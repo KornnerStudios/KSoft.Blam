@@ -14,9 +14,9 @@ namespace KSoft.Blam.Blob.Transport
 			internal const int kSizeOfData = sizeof(short) + (TypeExtensionsBlam.kTagStringLength+1) +
 				sizeof(short); // padding
 
-			internal static readonly Values.GroupTagData32 kSignature = 
+			internal static readonly Values.GroupTagData32 kSignature =
 				new Values.GroupTagData32("_blf", "blob_header");
-			static readonly BlobChunkHeader kChunkSignature = 
+			static readonly BlobChunkHeader kChunkSignature =
 				new BlobChunkHeader(kSignature, kVersion, kSizeOfData, kFlags);
 			const short kEndianSignature = -2;
 

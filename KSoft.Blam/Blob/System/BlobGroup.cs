@@ -7,7 +7,7 @@ namespace KSoft.Blam.Blob
 {
 	using GroupTagDatum = Values.GroupTagData32;
 
-	public sealed class BlobGroup 
+	public sealed class BlobGroup
 		: IO.ITagElementStringNameStreamable
 	{
 		GroupTagDatum mGroupTag;

@@ -10,7 +10,7 @@ namespace KSoft.Blam.Blob
 		ushort mBuildNumber;
 		ushort mFlags;
 		//public ContentHeader Data { get; private set; }
-		
+
 		internal ContentHeaderBlob()
 		{
 			base.BlobFlags |= Transport.BlobChunkHeader.kFlagIsHeader;

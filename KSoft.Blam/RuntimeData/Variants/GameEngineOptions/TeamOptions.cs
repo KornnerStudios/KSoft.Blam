@@ -52,7 +52,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		} }
 
 		public virtual bool IsDefault { get {
-			return Flags == 0 && NameString.Count == 0 && InitialDesignator.IsNone() && 
+			return Flags == 0 && NameString.Count == 0 && InitialDesignator.IsNone() &&
 				OverridesAreDefault && FireteamCount == 1;
 		} }
 

@@ -70,7 +70,7 @@ namespace KSoft.Blam.Engine
 		{
 			BranchHandle = EngineBuildHandle.None;
 
-			Name = ProjectName = 
+			Name = ProjectName =
 				"";
 
 			Revisions = new List<EngineBuildRevision>();

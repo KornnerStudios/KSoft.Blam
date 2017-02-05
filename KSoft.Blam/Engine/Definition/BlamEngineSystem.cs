@@ -12,7 +12,7 @@ namespace KSoft.Blam.Engine
 		public BlamEngine Engine { get; private set; }
 
 		internal EngineSystemAttribute SystemMetadata { get; private set; }
-		
+
 		/// <summary>Name of the file with the system's external definitions</summary>
 		public string ExternsFile { get; private set; }
 

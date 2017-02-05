@@ -10,10 +10,10 @@ namespace KSoft.Blam.Debug
 		static Diag.TraceSource kBlam
 			, kBlob
 			//, kCache
-			
+
 			, kEngine
 			//, kGames
-			
+
 			//, kResourceData
 			//, kRuntimeData
 			//, kTagInterface

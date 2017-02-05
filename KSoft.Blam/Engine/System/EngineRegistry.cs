@@ -257,7 +257,7 @@ namespace KSoft.Blam.Engine
 				EngineBranchHalo2 =
 				EngineBranchHalo3 = EngineBranchHaloOdst =
 				EngineBranchHaloReach =
-				EngineBranchHalo4 = 
+				EngineBranchHalo4 =
 				null;
 		}
 
@@ -289,7 +289,7 @@ namespace KSoft.Blam.Engine
 		#region ITagElementStreamable<string> Members
 		static dynamic OpenRegistryTagElementStream(FileAccess streamMode = FileAccess.Read)
 		{
-			Contract.Requires<FileNotFoundException>(File.Exists(kRegistryFilePath), 
+			Contract.Requires<FileNotFoundException>(File.Exists(kRegistryFilePath),
 				"Can't initialize the EngineRegistry, need the following file: " + kRegistryFilePath);
 
 			var stream = IO.TagElementStreamFactory.Open(kRegistryFilePath);

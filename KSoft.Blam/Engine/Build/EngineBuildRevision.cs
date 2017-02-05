@@ -54,11 +54,11 @@ namespace KSoft.Blam.Engine
 		{
 			BuildHandle = EngineBuildHandle.None;
 
-			BuildString = 
+			BuildString =
 				"00000.00.00.00.0000";
 			BuildStringType = EngineBuildStringType.Build_DateTime;
 
-			Version = ChangeList = 
+			Version = ChangeList =
 				TypeExtensions.kNone;
 
 			Date = DateTime.MinValue;

@@ -158,7 +158,7 @@ namespace KSoft.Blam.RuntimeData
 		#endregion
 
 		#region ITagElementStringNameStreamable Members
-		protected abstract void SerializeActivity<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, 
+		protected abstract void SerializeActivity<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string attrName, ref sbyte value)
 			where TDoc : class
 			where TCursor : class;

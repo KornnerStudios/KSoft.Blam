@@ -30,7 +30,7 @@ namespace KSoft.Blam
 		{
 			switch (type)
 			{
-				case MegaloScriptVariableReferenceType.	Custom: 
+				case MegaloScriptVariableReferenceType.	Custom:
 					return MegaloScriptVariableType.	Numeric;
 				case MegaloScriptVariableReferenceType.	Player:
 					return MegaloScriptVariableType.	Player;

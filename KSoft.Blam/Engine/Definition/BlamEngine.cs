@@ -20,15 +20,15 @@ namespace KSoft.Blam.Engine
 				out kIndexBitCount);
 		}
 		#endregion
-		
+
 		/// <summary>A handle with just the engine index populated, that tracks back to this engine instance</summary>
 		public EngineBuildHandle RootBuildHandle { get; private set; }
 
 		public string Name { get; private set; }
-		
+
 		/// <summary>The community-determined generation this engine was introduced</summary>
 		public EngineGeneration Generation { get; private set; }
-		
+
 		/// <summary>The data store which has all the know builds based on this general engine</summary>
 		public EngineBuildRepository BuildRepository { get; private set; }
 
@@ -36,7 +36,7 @@ namespace KSoft.Blam.Engine
 
 		public BlamEngine()
 		{
-			Name = 
+			Name =
 				"";
 
 			BuildRepository = new EngineBuildRepository();

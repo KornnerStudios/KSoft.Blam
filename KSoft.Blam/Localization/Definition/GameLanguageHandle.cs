@@ -26,7 +26,7 @@ namespace KSoft.Blam.Localization
 		{
 			// NOTE: It is assumed that the maximum value of GameIndex is the last last registered language
 			// After all, this is suppose to map one to the other...
-			
+
 			public static readonly int kGameIndexShift =
 				0;
 			public static readonly int kGameIndexBitCount =
@@ -39,7 +39,7 @@ namespace KSoft.Blam.Localization
 			public static readonly uint kIsSupportedMask =
 				0x1;
 
-			public static readonly int kLanguageIndexShift = 
+			public static readonly int kLanguageIndexShift =
 				kIsSupportedShift + Bits.kBooleanBitCount;
 
 			public static readonly int kBuildShift =

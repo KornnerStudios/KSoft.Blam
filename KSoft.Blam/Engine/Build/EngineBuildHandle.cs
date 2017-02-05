@@ -242,7 +242,7 @@ namespace KSoft.Blam.Engine
 		/// <returns></returns>
 		/// <remarks>
 		/// A build can be considered a child if:
-		/// 1) It's of the same engine  
+		/// 1) It's of the same engine
 		/// 2) It's of the same branch, if the parent's branch data isn't NONE
 		/// </remarks>
 		public bool IsChildOf(EngineBuildHandle parentHandle) // IsSupersetOf (this includes all of other)

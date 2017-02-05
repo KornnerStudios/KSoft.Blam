@@ -12,7 +12,7 @@ namespace KSoft.Blam.Localization.StringTables
 		, ICollection<LocaleStringTableReference>, System.Collections.ICollection
 	{
 		static readonly Memory.Strings.StringMemoryPoolSettings kStringPoolConfig =
-			new Memory.Strings.StringMemoryPoolSettings(Memory.Strings.StringStorage.CStringUtf8, 
+			new Memory.Strings.StringMemoryPoolSettings(Memory.Strings.StringStorage.CStringUtf8,
 				implicitNull:false, addressSize:Shell.ProcessorSize.x32);
 
 		internal LocaleStringTableInfo kInfo;
@@ -127,7 +127,7 @@ namespace KSoft.Blam.Localization.StringTables
 			Contract.Assert(Count <= Capacity);
 			s.Write(mStringReferences.Count, kInfo.CountBitLength);
 			ReferencesWrite(s);
-			
+
 			if (HasStrings)
 				s.StreamObject(string_data);
 		}
@@ -162,7 +162,7 @@ namespace KSoft.Blam.Localization.StringTables
 		{
 			using (s.EnterOwnerBookmark(this))
 			{
-				s.StreamableElements("String", mStringReferences, 
+				s.StreamableElements("String", mStringReferences,
 					kInfo, _info => new LocaleStringTableReference(_info.EngineLanguageTable));
 			}
 

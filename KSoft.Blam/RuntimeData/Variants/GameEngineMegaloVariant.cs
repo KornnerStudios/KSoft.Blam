@@ -182,7 +182,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		{
 			if ((TagElementStreamSerializeFlags & GameEngineMegaloVariantTagElementStreamFlags.UseStringTableNames) != 0)
 			{
-				s.StreamAttributeIdAsString(attributeName, ref stringIndex, 
+				s.StreamAttributeIdAsString(attributeName, ref stringIndex,
 					this, StringTableEntryIdResolver, StringTableEntryNameResolver);
 			}
 			else

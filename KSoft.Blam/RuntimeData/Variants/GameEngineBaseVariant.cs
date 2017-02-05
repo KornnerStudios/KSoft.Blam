@@ -56,7 +56,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		{
 			s.Stream(ref Flags, flagsBitLength, GameEngineBaseVariantFlagsBitStreamer.Instance);
 		}
-		
+
 		public abstract void Serialize(IO.BitStream s);
 		#endregion
 

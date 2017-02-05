@@ -150,7 +150,7 @@ namespace KSoft.Blam.Localization
 		#region ITagElementStreamable<string> Members
 		static dynamic OpenRegistryTagElementStream(FileAccess streamMode = FileAccess.Read)
 		{
-			Contract.Requires<FileNotFoundException>(File.Exists(kRegistryFilePath), 
+			Contract.Requires<FileNotFoundException>(File.Exists(kRegistryFilePath),
 				"Can't initialize the LanguageRegistry, need the following file: " + kRegistryFilePath);
 
 			var stream = IO.TagElementStreamFactory.Open(kRegistryFilePath);

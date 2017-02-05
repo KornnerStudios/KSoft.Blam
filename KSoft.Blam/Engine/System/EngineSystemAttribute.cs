@@ -91,7 +91,7 @@ namespace KSoft.Blam.Engine
 			return Guid.ToString(Values.KGuid.kFormatHyphenated);
 		}
 		#endregion
-		
+
 		/// <summary>For unit testing purposes only. Verifies this instance was properly initialized</summary>
 		internal bool IsValid { get {
 			return
@@ -145,7 +145,7 @@ namespace KSoft.Blam.Engine
 
 			FindSystemGuid();
 		}
-		
+
 		void FindEngineSystemFactoryMethod()
 		{
 			const BindingFlags k_factory_method_binding_flags =
@@ -162,7 +162,7 @@ namespace KSoft.Blam.Engine
 					EngineSystemType, ex);
 			}
 		}
-		
+
 		void RegisterSystem()
 		{
 			if (Engine.EngineRegistry.Systems.ContainsKey(Guid))
