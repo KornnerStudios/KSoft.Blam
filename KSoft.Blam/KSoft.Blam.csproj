@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{74372FF0-FCDA-405B-8DA3-E4BFBA051D27}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KSoft.Blam</RootNamespace>
+    <AssemblyName>KSoft.Blam</AssemblyName>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+  </PropertyGroup>
+  <Import Project="$(MSBuildProjectDirectory)\..\KSoft.Blam.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Blob\Presentation\BlobObject.cs" />
+    <Compile Include="Blob\Presentation\ContentHeaderBlob.cs" />
+    <Compile Include="Blob\Presentation\GameEngineVariantBlob.cs" />
+    <Compile Include="Blob\System\BlobGroup.cs" />
+    <Compile Include="Blob\System\BlobSystem.cs" />
+    <Compile Include="Blob\Transport\BlobChunkHeader.cs" />
+    <Compile Include="Blob\Transport\BlobChunkVerificationResult.cs" />
+    <Compile Include="Blob\Transport\BlobChunkVerificationResultInfo.cs" />
+    <Compile Include="Blob\Transport\BlobTransportStream.cs" />
+    <Compile Include="Blob\Transport\BlobTransportStreamFooter.cs" />
+    <Compile Include="Blob\Transport\BlobTransportStreamHeader.cs" />
+    <Compile Include="Blob\WellKnownBlob.cs" />
+    <Compile Include="Debug\Trace.cs" />
+    <Compile Include="Engine\Build\EngineBuildBranch.cs" />
+    <Compile Include="Engine\Build\EngineBuildHandle.cs" />
+    <Compile Include="Engine\Build\EngineBuildRepository.cs" />
+    <Compile Include="Engine\Build\EngineBuildRevision.cs" />
+    <Compile Include="Engine\Definition\BlamEngine.cs" />
+    <Compile Include="Engine\Definition\BlamEngineSystem.cs" />
+    <Compile Include="Engine\Definition\BlamEngineTargetHandle.cs" />
+    <Compile Include="Engine\Definition\EngineTargetPlatform.cs" />
+    <Compile Include="Engine\System\EngineRegistry.cs" />
+    <Compile Include="Engine\Enums\EngineBuildStringType.cs" />
+    <Compile Include="Engine\Enums\EngineGeneration.cs" />
+    <Compile Include="Engine\Enums\EngineProductionStage.cs" />
+    <Compile Include="Engine\System\EngineSystemAttribute.cs" />
+    <Compile Include="Engine\System\EngineSystemBase.cs" />
+    <Compile Include="Engine\System\EngineSystemReference.cs" />
+    <Compile Include="Localization\Definition\GameLanguageHandle.cs" />
+    <Compile Include="Localization\Definition\GameLanguageTable.cs" />
+    <Compile Include="Localization\StringTables\LocaleStringTable.cs" />
+    <Compile Include="Localization\StringTables\LocaleStringTableBuffer.cs" />
+    <Compile Include="Localization\StringTables\LocaleStringTableInfo.cs" />
+    <Compile Include="Localization\StringTables\LocaleStringTableReference.cs" />
+    <Compile Include="Localization\System\LanguageRegistry.cs" />
+    <Compile Include="Localization\System\LanguageSystem.cs" />
+    <Compile Include="Localization\_INPC.cs" />
+    <Compile Include="Megalo\Enums\GameEngineTimerRate.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptComparisonType.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptDamageReportingModifier.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptNavpointIconType.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptOperationType.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptPlayerFilterType.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptShapeType.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptTargetType.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptTokenAbstractType.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptVariableNetworkState.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptVariableReferenceType.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptVariableSet.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptVariableType.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptWidgetMeterType.cs" />
+    <Compile Include="Megalo\Model\MegaloScriptAccessibleObject.cs" />
+    <Compile Include="Megalo\Model\_INPC.cs" />
+    <Compile Include="Megalo\Proto\System\BuildProtoFiles.cs" />
+    <Compile Include="Megalo\Proto\System\MegaloProtoSystem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="RuntimeData\Content\ContentAuthor.cs" />
+    <Compile Include="RuntimeData\Content\ContentData.cs" />
+    <Compile Include="RuntimeData\Enums\ContentMiniMetadataType.cs" />
+    <Compile Include="RuntimeData\Enums\ContentType.cs" />
+    <Compile Include="RuntimeData\Enums\GameDifficulty.cs" />
+    <Compile Include="RuntimeData\Enums\GameEngineType.cs" />
+    <Compile Include="RuntimeData\Enums\GameMode.cs" />
+    <Compile Include="RuntimeData\Enums\GameTeamDesignator.cs" />
+    <Compile Include="RuntimeData\Enums\MetagameScoring.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineBaseVariant.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineCampaignVariant.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineMegaloVariant.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineOptions\LoadoutOptions.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineOptions\MapOverridesOptions.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineOptions\MiscOptions.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineOptions\PlayerTraits.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineOptions\RespawnOptions.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineOptions\SocialOptions.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineOptions\TeamOptions.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineSandboxVariant.cs" />
+    <Compile Include="RuntimeData\Variants\GameEngineVariant.cs" />
+    <Compile Include="RuntimeData\Variants\Megalo\MapPermissions.cs" />
+    <Compile Include="RuntimeData\Variants\Megalo\MegaloPlayerTraits.cs" />
+    <Compile Include="RuntimeData\Variants\Megalo\PlayerRatingParameters.cs" />
+    <Compile Include="RuntimeData\Variants\Megalo\UserDefinedOptions.cs" />
+    <Compile Include="RuntimeData\Variants\OptionalRealArray.cs" />
+    <Compile Include="RuntimeData\Variants\_INPC.cs" />
+    <Compile Include="TypeExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(VitaRootDir)\KSoft\KSoft.IO.TagElementStreams\KSoft.IO.TagElementStreams.csproj">
+      <Project>{18f32228-8351-4f99-992f-78e9d1ce83d9}</Project>
+      <Name>KSoft.IO.TagElementStreams</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="$(VitaRootDir)\KSoft\KSoft\KSoft.csproj">
+      <Project>{eb07f515-e27c-4768-8bd8-2829f657807e}</Project>
+      <Name>KSoft</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="$(VitaRootDir)KSoft\KSoft.Compression\KSoft.Compression.csproj">
+      <Project>{0b27603c-ceb1-4a3a-b56f-cbc14b8c06e7}</Project>
+      <Name>KSoft.Compression</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="$(VitaRootDir)\KSoft\KSoft.Security\KSoft.Security.csproj">
+      <Project>{0632a00b-de9e-4350-a3f8-3a82f9c780af}</Project>
+      <Name>KSoft.Security</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Engine\EngineRegistry.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Games\Halo1\Halo1.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Games\Halo2\Halo2.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Games\Halo2\Halo2_Localization.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Games\Halo3\Halo3.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Games\Halo3\Halo3_Localization.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Games\Halo4\Halo4.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Games\Halo4\Halo4_Localization.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Games\HaloReach\HaloReach.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Games\HaloReach\HaloReach_Blobs.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Games\HaloReach\HaloReach_Localization.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Localization\LanguageRegistry.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v12.0\TextTemplating\\Microsoft.TextTemplating.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

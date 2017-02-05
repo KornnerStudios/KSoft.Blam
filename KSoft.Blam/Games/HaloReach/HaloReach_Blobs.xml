@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<System engine="HaloReach">
+	<BlobGroupTags>
+		<Group tag="chdr" name="content_header" />
+		<Group tag="mpvr" name="game_variant" />
+	</BlobGroupTags>
+
+	<BlobGroups>
+		<BlobGroup tag="chdr" type="ContentHeader">
+			<Versions>
+				<Version id="10" branch="HaloReach" />
+			</Versions>
+		</BlobGroup>
+
+		<BlobGroup tag="mpvr" type="GameVariant">
+			<Versions>
+				<Version id="54" branch="HaloReach" />
+			</Versions>
+		</BlobGroup>
+	</BlobGroups>
+</System>

@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Engine name="Halo2">
+	<Repository>
+		<Guid>00000000-0000-0000-0000-000000000000</Guid>
+
+		<Branches>
+			<Branch name="Halo2" project="halo2">
+				<Revisions>
+					<!--Xbox-->
+					<Rev versionId="7902" build="02.06.28.07902" productionStage="Alpha" buildStringType="Major_MonthDay_Build">
+						<Date>Jun 28 2004</Date>
+						<Time>02:48:03 -8</Time>
+
+						<ValidTargetPlatforms>
+							<Platform>Xbox</Platform>
+						</ValidTargetPlatforms>
+					</Rev>
+
+					<Rev versionId="9809" build="02.09.27.09809" productionStage="Ship" buildStringType="Major_MonthDay_Build"
+						exportName="Halo2_Xbox">
+						<Date>Sep 27 2004</Date>
+						<Time>00:00:00 -8</Time> <!--TODO-->
+
+						<ValidTargetPlatforms>
+							<Platform>Xbox</Platform>
+						</ValidTargetPlatforms>
+					</Rev>
+
+					<!--PC-->
+					<Rev versionId="11078" build="11078.07.04.28.2131.main" productionStage="Ship"
+						exportName="Halo2_PC">
+						<Date>Apr 28 2007</Date>
+						<Time>21:31:00 -8</Time>
+
+						<ValidTargetPlatforms>
+							<Platform>Win32</Platform>
+						</ValidTargetPlatforms>
+					</Rev>
+					<Rev versionId="11081" build="11081.07.04.30.0934.main" productionStage="Ship">
+						<Date>Apr 30 2007</Date>
+						<Time>09:34:00 -8</Time>
+
+						<ValidTargetPlatforms>
+							<Platform>Win32</Platform>
+						</ValidTargetPlatforms>
+					</Rev>
+					<Rev versionId="11122" build="11122.07.08.24.1808.main" productionStage="TU">
+						<Date>Aug 24 2007</Date>
+						<Time>18:08:00 -8</Time>
+
+						<ValidTargetPlatforms>
+							<Platform>Win32</Platform>
+						</ValidTargetPlatforms>
+					</Rev>
+				</Revisions>
+			</Branch>
+		</Branches>
+	</Repository>
+</Engine>

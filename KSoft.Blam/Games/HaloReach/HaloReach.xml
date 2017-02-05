@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Engine name="HaloReach">
+	<Repository>
+		<Guid>00000000-0000-0000-0000-000000000000</Guid>
+		<ValidTargetPlatforms>
+			<Platform>Xbox360</Platform>
+		</ValidTargetPlatforms>
+
+		<Branches>
+			<Branch name="HaloReach" project="omaha">
+				<Revisions>
+					<Rev versionId="9449" build="09449.10.03.25.1545.omaha_beta" productionStage="Beta">
+						<Date>Mar 25 2010</Date>
+						<Time>16:13:19 -8</Time>
+					</Rev>
+
+					<Rev versionId="9664" build="09664.10.04.06.2121.omaha_beta" productionStage="Beta">
+						<Date>Apr 06 2010</Date>
+						<Time>21:36:51 -8</Time>
+					</Rev>
+
+					<Rev versionId="9730" build="09730.10.04.09.1309.omaha_delta" productionStage="Delta">
+						<Date>Apr 09 2010</Date>
+						<Time>13:24:34 -8</Time>
+					</Rev>
+
+					<Rev versionId="11860" build="11860.10.07.24.0147.omaha_relea" productionStage="Ship"
+						exportName="HaloReach_Xbox">
+						<Date>Jul 24 2010</Date>
+						<Time>02:02:45 -8</Time>
+					</Rev>
+
+					<Rev versionId="12065" build="12065.11.08.24.1738.tu1actual" productionStage="TU">
+						<Date>Aug 24 2011</Date>
+						<Time>17:51:29 -8</Time>
+					</Rev>
+				</Revisions>
+			</Branch>
+		</Branches>
+	</Repository>
+
+	<Systems>
+		<System guid="EF39D343-DAD5-43D4-A215-F91722ED1CC5" externs="HaloReach_Localization.xml" />
+		<System guid="EA5FFB03-9991-4B81-B952-022EDC371F27" externs="HaloReach_Blobs.xml" />
+	</Systems>
+</Engine>

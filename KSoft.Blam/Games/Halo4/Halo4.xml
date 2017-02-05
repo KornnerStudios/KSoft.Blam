@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Engine name="Halo4">
+	<Repository>
+		<Guid>00000000-0000-0000-0000-000000000000</Guid>
+		<ValidTargetPlatforms>
+			<Platform>Xbox360</Platform>
+			<!--TODO: Will need to figure out XboxOne support, if that's ever a thing-->
+		</ValidTargetPlatforms>
+
+		<Branches>
+			<Branch name="Halo4" project="midnight">
+				<Revisions>
+					<Rev versionId="14064" build="14064.12.05.05.1011.beta" productionStage="Beta"
+						exportName="Halo4_Beta">
+						<Date>May 05 2012</Date>
+						<Time>10:36:15 -8</Time>
+					</Rev>
+
+					<Rev versionId="20810" build="20810.12.09.22.1647.main" productionStage="Ship"
+						exportName="Halo4_Xbox"> <!--452,269-->
+						<Date>Sep 22 2012</Date>
+						<Time>16:59:19 -8</Time>
+					</Rev>
+
+					<!--1.01.0-->
+					<Rev versionId="20975" build="20975.12.10.25.1337.main" productionStage="TU"> <!--464,787-->
+						<Date>Oct 25 2012</Date>
+						<Time>13:53:37 -8</Time>
+					</Rev>
+
+					<!--1.02.0-->
+					<Rev versionId="21122" build="21122.12.11.21.0101.main" productionStage="TU"> <!--480,382-->
+						<Date>Nov 21 2012</Date>
+						<Time>01:43:12 -8</Time>
+					</Rev>
+					<!--1.02.1-->
+					<Rev versionId="21165" build="21165.12.12.12.0112.main" productionStage="TU"> <!--482,098-->
+						<Date>Dec 12 2012</Date>
+						<Time>01:47:38 -8</Time>
+					</Rev>
+
+					<!--1.04.0-->
+					<Rev versionId="21391" build="21391.13.03.13.1711.main" productionStage="TU">
+						<Date>Mar 13 2013</Date>
+						<Time>17:37:03 -8</Time>
+					</Rev>
+					<!--1.04.1-->
+					<Rev versionId="21401" build="21401.13.04.23.1849.main" productionStage="TU"> <!--525,756-->
+						<Date>Apr 23 2013</Date>
+						<Time>22:45:12 -8</Time>
+					</Rev>
+
+					<!--1.05.0-->
+					<Rev versionId="21501" build="21501.13.08.06.2311.main" productionStage="TU">
+						<Date>Aug 06 2013</Date>
+						<Time>23:51:29 -8</Time>
+					</Rev>
+				</Revisions>
+			</Branch>
+		</Branches>
+	</Repository>
+</Engine>

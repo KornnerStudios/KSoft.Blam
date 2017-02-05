@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<System engine="Halo3">
+	<LanguageTables>
+		<T>
+			<Entries>
+				<E id="0"  lang="English" />
+				<E id="1"  lang="Japanese" />
+				<E id="2"  lang="German" />
+				<E id="3"  lang="French" />
+				<E id="4"  lang="Spanish" />
+				<E id="5"  lang="Mexican" />
+				<E id="6"  lang="Italian" />
+				<E id="7"  lang="Korean" />
+				<E id="8"  lang="ChineseTrad" />
+				<E id="9"  lang="ChineseSimp" />
+				<E id="10" lang="Portuguese" />
+				<E id="11" lang="Polish" />
+			</Entries>
+		</T>
+	</LanguageTables>
+</System>

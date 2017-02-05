@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Engine name="Halo1">
+	<Repository>
+		<Guid>00000000-0000-0000-0000-000000000000</Guid>
+
+		<Branches>
+			<Branch name="Halo1" project="blam">
+				<!--The valid platforms for all non-Xbox based builds (which there is only one revision)-->
+				<ValidTargetPlatforms>
+					<Platform>Win32</Platform>
+					<Platform>MacIntel32</Platform> <!--TODO: pretty sure there are no binary differences with PC-->
+				</ValidTargetPlatforms>
+
+				<Revisions>
+					<!--Xbox-->
+					<Rev versionId="2276" build="01.10.12.2276" productionStage="Ship" buildStringType="Major_MonthDay_Build"
+						exportName="Halo1_Xbox">
+						<!--leaked 'beta' build's date: Oct 12 2001 16:07:48-->
+						<Date>Oct 12 2001</Date>
+						<Time>16:14:28 -8</Time>
+
+						<!--Doing this will circumvent the Branch's valid platforms from propogating to this revision-->
+						<ValidTargetPlatforms>
+							<Platform>Xbox</Platform>
+						</ValidTargetPlatforms>
+					</Rev>
+
+					<!--PC-->
+					<Rev versionId="564" build="01.00.00.0564" productionStage="Ship" buildStringType="Major_MonthDay_Build"
+						exportName="Halo1_PC">
+						<Date>Sep 04 2003</Date>
+						<Time>17:09:42 -6</Time>
+					</Rev>
+				</Revisions>
+			</Branch>
+			<Branch name="HaloCE" project="blam"> <!--Halo Custom Edition-->
+				<ValidTargetPlatforms>
+					<Platform>Win32</Platform>
+				</ValidTargetPlatforms>
+
+				<Revisions>
+					<Rev versionId="609" build="01.00.00.0609" productionStage="Ship" buildStringType="Major_MonthDay_Build"
+						exportName="Halo1_CE">
+						<Date>Apr 27 2004</Date>
+						<Time>15:09:55 -6</Time>
+					</Rev>
+				</Revisions>
+			</Branch>
+			<Branch name="HA10" project="blam"> <!--Halo Anniversary-->
+				<ValidTargetPlatforms>
+					<Platform>Xbox360</Platform>
+					<!--<Platform>XboxOne</Platform>-->
+				</ValidTargetPlatforms>
+
+				<Revisions>
+					<!--Xbox360-->
+					<Rev versionId="563" build="01.00.01.0563" productionStage="Ship" buildStringType="Major_MonthDay_Build">
+						<Date>Oct 06 2011</Date>
+						<Time>21:41:11 -8</Time>
+					</Rev>
+				</Revisions>
+			</Branch>
+
+			<Branch name="Stubbs" project="stubbs"> <!--NOTE: project name is unknown-->
+				<ValidTargetPlatforms>
+					<Platform>Xbox</Platform>
+					<Platform>Win32</Platform>
+					<Platform>MacIntel32</Platform> <!--PPC builds actually byteswap the map and tag data into big endian at runtime-->
+				</ValidTargetPlatforms>
+
+				<Revisions>
+					<!--Xbox-->
+					<Rev versionId="400" build="400" productionStage="Ship" buildStringType="Build">
+						<Date>Sep 06 2005</Date>
+						<Time>16:28:52 -6</Time>
+					</Rev>
+
+					<!--PC-->
+					<Rev versionId="418" build="418" productionStage="Ship" buildStringType="Build">
+						<Date>Nov 01 2005</Date>
+						<Time>20:54:07 -6</Time>
+					</Rev>
+					<Rev versionId="424" build="424" productionStage="TU" buildStringType="Build">
+						<Date>Dec 14 2005</Date>
+						<Time>14:04:15 -6</Time>
+					</Rev>
+				</Revisions>
+			</Branch>
+
+			<Branch name="ShadowRun" project="shadow_run"> <!--NOTE: project name is unknown-->
+				<ValidTargetPlatforms>
+					<Platform>Xbox</Platform>
+				</ValidTargetPlatforms>
+
+				<Revisions>
+					<Rev versionId="132" build="01.12.07.0132" productionStage="Alpha" buildStringType="Major_MonthDay_Build">
+						<Date>Mar 30 2005</Date>
+						<Time>10:16:14 -8</Time>
+					</Rev>
+				</Revisions>
+			</Branch>
+		</Branches>
+	</Repository>
+</Engine>

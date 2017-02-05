@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<LanguageRegistry series="Blam">
+	<Languages>
+		<Language>English</Language>
+		<Language>Japanese</Language>
+		<Language>German</Language>
+		<Language>French</Language>
+		<Language>Spanish</Language>
+		<Language>Mexican</Language>		<!--Halo3+-->
+		<Language>Italian</Language>
+		<Language>Korean</Language>
+		<Language>ChineseTrad</Language>	<!--Halo3+-->
+		<Language>ChineseSimp</Language>	<!--Halo3+-->
+		<Language>Portuguese</Language>
+		<Language>Polish</Language>			<!--Halo3+-->
+		<Language>Russian</Language>		<!--Halo4+-->
+		<Language>Danish</Language>			<!--Halo4+-->
+		<Language>Finnish</Language>		<!--Halo4+-->
+		<Language>Dutch</Language>			<!--Halo4+-->
+		<Language>Norwegian</Language>		<!--Halo4+-->
+	</Languages>
+</LanguageRegistry>

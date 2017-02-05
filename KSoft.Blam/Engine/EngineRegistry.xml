@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<EngineRegistry series="Blam">
+	<Engines>
+		<Engine generation="First" name="Halo1" />
+
+		<Engine generation="Second" name="Halo2" />
+
+		<Engine generation="Third" name="Halo3" />
+		<Engine generation="Third" name="HaloReach" />
+		<Engine generation="Third" name="Halo4" />
+	</Engines>
+
+	<Targets>
+		<Platforms>
+			<Platform name="Win32"
+				platformType="Windows"
+				instructionSet="Intel" processorSize="x32" byteOrder="Little" />
+<!--			<Platform name="Win64"
+				platformType="Windows"
+				instructionSet="Intel" processorSize="x64" byteOrder="Little" />-->
+
+			<Platform name="Xbox"
+				platformType="Xbox"
+				instructionSet="Intel" processorSize="x32" byteOrder="Little" />
+			<Platform name="Xbox360"
+				platformType="Xbox"
+				instructionSet="PPC" processorSize="x32" byteOrder="Big" />
+<!--			<Platform name="XboxOne"
+				platformType="Xbox"
+				instructionSet="Intel" processorSize="x64" byteOrder="Little" />-->
+
+			<Platform name="MacPowerPc32"
+				platformType="Mac"
+				instructionSet="PPC" processorSize="x32" byteOrder="Big" />
+			<Platform name="MacIntel32"
+				platformType="Mac"
+				instructionSet="Intel" processorSize="x32" byteOrder="Little" />
+		</Platforms>
+
+		<ResourceModels>
+			<Model>Cache</Model>
+			<Model>Tags</Model>
+			<Model>Saber</Model> <!--Saber3D data-->
+		</ResourceModels>
+	</Targets>
+</EngineRegistry>
