@@ -31,7 +31,7 @@ namespace KSoft.Blam
 	[TestClass]
 	public abstract class BaseTestClass
 	{
-		public const string kTestResultsPath = @"C:\KStudio\Vita\_test_results\KSoft.Blam\";
+		public const string kTestResultsPath = @"C:\Mount\B\Kornner\Vita\_test_results\KSoft.Blam\";
 
 		/// <summary>
 		/// Gets or sets the test context which provides information about and functionality for the current test run.

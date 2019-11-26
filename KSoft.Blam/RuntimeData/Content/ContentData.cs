@@ -1,12 +1,17 @@
 ﻿using System;
-using Contracts = System.Diagnostics.Contracts;
-using Contract = System.Diagnostics.Contracts.Contract;
+#if CONTRACTS_FULL_SHIM
+using Contract = System.Diagnostics.ContractsShim.Contract;
+#else
+using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
+#endif
 
 namespace KSoft.Blam.RuntimeData
 {
-	using ContentTypeBitStreamer = IO.EnumBitStreamer<	ContentType,
-														Int32,
-														IO.EnumBitStreamerOptions.ShouldUseNoneSentinelEncoding>;
+	using ContentTypeBitStreamer = IO.EnumBitStreamer
+		< ContentType
+		, Int32
+		, IO.EnumBitStreamerOptions.ShouldUseNoneSentinelEncoding
+		>;
 	using GameModeBitStreamer = IO.EnumBitStreamer<GameMode>;
 	using GameEngineTypeBitStreamer = IO.EnumBitStreamer<GameEngineType>;
 
@@ -67,7 +72,7 @@ namespace KSoft.Blam.RuntimeData
 
 		internal static ContentHeader Create(Engine.EngineBuildHandle gameBuild)
 		{
-#if false // TODO
+#if false // #TODO
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
 				return new Games.HaloReach.RuntimeData.ContentHeaderHaloReach();
 			else if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))

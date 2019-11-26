@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using Contracts = System.Diagnostics.Contracts;
-using Contract = System.Diagnostics.Contracts.Contract;
+#if CONTRACTS_FULL_SHIM
+using Contract = System.Diagnostics.ContractsShim.Contract;
+#else
+using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
+#endif
 
 namespace KSoft.Blam.Localization
 {
@@ -90,6 +94,9 @@ namespace KSoft.Blam.Localization
 				SerializeLanguages(s);
 			}
 
+			KSoft.Debug.ValueCheck.IsGreaterThanEqualTo("LanguageRegistry: No registered languages",
+				1, gLanguageNames.Count);
+
 			KSoft.Debug.ValueCheck.IsLessThanEqualTo("LanguageRegistry: Too many registered languages",
 				kMaxLanguages, gLanguageNames.Count);
 
@@ -164,7 +171,7 @@ namespace KSoft.Blam.Localization
 			where TCursor : class
 		{
 			using (s.EnterCursorBookmark("Languages"))
-				s.StreamElements("Lang", gLanguageNames);
+				s.StreamElements("Language", gLanguageNames);
 		}
 
 		internal static bool SerializeLanguageId<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,

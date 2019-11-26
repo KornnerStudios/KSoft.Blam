@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-using Contract = System.Diagnostics.Contracts.Contract;
+﻿using System.Collections.Generic;
+#if CONTRACTS_FULL_SHIM
+using Contract = System.Diagnostics.ContractsShim.Contract;
+#else
+using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
+#endif
 
 namespace KSoft.Blam.RuntimeData.Megalo.Proto
 {
-	/// <summary></summary>
 	[Engine.EngineSystem]
 	public sealed class MegaloProtoSystem
 		: Engine.EngineSystemBase

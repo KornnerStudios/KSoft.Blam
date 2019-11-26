@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-using Contract = System.Diagnostics.Contracts.Contract;
+#if CONTRACTS_FULL_SHIM
+using Contract = System.Diagnostics.ContractsShim.Contract;
+#else
+using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
+#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -45,8 +48,12 @@ namespace KSoft.Blam.Engine
 			if (amount < 0)
 			{
 				if (revisn_count < 0 || branch_count < 0 || engine_count < 0)
+				{
 					throw new InvalidOperationException(string.Format(
-						"Extra or bad RemoveReference call detected for {0} using the handle {1}"));
+						"Extra or bad RemoveReference call detected for {0} using the handle {1}",
+						Engine,
+						buildHandle));
+				}
 			}
 		}
 		void InitializeReferencesByBuildCounts()

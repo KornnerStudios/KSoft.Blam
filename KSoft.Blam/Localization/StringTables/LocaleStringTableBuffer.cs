@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-using Contract = System.Diagnostics.Contracts.Contract;
-
+﻿
 namespace KSoft.Blam.Localization.StringTables
 {
 	[System.Reflection.Obfuscation(Exclude=false)]

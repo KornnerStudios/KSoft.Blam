@@ -1,7 +1,4 @@
-﻿using System;
-using Contracts = System.Diagnostics.Contracts;
-using Contract = System.Diagnostics.Contracts.Contract;
-
+﻿
 namespace KSoft.Blam.Blob.Transport
 {
 	using AuthenticationTypeStreamer = IO.EnumBinaryStreamer<BlobTransportStreamAuthentication, byte>;

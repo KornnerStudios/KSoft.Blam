@@ -1,17 +1,20 @@
-﻿using System;
-
+﻿
 namespace KSoft.Blam
 {
 	public static class Program
 	{
 		public static void Initialize()
 		{
-			Util.ValueTypeInitializeComparer			<Engine.EngineBuildHandle>();
-			Util.ValueTypeInitializeEquatableComparer	<Engine.EngineBuildHandle>();
-			Util.ValueTypeInitializeComparer			<Engine.BlamEngineTargetHandle>();
-			Util.ValueTypeInitializeEquatableComparer	<Engine.BlamEngineTargetHandle>();
-			Util.ValueTypeInitializeComparer			<Localization.GameLanguageHandle>();
-			Util.ValueTypeInitializeEquatableComparer	<Localization.GameLanguageHandle>();
+			var dot_net_version = System.Environment.Version;
+			if (dot_net_version.Major <= 2)
+			{
+				Util.ValueTypeInitializeComparer			<Engine.EngineBuildHandle>();
+				Util.ValueTypeInitializeEquatableComparer	<Engine.EngineBuildHandle>();
+				Util.ValueTypeInitializeComparer			<Engine.BlamEngineTargetHandle>();
+				Util.ValueTypeInitializeEquatableComparer	<Engine.BlamEngineTargetHandle>();
+				Util.ValueTypeInitializeComparer			<Localization.GameLanguageHandle>();
+				Util.ValueTypeInitializeEquatableComparer	<Localization.GameLanguageHandle>();
+			}
 
 			Engine.EngineRegistry.InitializeForNewProgram();
 		}

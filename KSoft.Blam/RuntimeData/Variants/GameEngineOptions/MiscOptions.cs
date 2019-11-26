@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace KSoft.Blam.RuntimeData.Variants
 {
-	using GameOptionsMiscFlagsBitStreamer = IO.EnumBitStreamerWithOptions<	GameOptionsMiscFlags, 
-																			IO.EnumBitStreamerOptions.ShouldBitSwap>;
+	using GameOptionsMiscFlagsBitStreamer = IO.EnumBitStreamerWithOptions
+		< GameOptionsMiscFlags
+		, IO.EnumBitStreamerOptions.ShouldBitSwap
+		>;
 
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
 	[Flags]
