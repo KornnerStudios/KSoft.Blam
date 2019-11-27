@@ -86,7 +86,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 #endif
 		internal static GameEngineMegaloVariant Create(Engine.EngineBuildHandle gameBuild)
 		{
-#if false // TODO
+#if false // #TODO
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
 				return new Games.HaloReach.RuntimeData.Variants.GameEngineMegaloVariantHaloReach();
 			else if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
@@ -101,7 +101,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		protected abstract bool VerifyEncodingVersion();
 
 		#region IBitStreamSerializable Members
-#if false // TODO
+#if false // #TODO
 		internal void StreamStringTableIndexPointer(IO.BitStream s,		ref int stringIndex)
 		{ s.StreamNoneable(ref stringIndex,	EngineDefinition.Database.Limits.VariantStrings.IndexBitLength); }
 		internal void StreamStringTableIndexReference(IO.BitStream s,	ref int stringIndex)
@@ -137,7 +137,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 				s.Stream(ref mEncodingVersion);
 				if (s.IsReading && !VerifyEncodingVersion())
 					throw new IO.VersionMismatchException("Megalo encoding", (uint)mEncodingVersion);
-#if false // TODO
+#if false // #TODO
 				s.Stream(ref EngineVersion);				// global, not a c_game_engine_megalo_variant member
 				s.StreamObject(BaseVariant);
 				s.StreamElements(PlayerTraits,
@@ -223,7 +223,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-#if false // TODO
+#if false // #TODO
 			if (!variant.TagElementStreamSerializeFlags.UseUserOptionNames())
 				s.StreamCursor(ref bitIndex);
 			else if (s.IsReading)
@@ -337,7 +337,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 					Console.ResetColor();
 					return;
 				}
-#if false // TODO
+#if false // #TODO
 				using (s.EnterCursorBookmark("MegaloScript"))
 					s.StreamObject(EngineDefinition);
 #endif

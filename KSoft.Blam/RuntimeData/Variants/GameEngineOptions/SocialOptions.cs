@@ -7,8 +7,9 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Blam.RuntimeData.Variants
 {
-	using GameOptionsSocialFlagsBitStreamer = IO.EnumBitStreamerWithOptions<GameOptionsSocialFlags,
-																			IO.EnumBitStreamerOptions.ShouldBitSwap>;
+	using GameOptionsSocialFlagsBitStreamer = IO.EnumBitStreamerWithOptions
+		< GameOptionsSocialFlags
+		, IO.EnumBitStreamerOptions.ShouldBitSwap>;
 
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
 	[Flags]

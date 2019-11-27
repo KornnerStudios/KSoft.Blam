@@ -12,10 +12,7 @@ namespace KSoft.Blam.Blob
 	public sealed class BlobSystem
 		: Engine.EngineSystemBase
 	{
-		#region SystemGuid
-		static readonly Values.KGuid kSystemGuid = new Values.KGuid("EA5FFB03-9991-4B81-B952-022EDC371F27");
-		public static Values.KGuid SystemGuid { get { return kSystemGuid; } }
-		#endregion
+		public static Values.KGuid SystemGuid { get; } = new Values.KGuid("EA5FFB03-9991-4B81-B952-022EDC371F27");
 
 		GroupTagDatumCollection mGroupTags;
 		public GroupTagDatumCollection GroupTags { get { return mGroupTags; } }

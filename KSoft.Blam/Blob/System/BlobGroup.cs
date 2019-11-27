@@ -10,7 +10,7 @@ namespace KSoft.Blam.Blob
 		GroupTagDatum mGroupTag;
 		public GroupTagDatum GroupTag { get { return mGroupTag; } }
 
-		public WellKnownBlob mKnownAs;
+		internal WellKnownBlob mKnownAs;
 		public WellKnownBlob KnownAs { get { return mKnownAs; } }
 
 		Dictionary<int, Engine.EngineBuildHandle> mVersionToBuildMap;

@@ -210,7 +210,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TCursor : class
 		{
 			if (!IsRangeValue)
-				return; // HACK: IgnoreWritePredicates hack!
+				return; // #HACK: IgnoreWritePredicates hack!
 
 			s.StreamAttribute("rangeValue", ref Value);
 			if (s.IsReading)
