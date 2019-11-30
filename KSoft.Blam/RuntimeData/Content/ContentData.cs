@@ -72,14 +72,16 @@ namespace KSoft.Blam.RuntimeData
 
 		internal static ContentHeader Create(Engine.EngineBuildHandle gameBuild)
 		{
-#if false // #TODO
+#if false // #TODO_BLAM_REFACTOR
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
 				return new Games.HaloReach.RuntimeData.ContentHeaderHaloReach();
 			else if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
 				return new Games.Halo4.RuntimeData.ContentHeaderHalo4();
 			else
 #endif
+			{
 				throw new KSoft.Debug.UnreachableException(gameBuild.ToDisplayString());
+			}
 		}
 
 		#region IBitStreamSerializable Members

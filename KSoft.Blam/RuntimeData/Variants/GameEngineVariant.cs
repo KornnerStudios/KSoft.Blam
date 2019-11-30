@@ -36,7 +36,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		{
 			switch (Type)
 			{
-#if false // #TODO
+#if false // #TODO_BLAM_REFACTOR
 				case GameEngineType.None:
 					Variant = GameEngineBaseVariant.Create(GameBuild);
 					break;
@@ -93,7 +93,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		{
 			if (Variant is GameEngineMegaloVariant)
 				return (GameEngineMegaloVariant)Variant;
-#if false // #TODO
+#if false // #TODO_BLAM_REFACTOR
 			else if (Variant is GameEngineSandboxVariant)
 				return ((GameEngineSandboxVariant)Variant).MegaloVariant;
 #endif

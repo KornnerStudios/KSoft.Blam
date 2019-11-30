@@ -40,14 +40,16 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 		internal static GameEngineBaseVariant Create(Engine.EngineBuildHandle gameBuild)
 		{
-#if false // #TODO
+#if false // #TODO_BLAM_REFACTOR
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
 				return new Games.HaloReach.RuntimeData.Variants.GameEngineBaseVariantHaloReach();
 			else if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
 				return new Games.Halo4.RuntimeData.Variants.GameEngineBaseVariantHalo4();
 			else
 #endif
+			{
 				throw new KSoft.Debug.UnreachableException(gameBuild.ToDisplayString());
+			}
 		}
 
 		#region IBitStreamSerializable Members
