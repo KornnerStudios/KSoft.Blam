@@ -177,6 +177,7 @@ namespace KSoft.Blam.Localization
 			int lang_count = 0;
 
 			foreach (var e in s.ElementsByName(kElementNameEntry))
+			using (s.EnterCursorBookmark(e))
 			{
 				int game_index = TypeExtensions.kNone;
 				int lang_index = TypeExtensions.kNone;
@@ -222,5 +223,12 @@ namespace KSoft.Blam.Localization
 			}
 		}
 		#endregion
+
+		public EnumeratorWrapper<GameLanguageHandle> EngineLanguageHandles { get {
+			return new EnumeratorWrapper<GameLanguageHandle>(mEngineLanguageTable);
+		} }
+		public EnumeratorWrapper<GameLanguageHandle> SupportedLanguageHandles { get {
+			return new EnumeratorWrapper<GameLanguageHandle>(mGameLanguageTable);
+		} }
 	};
 }

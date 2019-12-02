@@ -8,13 +8,13 @@
 	<BlobGroups>
 		<BlobGroup tag="chdr" type="ContentHeader">
 			<Versions>
-				<Version id="10" branch="HaloReach" />
+				<V id="10" branch="HaloReach" />
 			</Versions>
 		</BlobGroup>
 
 		<BlobGroup tag="mpvr" type="GameVariant">
 			<Versions>
-				<Version id="54" branch="HaloReach" />
+				<V id="54" branch="HaloReach" />
 			</Versions>
 		</BlobGroup>
 	</BlobGroups>

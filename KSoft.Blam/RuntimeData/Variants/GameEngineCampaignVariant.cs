@@ -1,4 +1,9 @@
-﻿
+﻿#if CONTRACTS_FULL_SHIM
+using Contract = System.Diagnostics.ContractsShim.Contract;
+#else
+using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
+#endif
+
 namespace KSoft.Blam.RuntimeData.Variants
 {
 	[System.Reflection.Obfuscation(Exclude=false)]
@@ -7,19 +12,24 @@ namespace KSoft.Blam.RuntimeData.Variants
 	{
 		public GameEngineBaseVariant BaseVariant { get; private set; }
 
-		protected GameEngineCampaignVariant(Engine.EngineBuildHandle gameBuild)
+		protected GameEngineCampaignVariant(GameEngineVariant variantManager)
 		{
-			BaseVariant = GameEngineBaseVariant.Create(gameBuild);
+			BaseVariant = GameEngineBaseVariant.Create(variantManager);
 		}
 
-		internal static GameEngineCampaignVariant Create(Engine.EngineBuildHandle gameBuild)
+		internal static GameEngineCampaignVariant Create(GameEngineVariant variantManager)
 		{
-			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
-				return new GameEngineCampaignVariant(gameBuild);
-			else if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
-				return new GameEngineCampaignVariant(gameBuild);
-			else
-				throw new KSoft.Debug.UnreachableException(gameBuild.ToDisplayString());
+			Contract.Requires(variantManager != null);
+
+			var game_build = variantManager.GameBuild;
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+				return new GameEngineCampaignVariant(variantManager);
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+				return new GameEngineCampaignVariant(variantManager);
+
+			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
 		}
 
 		#region IBitStreamSerializable Members

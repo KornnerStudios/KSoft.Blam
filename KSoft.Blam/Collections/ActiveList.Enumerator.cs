@@ -5,10 +5,12 @@ namespace KSoft.Collections
 {
 	partial class ActiveList<T>
 	{
-		public struct ActiveItemsEnumerator : IEnumerator<T>, ICloneable
+		public struct ActiveItemsEnumerator
+			: IEnumerator<T>
+			, ICloneable
 		{
-			ActiveList<T> mList;
-			IEnumerator<int> mActiveIndicesEnumerator;
+			readonly ActiveList<T> mList;
+			readonly IEnumerator<int> mActiveIndicesEnumerator;
 
 			internal ActiveItemsEnumerator(ActiveList<T> list)
 			{

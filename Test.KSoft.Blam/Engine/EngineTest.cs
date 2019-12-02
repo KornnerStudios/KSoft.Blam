@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace KSoft.Blam.Engine.Test
 {
@@ -8,6 +6,25 @@ namespace KSoft.Blam.Engine.Test
 	public class EngineTest : BaseTestClass
 	{
 		[TestMethod]
+		[Description("Validate the expected bit sizes of handles used in KSoft.Blam")]
+		public void Engine_HandlesTest()
+		{
+			Assert.AreEqual(11, EngineBuildHandle.BitCount,
+				"Expected EngineBuildHandle bit count size has changed. Was this intentional?");
+			Assert.AreEqual(11+5, BlamEngineTargetHandle.BitCount,
+				"Expected BlamEngineTargetHandle bit count size has changed. Was this intentional?");
+
+			Assert.AreEqual(22, Localization.GameLanguageHandle.BitCount,
+				"Expected GameLanguageHandle bit count size has changed. Was this intentional?");
+
+			Assert.AreEqual(26, Megalo.Proto.MegaloScriptValueType.BitCount,
+				"Expected MegaloScriptValueType bit count size has changed. Was this intentional?");
+			Assert.AreEqual(19, Megalo.Model.MegaloScriptModelObjectHandle.BitCount,
+				"Expected MegaloScriptModelObjectHandle bit count size has changed. Was this intentional?");
+		}
+
+		[TestMethod]
+		[Description("Test the core engine registry for proper init and initial state")]
 		public void Engine_RegistryInitializeTest()
 		{
 			EngineRegistry.Initialize();
@@ -29,6 +46,7 @@ namespace KSoft.Blam.Engine.Test
 		}
 
 		[TestMethod]
+		[Description("Test that all systems are properly registered and initialized")]
 		public void Engine_RegistryRegisteredSystemsTest()
 		{
 			Assert.AreEqual(0

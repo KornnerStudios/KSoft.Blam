@@ -1,4 +1,9 @@
 ﻿using System;
+#if CONTRACTS_FULL_SHIM
+using Contract = System.Diagnostics.ContractsShim.Contract;
+#else
+using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
+#endif
 
 namespace KSoft.Blam.RuntimeData.Variants
 {
@@ -21,25 +26,26 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public short RespawnTime; // 0...60
 		public PlayerTraitsBase EditorTraits { get; private set; }
 
-		protected GameEngineSandboxVariant(Engine.EngineBuildHandle gameBuild)
+		protected GameEngineSandboxVariant(GameEngineVariant variantManager)
 		{
-			MegaloVariant = GameEngineMegaloVariant.Create(gameBuild);
+			MegaloVariant = GameEngineMegaloVariant.Create(variantManager);
 
 			EditorTraits = MegaloVariant.BaseVariant.NewPlayerTraits();
 		}
 
-		internal static GameEngineSandboxVariant Create(Engine.EngineBuildHandle gameBuild)
+		internal static GameEngineSandboxVariant Create(GameEngineVariant variantManager)
 		{
-#if false // #TODO_BLAM_REFACTOR
-			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
-				return new Games.HaloReach.RuntimeData.Variants.GameEngineSandboxVariantHaloReach();
-			else if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
-				return new Games.Halo4.RuntimeData.Variants.GameEngineSandboxVariantHalo4();
-			else
-#endif
-			{
-				throw new KSoft.Debug.UnreachableException(gameBuild.ToDisplayString());
-			}
+			Contract.Requires(variantManager != null);
+
+			var game_build = variantManager.GameBuild;
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+				return new Games.HaloReach.RuntimeData.Variants.GameEngineSandboxVariantHaloReach(variantManager);
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+				return new Games.Halo4.RuntimeData.Variants.GameEngineSandboxVariantHalo4(variantManager);
+
+			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
 		}
 
 		#region IBitStreamSerializable Members

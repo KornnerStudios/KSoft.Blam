@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace KSoft.Blam.RuntimeData.Variants
 {
 	using GameEngineTypeBitStreamer = IO.EnumBitStreamer<GameEngineType>;
@@ -14,50 +15,83 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public sealed class GameEngineVariant
-		: IO.IBitStreamSerializable
+		: IDisposable
+		, IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
-		public Engine.EngineBuildHandle GameBuild;
-		public GameEngineType Type = GameEngineType.None;
+		Engine.EngineBuildHandle mGameBuild;
+		GameEngineType mType = GameEngineType.None;
+
 		public IGameEngineVariant Variant { get; private set; }
+
+		public Engine.EngineBuildHandle GameBuild { get { return mGameBuild; } }
+		public GameEngineType Type { get { return mType; } }
+
+		#region EngineSystem references
+		Engine.EngineSystemReference<Localization.LanguageSystem> mLanguageSystemRef =
+			Engine.EngineSystemReference<Localization.LanguageSystem>.None;
+		Engine.EngineSystemReference<Megalo.Proto.MegaloProtoSystem> mMegaloProtoSystemRef =
+			Engine.EngineSystemReference<Megalo.Proto.MegaloProtoSystem>.None;
+
+		public Localization.LanguageSystem LanguageSystem { get { return mLanguageSystemRef; } }
+		public Megalo.Proto.MegaloProtoSystem MegaloProtoSystem { get { return mMegaloProtoSystemRef; } }
+
+		bool RequiresMegaloProtoSystem { get {
+			return Type == GameEngineType.Megalo || Type == GameEngineType.Sandbox;
+		} }
+		#endregion
 
 		public GameEngineVariant(Engine.EngineBuildHandle gameBuild)
 		{
-			GameBuild = gameBuild;
+			mGameBuild = gameBuild;
 		}
 		public GameEngineVariant(Engine.EngineBuildHandle gameBuild, GameEngineType type)
 		{
-			GameBuild = gameBuild;
-			Type = type;
+			mGameBuild = gameBuild;
+			mType = type;
 			InitializeVariant();
 		}
 
+		#region IDisposable Members
+		public void Dispose()
+		{
+			mLanguageSystemRef.Dispose();
+			mMegaloProtoSystemRef.Dispose();
+		}
+		#endregion
+
 		void InitializeVariant()
 		{
+			var engine = GameBuild.Engine;
+
+			mLanguageSystemRef = engine.GetSystem<Localization.LanguageSystem>(GameBuild);
+
+			if (RequiresMegaloProtoSystem)
+				mMegaloProtoSystemRef = engine.TryGetSystem<Megalo.Proto.MegaloProtoSystem>(GameBuild);
+
 			switch (Type)
 			{
-#if false // #TODO_BLAM_REFACTOR
 				case GameEngineType.None:
-					Variant = GameEngineBaseVariant.Create(GameBuild);
+					Variant = GameEngineBaseVariant.Create(this);
 					break;
 				case GameEngineType.Sandbox:
-					Variant = GameEngineSandboxVariant.Create(GameBuild);
+					Variant = GameEngineSandboxVariant.Create(this);
 					break;
 				case GameEngineType.Megalo:
-					Variant = GameEngineMegaloVariant.Create(GameBuild);
+					Variant = GameEngineMegaloVariant.Create(this);
 					break;
 				case GameEngineType.Campaign:
-					Variant = GameEngineCampaignVariant.Create(GameBuild);
+					Variant = GameEngineCampaignVariant.Create(this);
 					break;
 				case GameEngineType.Survival:
 					throw new NotImplementedException(Type.ToString());
-					//Variant = GameEngineSurvivalVariant.Create(GameBuild);
+					//Variant = GameEngineSurvivalVariant.Create(this);
 					//break;
 				case GameEngineType.Firefight:
 					throw new NotImplementedException(Type.ToString());
-					//Variant = GameEngineFirefightVariant.Create(GameBuild);
+					//Variant = GameEngineFirefightVariant.Create(this);
 					//break;
-#endif
+
 				default: throw new KSoft.Debug.UnreachableException(Type.ToString());
 			}
 		}
@@ -65,7 +99,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
 		{
-			s.Stream(ref Type, 4, GameEngineTypeBitStreamer.Instance);
+			s.Stream(ref mType, 4, GameEngineTypeBitStreamer.Instance);
 			if (s.IsReading)
 				InitializeVariant();
 
@@ -79,8 +113,8 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			Engine.EngineBuildHandle.Serialize(s, ref GameBuild);
-			s.StreamAttributeEnum("engineType", ref Type);
+			Engine.EngineBuildHandle.Serialize(s, ref mGameBuild);
+			s.StreamAttributeEnum("engineType", ref mType);
 			if (s.IsReading)
 				InitializeVariant();
 
@@ -91,12 +125,15 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 		public GameEngineMegaloVariant TryGetMegaloVariant()
 		{
+			if (!RequiresMegaloProtoSystem)
+				return null;
+
 			if (Variant is GameEngineMegaloVariant)
 				return (GameEngineMegaloVariant)Variant;
-#if false // #TODO_BLAM_REFACTOR
-			else if (Variant is GameEngineSandboxVariant)
+
+			if (Variant is GameEngineSandboxVariant)
 				return ((GameEngineSandboxVariant)Variant).MegaloVariant;
-#endif
+
 			return null;
 		}
 	};

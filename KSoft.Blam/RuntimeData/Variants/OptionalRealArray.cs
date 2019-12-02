@@ -35,7 +35,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 	{
 		readonly OptionalRealArrayInfo kInfo;
 		uint mValidFlags;
-		float[] mArray;
+		readonly float[] mArray;
 
 		public int Length { get { return mArray.Length; } }
 		public bool HasValues { get { return mValidFlags != 0; } }
@@ -135,7 +135,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 						s.ThrowReadException(new System.IO.InvalidDataException("Invalid name value: " + name));
 
 					mArray[name_index] = 0.0f;
-					if (s.ReadAttributeOpt(kEntryAttrValueName, ref mArray[name_index])) // HACK: IgnoreWritePredicates hack! didn't used to be Opt
+					if (s.ReadAttributeOpt(kEntryAttrValueName, ref mArray[name_index])) // #HACK: IgnoreWritePredicates hack! didn't used to be Opt
 						mValidFlags |= 1U << name_index;
 				}
 		}
@@ -148,14 +148,18 @@ namespace KSoft.Blam.RuntimeData.Variants
 			{
 				bool has_value = (mValidFlags & (uint)mask) != 0;
 				if (has_value)
+				{
 					using (s.EnterCursorBookmark(kEntryElementName))
 					{
 						s.WriteAttribute(kEntryAttrKeyName, names[x]);
 						s.WriteAttribute(kEntryAttrValueName, mArray[x].ToString("r")); // round-trip for full float value
 					}
-				else if (s.IgnoreWritePredicates) // HACK: IgnoreWritePredicates hack!
+				}
+				else if (s.IgnoreWritePredicates) // #HACK: IgnoreWritePredicates hack!
+				{
 					using (s.EnterCursorBookmark(kEntryElementName))
 						s.WriteAttribute(kEntryAttrKeyName, names[x]);
+				}
 			}
 		}
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)

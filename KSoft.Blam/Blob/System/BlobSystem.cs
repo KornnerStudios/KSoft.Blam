@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contract = System.Diagnostics.Contracts.Contract;
+#if CONTRACTS_FULL_SHIM
+using Contract = System.Diagnostics.ContractsShim.Contract;
+#else
+using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
+#endif
 
 namespace KSoft.Blam.Blob
 {
@@ -17,7 +21,7 @@ namespace KSoft.Blam.Blob
 		GroupTagDatumCollection mGroupTags;
 		public GroupTagDatumCollection GroupTags { get { return mGroupTags; } }
 
-		Dictionary<GroupTagDatum, BlobGroup> mGroups;
+		readonly Dictionary<GroupTagDatum, BlobGroup> mGroups;
 		public IReadOnlyDictionary<GroupTagDatum, BlobGroup> Groups { get { return mGroups; } }
 
 		internal BlobSystem()
@@ -77,13 +81,28 @@ namespace KSoft.Blam.Blob
 		#endregion
 
 		#region CreateObject
-		static BlobObject CreateObject(BlobSystem system, Engine.BlamEngineTargetHandle gameTarget,
+		BlobObject CreateObjectImpl(Engine.BlamEngineTargetHandle gameTarget,
 			BlobGroup blobGroup,
 			int version, int binarySize)
 		{
-			Contract.Requires(system != null);
+			BlobObject bobject;
+			switch(blobGroup.KnownAs)
+			{
+			case WellKnownBlob.ContentHeader:
+				bobject = new ContentHeaderBlob();
+				break;
 
-			return null;
+			case WellKnownBlob.GameVariant:
+				bobject = new GameEngineVariantBlob();
+				break;
+
+			default:
+				throw new KSoft.Debug.UnreachableException(blobGroup.GroupTag.Name);
+			}
+
+			bobject.Initialize(this, gameTarget, blobGroup, version);
+
+			return bobject;
 		}
 
 		public BlobObject CreateObject(Engine.BlamEngineTargetHandle gameTarget,
@@ -94,7 +113,7 @@ namespace KSoft.Blam.Blob
 			Contract.Requires(blobGroup != null);
 			Contract.Requires(version.IsNoneOrPositive());
 
-			return CreateObject(this, gameTarget, blobGroup, version, binarySize);
+			return CreateObjectImpl(gameTarget, blobGroup, version, binarySize);
 		}
 		#endregion
 

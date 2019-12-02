@@ -10,10 +10,10 @@ namespace KSoft.Blam.Blob
 		GroupTagDatum mGroupTag;
 		public GroupTagDatum GroupTag { get { return mGroupTag; } }
 
-		internal WellKnownBlob mKnownAs;
+		WellKnownBlob mKnownAs;
 		public WellKnownBlob KnownAs { get { return mKnownAs; } }
 
-		Dictionary<int, Engine.EngineBuildHandle> mVersionToBuildMap;
+		readonly Dictionary<int, Engine.EngineBuildHandle> mVersionToBuildMap;
 		public IReadOnlyDictionary<int, Engine.EngineBuildHandle> VersionToBuildMap { get { return mVersionToBuildMap; } }
 
 		public BlobGroup()
@@ -30,7 +30,7 @@ namespace KSoft.Blam.Blob
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttribute("id", ref versionId, NumeralBase.Decimal);
+			s.StreamAttribute("id", ref versionId);
 		}
 
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -45,7 +45,7 @@ namespace KSoft.Blam.Blob
 
 			using (s.EnterCursorBookmark("Versions"))
 			{
-				s.StreamElements("Version",
+				s.StreamElements("V",
 					mVersionToBuildMap, system.Engine.RootBuildHandle,
 					SerializeVersionToBuildMapKey,
 					Engine.EngineBuildHandle.SerializeWithBaseline);

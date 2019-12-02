@@ -41,7 +41,7 @@ namespace KSoft.Blam.RuntimeData
 		{
 			s.Stream(ref TimeStamp, isUnixTime: true);
 			s.Stream(ref Xuid);
-			s.Stream(ref Name, kNameEncoding); // TODO: do we need to do Name_NeedsDevHack here?
+			s.Stream(ref Name, kNameEncoding); // #REVIEW_BLAM: do we need to do Name_NeedsDevHack here?
 			s.Stream(ref IsOnlineId);
 			s.Pad24();
 		}

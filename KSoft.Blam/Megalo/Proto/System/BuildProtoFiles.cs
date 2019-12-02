@@ -1,9 +1,11 @@
 ﻿
-namespace KSoft.Blam.RuntimeData.Megalo.Proto
+namespace KSoft.Blam.Megalo.Proto
 {
 	internal struct BuildProtoFiles
 		: IO.ITagElementStringNameStreamable
 	{
+		public static BuildProtoFiles Empty { get { return new BuildProtoFiles(); } }
+
 		public string StaticDatabaseFile;
 		public string MegaloDatabaseFile;
 

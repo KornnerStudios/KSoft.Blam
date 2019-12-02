@@ -43,4 +43,8 @@
 			</Branch>
 		</Branches>
 	</Repository>
+
+	<Systems>
+		<System guid="EF39D343-DAD5-43D4-A215-F91722ED1CC5" externs="Halo3_Localization.xml" />
+	</Systems>
 </Engine>

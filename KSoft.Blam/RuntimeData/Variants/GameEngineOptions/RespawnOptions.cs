@@ -72,7 +72,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttributeOpt("respawn", ref RespawnTime/*, v=>v!=5*/); // HACK: default respawn times differ in Reach and H4, so leaving predicate out for now
+			s.StreamAttributeOpt("respawn", ref RespawnTime/*, v=>v!=5*/); // #HACK: default respawn times differ in Reach and H4, so leaving predicate out for now
 			s.StreamAttributeOpt("suicide", ref SuicideTime, v=>v!=5);
 			s.StreamAttributeOpt("betrayal", ref BetrayalTime, v=>v!=5);
 			s.StreamAttributeOpt("respawnGrowth", ref RespawnGrowthTime, Predicates.IsNotZero);

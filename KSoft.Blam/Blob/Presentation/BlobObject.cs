@@ -8,10 +8,25 @@ namespace KSoft.Blam.Blob
 		, IO.ITagElementStringNameStreamable
 	{
 		public BlobGroup SystemGroup { get; private set; }
+		public Engine.BlamEngineTargetHandle GameTarget { get; private set; }
 		public int Version { get; private set; }
 		public int BlobFlags { get; internal set; }
 
 		public abstract int CalculateFixedBinarySize(Engine.BlamEngineTargetHandle gameTarget);
+
+		#region internal Initialize
+		internal void Initialize(BlobSystem system, Engine.BlamEngineTargetHandle gameTarget,
+			BlobGroup blobGroup, int version)
+		{
+			SystemGroup = blobGroup;
+			GameTarget = gameTarget;
+			Version = version;
+			InitializeExplicitlyForGame(gameTarget);
+		}
+		protected virtual void InitializeExplicitlyForGame(Engine.BlamEngineTargetHandle gameTarget)
+		{
+		}
+		#endregion
 
 		#region IEndianStreamSerializable Members
 		public virtual void Serialize(IO.EndianStream s)

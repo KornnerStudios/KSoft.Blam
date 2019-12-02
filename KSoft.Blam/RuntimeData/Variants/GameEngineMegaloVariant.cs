@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+#if CONTRACTS_FULL_SHIM
+using Contract = System.Diagnostics.ContractsShim.Contract;
+#else
+using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
+#endif
 
 namespace KSoft.Blam.RuntimeData.Variants
 {
@@ -19,6 +24,8 @@ namespace KSoft.Blam.RuntimeData.Variants
 		: IGameEngineVariant
 	{
 		GameEngineType IGameEngineVariant.EngineType { get { return GameEngineType.Megalo; } }
+
+		public Engine.EngineBuildHandle BuildHandle { get { return BaseVariant.BuildHandle; } }
 
 		protected int mEncodingVersion;
 		public int EngineVersion;
@@ -48,8 +55,8 @@ namespace KSoft.Blam.RuntimeData.Variants
 		} }
 		#endregion
 
-//		public Megalo.Model.MegaloScriptModel EngineDefinition { get; private set; }
-//		public Megalo.Proto.MegaloScriptDatabase MegaloDatabase { get { return EngineDefinition.Database; } }
+		public Megalo.Model.MegaloScriptModel EngineDefinition { get; private set; }
+		public Megalo.Proto.MegaloScriptDatabase MegaloDatabase { get { return EngineDefinition.Database; } }
 
 		bool StringTableIsNotDefault { get {
 			return BaseNameStringIndex.IsNotNone() || StringTable.HasStrings;
@@ -59,21 +66,21 @@ namespace KSoft.Blam.RuntimeData.Variants
 			BaseNameStringIndex = TypeExtensions.kNone;
 			StringTable.Clear();
 		}
-#if false // #TODO_BLAM_REFACTOR
-		protected GameEngineMegaloVariant(EngineGame game,
+		protected GameEngineMegaloVariant(GameEngineVariant variantManager,
 			LocaleStringTableInfo stringTableInfo,
 			LocaleStringTableInfo nameStringInfo, LocaleStringTableInfo descriptionStringInfo,
 			LocaleStringTableInfo categoryStringInfo)
 		{
-			EngineDefinition = Megalo.Model.MegaloScriptModel.Create(game, this);
+			var build_handle = variantManager.GameBuild;
+			EngineDefinition = Megalo.Model.MegaloScriptModel.Create(variantManager, this);
 
 			PlayerTraits = new List<MegaloVariantPlayerTraitsBase>(MegaloDatabase.Limits.PlayerTraits.MaxCount);
 			UserDefinedOptions = new List<MegaloVariantUserDefinedOption>(MegaloDatabase.Limits.UserDefinedOptions.MaxCount);
-			StringTable = new LocaleStringTable(stringTableInfo);
+			StringTable = new LocaleStringTable(stringTableInfo, build_handle);
 			BaseNameStringIndex = TypeExtensions.kNone;
-			NameString = new LocaleStringTable(nameStringInfo);
-			DescriptionString = new LocaleStringTable(descriptionStringInfo);
-			CategoryString = new LocaleStringTable(categoryStringInfo);
+			NameString = new LocaleStringTable(nameStringInfo, build_handle);
+			DescriptionString = new LocaleStringTable(descriptionStringInfo, build_handle);
+			CategoryString = new LocaleStringTable(categoryStringInfo, build_handle);
 			EngineIconIndex = EngineCategory = TypeExtensions.kNone;
 			MapPermissions = new MegaloVariantMapPermissions();
 			PlayerRatingParameters = new MegaloVariantPlayerRatingParameters();
@@ -83,17 +90,20 @@ namespace KSoft.Blam.RuntimeData.Variants
 			DisabledUserOptions = new Collections.BitSet(MegaloDatabase.Limits.UserDefinedOptions.MaxCount, fixedLength: true);
 			HiddenUserOptions = new Collections.BitSet(MegaloDatabase.Limits.UserDefinedOptions.MaxCount, fixedLength: true);
 		}
-#endif
-		internal static GameEngineMegaloVariant Create(Engine.EngineBuildHandle gameBuild)
+
+		internal static GameEngineMegaloVariant Create(GameEngineVariant variantManager)
 		{
-#if false // #TODO_BLAM_REFACTOR
-			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
-				return new Games.HaloReach.RuntimeData.Variants.GameEngineMegaloVariantHaloReach();
-			else if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
-				return new Games.Halo4.RuntimeData.Variants.GameEngineMegaloVariantHalo4();
-			else
-#endif
-			throw new KSoft.Debug.UnreachableException(gameBuild.ToDisplayString());
+			Contract.Requires(variantManager != null);
+
+			var game_build = variantManager.GameBuild;
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+				return new Games.HaloReach.RuntimeData.Variants.GameEngineMegaloVariantHaloReach(variantManager);
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+				return new Games.Halo4.RuntimeData.Variants.GameEngineMegaloVariantHalo4(variantManager);
+
+			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
 		}
 
 		public virtual void ClearWeaponTunings() { }
@@ -101,7 +111,6 @@ namespace KSoft.Blam.RuntimeData.Variants
 		protected abstract bool VerifyEncodingVersion();
 
 		#region IBitStreamSerializable Members
-#if false // #TODO_BLAM_REFACTOR
 		internal void StreamStringTableIndexPointer(IO.BitStream s,		ref int stringIndex)
 		{ s.StreamNoneable(ref stringIndex,	EngineDefinition.Database.Limits.VariantStrings.IndexBitLength); }
 		internal void StreamStringTableIndexReference(IO.BitStream s,	ref int stringIndex)
@@ -110,16 +119,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		{ s.Stream(ref count,				EngineDefinition.Database.Limits.UserDefinedOptionValues.CountBitLength); }
 		internal void StreamUserDefinedValueIndex(IO.BitStream s,		ref int valueIndex)
 		{ s.Stream(ref valueIndex,			EngineDefinition.Database.Limits.UserDefinedOptionValues.IndexBitLength); }
-#else
-		internal void StreamStringTableIndexPointer(IO.BitStream s,		ref int stringIndex)
-		{  }
-		internal void StreamStringTableIndexReference(IO.BitStream s,	ref int stringIndex)
-		{  }
-		internal void StreamUserDefinedValuesCount(IO.BitStream s,		ref int count)
-		{  }
-		internal void StreamUserDefinedValueIndex(IO.BitStream s,		ref int valueIndex)
-		{  }
-#endif
+
 		protected void SerializeOptionToggles(IO.BitStream s)
 		{
 			DisabledEngineOptions.SerializeWords(s, Shell.EndianFormat.Little);
@@ -137,7 +137,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 				s.Stream(ref mEncodingVersion);
 				if (s.IsReading && !VerifyEncodingVersion())
 					throw new IO.VersionMismatchException("Megalo encoding", (uint)mEncodingVersion);
-#if false // #TODO_BLAM_REFACTOR
+
 				s.Stream(ref EngineVersion);				// global, not a c_game_engine_megalo_variant member
 				s.StreamObject(BaseVariant);
 				s.StreamElements(PlayerTraits,
@@ -148,14 +148,14 @@ namespace KSoft.Blam.RuntimeData.Variants
 				s.StreamObject(StringTable);
 				StreamStringTableIndexPointer(s, ref BaseNameStringIndex);
 				SerializeDescriptionLocaleStrings(s);
-				s.StreamEnum(ref EngineIconIndex,
+				s.StreamNoneable(ref EngineIconIndex,
 					MegaloDatabase.Limits.EngineCategories.IndexBitLength);
-				s.StreamEnum(ref EngineCategory,
+				s.StreamNoneable(ref EngineCategory,
 					MegaloDatabase.Limits.EngineCategories.IndexBitLength);
 				s.StreamObject(MapPermissions);
 				s.StreamObject(PlayerRatingParameters);
 				s.Stream(ref ScoreToWinRound);
-#endif
+
 				SerializeImpl(s);
 			}
 		}
@@ -223,7 +223,6 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-#if false // #TODO_BLAM_REFACTOR
 			if (!variant.TagElementStreamSerializeFlags.UseUserOptionNames())
 				s.StreamCursor(ref bitIndex);
 			else if (s.IsReading)
@@ -239,7 +238,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 					Megalo.Proto.MegaloScriptValueIndexTarget.Option, bitIndex);
 				s.WriteCursor(option_name);
 			}
-#endif
+
 			return bitIndex;
 		}
 		void SerializeOptionToggles<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -329,7 +328,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 				using (s.EnterCursorBookmark("Megalo"))
 					SerializeImpl(s);
 
-				if (s.IsWriting && s.IgnoreWritePredicates) // HACK: IgnoreWritePredicates hack!
+				if (s.IsWriting && s.IgnoreWritePredicates) // #HACK: IgnoreWritePredicates hack!
 				{
 					Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine();
@@ -337,10 +336,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 					Console.ResetColor();
 					return;
 				}
-#if false // #TODO_BLAM_REFACTOR
+
 				using (s.EnterCursorBookmark("MegaloScript"))
 					s.StreamObject(EngineDefinition);
-#endif
 			}
 		}
 		#endregion

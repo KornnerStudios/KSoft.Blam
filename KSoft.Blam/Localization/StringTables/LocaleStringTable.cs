@@ -19,16 +19,18 @@ namespace KSoft.Blam.Localization.StringTables
 				implicitNull:false, addressSize:Shell.ProcessorSize.x32);
 
 		internal LocaleStringTableInfo kInfo;
-		List<LocaleStringTableReference> mStringReferences;
+		readonly GameLanguageTable mEngineLanguageTable;
+		readonly List<LocaleStringTableReference> mStringReferences;
 
 		public int Count { get { return mStringReferences.Count; } }
 		public int Capacity { get { return kInfo.MaxCount; } }
 		internal bool HasStrings { get { return mStringReferences.Count > 0; } }
 
-		internal LocaleStringTable(LocaleStringTableInfo info)
+		internal LocaleStringTable(LocaleStringTableInfo info, Engine.EngineBuildHandle buildHandle)
 		{
 			kInfo = info;
 			mStringReferences = new List<LocaleStringTableReference>();
+			mEngineLanguageTable = LanguageSystem.GetGameLanguageTable(buildHandle);
 		}
 
 		public LocaleStringTableReference this[int index] { get {
@@ -85,18 +87,18 @@ namespace KSoft.Blam.Localization.StringTables
 
 			if (stringData.Buffer.Length > kInfo.BufferMaxSize)
 				throw new InvalidOperationException("Exceeded string table buffer size by (bytes): " +
-					(stringData.Buffer.Length - kInfo.BufferMaxSize).ToString());
+					(stringData.Buffer.Length - kInfo.BufferMaxSize));
 		}
 
 		void ReferencesRead(IO.BitStream s, int count)
 		{
 			if (count > Capacity)
 				throw new System.IO.InvalidDataException("String table reference count exceeded max by: " +
-					(count - Capacity).ToString());
+					(count - Capacity));
 
 			for (uint x = 0; x < count; x++)
 			{
-				var sr = new LocaleStringTableReference(kInfo.EngineLanguageTable);
+				var sr = new LocaleStringTableReference(mEngineLanguageTable);
 				sr.Serialize(s, kInfo.BufferOffsetBitLength);
 				mStringReferences.Add(sr);
 			}
@@ -145,14 +147,15 @@ namespace KSoft.Blam.Localization.StringTables
 		#region ITagElementStringNameStreamable Members
 		Exception SerializePostprocessCodeNames()
 		{
-			var names_set = new System.Collections.Generic.HashSet<string>();
+			var names_set = new HashSet<string>();
 			for (int x = 0; x < mStringReferences.Count; x++)
 			{
 				var sref = this[x];
 				if (string.IsNullOrWhiteSpace(sref.CodeName))
 					return new System.IO.InvalidDataException(string.Format("Multilingual string #{0} has an invalid name",
 						x));
-				else if (names_set.Add(sref.CodeName)==false)
+
+				if (names_set.Add(sref.CodeName)==false)
 					return new System.IO.InvalidDataException(string.Format("Multilingual string #{0} has a name already in use",
 						x));
 			}
@@ -166,7 +169,7 @@ namespace KSoft.Blam.Localization.StringTables
 			using (s.EnterOwnerBookmark(this))
 			{
 				s.StreamableElements("String", mStringReferences,
-					kInfo, _info => new LocaleStringTableReference(_info.EngineLanguageTable));
+					this, _me => new LocaleStringTableReference(_me.mEngineLanguageTable));
 			}
 
 			if (Count > Capacity)
@@ -202,7 +205,7 @@ namespace KSoft.Blam.Localization.StringTables
 			using (s.EnterOwnerBookmark(this))
 			using (s.EnterCursorBookmark(stringName))
 			{
-				var sref = new LocaleStringTableReference(kInfo.EngineLanguageTable);
+				var sref = new LocaleStringTableReference(mEngineLanguageTable);
 				sref.Serialize(s);
 
 				return AddImpl(sref);

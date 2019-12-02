@@ -10,6 +10,8 @@ using Interop = System.Runtime.InteropServices;
 
 namespace KSoft.Blam.Engine
 {
+	using BitFieldTraits = Bitwise.BitFieldTraits;
+
 	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
 	[System.Diagnostics.DebuggerDisplay("Engine# = {EngineIndex}, Branch# = {BranchIndex}, Rev# = {RevisionIndex}")]
 	public struct EngineBuildHandle
@@ -22,24 +24,21 @@ namespace KSoft.Blam.Engine
 		// which, being a value type cctor, may not run when we want it
 		static class Constants
 		{
-			public static readonly int kRevisionShift =
-				0;
+			public static readonly BitFieldTraits kRevisionBitField =
+				new BitFieldTraits(EngineBuildRevision.kIndexBitCount);
+			public static readonly BitFieldTraits kBranchBitField =
+				new BitFieldTraits(EngineBuildBranch.kIndexBitCount, kRevisionBitField);
+			public static readonly BitFieldTraits kEngineBitField =
+				new BitFieldTraits(BlamEngine.kIndexBitCount, kBranchBitField);
 
-			public static readonly int kBranchShift =
-				kRevisionShift + EngineBuildRevision.kIndexBitCount;
-
-			public static readonly int kEngineShift =
-				kBranchShift + EngineBuildBranch.kIndexBitCount;
-
-			public static readonly int kBitCount =
-				kEngineShift + BlamEngine.kIndexBitCount;
-			public static readonly uint kBitmask = Bits.BitCountToMask32(kBitCount);
+			public static readonly BitFieldTraits kLastBitField =
+				kEngineBitField;
 		};
 
 		/// <summary>Number of bits required to represent a bit-encoded representation of this value type</summary>
 		/// <remarks>11 bits at last count</remarks>
-		public static int BitCount { get { return Constants.kBitCount; } }
-		public static uint Bitmask { get { return Constants.kBitmask; } }
+		public static int BitCount { get { return Constants.kLastBitField.FieldsBitCount; } }
+		public static uint Bitmask { get { return Constants.kLastBitField.FieldsBitmask.u32; } }
 
 		public static readonly EngineBuildHandle None = new EngineBuildHandle();
 		#endregion
@@ -68,10 +67,10 @@ namespace KSoft.Blam.Engine
 		{
 			InitializeHandle(out mHandle, engineIndex, branchIndex, revisionIndex);
 		}
-		internal EngineBuildHandle(uint handle, int startBitIndex)
+		internal EngineBuildHandle(uint handle, BitFieldTraits buildField)
 		{
-			handle >>= startBitIndex;
-			handle &= Constants.kBitmask;
+			handle >>= buildField.BitIndex;
+			handle &= Bitmask;
 
 			mHandle = handle;
 		}
@@ -90,15 +89,15 @@ namespace KSoft.Blam.Engine
 		#region Value properties
 		[Contracts.Pure]
 		public int EngineIndex { get {
-			return BlamEngine.BitDecodeIndex(mHandle, Constants.kEngineShift);
+			return BlamEngine.BitDecodeIndex(mHandle, Constants.kEngineBitField.BitIndex);
 		} }
 		[Contracts.Pure]
 		public int BranchIndex { get {
-			return EngineBuildBranch.BitDecodeIndex(mHandle, Constants.kBranchShift);
+			return EngineBuildBranch.BitDecodeIndex(mHandle, Constants.kBranchBitField.BitIndex);
 		} }
 		[Contracts.Pure]
 		public int RevisionIndex { get {
-			return EngineBuildRevision.BitDecodeIndex(mHandle, Constants.kRevisionShift);
+			return EngineBuildRevision.BitDecodeIndex(mHandle, Constants.kRevisionBitField.BitIndex);
 		} }
 
 		[Contracts.Pure]
@@ -191,7 +190,7 @@ namespace KSoft.Blam.Engine
 			if (engine_index.IsNotNone())
 			{
 				var engine = EngineRegistry.Engines[engine_index];
-				sb.Append(engine.ToString());
+				sb.Append(engine);
 
 				#region Branch
 				if (branch_index.IsNotNone())
@@ -199,7 +198,7 @@ namespace KSoft.Blam.Engine
 					var branch = engine.BuildRepository.Branches[branch_index];
 					// only include the branch display name if it isn't the same as the engine's
 					if (branch.ToString() != engine.ToString())
-						sb.AppendFormat(".{0}", branch.ToString());
+						sb.AppendFormat(".{0}", branch);
 
 					#region Revision
 					if (revisn_index.IsNotNone())
@@ -313,6 +312,13 @@ namespace KSoft.Blam.Engine
 		}
 		#endregion
 
+		#region Operators
+		[Contracts.Pure]
+		public static bool operator ==(EngineBuildHandle lhs, EngineBuildHandle rhs)	{ return lhs.Handle == rhs.Handle; }
+		[Contracts.Pure]
+		public static bool operator !=(EngineBuildHandle lhs, EngineBuildHandle rhs)	{ return lhs.Handle != rhs.Handle; }
+		#endregion
+
 
 		#region Util
 		static int StaticCompare(EngineBuildHandle lhs, EngineBuildHandle rhs)
@@ -374,6 +380,67 @@ namespace KSoft.Blam.Engine
 			engine = new EngineBuildHandle(engine_index, TypeExtensions.kNone, TypeExtensions.kNone);
 
 			return true;
+		}
+
+		/// <summary>Looks up a value associated with a given build</summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="dic"></param>
+		/// <param name="forBuild"></param>
+		/// <param name="value"></param>
+		/// <param name="actualBuild">The build handle which is actually associated with the value, or NONE</param>
+		/// <returns></returns>
+		/// <remarks>
+		/// Tries to use <paramref name="forBuild"/>'s absolute value first in the lookup. If that fails,
+		/// it then looks up by <see cref="Branch"/>, and then by <see cref="Engine"/>.
+		/// <paramref name="actualBuild"/> will then have the handle for whichever looks up successfully.
+		/// 
+		/// Will safely handle <see cref="IsNone"/> handles.
+		/// </remarks>
+		public bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic, EngineBuildHandle forBuild,
+			ref T value, out EngineBuildHandle actualBuild)
+		{
+			actualBuild = forBuild;
+
+			if (forBuild.IsNone)
+				return false;
+
+			if (dic.TryGetValue(forBuild, out value))
+				return true;
+
+			EngineBuildHandle engine, branch;
+			forBuild.ExtractHandles(out engine, out branch);
+
+			if (dic.TryGetValue(branch, out value))
+			{
+				actualBuild = branch;
+				return true;
+			}
+
+			if (dic.TryGetValue(engine, out value))
+			{
+				actualBuild = engine;
+				return true;
+			}
+
+			actualBuild = EngineBuildHandle.None;
+			return false;
+		}
+		public bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic, EngineBuildHandle forBuild,
+			ref T value)
+		{
+			EngineBuildHandle actual_build;
+			return TryGetValue(dic, forBuild, ref value, out actual_build);
+		}
+
+		public bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic,
+			ref T value, out EngineBuildHandle actualBuild)
+		{
+			return TryGetValue(dic, this, ref value, out actualBuild);
+		}
+		public bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic,
+			ref T value)
+		{
+			return TryGetValue(dic, this, ref value);
 		}
 		#endregion
 

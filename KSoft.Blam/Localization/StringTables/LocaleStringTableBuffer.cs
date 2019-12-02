@@ -5,7 +5,7 @@ namespace KSoft.Blam.Localization.StringTables
 	internal class LocaleStringTableBuffer
 		: IO.IBitStreamSerializable
 	{
-		LocaleStringTable mOwner;
+		readonly LocaleStringTable mOwner;
 		public byte[] Buffer;
 
 		public LocaleStringTableBuffer(LocaleStringTable owner)

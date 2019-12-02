@@ -53,7 +53,7 @@ namespace KSoft.Blam.Localization
 
 			if (name != kNoneName)
 			{
-				id = LanguageNames.FindIndex(x => name.Equals(x));
+				id = LanguageNames.FindIndex(name.Equals);
 
 				if (id.IsNone())
 					throw new KeyNotFoundException(string.Format("No language is registered with the name '{0}'",
@@ -64,7 +64,7 @@ namespace KSoft.Blam.Localization
 		}
 		static readonly Func<object, string, int> LanguageIdResolverSansKeyNotFoundException =
 			(_null, name) => name != kNoneName
-				? LanguageNames.FindIndex(x => name.Equals(x))
+				? LanguageNames.FindIndex(name.Equals)
 				: TypeExtensions.kNone;
 		static readonly Func<object, int, string> LanguageNameResolver =
 			(_null, id) => id.IsNotNone()

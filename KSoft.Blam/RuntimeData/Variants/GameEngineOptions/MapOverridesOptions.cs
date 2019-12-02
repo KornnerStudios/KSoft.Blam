@@ -16,7 +16,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		IndestructibleVehiclesEnabled = 1<<5,
 	};
 	[System.Reflection.Obfuscation(Exclude=false)]
-	public abstract class GameOptionsMapOverrides : IO.IBitStreamSerializable, IO.ITagElementStringNameStreamable
+	public abstract class GameOptionsMapOverrides
+		: IO.IBitStreamSerializable
+		, IO.ITagElementStringNameStreamable
 	{
 		public GameOptionsMapOverridesFlags Flags;
 		public PlayerTraitsBase BaseTraits { get; private set; }

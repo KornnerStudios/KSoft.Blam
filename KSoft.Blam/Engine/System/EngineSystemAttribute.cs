@@ -14,7 +14,8 @@ namespace KSoft.Blam.Engine
 
 	/// <summary>Annotates a type as being an interface for</summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=false)]
-	public sealed class EngineSystemAttribute : Attribute
+	public sealed class EngineSystemAttribute
+		: Attribute
 	{
 		#region SystemGuid util
 		const string kSystemGuidPropertyName = "SystemGuid";
@@ -102,13 +103,18 @@ namespace KSoft.Blam.Engine
 		} }
 
 		/// <summary>Create a new instance of the system. Only call me if you are <see cref="BlamEngine"/>!</summary>
-		/// <typeparam name="T"><see cref="EngineSystemBase"/> type</typeparam>
+		/// <param name="prototype"></param>
 		/// <returns></returns>
-		internal EngineSystemBase NewInstance()
+		internal EngineSystemBase NewInstance(BlamEngineSystem prototype)
 		{
+			Contract.Requires(prototype != null);
 			Contract.Assert(mFactoryMethod != null, "Rerun engine unit tests");
 
-			return mFactoryMethod();
+			var system = mFactoryMethod();
+			Contract.Assert(system != null);
+
+			system.InitializeForNewInstance(prototype);
+			return system;
 		}
 
 		#region InitializeForNewProgram

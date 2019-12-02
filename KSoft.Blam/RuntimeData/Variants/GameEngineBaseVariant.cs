@@ -1,4 +1,9 @@
 ﻿using System;
+#if CONTRACTS_FULL_SHIM
+using Contract = System.Diagnostics.ContractsShim.Contract;
+#else
+using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
+#endif
 
 namespace KSoft.Blam.RuntimeData.Variants
 {
@@ -15,9 +20,12 @@ namespace KSoft.Blam.RuntimeData.Variants
 		Unknown1 = 1<<1, // Halo4
 	};
 	[System.Reflection.Obfuscation(Exclude=false)]
-	public abstract partial class GameEngineBaseVariant : IGameEngineVariant
+	public abstract partial class GameEngineBaseVariant
+		: IGameEngineVariant
 	{
 		public GameEngineBaseVariantFlags Flags;
+
+		public Engine.EngineBuildHandle BuildHandle { get; private set; }
 
 		public ContentHeader Header { get; private set; }
 
@@ -31,25 +39,27 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public GameOptionsTeamOptions TeamOptions { get; protected set; }
 		public GameOptionsLoadouts LoadoutOptions { get; protected set; }
 
-		protected GameEngineBaseVariant(Engine.EngineBuildHandle gameBuild)
+		protected GameEngineBaseVariant(GameEngineVariant variantManager)
 		{
-			Header = ContentHeader.Create(gameBuild);
+			BuildHandle = variantManager.GameBuild;
+			Header = ContentHeader.Create(BuildHandle);
 
 			OptionsSocial = new GameOptionsSocial();
 		}
 
-		internal static GameEngineBaseVariant Create(Engine.EngineBuildHandle gameBuild)
+		internal static GameEngineBaseVariant Create(GameEngineVariant variantManager)
 		{
-#if false // #TODO_BLAM_REFACTOR
-			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
-				return new Games.HaloReach.RuntimeData.Variants.GameEngineBaseVariantHaloReach();
-			else if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
-				return new Games.Halo4.RuntimeData.Variants.GameEngineBaseVariantHalo4();
-			else
-#endif
-			{
-				throw new KSoft.Debug.UnreachableException(gameBuild.ToDisplayString());
-			}
+			Contract.Requires(variantManager != null);
+
+			var game_build = variantManager.GameBuild;
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+				return new Games.HaloReach.RuntimeData.Variants.GameEngineBaseVariantHaloReach(variantManager);
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+				return new Games.Halo4.RuntimeData.Variants.GameEngineBaseVariantHalo4(variantManager);
+
+			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
 		}
 
 		#region IBitStreamSerializable Members

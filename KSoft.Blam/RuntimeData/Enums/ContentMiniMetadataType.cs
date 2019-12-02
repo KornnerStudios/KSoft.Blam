@@ -38,7 +38,7 @@ namespace KSoft.Blam
 	partial class TypeExtensionsBlam
 	{
 		[Contracts.Pure]
-		internal static string ToEncodingPrefix(this RuntimeData.ContentMiniMetadataType type)
+		internal static string ToEncodingPrefix(this ContentMiniMetadataType type)
 		{
 			switch (type)
 			{
@@ -56,7 +56,7 @@ namespace KSoft.Blam
 			}
 		}
 		[Contracts.Pure]
-		internal static bool IsValid(this RuntimeData.ContentMiniMetadataType type)
+		internal static bool IsValid(this ContentMiniMetadataType type)
 		{
 			switch (type)
 			{
@@ -75,7 +75,7 @@ namespace KSoft.Blam
 			}
 		}
 		[Contracts.Pure]
-		internal static string ToFileExtension(this RuntimeData.ContentMiniMetadataType type)
+		internal static string ToFileExtension(this ContentMiniMetadataType type)
 		{
 			switch (type)
 			{
@@ -90,7 +90,7 @@ namespace KSoft.Blam
 			}
 		}
 		[Contracts.Pure]
-		internal static string ToFileNameAndExtension(this RuntimeData.ContentMiniMetadataType type)
+		internal static string ToFileNameAndExtension(this ContentMiniMetadataType type)
 		{
 			switch (type)
 			{

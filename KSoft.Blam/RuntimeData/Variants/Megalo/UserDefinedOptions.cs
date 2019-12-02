@@ -14,10 +14,12 @@ namespace KSoft.Blam.RuntimeData.Variants
 			if (UserDefinedOptions.Count == UserDefinedOptions.Capacity)
 				return TypeExtensions.kNone;
 
-			var option = new MegaloVariantUserDefinedOption();
-			option.CodeName = codeName;
-			option.NameStringIndex = nameStringIndex;
-			option.DescriptionStringIndex = descStringIndex;
+			var option = new MegaloVariantUserDefinedOption()
+			{
+				CodeName = codeName,
+				NameStringIndex = nameStringIndex,
+				DescriptionStringIndex = descStringIndex,
+			};
 
 			UserDefinedOptions.Add(option);
 			return UserDefinedOptions.Count - 1;
@@ -29,9 +31,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 	{
 		public static readonly MegaloVariantUserDefinedOptionValueParams Null = new MegaloVariantUserDefinedOptionValueParams()
 		{
-			NameStringIndex=-1,
-			DescriptionStringIndex=-1,
-			Value=-1
+			NameStringIndex=TypeExtensions.kNone,
+			DescriptionStringIndex=TypeExtensions.kNone,
+			Value=TypeExtensions.kNone,
 		};
 
 		public int NameStringIndex;

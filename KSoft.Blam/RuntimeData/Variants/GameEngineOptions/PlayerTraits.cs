@@ -33,23 +33,28 @@ namespace KSoft.Blam.RuntimeData.Variants
 	};
 
 	[System.Reflection.Obfuscation(Exclude=false)]
-	public abstract class PlayerTraitsDamageBase : PlayerTraitsDataBase
+	public abstract class PlayerTraitsDamageBase
+		: PlayerTraitsDataBase
 	{
 	};
 	[System.Reflection.Obfuscation(Exclude=false)]
-	public abstract class PlayerTraitsWeaponsBase : PlayerTraitsDataBase
+	public abstract class PlayerTraitsWeaponsBase
+		: PlayerTraitsDataBase
 	{
 	};
 	[System.Reflection.Obfuscation(Exclude=false)]
-	public abstract class PlayerTraitsMovementBase : PlayerTraitsDataBase
+	public abstract class PlayerTraitsMovementBase
+		: PlayerTraitsDataBase
 	{
 	};
 	[System.Reflection.Obfuscation(Exclude=false)]
-	public abstract class PlayerTraitsAppearanceBase : PlayerTraitsDataBase
+	public abstract class PlayerTraitsAppearanceBase
+		: PlayerTraitsDataBase
 	{
 	};
 	[System.Reflection.Obfuscation(Exclude=false)]
-	public abstract class PlayerTraitsSensorsBase : PlayerTraitsDataBase
+	public abstract class PlayerTraitsSensorsBase
+		: PlayerTraitsDataBase
 	{
 	};
 

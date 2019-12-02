@@ -10,7 +10,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 namespace KSoft.Blam.Engine
 {
 	/// <summary>The system root for a registered engine in <see cref="EngineRegistry"/></summary>
-	public sealed class BlamEngine
+	public sealed partial class BlamEngine
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Constants
@@ -31,20 +31,21 @@ namespace KSoft.Blam.Engine
 		public string Name { get; private set; }
 
 		/// <summary>The community-determined generation this engine was introduced</summary>
+		// ReSharper disable once UnusedAutoPropertyAccessor.Local - written to via reflection in SerializePrototype
 		public EngineGeneration Generation { get; private set; }
 
 		/// <summary>The data store which has all the know builds based on this general engine</summary>
 		public EngineBuildRepository BuildRepository { get; private set; }
 
-		Dictionary<Values.KGuid, string> mDeclaredSystems;
+		readonly Dictionary<Values.KGuid, BlamEngineSystem> mSystemPrototypes; 
 
 		public BlamEngine()
 		{
-			Name =
+			Name = 
 				"";
 
 			BuildRepository = new EngineBuildRepository();
-			mDeclaredSystems = new Dictionary<Values.KGuid, string>();
+			mSystemPrototypes = new Dictionary<Values.KGuid, BlamEngineSystem>();
 		}
 
 		public override string ToString()
@@ -59,16 +60,35 @@ namespace KSoft.Blam.Engine
 		{
 			Contract.Requires<ArgumentNullException>(systemGuid != Values.KGuid.Empty);
 
-			string system_file;
-			return mDeclaredSystems.TryGetValue(systemGuid, out system_file);
+			BlamEngineSystem proto_system;
+			return mSystemPrototypes.TryGetValue(systemGuid, out proto_system);
+		}
+
+		/// <summary>Only call me if you are <see cref="EngineSystemBase.RemoveReferenceAsync"/></summary>
+		/// <param name="activeSystem">The system which no longer has any active references</param>
+		internal void CloseSystem(EngineSystemBase activeSystem)
+		{
+			Contract.Assume(activeSystem != null);
+
+			var system_guid = activeSystem.Prototype.SystemMetadata.Guid;
+			lock (mActiveSystems)
+			{
+				Contract.Assume(mActiveSystems.ContainsKey(system_guid));
+				mActiveSystems.Remove(system_guid);
+			}
 		}
 
 		EngineSystemBase GetNewOrExistingSystem(EngineSystemAttribute systemMetadata)
 		{
+			// All we care about doing here is getting or constructing a new system.
+			// Referencing counting and the like is handled elsewhere (hopefully only in EngineSystemReference)
+
+			var proto_system = mSystemPrototypes[systemMetadata.Guid];
+
 			EngineSystemBase system;
-			if (!mActiveSystems.TryGetValue(systemMetadata.Guid, out system))
+			lock (mActiveSystems) if (!mActiveSystems.TryGetValue(systemMetadata.Guid, out system))
 			{
-				system = systemMetadata.NewInstance();
+				system = systemMetadata.NewInstance(proto_system);
 				mActiveSystems.Add(systemMetadata.Guid, system);
 			}
 
@@ -134,71 +154,6 @@ namespace KSoft.Blam.Engine
 			where T : EngineSystemBase
 		{
 			return TryGetSystem<T>(RootBuildHandle);
-		}
-		#endregion
-
-		#region ITagElementStreamable<string> Members
-		static void StreamDeclaredSystemsKey<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
-			BlamEngine engine,
-			ref Values.KGuid systemGuid)
-			where TDoc : class
-			where TCursor : class
-		{
-			s.StreamAttribute("guid", ref systemGuid);
-
-			if (s.IsReading)
-			{
-				string invalid_guid_msg = null;
-
-				if (systemGuid == Values.KGuid.Empty)
-					invalid_guid_msg = "Invalid system guid";
-				else if (EngineRegistry.TryGetRegisteredSystem(systemGuid) == null)
-					invalid_guid_msg = "Unknown system guid";
-
-				if (invalid_guid_msg != null)
-					s.ThrowReadException(new System.IO.InvalidDataException(invalid_guid_msg));
-			}
-		}
-		static void StreamDeclaredSystemsValue<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
-			BlamEngine engine,
-			ref string externsFile)
-			where TDoc : class
-			where TCursor : class
-		{
-			s.StreamAttributeOpt("externs", ref externsFile, Predicates.IsNotNullOrEmpty);
-		}
-
-		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
-			where TDoc : class
-			where TCursor : class
-		{
-			Contract.Assert(s.Owner == null);
-			s.Owner = this;
-
-			using (s.EnterUserDataBookmark(this))
-			{
-				BuildRepository.Serialize(s);
-			}
-
-			using (var bm = s.EnterCursorBookmarkOpt("Systems", mDeclaredSystems, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamElements("System", mDeclaredSystems, this,
-					StreamDeclaredSystemsKey, StreamDeclaredSystemsValue,
-					_ctxt => null);
-
-			if (s.IsReading)
-			{
-				if (mDeclaredSystems.Count > 0)
-					mActiveSystems = new Dictionary<Values.KGuid, EngineSystemBase>(mDeclaredSystems.Count);
-			}
-		}
-
-		internal static void SerializePrototype<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
-			object _context, ref BlamEngine engine)
-			where TDoc : class
-			where TCursor : class
-		{
-			s.StreamAttributeEnum("generation", engine, obj => obj.Generation);
-			s.StreamAttribute("name", engine, obj => obj.Name);
 		}
 		#endregion
 
@@ -273,30 +228,6 @@ namespace KSoft.Blam.Engine
 			(_null, id) => id.IsNotNone()
 				? EngineRegistry.Engines[id].Name
 				: null;
-
-		internal static bool SerializeId<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
-			string attributeName, ref int engineId, bool isOptional = false)
-			where TDoc : class
-			where TCursor : class
-		{
-			bool streamed = true;
-
-			if (isOptional)
-			{
-				streamed = s.StreamAttributeOptIdAsString(attributeName, ref engineId, null,
-					EngineIdResolver, EngineNameResolver, Predicates.IsNotNullOrEmpty);
-
-				if (!streamed && s.IsReading)
-					engineId = TypeExtensions.kNone;
-			}
-			else
-			{
-				s.StreamAttributeIdAsString(attributeName, ref engineId, null,
-					EngineIdResolver, EngineNameResolver);
-			}
-
-			return streamed;
-		}
 		#endregion
 	};
 }

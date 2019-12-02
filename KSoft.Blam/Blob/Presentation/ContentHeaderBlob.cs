@@ -6,13 +6,14 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Blam.Blob
 {
-	public sealed class ContentHeaderBlob : BlobObject
+	public sealed class ContentHeaderBlob
+		: BlobObject
 	{
 		public const int kSizeOf = 0x2C0 - Blob.Transport.BlobChunkHeader.kSizeOf;
 
 		ushort mBuildNumber;
 		ushort mFlags;
-		//public ContentHeader Data { get; private set; }
+		public RuntimeData.ContentHeader Data { get; private set; }
 
 		internal ContentHeaderBlob()
 		{
@@ -24,13 +25,20 @@ namespace KSoft.Blam.Blob
 			return kSizeOf;
 		}
 
+		protected override void InitializeExplicitlyForGame(Engine.BlamEngineTargetHandle gameTarget)
+		{
+			Data = RuntimeData.ContentHeader.Create(gameTarget.Build);
+
+			Contract.Assert(gameTarget.Build.RevisionIndex.IsNotNone());
+			mBuildNumber = (ushort)gameTarget.Build.Revision.Version;
+		}
+
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			s.Stream(ref mBuildNumber);
 			s.Stream(ref mFlags);
-			Contract.Assert(false);
-			//s.Stream(Data);
+			s.Stream(Data);
 		}
 		#endregion
 
@@ -43,8 +51,7 @@ namespace KSoft.Blam.Blob
 			{
 				s.StreamAttribute("buildNumber", ref mBuildNumber);
 				s.StreamAttribute("flags", ref mFlags);
-				Contract.Assert(false);
-				//s.StreamObject(Data);
+				s.StreamObject(Data);
 			}
 		}
 		#endregion

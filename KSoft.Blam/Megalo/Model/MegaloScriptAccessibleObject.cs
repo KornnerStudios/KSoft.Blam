@@ -53,7 +53,7 @@ namespace KSoft.Blam.Megalo.Model
 		} }
 		#endregion
 
-		// TODO: DefaultCodeNameStringIndex
+		// #TODO_IMPLEMENT: DefaultCodeNameStringIndex
 
 		protected MegaloScriptAccessibleObjectBase()
 		{

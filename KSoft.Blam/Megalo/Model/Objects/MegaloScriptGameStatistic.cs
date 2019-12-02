@@ -1,5 +1,5 @@
 ﻿
-namespace KSoft.Blam.Megalo
+namespace KSoft.Blam.Megalo.Model
 {
 	using StatFormatBitStreamer = IO.EnumBitStreamer
 		< MegaloScriptGameStatisticFormat
@@ -12,20 +12,17 @@ namespace KSoft.Blam.Megalo
 		< MegaloScriptGameStatisticGrouping
 		>;
 
-	namespace Model
+	partial class MegaloScriptModel
 	{
-		partial class MegaloScriptModel
+		protected virtual MegaloScriptGameStatistic NewGameStatistic()
 		{
-			protected virtual MegaloScriptGameStatistic NewGameStatistic()
-			{
-				return new MegaloScriptGameStatistic();
-			}
-		};
+			return new MegaloScriptGameStatistic();
+		}
 	};
 
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public partial class MegaloScriptGameStatistic
-		: Model.MegaloScriptAccessibleObjectBase
+		: MegaloScriptAccessibleObjectBase
 		, IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
@@ -87,11 +84,9 @@ namespace KSoft.Blam.Megalo
 		#region IBitStreamSerializable Members
 		public virtual void Serialize(IO.BitStream s)
 		{
-			var model = (Model.MegaloScriptModel)s.Owner;
+			var model = (MegaloScriptModel)s.Owner;
 
-#if false // #TODO_BLAM_REFACTOR
 			model.MegaloVariant.StreamStringTableIndexReference(s, ref mNameStringIndex);
-#endif
 			s.Stream(ref mFormat, 2, StatFormatBitStreamer.Instance);
 			s.Stream(ref mSortOrder, 2, StatSortOrderBitStreamer.Instance);
 			s.Stream(ref mGrouping, 1, StatGroupingBitStreamer.Instance);
@@ -104,11 +99,9 @@ namespace KSoft.Blam.Megalo
 			where TDoc : class
 			where TCursor : class
 		{
-			var model = (Model.MegaloScriptModel)s.Owner;
+			var model = (MegaloScriptModel)s.Owner;
 
-#if false // #TODO_BLAM_REFACTOR
 			model.MegaloVariant.SerializeStringTableIndexOpt(s, "nameIndex", ref mNameStringIndex);
-#endif
 			s.StreamAttributeEnum("format", ref mFormat);
 			s.StreamAttributeEnumOpt("sortOrder", ref mSortOrder, e => e != MegaloScriptGameStatisticSortOrder.Ascending);
 			s.StreamAttributeEnumOpt("grouping", ref mGrouping, e => e != 0);
@@ -121,4 +114,3 @@ namespace KSoft.Blam.Megalo
 		#endregion
 	};
 }
-

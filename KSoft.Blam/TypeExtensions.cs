@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Contracts = System.Diagnostics.Contracts;
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
 #else
@@ -8,6 +9,9 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Blam
 {
+	using MegaloModel = Blam.Megalo.Model;
+	using MegaloProto = Blam.Megalo.Proto;
+
 	public static partial class TypeExtensionsBlam
 	{
 		internal const int kTagStringLength = 31;
@@ -24,6 +28,32 @@ namespace KSoft.Blam
 				EngineGeneration = new EnumBitEncoder32<Engine.EngineGeneration>();
 			public static readonly EnumBitEncoder32<Engine.EngineProductionStage>
 				EngineProductionStage = new EnumBitEncoder32<Engine.EngineProductionStage>();
+
+			internal static readonly EnumBitEncoder32<Megalo.MegaloScriptVariableType>
+				MegaloScriptVariableType = new EnumBitEncoder32<Megalo.MegaloScriptVariableType>();
+			internal static readonly EnumBitEncoder32<Megalo.MegaloScriptVariableSet>
+				MegaloScriptVariableSet = new EnumBitEncoder32<Megalo.MegaloScriptVariableSet>();
+
+			#region KSoft.Blam.Megalo.Model
+			internal static readonly EnumBitEncoder32<MegaloModel.MegaloScriptModelObjectType>
+				MegaloScriptModelObjectType = new EnumBitEncoder32<MegaloModel.MegaloScriptModelObjectType>();
+			#endregion
+
+			#region KSoft.Blam.Megalo.Proto
+			internal static readonly EnumBitEncoder32<MegaloProto.MegaloScriptVarReferenceType>
+				MegaloScriptVarReferenceType = new EnumBitEncoder32<MegaloProto.MegaloScriptVarReferenceType>();
+
+			internal static readonly EnumBitEncoder32<MegaloProto.MegaloScriptValueIndexTarget>
+				MegaloScriptValueIndexTarget = new EnumBitEncoder32<MegaloProto.MegaloScriptValueIndexTarget>();
+			internal static readonly EnumBitEncoder32<MegaloProto.MegaloScriptValueIndexTraits>
+				MegaloScriptValueIndexTraits = new EnumBitEncoder32<MegaloProto.MegaloScriptValueIndexTraits>();
+
+			internal static readonly EnumBitEncoder32<MegaloProto.MegaloScriptValueBaseType>
+				MegaloScriptValueBaseType = new EnumBitEncoder32<MegaloProto.MegaloScriptValueBaseType>();
+
+			internal static readonly EnumBitEncoder32<MegaloProto.MegaloScriptValueEnumTraits>
+				MegaloScriptValueEnumTraits = new EnumBitEncoder32<MegaloProto.MegaloScriptValueEnumTraits>();
+			#endregion
 		};
 
 		public static IEnumBitEncoder<uint> GetBitEncoder(this Engine.EngineGeneration value)
@@ -255,7 +285,7 @@ namespace KSoft.Blam
 		}
 		#endregion
 
-		// TODO: T4
+		// #TODO_BLAM: T4
 		#region Stream noneable
 		/// <summary>Streams an integer which is >= -1, but when streamed out the value is added by 1 (so it will be >= 0)</summary>
 		/// <param name="s"></param>
@@ -286,7 +316,8 @@ namespace KSoft.Blam
 
 			if (s.IsReading)
 			{
-				s.Read(out value, bitCount); value--;
+				s.Read(out value, bitCount);
+				value--;
 			}
 			else if (s.IsWriting)
 			{
@@ -380,6 +411,257 @@ namespace KSoft.Blam
 		{
 			if (!s.StreamAttributeOpt(name, ref value, Predicates.IsNotZero) && s.IsReading)
 				value = 0;
+		}
+		#endregion
+
+		#region Megalo
+		[Contracts.Pure]
+		internal static Megalo.MegaloScriptVariableType ToVariableType(
+			this Megalo.MegaloScriptVariableReferenceType type)
+		{
+			switch (type)
+			{
+				case Megalo.MegaloScriptVariableReferenceType.	Custom:
+					return Megalo.MegaloScriptVariableType.		Numeric;
+				case Megalo.MegaloScriptVariableReferenceType.	Player:
+					return Megalo.MegaloScriptVariableType.		Player;
+				case Megalo.MegaloScriptVariableReferenceType.	Object:
+					return Megalo.MegaloScriptVariableType.		Object;
+				case Megalo.MegaloScriptVariableReferenceType.	Team:
+					return Megalo.MegaloScriptVariableType.		Team;
+				case Megalo.MegaloScriptVariableReferenceType.	Timer:
+					return Megalo.MegaloScriptVariableType.		Timer;
+
+				default: throw new KSoft.Debug.UnreachableException(type.ToString());
+			}
+		}
+
+		[Contracts.Pure]
+		internal static bool RequiresBitLength(this MegaloProto.MegaloScriptValueBaseType type)
+		{
+			switch (type)
+			{
+				case MegaloProto.MegaloScriptValueBaseType.Int:
+				case MegaloProto.MegaloScriptValueBaseType.UInt:
+				case MegaloProto.MegaloScriptValueBaseType.Enum:
+					return true;
+
+				default: return false;
+			}
+		}
+
+		/// <summary>Is the target based in static (ie, tag) data?</summary>
+		/// <param name="target"></param>
+		/// <returns></returns>
+		[Contracts.Pure]
+		public static bool IsStaticData(this MegaloProto.MegaloScriptValueIndexTarget target)
+		{
+			switch (target)
+			{
+				case MegaloProto.MegaloScriptValueIndexTarget.ObjectType:
+				case MegaloProto.MegaloScriptValueIndexTarget.Name:
+				case MegaloProto.MegaloScriptValueIndexTarget.Sound:
+				case MegaloProto.MegaloScriptValueIndexTarget.Incident:
+				case MegaloProto.MegaloScriptValueIndexTarget.Icon:
+				case MegaloProto.MegaloScriptValueIndexTarget.Medal:
+				case MegaloProto.MegaloScriptValueIndexTarget.Ordnance:
+					return true;
+
+				default: return false;
+			}
+		}
+		/// <summary>Is the target based in variant data?</summary>
+		/// <param name="target"></param>
+		/// <returns></returns>
+		[Contracts.Pure]
+		public static bool IsVariantData(this MegaloProto.MegaloScriptValueIndexTarget target)
+		{
+			switch (target)
+			{
+				case MegaloProto.MegaloScriptValueIndexTarget.LoadoutPalette:
+				case MegaloProto.MegaloScriptValueIndexTarget.Option:
+				case MegaloProto.MegaloScriptValueIndexTarget.String:
+				case MegaloProto.MegaloScriptValueIndexTarget.PlayerTraits:
+				case MegaloProto.MegaloScriptValueIndexTarget.Statistic:
+				case MegaloProto.MegaloScriptValueIndexTarget.Widget:
+				case MegaloProto.MegaloScriptValueIndexTarget.ObjectFilter:
+				case MegaloProto.MegaloScriptValueIndexTarget.GameObjectFilter:
+					return true;
+
+				default: return false;
+			}
+		}
+		/// <summary>Does the target have a human-friendly name?</summary>
+		/// <param name="target"></param>
+		/// <returns></returns>
+		[Contracts.Pure]
+		public static bool HasIndexName(this MegaloProto.MegaloScriptValueIndexTarget target)
+		{
+			switch (target)
+			{
+				case MegaloProto.MegaloScriptValueIndexTarget.ObjectType:
+				case MegaloProto.MegaloScriptValueIndexTarget.Name:
+				case MegaloProto.MegaloScriptValueIndexTarget.Sound:
+				case MegaloProto.MegaloScriptValueIndexTarget.Incident:
+//				case MegaloProto.MegaloScriptValueIndexTarget.Icon:
+				case MegaloProto.MegaloScriptValueIndexTarget.Medal:
+				case MegaloProto.MegaloScriptValueIndexTarget.Ordnance:
+
+				case MegaloProto.MegaloScriptValueIndexTarget.Option:
+				case MegaloProto.MegaloScriptValueIndexTarget.String:
+				case MegaloProto.MegaloScriptValueIndexTarget.PlayerTraits:
+				case MegaloProto.MegaloScriptValueIndexTarget.Statistic:
+				case MegaloProto.MegaloScriptValueIndexTarget.Widget:
+				case MegaloProto.MegaloScriptValueIndexTarget.ObjectFilter:
+				case MegaloProto.MegaloScriptValueIndexTarget.GameObjectFilter:
+					return true;
+
+				default: return false;
+			}
+		}
+
+		internal static bool UseConditionTypeNames(this MegaloModel.MegaloScriptModelTagElementStreamFlags flags)
+		{
+			const MegaloModel.MegaloScriptModelTagElementStreamFlags k_mask =
+				MegaloModel.MegaloScriptModelTagElementStreamFlags.UseConditionTypeNames;
+			return (flags & k_mask) == k_mask;
+		}
+		internal static bool UseActionTypeNames(this MegaloModel.MegaloScriptModelTagElementStreamFlags flags)
+		{
+			const MegaloModel.MegaloScriptModelTagElementStreamFlags k_mask =
+				MegaloModel.MegaloScriptModelTagElementStreamFlags.UseActionTypeNames;
+			return (flags & k_mask) == k_mask;
+		}
+		internal static bool EmbedObjects(this MegaloModel.MegaloScriptModelTagElementStreamFlags flags)
+		{
+			const MegaloModel.MegaloScriptModelTagElementStreamFlags k_mask =
+				MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjects;
+			return (flags & k_mask) == k_mask;
+		}
+		internal static bool EmbedObjectsWriteSansIds(this MegaloModel.MegaloScriptModelTagElementStreamFlags flags)
+		{
+			const MegaloModel.MegaloScriptModelTagElementStreamFlags k_mask =
+				MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjects |
+				MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjectsWriteSansIds;
+			return (flags & k_mask) == k_mask;
+		}
+		internal static bool HasParamFlags(this MegaloModel.MegaloScriptModelTagElementStreamFlags flags)
+		{
+			const MegaloModel.MegaloScriptModelTagElementStreamFlags k_mask =
+				MegaloModel.MegaloScriptModelTagElementStreamFlags.kParamsMask;
+
+			return (flags & k_mask) != 0;
+		}
+
+		public static bool IsUpdatedOnGameTick(this Megalo.MegaloScriptTriggerType type)
+		{
+			return	type == Megalo.MegaloScriptTriggerType.Normal ||
+					type == Megalo.MegaloScriptTriggerType.Local;
+		}
+
+		[Contracts.Pure]
+		internal static Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach ToHaloReach(
+			this Megalo.MegaloScriptTokenAbstractType type)
+		{
+			switch (type)
+			{
+				case Megalo.MegaloScriptTokenAbstractType.None:
+					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.None;
+				case Megalo.MegaloScriptTokenAbstractType.Player:
+					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.AbsolutePlayerIndex;
+				case Megalo.MegaloScriptTokenAbstractType.Team:
+					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.TeamDesignator;
+				case Megalo.MegaloScriptTokenAbstractType.Object:
+					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.Object;
+				case Megalo.MegaloScriptTokenAbstractType.Numeric:
+					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.Numeric;
+				case Megalo.MegaloScriptTokenAbstractType.SignedNumeric:
+					throw new NotSupportedException(type.ToString());
+				case Megalo.MegaloScriptTokenAbstractType.Timer:
+					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.TimerSeconds;
+
+				default: throw new KSoft.Debug.UnreachableException(type.ToString());
+			}
+		}
+		[Contracts.Pure]
+		internal static Megalo.MegaloScriptTokenAbstractType ToAbstract(
+			this Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach type)
+		{
+			switch (type)
+			{
+				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.None:
+					return Megalo.MegaloScriptTokenAbstractType.None;
+				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.AbsolutePlayerIndex:
+					return Megalo.MegaloScriptTokenAbstractType.Player;
+				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.TeamDesignator:
+					return Megalo.MegaloScriptTokenAbstractType.Team;
+				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.Object:
+					return Megalo.MegaloScriptTokenAbstractType.Object;
+				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.Numeric:
+					return Megalo.MegaloScriptTokenAbstractType.Numeric;
+				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.TimerSeconds:
+					return Megalo.MegaloScriptTokenAbstractType.Timer;
+
+				default: throw new KSoft.Debug.UnreachableException(type.ToString());
+			}
+		}
+
+		[Contracts.Pure]
+		internal static Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4 ToHalo4(
+			this Megalo.MegaloScriptTokenAbstractType type)
+		{
+			switch (type)
+			{
+				case Megalo.MegaloScriptTokenAbstractType.None:
+					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.None;
+				case Megalo.MegaloScriptTokenAbstractType.Player:
+					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.AbsolutePlayerIndex;
+				case Megalo.MegaloScriptTokenAbstractType.Team:
+					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.TeamDesignator;
+				case Megalo.MegaloScriptTokenAbstractType.Object:
+					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.Object;
+				case Megalo.MegaloScriptTokenAbstractType.Numeric:
+					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.Numeric;
+				case Megalo.MegaloScriptTokenAbstractType.SignedNumeric:
+					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.SignedNumeric;
+				case Megalo.MegaloScriptTokenAbstractType.Timer:
+					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.TimerSeconds;
+
+				default: throw new KSoft.Debug.UnreachableException(type.ToString());
+			}
+		}
+		[Contracts.Pure]
+		internal static Megalo.MegaloScriptTokenAbstractType ToAbstract(
+			this Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4 type)
+		{
+			switch (type)
+			{
+				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.None:
+					return Megalo.MegaloScriptTokenAbstractType.None;
+				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.AbsolutePlayerIndex:
+					return Megalo.MegaloScriptTokenAbstractType.Player;
+				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.TeamDesignator:
+					return Megalo.MegaloScriptTokenAbstractType.Team;
+				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.Object:
+					return Megalo.MegaloScriptTokenAbstractType.Object;
+				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.Numeric:
+					return Megalo.MegaloScriptTokenAbstractType.Numeric;
+				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.SignedNumeric:
+					return Megalo.MegaloScriptTokenAbstractType.SignedNumeric;
+				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.TimerSeconds:
+					return Megalo.MegaloScriptTokenAbstractType.Timer;
+
+				default: throw new KSoft.Debug.UnreachableException(type.ToString());
+			}
+		}
+		#endregion
+
+		#region RuntimeData.Variants
+		internal static bool UseUserOptionNames(this RuntimeData.Variants.GameEngineMegaloVariantTagElementStreamFlags flags)
+		{
+			const RuntimeData.Variants.GameEngineMegaloVariantTagElementStreamFlags k_mask =
+				RuntimeData.Variants.GameEngineMegaloVariantTagElementStreamFlags.UseUserOptionNames;
+			return (flags & k_mask) == k_mask;
 		}
 		#endregion
 	};

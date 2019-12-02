@@ -24,7 +24,7 @@ namespace KSoft.Blam.Localization.StringTables
 		#endregion
 
 		readonly GameLanguageTable mLanguageTable;
-		string[] mLanguageStrings;
+		readonly string[] mLanguageStrings;
 
 		#region LanguageOffsets
 		// Only valid when reading/writing. Set to null once strings have been read, or the offsets have been written

@@ -33,7 +33,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 		public PlayerTraitsBase Traits { get; protected set; }
 
-		protected MegaloVariantPlayerTraitsBase(GameEngineMegaloVariant variant)
+		protected MegaloVariantPlayerTraitsBase(IGameEngineVariant variant)
 		{
 			NameStringIndex = DescriptionStringIndex = TypeExtensions.kNone;
 
@@ -75,7 +75,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 	sealed class MegaloVariantPlayerTraitsDefaultImpl
 		: MegaloVariantPlayerTraitsBase
 	{
-		public MegaloVariantPlayerTraitsDefaultImpl(GameEngineMegaloVariant variant) : base(variant)
+		public MegaloVariantPlayerTraitsDefaultImpl(IGameEngineVariant variant) : base(variant)
 		{
 		}
 	};

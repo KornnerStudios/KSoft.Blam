@@ -25,6 +25,7 @@ namespace KSoft.Blam.Localization
 			if (gLanguageChangedEventArgs == null)
 				InitializeLanguageChangedEventArgs();
 
+			Contract.Assume(gLanguageChangedEventArgs != null);
 			return gLanguageChangedEventArgs[langIndex];
 		}
 	};

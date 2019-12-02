@@ -10,6 +10,8 @@ using Interop = System.Runtime.InteropServices;
 
 namespace KSoft.Blam.Localization
 {
+	using BitFieldTraits = Bitwise.BitFieldTraits;
+
 	/// <summary>Represents a mapping between a game-agnostic possibly-supported-language and a game implementation's language</summary>
 	/// <remarks>
 	/// EngineLanguage: a game-agnostic possibly-supported-language
@@ -28,36 +30,26 @@ namespace KSoft.Blam.Localization
 		// which, being a value type cctor, may not run when we want it
 		static class Constants
 		{
-			// NOTE: It is assumed that the maximum value of GameIndex is the last last registered language
+			// #NOTE_BLAM: It is assumed that the maximum value of GameIndex is the last last registered language
 			// After all, this is suppose to map one to the other...
 
-			public static readonly int kGameIndexShift =
-				0;
-			public static readonly int kGameIndexBitCount =
-				LanguageRegistry.kLanguageIndexBitCount;
-			public static readonly uint kGameIndexBitMask =
-				Bits.BitCountToMask32(kGameIndexBitCount);
+			public static readonly BitFieldTraits kGameIndexBitField =
+				new BitFieldTraits(LanguageRegistry.kLanguageIndexBitCount);
+			public static readonly BitFieldTraits kIsSupportedBitField =
+				new BitFieldTraits(Bits.kBooleanBitCount, kGameIndexBitField);
+			public static readonly BitFieldTraits kLanguageIndexBitField =
+				new BitFieldTraits(LanguageRegistry.kLanguageIndexBitCount, kIsSupportedBitField);
+			public static readonly BitFieldTraits kBuildBitField =
+				new BitFieldTraits(Engine.EngineBuildHandle.BitCount, kLanguageIndexBitField);
 
-			public static readonly int kIsSupportedShift =
-				kGameIndexShift + kGameIndexBitCount;
-			public static readonly uint kIsSupportedMask =
-				0x1;
-
-			public static readonly int kLanguageIndexShift =
-				kIsSupportedShift + Bits.kBooleanBitCount;
-
-			public static readonly int kBuildShift =
-				kLanguageIndexShift + LanguageRegistry.kLanguageIndexBitCount;
-
-			public static readonly int kBitCount =
-				kBuildShift + Engine.EngineBuildHandle.BitCount;
-			public static readonly uint kBitmask = Bits.BitCountToMask32(kBitCount);
+			public static readonly BitFieldTraits kLastBitField =
+				kBuildBitField;
 		};
 
 		/// <summary>Number of bits required to represent a bit-encoded representation of this value type</summary>
 		/// <remarks>22 bits at last count</remarks>
-		public static int BitCount { get { return Constants.kBitCount; } }
-		public static uint Bitmask { get { return Constants.kBitmask; } }
+		public static int BitCount { get { return Constants.kLastBitField.FieldsBitCount; } }
+		public static uint Bitmask { get { return Constants.kLastBitField.FieldsBitmask.u32; } }
 
 		public static readonly GameLanguageHandle None = new GameLanguageHandle();
 
@@ -76,10 +68,10 @@ namespace KSoft.Blam.Localization
 			uint is_supported = gameIndex.IsNotNone() ? 1U : 0U;
 
 			var encoder = new Bitwise.HandleBitEncoder();
-			encoder.EncodeNoneable32(gameIndex, Constants.kGameIndexBitMask);
-			encoder.Encode32(is_supported, Constants.kIsSupportedMask);
+			encoder.EncodeNoneable32(gameIndex, Constants.kGameIndexBitField);
+			encoder.Encode32(is_supported, Constants.kIsSupportedBitField);
 			LanguageRegistry.BitEncodeLanguageIndex(ref encoder, langIndex);
-			encoder.Encode32(buildHandle.Handle, Engine.EngineBuildHandle.Bitmask);
+			encoder.Encode32(buildHandle.Handle, Constants.kBuildBitField);
 
 			Contract.Assert(encoder.UsedBitCount == GameLanguageHandle.BitCount);
 
@@ -101,27 +93,27 @@ namespace KSoft.Blam.Localization
 		/// <summary>The handle to the game build this info specifically associates with</summary>
 		[Contracts.Pure]
 		public Engine.EngineBuildHandle Build { get {
-			return new Engine.EngineBuildHandle(mHandle, Constants.kBuildShift);
+			return new Engine.EngineBuildHandle(mHandle, Constants.kBuildBitField);
 		} }
 		/// <summary>Index of a language registered in the <see cref="LanguageRegistry"/></summary>
 		[Contracts.Pure]
 		public int LanguageIndex { get {
-			return LanguageRegistry.BitDecodeLanguageIndex(mHandle, Constants.kLanguageIndexShift);
+			return LanguageRegistry.BitDecodeLanguageIndex(mHandle, Constants.kLanguageIndexBitField.BitIndex);
 		} }
 		/// <summary>Is the language supported by <see cref="Build"/>?</summary>
 		[Contracts.Pure]
 		public bool IsSupported { get {
-			return 1 == Bits.BitDecode(mHandle, Constants.kIsSupportedShift, Constants.kIsSupportedMask);
+			return 1 == Bits.BitDecode(mHandle, Constants.kIsSupportedBitField);
 		} }
 		/// <summary>Is the language unsupported by <see cref="Build"/>?</summary>
 		[Contracts.Pure]
 		public bool IsUnsupported { get {
-			return 0 == Bits.BitDecode(mHandle, Constants.kIsSupportedShift, Constants.kIsSupportedMask);
+			return 0 == Bits.BitDecode(mHandle, Constants.kIsSupportedBitField);
 		} }
 		/// <summary>The index <see cref="LanguageIndex"/> maps to in <see cref="Build"/></summary>
 		[Contracts.Pure]
 		public int GameIndex { get {
-			return Bits.BitDecodeNoneable(mHandle, Constants.kGameIndexShift, Constants.kGameIndexBitMask);
+			return Bits.BitDecodeNoneable(mHandle, Constants.kGameIndexBitField);
 		} }
 
 		[Contracts.Pure]

@@ -33,6 +33,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Blob\BlobTest.cs" />
     <Compile Include="Engine\EngineTest.cs" />
     <Compile Include="Localization\LocalizationTest.cs" />
     <Compile Include="Program.cs" />

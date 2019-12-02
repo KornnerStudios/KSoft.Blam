@@ -53,9 +53,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 				OverridesAreDefault && FireteamCount == 1;
 		} }
 
-		protected GameOptionsSingleTeamOptions(LocaleStringTableInfo nameInfo)
+		protected GameOptionsSingleTeamOptions(Engine.EngineBuildHandle buildHandle, LocaleStringTableInfo nameInfo)
 		{
-			NameString = new LocaleStringTable(nameInfo);
+			NameString = new LocaleStringTable(nameInfo, buildHandle);
 		}
 
 		public virtual void RevertToDefault()

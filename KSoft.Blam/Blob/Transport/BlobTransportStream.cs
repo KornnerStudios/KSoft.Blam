@@ -160,14 +160,14 @@ namespace KSoft.Blam.Blob.Transport
 			switch (mFooter.Authentication)
 			{
 				case BlobTransportStreamAuthentication.None: break;
-				// TODO:
+				// #TODO_IMPLEMENT:
 				case BlobTransportStreamAuthentication.Crc: throw new NotImplementedException();
 				case BlobTransportStreamAuthentication.Hash: throw new NotImplementedException();
 				case BlobTransportStreamAuthentication.Rsa: throw new NotImplementedException();
 			}
 
 			if (hash_algo != null)
-				return hash_algo.ComputeHash(BaseStream, StartPosition, (int)AssumedBlobSize);
+				return hash_algo.ComputeHash(BaseStream, StartPosition, mFooterPosition);
 
 			return null;
 		}
@@ -264,8 +264,8 @@ namespace KSoft.Blam.Blob.Transport
 				UnderlyingStream.Seek(findStartPosition + StartPosition, System.IO.SeekOrigin.Begin);
 			}
 
-			// TODO
-			Contract.Assert(false);
+			// #TODO_IMPLEMENT
+			Contract.Assert(false, "TODO");
 
 			if (orig_pos.IsNotNone())
 			{
@@ -573,7 +573,7 @@ namespace KSoft.Blam.Blob.Transport
 			byte[] data;
 
 			var sys_group = obj.SystemGroup;
-			// TODO: support non-fixed length blobs like film streams
+			// #TODO_IMPLEMENT: support non-fixed length blobs like film streams
 			using (var ms = new System.IO.MemoryStream(obj.CalculateFixedBinarySize(this.GameTarget)))
 			using (var es = new IO.EndianStream(ms, UnderlyingStream.ByteOrder, this, sys_group.GroupTag.Name, FileAccess.Write))
 			{

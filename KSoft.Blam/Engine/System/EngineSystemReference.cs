@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Contracts = System.Diagnostics.Contracts;
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
@@ -19,7 +20,15 @@ namespace KSoft.Blam.Engine
 		readonly EngineBuildHandle mBuildHandle;
 
 		/// <summary>The system that is referenced</summary>
-		public EngineSystemBase System { get { return mSystem; } }
+		public EngineSystemBase System { get {
+			if (IsValid)
+			{
+				bool didntTimeout = mSystem.WaitForExternsIO();
+				Contract.Assert(didntTimeout);
+			}
+
+			return mSystem;
+		} }
 
 		#region Ctor
 		EngineSystemReference(bool dummy)
@@ -35,7 +44,9 @@ namespace KSoft.Blam.Engine
 			mSystem = system;
 			mBuildHandle = buildHandle;
 
-			system.AddReference(buildHandle);
+#pragma warning disable 4014
+			system.AddReferenceAsync(buildHandle);
+#pragma warning restore 4014
 		}
 		#endregion
 
@@ -50,7 +61,9 @@ namespace KSoft.Blam.Engine
 		{
 			if (mSystem != null)
 			{
-				mSystem.RemoveReference(mBuildHandle);
+#pragma warning disable 4014
+				mSystem.RemoveReferenceAsync(mBuildHandle);
+#pragma warning restore 4014
 				mSystem = null;
 			}
 		}
@@ -77,7 +90,15 @@ namespace KSoft.Blam.Engine
 		readonly EngineBuildHandle mBuildHandle;
 
 		/// <summary>The system that is referenced</summary>
-		public T System { get { return mSystem; } }
+		public T System { get {
+			if (IsValid)
+			{
+				bool didntTimeout = mSystem.WaitForExternsIO();
+				Contract.Assert(didntTimeout);
+			}
+
+			return mSystem;
+		} }
 
 		#region Ctor
 		EngineSystemReference(bool dummy)
@@ -93,7 +114,9 @@ namespace KSoft.Blam.Engine
 			mSystem = system;
 			mBuildHandle = buildHandle;
 
-			system.AddReference(buildHandle);
+#pragma warning disable 4014
+			system.AddReferenceAsync(buildHandle);
+#pragma warning restore 4014
 		}
 		#endregion
 
@@ -108,7 +131,9 @@ namespace KSoft.Blam.Engine
 		{
 			if (mSystem != null)
 			{
-				mSystem.RemoveReference(mBuildHandle);
+#pragma warning disable 4014
+				mSystem.RemoveReferenceAsync(mBuildHandle);
+#pragma warning restore 4014
 				mSystem = null;
 			}
 		}

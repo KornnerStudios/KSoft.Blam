@@ -11,8 +11,6 @@ namespace KSoft.Blam.Localization.StringTables
 	{
 		const int kDefaultBufferCompressionThreshold = 0x80;
 
-		public readonly GameLanguageTable EngineLanguageTable;
-
 		public readonly int MaxCount;
 		internal readonly int CountBitLength;
 
@@ -24,12 +22,8 @@ namespace KSoft.Blam.Localization.StringTables
 		internal readonly bool CodeNameEntries;
 
 		#region Ctor
-		internal LocaleStringTableInfo(int maxCount, int bufferMaxSize, GameLanguageTable engineLanguages, bool codeNameEntries = false)
+		internal LocaleStringTableInfo(int maxCount, int bufferMaxSize, bool codeNameEntries = false)
 		{
-			Contract.Requires(engineLanguages != null);
-
-			EngineLanguageTable = engineLanguages;
-
 			MaxCount = maxCount;
 			CountBitLength = Bits.GetMaxEnumBits(maxCount + 1);
 

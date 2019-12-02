@@ -10,6 +10,8 @@ using Interop = System.Runtime.InteropServices;
 
 namespace KSoft.Blam.Engine
 {
+	using BitFieldTraits = Bitwise.BitFieldTraits;
+
 	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
 	[System.Diagnostics.DebuggerDisplay("Engine# = {Build.EngineIndex}, TargetPlatform# = {TargetPlatformIndex}, ResourceModel# = {ResourceModelIndex}")]
 	public struct BlamEngineTargetHandle
@@ -22,24 +24,21 @@ namespace KSoft.Blam.Engine
 		// which, being a value type cctor, may not run when we want it
 		static class Constants
 		{
-			public static readonly int kResourceModelShift =
-				0;
+			public static readonly BitFieldTraits kResourceModelBitField =
+				new BitFieldTraits(EngineRegistry.kResourceModelBitCount);
+			public static readonly BitFieldTraits kTargetPlatformBitField =
+				new BitFieldTraits(EngineTargetPlatform.kIndexBitCount, kResourceModelBitField);
+			public static readonly BitFieldTraits kBuildBitField =
+				new BitFieldTraits(EngineBuildHandle.BitCount, kTargetPlatformBitField);
 
-			public static readonly int kTargetPlatformShift =
-				kResourceModelShift + EngineRegistry.kResourceModelBitCount;
-
-			public static readonly int kBuildShift =
-				kTargetPlatformShift + EngineBuildBranch.kIndexBitCount;
-
-			public static readonly int kBitCount =
-				kBuildShift + BlamEngine.kIndexBitCount;
-			public static readonly uint kBitmask = Bits.BitCountToMask32(kBitCount);
+			public static readonly BitFieldTraits kLastBitField =
+				kBuildBitField;
 		};
 
 		/// <summary>Number of bits required to represent a bit-encoded representation of this value type</summary>
 		/// <remarks>16 bits at last count</remarks>
-		public static int BitCount { get { return Constants.kBitCount; } }
-		public static uint Bitmask { get { return Constants.kBitmask; } }
+		public static int BitCount { get { return Constants.kLastBitField.FieldsBitCount; } }
+		public static uint Bitmask { get { return Constants.kLastBitField.FieldsBitmask.u32; } }
 
 		public static readonly BlamEngineTargetHandle None = new BlamEngineTargetHandle();
 		#endregion
@@ -47,7 +46,7 @@ namespace KSoft.Blam.Engine
 		#region Internal Value
 		[Interop.FieldOffset(0)] readonly uint mHandle;
 
-		internal uint Handle { get { return mHandle; } }
+		//internal uint Handle { get { return mHandle; } }
 
 		static void InitializeHandle(out uint handle,
 			EngineBuildHandle buildHandle, int platformIndex, int resourceModelIndex)
@@ -75,10 +74,10 @@ namespace KSoft.Blam.Engine
 
 			InitializeHandle(out mHandle, buildHandle, platformIndex, resourceModelIndex);
 		}
-		internal BlamEngineTargetHandle(uint handle, int startBitIndex)
+		internal BlamEngineTargetHandle(uint handle, BitFieldTraits engineTargetField)
 		{
-			handle >>= startBitIndex;
-			handle &= Constants.kBitmask;
+			handle >>= engineTargetField.BitIndex;
+			handle &= Bitmask;
 
 			mHandle = handle;
 		}
@@ -87,15 +86,15 @@ namespace KSoft.Blam.Engine
 		#region Value properties
 		[Contracts.Pure]
 		public EngineBuildHandle Build { get {
-			return new EngineBuildHandle(mHandle, Constants.kBuildShift);
+			return new EngineBuildHandle(mHandle, Constants.kBuildBitField);
 		} }
 		[Contracts.Pure]
 		public int TargetPlatformIndex { get {
-			return EngineTargetPlatform.BitDecodeIndex(mHandle, Constants.kTargetPlatformShift);
+			return EngineTargetPlatform.BitDecodeIndex(mHandle, Constants.kTargetPlatformBitField.BitIndex);
 		} }
 		[Contracts.Pure]
 		public int ResourceModelIndex { get {
-			return EngineRegistry.BitDecodeResourceModelIndex(mHandle, Constants.kResourceModelShift);
+			return EngineRegistry.BitDecodeResourceModelIndex(mHandle, Constants.kResourceModelBitField.BitIndex);
 		} }
 
 		[Contracts.Pure]
@@ -148,6 +147,7 @@ namespace KSoft.Blam.Engine
 		/// <summary>Creates a string of the build component name ids separated by periods</summary>
 		/// <returns>Empty string if this <see cref="IsNone"/></returns>
 		/// <remarks>If the <see cref="Branch"/>'s display name is the same as <see cref="Engine"/>, the former isn't included in the output</remarks>
+		[Contracts.Pure]
 		public string ToDisplayString()
 		{
 			Contract.Ensures(Contract.Result<string>() != null);
@@ -162,7 +162,7 @@ namespace KSoft.Blam.Engine
 			if (platform_index.IsNotNone())
 			{
 				var platform = EngineRegistry.TargetPlatforms[platform_index];
-				sb.AppendFormat(".{0}", platform.ToString());
+				sb.AppendFormat(".{0}", platform);
 
 				#region ResourceModel
 				if (rsrc_model_index.IsNotNone())
@@ -225,6 +225,13 @@ namespace KSoft.Blam.Engine
 		{
 			return this.mHandle == other.mHandle;
 		}
+		#endregion
+
+		#region Operators
+		[Contracts.Pure]
+		public static bool operator ==(BlamEngineTargetHandle lhs, BlamEngineTargetHandle rhs)	{ return lhs.mHandle == rhs.mHandle; }
+		[Contracts.Pure]
+		public static bool operator !=(BlamEngineTargetHandle lhs, BlamEngineTargetHandle rhs)	{ return lhs.mHandle != rhs.mHandle; }
 		#endregion
 
 

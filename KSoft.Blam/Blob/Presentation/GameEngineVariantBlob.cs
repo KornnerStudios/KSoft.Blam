@@ -1,1 +1,191 @@
-﻿
+﻿using System;
+using Contracts = System.Diagnostics.Contracts;
+#if CONTRACTS_FULL_SHIM
+using Contract = System.Diagnostics.ContractsShim.Contract;
+#else
+using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
+#endif
+
+namespace KSoft.Blam.Blob
+{
+	[System.Reflection.Obfuscation(Exclude=false)]
+	public sealed class GameEngineVariantBlob
+		: Blob.BlobObject
+	{
+		#region Constants
+		const int kSizeOfBitStreamHaloReach = 0x5000;
+		const int kSizeOfBitStreamHalo4 = 0x7C00;
+		const int kSizeOfHash = 0x14;
+		const int kSizeOfPrememble = kSizeOfHash + 
+			sizeof(uint) + // unused/uninitialized (should only ever contain garbage/stack data)
+			sizeof(int); // bitstream length
+
+		const int kSizeOfHaloReach = kSizeOfPrememble + kSizeOfBitStreamHaloReach;
+		const int kSizeOfHalo4 = kSizeOfPrememble + kSizeOfBitStreamHalo4;
+		#endregion
+
+		public bool InvalidData { get; private set; }
+
+		public RuntimeData.Variants.GameEngineVariant Data { get; private set; }
+
+		public override int CalculateFixedBinarySize(Engine.BlamEngineTargetHandle gameTarget)
+		{
+			var game_build = gameTarget.Build;
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+				return kSizeOfHaloReach;
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+				return kSizeOfHalo4;
+
+			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
+		}
+
+		protected override void InitializeExplicitlyForGame(Engine.BlamEngineTargetHandle gameTarget)
+		{
+			Data = new RuntimeData.Variants.GameEngineVariant(gameTarget.Build);
+		}
+
+		public void ChangeData(RuntimeData.Variants.GameEngineVariant newData)
+		{
+			Contract.Requires<ArgumentNullException>(newData != null);
+			Contract.Requires<ArgumentException>(newData.GameBuild == GameTarget.Build);
+
+			Data = newData;
+		}
+
+		void SanityCheckInvalidIsFalse(string streamName)
+		{
+			if (InvalidData)
+				throw new System.IO.InvalidDataException(string.Format(
+					"{0}: game variant bitstream is invalid, can't operate", streamName));
+		}
+
+		#region IEndianStreamSerializable Members
+		int GetBitStreamSize()
+		{
+			var game_build = GameTarget.Build;
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+				return kSizeOfBitStreamHaloReach;
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+				return kSizeOfBitStreamHalo4;
+
+			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
+		}
+		static int ReadBitStreamSize(IO.EndianReader s, System.Security.Cryptography.ICryptoTransform hasher)
+		{
+			byte[] bitstream_size_bytes = new byte[sizeof(int)];
+			s.Read(bitstream_size_bytes);
+			hasher.TransformBlock(bitstream_size_bytes, 0, bitstream_size_bytes.Length, null, 0);
+
+			if(!s.ByteOrder.IsSameAsRuntime())
+				Bitwise.ByteSwap.SwapData(Bitwise.ByteSwap.kInt32Definition, bitstream_size_bytes);
+			return BitConverter.ToInt32(bitstream_size_bytes, 0);
+		}
+		void ReadBitStream(IO.EndianReader s, byte[] hashBuffer)
+		{
+			byte[] bs_bytes;
+			using (var hasher = Program.GetGen3RuntimeDataHasher())
+			{
+				int bs_length = ReadBitStreamSize(s, hasher);
+				bs_bytes = new byte[IntegerMath.Align(IntegerMath.kInt32AlignmentBit, bs_length)];
+				s.Read(bs_bytes, bs_length);
+
+				hasher.TransformFinalBlock(bs_bytes, 0, bs_length);
+				InvalidData = hasher.Hash.EqualsArray(hashBuffer) == false;
+			}
+
+			if (InvalidData)
+				Data = null;
+			else
+			{
+				using (var ms = new System.IO.MemoryStream(bs_bytes))
+				using (var bs = new IO.BitStream(ms, System.IO.FileAccess.Read, streamName: "GameVariant"))
+				{
+					bs.StreamMode = System.IO.FileAccess.Read;
+
+					Data.Serialize(bs);
+				}
+			}
+		}
+		void WriteBitStream(IO.EndianWriter s, long hashPosition)
+		{
+			byte[] bs_bytes = new byte[GetBitStreamSize()];
+			int bs_length;
+			using (var ms = new System.IO.MemoryStream(bs_bytes))
+			using (var bs = new IO.BitStream(ms, System.IO.FileAccess.Write, streamName: "GameVariant"))
+			{
+				bs.StreamMode = System.IO.FileAccess.Write;
+
+				Data.Serialize(bs);
+				bs.Flush();
+
+				bs_length = (int)ms.Position;
+			}
+
+			#region calculate hash
+			byte[] calculated_hash;
+			using (var hasher = Program.GetGen3RuntimeDataHasher())
+			{
+				byte[] bs_length_bytes = BitConverter.GetBytes(bs_length);
+				if (!s.ByteOrder.IsSameAsRuntime())
+					Bitwise.ByteSwap.SwapData(Bitwise.ByteSwap.kInt32Definition, bs_length_bytes);
+
+				hasher.TransformBlock(bs_length_bytes, 0, bs_length_bytes.Length, null, 0);
+				hasher.TransformFinalBlock(bs_bytes, 0, bs_length);
+				calculated_hash = hasher.Hash;
+			}
+			#endregion
+
+			s.Write(bs_length);
+			s.Write(bs_bytes);
+
+			long position = s.BaseStream.Position;
+			s.Seek(hashPosition);
+			s.Write(calculated_hash);
+			s.Seek(position);
+		}
+		public override void Serialize(IO.EndianStream s)
+		{
+			SanityCheckInvalidIsFalse(s.StreamName);
+
+			byte[] hash_buffer = new byte[kSizeOfHash];
+
+			long hash_position = s.BaseStream.Position;
+			s.Stream(hash_buffer);
+			s.Pad32();
+
+				 if (s.IsReading)	ReadBitStream(s.Reader, hash_buffer);
+			else if (s.IsWriting)	WriteBitStream(s.Writer, hash_position);
+		}
+		#endregion
+
+		#region ITagElementStringNameStreamable Members
+		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
+		{
+			SanityCheckInvalidIsFalse(s.StreamName);
+			base.Serialize(s);
+
+			using (s.EnterCursorBookmark("GameVariant"))
+			{
+				s.StreamObject(Data);
+			}
+		}
+		#endregion
+
+		public static long GetBlfFileLength(Engine.BlamEngineTargetHandle gameTarget)
+		{
+			var game_build = gameTarget.Build;
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+				return kSizeOfBitStreamHaloReach + 0x329;
+
+			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+				return kSizeOfBitStreamHalo4 + 0x329;
+
+			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
+		}
+	};
+}
