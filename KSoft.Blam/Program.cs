@@ -5,17 +5,6 @@ namespace KSoft.Blam
 	{
 		public static void Initialize()
 		{
-			var dot_net_version = System.Environment.Version;
-			if (dot_net_version.Major <= 2)
-			{
-				Util.ValueTypeInitializeComparer			<Engine.EngineBuildHandle>();
-				Util.ValueTypeInitializeEquatableComparer	<Engine.EngineBuildHandle>();
-				Util.ValueTypeInitializeComparer			<Engine.BlamEngineTargetHandle>();
-				Util.ValueTypeInitializeEquatableComparer	<Engine.BlamEngineTargetHandle>();
-				Util.ValueTypeInitializeComparer			<Localization.GameLanguageHandle>();
-				Util.ValueTypeInitializeEquatableComparer	<Localization.GameLanguageHandle>();
-			}
-
 			Engine.EngineRegistry.InitializeForNewProgram();
 		}
 		public static void Dispose()
