@@ -32,7 +32,7 @@
     <Compile Include="Blob\Transport\BlobTransportStreamHeader.cs" />
     <Compile Include="Blob\WellKnownBlob.cs" />
     <Compile Include="Collections\ActiveList.cs" />
-    <Compile Include="Collections\ActiveList.Enumerator.cs" />
+    <Compile Include="Collections\ActiveListEnumerator.cs" />
     <Compile Include="Collections\ActiveListDesc.cs" />
     <Compile Include="Collections\ActiveListUtil.cs" />
     <Compile Include="Debug\Trace.cs" />
