@@ -19,6 +19,7 @@
   <Import Project="$(MSBuildProjectDirectory)\..\KSoft.Blam.props" />
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -35,9 +36,12 @@
   <ItemGroup>
     <Compile Include="Blob\BlobTest.cs" />
     <Compile Include="Engine\EngineTest.cs" />
+    <Compile Include="Games\Halo4\Halo4Test.cs" />
+    <Compile Include="Games\HaloReach\HaloReachTest.cs" />
     <Compile Include="Localization\LocalizationTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuntimeData\Content\ContentTestcs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(VitaRootDir)KSoft\KSoft.IO.TagElementStreams\KSoft.IO.TagElementStreams.csproj">

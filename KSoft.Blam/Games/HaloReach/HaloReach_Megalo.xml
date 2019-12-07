@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<System engine="HaloReach">
+<System engine="HaloReach" branch="HaloReach">
 	<BuildFiles>
-		<Files rev="11860"
+		<!--rev="11860"-->
+		<Files
 				staticDb="Games\HaloReach\Megalo\Proto\HaloReach_MegaloStaticDb_Xbox.xml"
 				megaloDb="Games\HaloReach\Megalo\Proto\HaloReach_MegaloDb_Xbox.xml"
 				/>

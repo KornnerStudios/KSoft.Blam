@@ -58,6 +58,12 @@ namespace KSoft.Blam.Engine
 
 		public Values.KGuid Guid { get; private set; }
 
+		public string DebugDisplayString { get {
+			return string.Format("{{{0}}}={1}",
+				Guid.ToString(Values.KGuid.kFormatHyphenated),
+				EngineSystemType);
+		} }
+
 		EngineSystemCtorSignature mFactoryMethod;
 
 		#region Parameters
@@ -124,22 +130,28 @@ namespace KSoft.Blam.Engine
 
 			#region validate guid_prop
 			if (guid_prop == null)
+			{
 				throw new InvalidOperationException(string.Format(
 					"{0} doesn't specify a static property named {1}",
 					EngineSystemType.Name, kSystemGuidPropertyName));
+			}
 			else if (guid_prop.PropertyType != typeof(Values.KGuid))
+			{
 				throw new InvalidOperationException(string.Format(
 					"{0}'s {1} isn't defined as a {2}",
 					EngineSystemType.Name, kSystemGuidPropertyName, typeof(Values.KGuid).Name));
+			}
 			#endregion
 
 			#region Get and validate Guid
 			Guid = (Values.KGuid)guid_prop.GetValue(null);
 
-			if(Guid == Values.KGuid.Empty)
+			if (Guid.IsEmpty)
+			{
 				throw new InvalidOperationException(string.Format(
 					"{0}'s {1} is Empty, this isn't allowed",
 					EngineSystemType.Name, kSystemGuidPropertyName));
+			}
 			#endregion
 		}
 		void AttachToSystemType(Type systemType)

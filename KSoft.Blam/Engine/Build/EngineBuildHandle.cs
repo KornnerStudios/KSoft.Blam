@@ -167,6 +167,7 @@ namespace KSoft.Blam.Engine
 		{
 			Contract.Ensures(Contract.Result<string>() != null);
 
+			// #REVIEW_BLAM: This isn't great when viewing in a debugger, as the tabs seem to be ignored (so there's no whitespace)
 			return string.Format("[{0}\t{1}\t{2}]",
 				Engine, Branch, Revision);
 		}
@@ -393,7 +394,7 @@ namespace KSoft.Blam.Engine
 		/// Tries to use <paramref name="forBuild"/>'s absolute value first in the lookup. If that fails,
 		/// it then looks up by <see cref="Branch"/>, and then by <see cref="Engine"/>.
 		/// <paramref name="actualBuild"/> will then have the handle for whichever looks up successfully.
-		/// 
+		///
 		/// Will safely handle <see cref="IsNone"/> handles.
 		/// </remarks>
 		public bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic, EngineBuildHandle forBuild,
@@ -518,7 +519,9 @@ namespace KSoft.Blam.Engine
 					engine_index = TypeExtensions.kNone;
 				}
 				else
+				{
 					engine_index = value.EngineIndex;
+				}
 				#endregion
 
 				#region prepare branch_index
@@ -529,7 +532,9 @@ namespace KSoft.Blam.Engine
 					branch_index = TypeExtensions.kNone;
 				}
 				else
+				{
 					branch_index = value.BranchIndex;
+				}
 				#endregion
 
 				#region prepare revisn_index
@@ -539,7 +544,9 @@ namespace KSoft.Blam.Engine
 					branch_index = TypeExtensions.kNone;
 				}
 				else
+				{
 					revisn_index = value.RevisionIndex;
+				}
 				#endregion
 			}
 
@@ -559,7 +566,7 @@ namespace KSoft.Blam.Engine
 			// precondition: someone's BranchIndex was valid
 			// reading: baseline RevisionIndex is valid
 			// writing: value RevisionIndex mismatches baseline
-			if (branch != null && revisn_index.IsNotNone())
+			if (branch != null && (revisn_index.IsNotNone() || s.IsReading))
 				branch.SerializeRevisionId(s, kAttributeNameRevisn, ref revisn_index, true);
 
 			if (s.IsReading)

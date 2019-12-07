@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<System engine="Halo4">
+	<BlobGroupTags>
+		<Group tag="chdr" name="content_header" />
+		<Group tag="mpvr" name="game_variant" />
+	</BlobGroupTags>
+
+	<BlobGroups>
+		<BlobGroup tag="chdr" type="ContentHeader">
+			<Versions>
+				<V id="10" branch="Halo4" />
+			</Versions>
+		</BlobGroup>
+
+		<BlobGroup tag="mpvr" type="GameVariant">
+			<Versions>
+				<V id="132" branch="Halo4" />
+			</Versions>
+		</BlobGroup>
+	</BlobGroups>
+</System>

@@ -63,5 +63,22 @@ namespace KSoft.Blam.Engine.Test
 					kv.Value.EngineSystemType);
 			}
 		}
+
+		[TestMethod]
+		[Description("Test to ensure invalid and value inputs return valid strings")]
+		public void GetSystemDebugDisplayStringTest()
+		{
+			string invalid_case_empty_display_name = EngineRegistry.GetSystemDebugDisplayString(Values.KGuid.Empty);
+			Assert.IsTrue(invalid_case_empty_display_name.IsNotNullOrEmpty(), invalid_case_empty_display_name);
+			Assert.AreEqual(
+				"{00000000-0000-0000-0000-000000000000}=UNDEFINED_SYSTEM",
+				invalid_case_empty_display_name);
+
+			string valid_case_blob_system_display_name = EngineRegistry.GetSystemDebugDisplayString(Blob.BlobSystem.SystemGuid);
+			Assert.IsTrue(valid_case_blob_system_display_name.IsNotNullOrEmpty(), valid_case_blob_system_display_name);
+			Assert.AreEqual(
+				"{"+Blob.BlobSystem.SystemGuid.ToString(Values.KGuid.kFormatHyphenated)+"}=" + typeof(KSoft.Blam.Blob.BlobSystem),
+				valid_case_blob_system_display_name);
+		}
 	};
 }

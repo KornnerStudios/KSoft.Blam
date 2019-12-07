@@ -72,7 +72,7 @@ namespace KSoft.Blam.Localization
 				}
 #else
 				s.StreamableElements(kElementNameLanguageTable,
-					mEngineTables, this.Engine.RootBuildHandle,
+					mEngineTables, this.RootBuildHandle,
 					Blam.Engine.EngineBuildHandle.SerializeWithBaseline);
 #endif
 			}

@@ -29,6 +29,7 @@ namespace KSoft.Blam.Engine
 		// #NOTE_BLAM: will always be null if !Prototype.SystemRequiresReferenceTracking
 		Dictionary<EngineBuildHandle, int> mReferencesByBuildCounts;
 		bool mActiveInBlamEngine;
+		EngineBuildHandle mRootBuildHandleBaseline;
 
 		protected EngineSystemBase()
 		{
@@ -39,6 +40,7 @@ namespace KSoft.Blam.Engine
 		{
 			Prototype = prototype;
 			mActiveInBlamEngine = true;
+			mRootBuildHandleBaseline = Prototype.Engine.RootBuildHandle;
 
 			// ReSharper disable once InconsistentlySynchronizedField - method is construction, don't need a lock
 			if (Prototype.SystemRequiresReferenceTracking)
@@ -57,6 +59,7 @@ namespace KSoft.Blam.Engine
 		#endregion
 
 		public BlamEngine Engine { get { return Prototype.Engine; } }
+		public EngineBuildHandle RootBuildHandle { get { return mRootBuildHandleBaseline; } }
 
 		#region Reference counting
 		enum UpdateReferenceSideEffect
@@ -189,11 +192,11 @@ namespace KSoft.Blam.Engine
 		{
 			return new EngineSystemReference(this, buildHandle);
 		}
-		/// <summary>Create a new reference to this system using <see cref="Engine"/>'s root build handle</summary>
+		/// <summary>Create a new reference to this system using its <see cref="RootBuildHandle"/> (which may more specific than <see cref="Engine"/>'s root build handle)</summary>
 		/// <returns></returns>
 		public EngineSystemReference NewReference()
 		{
-			return new EngineSystemReference(this, Engine.RootBuildHandle);
+			return new EngineSystemReference(this, this.RootBuildHandle);
 		}
 		#endregion
 
@@ -270,8 +273,7 @@ namespace KSoft.Blam.Engine
 			else
 				Contract.Assert(prototype == Prototype);*/
 
-			var build_handle = Engine.RootBuildHandle;
-			EngineBuildHandle.Serialize(s, ref build_handle);
+			EngineBuildHandle.Serialize(s, ref mRootBuildHandleBaseline);
 
 			using (s.EnterUserDataBookmark(this))
 			{
@@ -281,7 +283,7 @@ namespace KSoft.Blam.Engine
 			if (s.IsReading)
 			{
 				int expected_engine_index = Engine.RootBuildHandle.EngineIndex;
-				int actual_engine_index = build_handle.EngineIndex;
+				int actual_engine_index = RootBuildHandle.EngineIndex;
 				KSoft.Debug.ValueCheck.AreEqual(
 					string.Format("{0} definition for {1} uses wrong engine id",
 						GetType().Name, Engine.Name),

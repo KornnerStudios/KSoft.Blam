@@ -125,7 +125,7 @@ namespace KSoft.Blam.Megalo.Proto
 			using (s.EnterCursorBookmark("BuildFiles"))
 			{
 				s.StreamableElements("Files",
-					mBuildProtoFiles, this.Engine.RootBuildHandle,
+					mBuildProtoFiles, this.RootBuildHandle,
 					Blam.Engine.EngineBuildHandle.SerializeWithBaseline);
 			}
 		}

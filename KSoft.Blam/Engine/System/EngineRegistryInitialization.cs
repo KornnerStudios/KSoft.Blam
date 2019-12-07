@@ -74,6 +74,7 @@ namespace KSoft.Blam.Engine
 			EngineBranchHaloOdst = BlamEngine.ResolveWellKnownEngineBranch("Halo3", "HaloOdst");
 			EngineBranchHaloReach = BlamEngine.ResolveWellKnownEngineBranch("HaloReach", "HaloReach");
 			EngineBranchHalo4 = BlamEngine.ResolveWellKnownEngineBranch("Halo4", "Halo4");
+			EngineBranchHalo2A = BlamEngine.ResolveWellKnownEngineBranch("Halo4", "Halo2A");
 		}
 
 		public static void Initialize()
@@ -101,7 +102,7 @@ namespace KSoft.Blam.Engine
 				EngineBranchHalo2 =
 				EngineBranchHalo3 = EngineBranchHaloOdst =
 				EngineBranchHaloReach =
-				EngineBranchHalo4 =
+				EngineBranchHalo4 = EngineBranchHalo2A =
 				null;
 		}
 

@@ -57,10 +57,17 @@
 					</Rev>
 				</Revisions>
 			</Branch>
+			<Branch name="Halo2A" project="groundhog">
+				<Revisions>
+					<!--#TODO-->
+				</Revisions>
+			</Branch>
 		</Branches>
 	</Repository>
 
 	<Systems>
 		<System guid="EF39D343-DAD5-43D4-A215-F91722ED1CC5" externs="Halo4_Localization.xml" />
+		<System guid="EA5FFB03-9991-4B81-B952-022EDC371F27" externs="Halo4_Blobs.xml" />
+		<System guid="F3047D03-8474-44C6-BB9E-49745454BD3D" externs="Halo4_Megalo.xml" />
 	</Systems>
 </Engine>

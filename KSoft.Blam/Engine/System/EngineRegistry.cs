@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Contracts = System.Diagnostics.Contracts;
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
 #else
 using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 #endif
+
 namespace KSoft.Blam.Engine
 {
 	/// <summary>Tracks all global-level engine information and objects</summary>
@@ -33,6 +32,7 @@ namespace KSoft.Blam.Engine
 		public static EngineBuildBranch EngineBranchHaloOdst { get; private set; }
 		public static EngineBuildBranch EngineBranchHaloReach { get; private set; }
 		public static EngineBuildBranch EngineBranchHalo4 { get; private set; }
+		public static EngineBuildBranch EngineBranchHalo2A { get; private set; }
 		#endregion
 
 		#region TargetPlatforms
@@ -128,12 +128,32 @@ namespace KSoft.Blam.Engine
 		/// <returns>Null if no system is registered with the provided guid</returns>
 		public static EngineSystemAttribute TryGetRegisteredSystem(Values.KGuid systemGuid)
 		{
-			Contract.Requires<ArgumentNullException>(systemGuid != Values.KGuid.Empty);
+			Contract.Requires<ArgumentNullException>(systemGuid.IsNotEmpty);
 
 			EngineSystemAttribute metadata;
 			Systems.TryGetValue(systemGuid, out metadata);
 
 			return metadata;
+		}
+
+		/// <summary>Get a human readable display string for debugging system references from a GUID</summary>
+		/// <param name="systemGuid"></param>
+		/// <returns>Non-null or empty string, no matter the input</returns>
+		public static string GetSystemDebugDisplayString(Values.KGuid systemGuid)
+		{
+			Contract.Ensures(Contract.Result<string>().IsNotNullOrEmpty());
+
+			EngineSystemAttribute system_attribute = null;
+			if (systemGuid.IsNotEmpty)
+				system_attribute = TryGetRegisteredSystem(systemGuid);
+
+			string display_string = string.Format("{{{0}}}={1}",
+				systemGuid.ToString(Values.KGuid.kFormatHyphenated),
+				system_attribute != null
+					? system_attribute.EngineSystemType.ToString()
+					: "UNDEFINED_SYSTEM");
+
+			return display_string;
 		}
 
 		/// <summary>Get an <see cref="EngineSystemBase"/> associated with a registered engine</summary>

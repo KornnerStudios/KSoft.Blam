@@ -37,11 +37,11 @@ namespace KSoft.Blam.Engine
 		/// <summary>The data store which has all the know builds based on this general engine</summary>
 		public EngineBuildRepository BuildRepository { get; private set; }
 
-		readonly Dictionary<Values.KGuid, BlamEngineSystem> mSystemPrototypes; 
+		readonly Dictionary<Values.KGuid, BlamEngineSystem> mSystemPrototypes;
 
 		public BlamEngine()
 		{
-			Name = 
+			Name =
 				"";
 
 			BuildRepository = new EngineBuildRepository();
@@ -98,8 +98,10 @@ namespace KSoft.Blam.Engine
 		{
 			if (!SupportsSystem(systemGuid))
 			{
+				string system_display_name = EngineRegistry.GetSystemDebugDisplayString(systemGuid);
+
 				string msg = string.Format("{0} doesn't support the system {1}",
-					forBuild.ToDisplayString(), systemGuid.ToString(Values.KGuid.kFormatHyphenated));
+					forBuild.ToDisplayString(), system_display_name);
 
 				throw new InvalidOperationException(msg);
 			}

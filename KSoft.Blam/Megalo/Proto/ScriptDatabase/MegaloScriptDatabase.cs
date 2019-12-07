@@ -163,7 +163,12 @@ namespace KSoft.Blam.Megalo.Proto
 			else if (forBuild.IsChildOf(Engine.EngineRegistry.EngineBranchHalo4.BranchHandle))
 				InitializeForHalo4();
 			else
+			{
 				Contract.Assert(false);
+				throw new KSoft.Debug.UnreachableException(string.Format(
+					"Failed to handle build: {0}",
+					forBuild));
+			}
 		}
 
 		void InitializeForHaloReach()
