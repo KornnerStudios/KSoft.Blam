@@ -10,8 +10,6 @@ namespace KSoft.Blam.Localization.Test
 		[Description("Test the core language registry for proper init and initial state")]
 		public void Localization_LanguageRegistryTest()
 		{
-			LanguageRegistry.Initialize();
-
 			Assert.AreEqual(17, LanguageRegistry.NumberOfLanguages,
 				"Unexpected supported language count. Was a new one added?");
 
@@ -25,9 +23,6 @@ namespace KSoft.Blam.Localization.Test
 		[Description("Temp test for validating the language system works using Reach")]
 		public void Localization_LanguageSystemHaloReachTest()
 		{
-			Engine.EngineRegistry.Initialize();
-			LanguageRegistry.Initialize();
-
 			var engines = Engine.EngineRegistry.Engines;
 			var reach = Engine.EngineRegistry.EngineBranchHaloReach;
 

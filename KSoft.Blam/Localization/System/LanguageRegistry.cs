@@ -125,6 +125,11 @@ namespace KSoft.Blam.Localization
 
 		public static void Initialize()
 		{
+			if (gLanguageNames != null)
+			{
+				throw new InvalidOperationException("Tried to initialize the language registry more than once");
+			}
+
 			gLanguageNames = new List<string>(kMaxLanguages);
 
 			InitializeLanguageNames();

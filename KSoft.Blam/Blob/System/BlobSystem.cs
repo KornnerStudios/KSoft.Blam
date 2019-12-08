@@ -32,12 +32,12 @@ namespace KSoft.Blam.Blob
 
 		#region TryGetBlobGroup
 		bool TryGetBlobGroup(GroupTagDatum groupTag, int version,
-			ref BlobGroup group, ref Blam.Engine.EngineBuildHandle buildForVersion)
+			ref BlobGroup group, ref BlobGroupVersionAndBuildInfo infoForVersion)
 		{
 			if (groupTag != null)
 			{
 				var group_candidate = Groups[groupTag];
-				if (group_candidate.VersionToBuildMap.TryGetValue(version, out buildForVersion))
+				if (group_candidate.VersionAndBuildMap.TryGetValue(version, out infoForVersion))
 				{
 					group = group_candidate;
 					return true;
@@ -48,35 +48,35 @@ namespace KSoft.Blam.Blob
 		}
 
 		bool TryGetBlobGroup(string tagString, int version,
-			out BlobGroup group, out Blam.Engine.EngineBuildHandle buildForVersion)
+			out BlobGroup group, out BlobGroupVersionAndBuildInfo infoForVersion)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(version.IsNotNone());
 
 			group = null;
-			buildForVersion = Blam.Engine.EngineBuildHandle.None;
+			infoForVersion = null;
 
 			var group_tag = (GroupTagDatum)GroupTags.FindGroupByTag(tagString);
-			return TryGetBlobGroup(group_tag, version, ref group, ref buildForVersion);
+			return TryGetBlobGroup(group_tag, version, ref group, ref infoForVersion);
 		}
 
 		public bool TryGetBlobGroup(uint signature, int binarySize, int version,
-			out BlobGroup group, out Blam.Engine.EngineBuildHandle buildForVersion)
+			out BlobGroup group, out BlobGroupVersionAndBuildInfo infoForVersion)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(version.IsNotNone());
 
 			group = null;
-			buildForVersion = Blam.Engine.EngineBuildHandle.None;
+			infoForVersion = null;
 
 			var group_tag = GroupTags.FindGroupByTag(signature);
-			return TryGetBlobGroup(group_tag, version, ref group, ref buildForVersion);
+			return TryGetBlobGroup(group_tag, version, ref group, ref infoForVersion);
 		}
 		public bool TryGetBlobGroup(uint signature, int binarySize, int version,
 			out BlobGroup group)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(version.IsNotNone());
 
-			Blam.Engine.EngineBuildHandle build;
-			return TryGetBlobGroup(signature, binarySize, version, out group, out build);
+			BlobGroupVersionAndBuildInfo infoForVersion;
+			return TryGetBlobGroup(signature, binarySize, version, out group, out infoForVersion);
 		}
 		#endregion
 
@@ -197,14 +197,16 @@ namespace KSoft.Blam.Blob
 				s.ReadAttribute(kAttributeNameVersion, ref version);
 
 				BlobGroup blob_group;
-				Engine.EngineBuildHandle build_for_version;
-				if (ctxt.System.TryGetBlobGroup(group_tag, version, out blob_group, out build_for_version))
+				BlobGroupVersionAndBuildInfo info_for_version;
+				if (ctxt.System.TryGetBlobGroup(group_tag, version, out blob_group, out info_for_version))
 				{
 					var target_build = ctxt.GameTarget.Build;
 
-					if (!build_for_version.IsWithinSameBranch(target_build))
+					if (!info_for_version.BuildHandle.IsWithinSameBranch(target_build))
+					{
 						s.ThrowReadException(SerializeObjectFoundBuildIncompatibility(ctxt.System,
-							blob_group, version, build_for_version, target_build));
+							blob_group, version, info_for_version.BuildHandle, target_build));
+					}
 
 					obj = ctxt.System.CreateObject(Blam.Engine.BlamEngineTargetHandle.None, blob_group, version);
 				}

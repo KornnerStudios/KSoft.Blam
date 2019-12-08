@@ -361,15 +361,19 @@ namespace KSoft.Blam.Blob.Transport
 		#endregion
 
 		#region EnumerateChunks
-		BlobObject EnumerateChunksReadObject(BlobSystem blobSystem, BlobGroup blobGroup,
+		BlobObject EnumerateChunksReadObject(BlobSystem blobSystem, BlobGroup blobGroup, BlobGroupVersionAndBuildInfo infoForVersion,
 			BlobChunkHeader header, byte[] data)
 		{
 			Contract.Requires<InvalidOperationException>(!GameTarget.IsNone);
 
 			var obj = blobSystem.CreateObject(GameTarget, blobGroup, header.Version, header.Size);
 
+			var byte_order = UnderlyingStream.ByteOrder;
+			if (infoForVersion.ForceLittleEndian)
+				byte_order = Shell.EndianFormat.Little;
+
 			using (var ms = new System.IO.MemoryStream(data))
-			using (var es = new IO.EndianStream(ms, UnderlyingStream.ByteOrder, this, blobGroup.GroupTag.Name, FileAccess.Read))
+			using (var es = new IO.EndianStream(ms, byte_order, this, blobGroup.GroupTag.Name, FileAccess.Read))
 			{
 				es.StreamMode = FileAccess.Read;
 
@@ -412,15 +416,17 @@ namespace KSoft.Blam.Blob.Transport
 			{
 				var header = kv.Key;
 				BlobGroup blob_group;
-				Engine.EngineBuildHandle build_for_version;
-				if (blobSystem.TryGetBlobGroup(header.Signature, header.DataSize, header.Version, out blob_group, out build_for_version))
+				BlobGroupVersionAndBuildInfo info_for_version;
+				if (blobSystem.TryGetBlobGroup(header.Signature, header.DataSize, header.Version, out blob_group, out info_for_version))
 				{
-					if (!build_for_version.IsWithinSameBranch(GameTarget.Build))
+					if (!info_for_version.BuildHandle.IsWithinSameBranch(GameTarget.Build))
+					{
 						EnumerateChunksReadObjectFoundBuildIncompatibility(blobSystem, header, blob_group,
-							build_for_version, GameTarget.Build);
+							info_for_version.BuildHandle, GameTarget.Build);
+					}
 
 					var task = Task<BlobObject>.Factory.StartNew(s =>
-						(s as BlobTransportStream).EnumerateChunksReadObject(blobSystem, blob_group, header, kv.Value),
+						(s as BlobTransportStream).EnumerateChunksReadObject(blobSystem, blob_group, info_for_version, header, kv.Value),
 						this);
 					task_list.Add(task);
 				}
@@ -439,14 +445,16 @@ namespace KSoft.Blam.Blob.Transport
 			{
 				var header = kv.Key;
 				BlobGroup blob_group;
-				Engine.EngineBuildHandle build_for_version;
-				if (blobSystem.TryGetBlobGroup(header.Signature, header.DataSize, header.Version, out blob_group, out build_for_version))
+				BlobGroupVersionAndBuildInfo info_for_version;
+				if (blobSystem.TryGetBlobGroup(header.Signature, header.DataSize, header.Version, out blob_group, out info_for_version))
 				{
-					if (!build_for_version.IsWithinSameBranch(GameTarget.Build))
+					if (!info_for_version.BuildHandle.IsWithinSameBranch(GameTarget.Build))
+					{
 						EnumerateChunksReadObjectFoundBuildIncompatibility(blobSystem, header, blob_group,
-							build_for_version, GameTarget.Build);
+							info_for_version.BuildHandle, GameTarget.Build);
+					}
 
-					var obj = EnumerateChunksReadObject(blobSystem, blob_group, header, kv.Value);
+					var obj = EnumerateChunksReadObject(blobSystem, blob_group, info_for_version, header, kv.Value);
 					results.Add(obj);
 				}
 				else
@@ -572,10 +580,14 @@ namespace KSoft.Blam.Blob.Transport
 		{
 			byte[] data;
 
+			var byte_order = UnderlyingStream.ByteOrder;
+			if (obj.SystemGroupVersionInfo.ForceLittleEndian)
+				byte_order = Shell.EndianFormat.Little;
+
 			var sys_group = obj.SystemGroup;
 			// #TODO_IMPLEMENT: support non-fixed length blobs like film streams
 			using (var ms = new System.IO.MemoryStream(obj.CalculateFixedBinarySize(this.GameTarget)))
-			using (var es = new IO.EndianStream(ms, UnderlyingStream.ByteOrder, this, sys_group.GroupTag.Name, FileAccess.Write))
+			using (var es = new IO.EndianStream(ms, byte_order, this, sys_group.GroupTag.Name, FileAccess.Write))
 			{
 				es.StreamMode = FileAccess.Write;
 

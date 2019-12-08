@@ -27,8 +27,6 @@ namespace KSoft.Blam.Engine.Test
 		[Description("Test the core engine registry for proper init and initial state")]
 		public void Engine_RegistryInitializeTest()
 		{
-			EngineRegistry.Initialize();
-
 			Assert.AreEqual(5, EngineRegistry.Engines.Count,
 				"Unexpected engine count in the registry. Was a new one added?");
 
@@ -43,6 +41,7 @@ namespace KSoft.Blam.Engine.Test
 			Assert.IsNotNull(EngineRegistry.EngineBranchHalo3);
 			Assert.IsNotNull(EngineRegistry.EngineBranchHaloOdst);
 			Assert.IsNotNull(EngineRegistry.EngineBranchHalo4);
+			Assert.IsNotNull(EngineRegistry.EngineBranchHalo2A);
 		}
 
 		[TestMethod]

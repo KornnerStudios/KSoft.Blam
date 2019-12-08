@@ -8,6 +8,7 @@ namespace KSoft.Blam.Blob
 		, IO.ITagElementStringNameStreamable
 	{
 		public BlobGroup SystemGroup { get; private set; }
+		public BlobGroupVersionAndBuildInfo SystemGroupVersionInfo { get; private set; }
 		public Engine.BlamEngineTargetHandle GameTarget { get; private set; }
 		public int Version { get; private set; }
 		public int BlobFlags { get; internal set; }
@@ -21,6 +22,17 @@ namespace KSoft.Blam.Blob
 			SystemGroup = blobGroup;
 			GameTarget = gameTarget;
 			Version = version;
+
+			BlobGroupVersionAndBuildInfo info_for_version;
+			if (SystemGroup.VersionAndBuildMap.TryGetValue(Version, out info_for_version))
+			{
+				SystemGroupVersionInfo = info_for_version;
+			}
+			else
+			{
+				throw new KSoft.Debug.UnreachableException();
+			}
+
 			InitializeExplicitlyForGame(gameTarget);
 		}
 		protected virtual void InitializeExplicitlyForGame(Engine.BlamEngineTargetHandle gameTarget)

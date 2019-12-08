@@ -11,8 +11,6 @@ namespace KSoft.Blam.Blob.Test
 		[Description("Temp test for validating the blob system works using Reach")]
 		public void Blob_BlobSystemHaloReachTest()
 		{
-			Engine.EngineRegistry.Initialize();
-
 			var engines = Engine.EngineRegistry.Engines;
 			var reach = Engine.EngineRegistry.EngineBranchHaloReach;
 
@@ -23,7 +21,7 @@ namespace KSoft.Blam.Blob.Test
 				foreach (var g in blob_system.System.Groups)
 				{
 					Console.WriteLine("{0} - known-as: {1}, version-count: {2}",
-						g.Key, g.Value.KnownAs, g.Value.VersionToBuildMap.Count);
+						g.Key, g.Value.KnownAs, g.Value.VersionAndBuildMap.Count);
 				}
 			}
 		}

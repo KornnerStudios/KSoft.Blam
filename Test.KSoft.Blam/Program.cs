@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace KSoft.Blam
 {
@@ -11,6 +10,7 @@ namespace KSoft.Blam
 		{
 			KSoft.Program.Initialize();
 			KSoft.Blam.Program.Initialize();
+			Blam.Program.InitializeCoreSystems();
 
 			// If this isn't true, then whoever is using this code didn't update
 			// [kTestResultsPath] to reflect their project tree's test results dir.
@@ -23,6 +23,7 @@ namespace KSoft.Blam
 		[AssemblyCleanup]
 		public static void AssemblyDispose()
 		{
+			Blam.Program.DisposeCoreSystems();
 			KSoft.Blam.Program.Dispose();
 			KSoft.Program.Dispose();
 		}

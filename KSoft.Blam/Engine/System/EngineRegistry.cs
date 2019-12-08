@@ -33,6 +33,28 @@ namespace KSoft.Blam.Engine
 		public static EngineBuildBranch EngineBranchHaloReach { get; private set; }
 		public static EngineBuildBranch EngineBranchHalo4 { get; private set; }
 		public static EngineBuildBranch EngineBranchHalo2A { get; private set; }
+
+		public static EngineBuildHandle TryParseEngineBranchName(string branchNameToFind)
+		{
+			var found_handle = EngineBuildHandle.None;
+
+			if (branchNameToFind.IsNotNullOrEmpty())
+			{
+				foreach (var engine in gEngines)
+				{
+					foreach (var branch in engine.BuildRepository.Branches)
+					{
+						if (string.Compare(branch.Name, branchNameToFind, StringComparison.OrdinalIgnoreCase)==0)
+						{
+							found_handle = branch.BranchHandle;
+							break;
+						}
+					}
+				}
+			}
+
+			return found_handle;
+		}
 		#endregion
 
 		#region TargetPlatforms

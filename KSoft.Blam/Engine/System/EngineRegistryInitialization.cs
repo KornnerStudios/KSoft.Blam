@@ -79,6 +79,11 @@ namespace KSoft.Blam.Engine
 
 		public static void Initialize()
 		{
+			if (gEngines != null)
+			{
+				throw new System.InvalidOperationException("Tried to initialize the engine registry more than once");
+			}
+
 			gEngines = new List<BlamEngine>(BlamEngine.kMaxCount);
 			gTargetPlatforms = new List<EngineTargetPlatform>(EngineTargetPlatform.kMaxCount);
 			gResourceModels = new List<string>(kMaxResourceModels);
@@ -106,12 +111,24 @@ namespace KSoft.Blam.Engine
 				null;
 		}
 
+		static bool mIsInitializedForNewProgram = false;
+		/// <summary>Causes all engine systems to globally initialize and register themselves</summary>
 		internal static void InitializeForNewProgram()
 		{
+			if (mIsInitializedForNewProgram)
+			{
+				throw new System.InvalidOperationException("Tried to initialize the engine registry for a program more than once");
+			}
+
 			EngineSystemAttribute.InitializeForNewAssembly(System.Reflection.Assembly.GetCallingAssembly());
+
+			mIsInitializedForNewProgram = true;
 		}
 		internal static void DisposeFromOldProgram()
 		{
+			EngineSystemAttribute.DisposeFromOldAssembly(System.Reflection.Assembly.GetCallingAssembly());
+
+			mIsInitializedForNewProgram = false;
 		}
 	};
 }

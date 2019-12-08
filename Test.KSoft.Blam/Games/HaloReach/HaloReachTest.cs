@@ -7,17 +7,6 @@ namespace KSoft.Blam.Games.HaloReach.Test
 	[TestClass]
 	public class HaloReachTest : BaseTestClass
 	{
-		[ClassInitialize]
-		public static void ContentTestInitialize(TestContext testContext)
-		{
-			Engine.EngineRegistry.Initialize();
-		}
-		[ClassCleanup]
-		public static void ContentTestDispose()
-		{
-			Engine.EngineRegistry.Dispose();
-		}
-
 		[TestMethod]
 		public void MegaloProtoSystemTest()
 		{

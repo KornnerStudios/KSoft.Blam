@@ -9,17 +9,6 @@ namespace KSoft.Blam.RuntimeData.Test
 	[TestClass]
 	public class ContentTest : BaseTestClass
 	{
-		[ClassInitialize]
-		public static void ContentTestInitialize(TestContext testContext)
-		{
-			Engine.EngineRegistry.Initialize();
-		}
-		[ClassCleanup]
-		public static void ContentTestDispose()
-		{
-			Engine.EngineRegistry.Dispose();
-		}
-
 		#region ContentMiniMetadataEncoding
 		static void TestContentMiniMetadataEncoding(EngineBuildBranchAndStringKvp kv)
 		{

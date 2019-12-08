@@ -8,17 +8,6 @@ namespace KSoft.Blam.Games.Halo4.Test
 	[TestClass]
 	public class Halo4Test : BaseTestClass
 	{
-		[ClassInitialize]
-		public static void ContentTestInitialize(TestContext testContext)
-		{
-			Engine.EngineRegistry.Initialize();
-		}
-		[ClassCleanup]
-		public static void ContentTestDispose()
-		{
-			Engine.EngineRegistry.Dispose();
-		}
-
 		[TestMethod]
 		public void MegaloProtoSystemTest()
 		{

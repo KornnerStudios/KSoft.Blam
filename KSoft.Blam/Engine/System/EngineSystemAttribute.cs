@@ -220,5 +220,10 @@ namespace KSoft.Blam.Engine
 			foreach (var esa in attrs)
 				esa.Value.InitializeForNewProgram(esa.Key);
 		}
+
+		internal static void DisposeFromOldAssembly(Assembly assembly)
+		{
+
+		}
 	};
 }
