@@ -127,7 +127,7 @@ namespace KSoft.Blam.Megalo.Proto
 				actualBuild => new MegaloScriptDatabase(actualBuild));
 		}
 		public static bool OutputMegaloDatabasePostprocessErrorTextToConsole { get; set; } = false;
-		static void PostprocessMegaloDatabase(MegaloScriptDatabase db)
+		static void PostprocessMegaloDatabase(MegaloScriptDatabase db, MegaloStaticDatabase associatedStaticDb)
 		{
 			System.IO.TextWriter errorOutput = null;
 			if (Blam.Program.RunningUnitTests || OutputMegaloDatabasePostprocessErrorTextToConsole)
@@ -135,7 +135,7 @@ namespace KSoft.Blam.Megalo.Proto
 				errorOutput = Console.Out;
 			}
 
-			db.Postprocess(errorOutput);
+			db.Postprocess(associatedStaticDb, errorOutput);
 		}
 
 		public AllDatabasesTasksTuple GetAllDatabasesAsync(Engine.EngineBuildHandle forBuild)
@@ -160,8 +160,7 @@ namespace KSoft.Blam.Megalo.Proto
 			if (scriptDb.StaticDatabase != null)
 				throw new ArgumentException("Script db already had a static db reference set", nameof(scriptDb));
 
-			scriptDb.StaticDatabase = staticDb;
-			PostprocessMegaloDatabase(scriptDb);
+			PostprocessMegaloDatabase(scriptDb, staticDb);
 		}
 		#endregion
 

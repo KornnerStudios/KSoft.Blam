@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <System engine="HaloReach">
 	<LanguageTables>
 		<T> <!--same as Halo3-->
@@ -14,7 +14,7 @@
 				<E id="8"  lang="ChineseTrad" />
 				<E id="9"  lang="ChineseSimp" />
 				<E id="10" lang="Portuguese" />
-				<E id="11" lang="Polish" />
+				<E id="11" lang="Polish" optional="true" />
 			</Entries>
 		</T>
 	</LanguageTables>

@@ -61,7 +61,8 @@ namespace KSoft.Blam.Localization.StringTables
 			NotifyPropertyChanged(LanguageRegistry.GetLanguageChangedEventArgs(langIndex));
 		}
 
-		public string English {
+		public string English
+		{
 			get { return GetImpl(LanguageRegistry.EnglishIndex); }
 			set { SetImpl(LanguageRegistry.EnglishIndex, value); }
 		}
@@ -97,7 +98,7 @@ namespace KSoft.Blam.Localization.StringTables
 		internal void ReadLanguageStrings(IO.EndianReader buffer, uint langBitmask = uint.MaxValue)
 		{
 			Contract.Assert(LanguageRegistry.NumberOfLanguages <= Bits.kInt32BitCount,
-				"langBitmask is too small to actually be a language bitvector");
+				nameof(langBitmask) + " is too small to actually be a language bitvector");
 			Contract.Assert(mLanguageOffsets != null);
 
 			for (int x = 0; x < mLanguageOffsets.Length; x++)
@@ -158,25 +159,35 @@ namespace KSoft.Blam.Localization.StringTables
 			where TCursor : class
 		{
 			bool writing = s.IsWriting;
+			GameLanguageHandle english_game_lang_hHandle = mLanguageTable.EnglishGameLangaugeHandle;
 
 			for (int x = 0; x < mLanguageStrings.Length; x++)
 			{
 				if (writing && mLanguageStrings[x] == null)
 					continue;
 
-				using (var bm = s.EnterCursorBookmarkOpt(mLanguageTable.GetGameLanguage(x).LanguageName)) if (bm.IsNotNull)
+				GameLanguageHandle game_lang_handle = mLanguageTable.GetGameLanguage(x);
+
+				using (var bm = s.EnterCursorBookmarkOpt(game_lang_handle.LanguageName)) if (bm.IsNotNull)
+				{
 					s.StreamCursor(ref mLanguageStrings[x]);
+				}
 				else
 				{
-					if (x == LanguageRegistry.EnglishIndex)
+					if (x == english_game_lang_hHandle.GameIndex)
+					{
 						s.ThrowReadException(new System.IO.InvalidDataException(
 							"Tried to serialize multilingual string with no English translation"));
+					}
 
+					// Eg, HaloReach didn't originally ship with Polish loc support, so don't force to English at this level in those cases.
+					bool game_lang_is_optional = mLanguageTable.IsGameLanguageOptional(x);
 					// If ChineseSimple is empty, engine will fall back to ChineseTraditional (for HaloReach and H4 at least)
-					if (x != LanguageRegistry.ChineseSimpleIndex)
+					bool game_lang_is_chinese_simple = game_lang_handle.LanguageIndex == LanguageRegistry.ChineseSimpleIndex;
+					if (!game_lang_is_chinese_simple && !game_lang_is_optional)
 					{
 						// default to english if there's no element for this lang
-						mLanguageStrings[x] = mLanguageStrings[LanguageRegistry.EnglishIndex];
+						mLanguageStrings[x] = mLanguageStrings[english_game_lang_hHandle.GameIndex];
 					}
 				}
 			}
@@ -191,7 +202,7 @@ namespace KSoft.Blam.Localization.StringTables
 			using (var bm = s.EnterCursorBookmarkOpt("String", this, obj=>obj.JustEnglish)) if (bm.IsNotNull)
 			{
 				LanguageRegistry.CodeExpectsEnglishFirst();
-				int k_english_index = LanguageRegistry.EnglishIndex;
+				int k_english_index = mLanguageTable.EnglishGameLangaugeHandle.GameIndex;
 
 				s.StreamCursor(ref mLanguageStrings[k_english_index]);
 				if (s.IsReading)
@@ -205,7 +216,9 @@ namespace KSoft.Blam.Localization.StringTables
 				}
 			}
 			else
+			{
 				SerializeLanguages(s);
+			}
 		}
 		#endregion
 	};

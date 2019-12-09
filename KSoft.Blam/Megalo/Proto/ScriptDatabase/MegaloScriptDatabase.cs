@@ -22,7 +22,7 @@ namespace KSoft.Blam.Megalo.Proto
 		public uint Version;
 
 		public EngineLimits Limits { get; private set; }
-		public MegaloStaticDatabase StaticDatabase { get; internal set; } // #TODO_BLAM: private set
+		public MegaloStaticDatabase StaticDatabase { get; private set; }
 
 		public List<SingleEncoding> SingleEncodings { get; private set; }
 		public List<MegaloScriptEnum> Enums { get; private set; }
@@ -224,10 +224,14 @@ namespace KSoft.Blam.Megalo.Proto
 			return NameToActionMap.TryGetValue(actionName, out action);
 		}
 
-		public void Postprocess(TextWriter errorWriter = null)
+		public void Postprocess(MegaloStaticDatabase associatedStaticDb, TextWriter errorWriter = null)
 		{
+			Contract.Requires(associatedStaticDb != null);
+
 			if (errorWriter == null)
 				errorWriter = Console.Out;
+
+			this.StaticDatabase = associatedStaticDb;
 
 			#region ValueTypes
 			foreach (var type in ValueTypes)

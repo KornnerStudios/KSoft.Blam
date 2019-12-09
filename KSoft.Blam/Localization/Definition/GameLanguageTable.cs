@@ -21,6 +21,8 @@ namespace KSoft.Blam.Localization
 			"GameLanguageTable not yet initialized";
 
 		Engine.EngineBuildHandle mBuildHandle;
+		Collections.BitVector32 mOptionalEngineLanguageFlags;
+		Collections.BitVector32 mOptionalGameLanguageFlags;
 		// An array of all registered languages and how they map to the build
 		GameLanguageHandle[] mEngineLanguageTable;
 		// All the IsSupported elements in mEngineLanguageTable, allowing us to index by game index
@@ -29,6 +31,8 @@ namespace KSoft.Blam.Localization
 		public GameLanguageTable()
 		{
 			mBuildHandle = Engine.EngineBuildHandle.None;
+			mOptionalEngineLanguageFlags = new Collections.BitVector32();
+			mOptionalGameLanguageFlags = new Collections.BitVector32();
 		}
 
 		/// <summary>The handle for the build of the engine this table is associated with</summary>
@@ -43,6 +47,12 @@ namespace KSoft.Blam.Localization
 			Contract.Assert(mGameLanguageTable != null, kErrorMessageNotInitialized);
 
 			return mGameLanguageTable.Length;
+		} }
+
+		public GameLanguageHandle EnglishGameLangaugeHandle { get {
+			Contract.Assert(mEngineLanguageTable != null, kErrorMessageNotInitialized);
+
+			return mEngineLanguageTable[LanguageRegistry.EnglishIndex];
 		} }
 
 		[Contracts.Pure]
@@ -60,6 +70,25 @@ namespace KSoft.Blam.Localization
 			Contract.Assert(mGameLanguageTable != null, kErrorMessageNotInitialized);
 
 			return mGameLanguageTable[gameIndex];
+		}
+
+		[Contracts.Pure]
+		public bool IsEngineLanguageOptional(int langIndex)
+		{
+			if (!LanguageRegistry.IsValidLanguageIndex(langIndex))
+				throw new ArgumentOutOfRangeException(nameof(langIndex), langIndex, "Out of bounds");
+			Contract.Assert(mEngineLanguageTable != null, kErrorMessageNotInitialized);
+
+			return mOptionalEngineLanguageFlags[langIndex];
+		}
+		[Contracts.Pure]
+		public bool IsGameLanguageOptional(int gameIndex)
+		{
+			if (!IsValidGameIndex(gameIndex))
+				throw new ArgumentOutOfRangeException(nameof(gameIndex), gameIndex, "Out of bounds");
+			Contract.Assert(mEngineLanguageTable != null, kErrorMessageNotInitialized);
+
+			return mOptionalGameLanguageFlags[gameIndex];
 		}
 
 		#region Index interfaces
@@ -135,6 +164,10 @@ namespace KSoft.Blam.Localization
 				mEngineLanguageTable[langIndex] =
 					new GameLanguageHandle(mBuildHandle, langIndex, TypeExtensions.kNone);
 			}
+
+			Contract.Assert(LanguageRegistry.NumberOfLanguages <= Bits.kInt32BitCount,
+				nameof(mOptionalEngineLanguageFlags) + " and " + nameof(mOptionalGameLanguageFlags) +
+				" are too small to actually be a language bitvector");
 		}
 		bool InitializeGameLanguageTableFromEngineTable(int gameLangCount)
 		{
@@ -172,6 +205,7 @@ namespace KSoft.Blam.Localization
 			const string kElementNameEntry = "E";
 			const string kAttributeNameGameIndex = "id";
 			const string kAttributeNameLangIndex = "lang";
+			const string kAttributeNameOptional = "optional";
 
 			// number of languages for this build of the engine
 			int lang_count = 0;
@@ -181,23 +215,36 @@ namespace KSoft.Blam.Localization
 			{
 				int game_index = TypeExtensions.kNone;
 				int lang_index = TypeExtensions.kNone;
+				bool is_optional = false;
 
 				s.ReadAttribute(kAttributeNameGameIndex, ref game_index, NumeralBase.Decimal);
 				LanguageRegistry.SerializeLanguageId(s, kAttributeNameLangIndex, ref lang_index);
+				s.ReadAttributeOpt(kAttributeNameOptional, ref is_optional);
 
 				if (IsInvalidGameIndexFromStream(game_index) || lang_index.IsNone())
+				{
 					s.ThrowReadException(new System.IO.InvalidDataException("Invalid table entry data"));
+				}
 
 				mEngineLanguageTable[lang_index] = new GameLanguageHandle(mBuildHandle, lang_index, game_index);
+				if (is_optional)
+				{
+					mOptionalEngineLanguageFlags[lang_index] = true;
+					mOptionalGameLanguageFlags[game_index] = true;
+				}
 
 				lang_count++;
 			}
 
-			if(lang_count == 0)
+			if (lang_count == 0)
+			{
 				s.ThrowReadException(new System.IO.InvalidDataException("Table has no entries"));
+			}
 
 			if (!InitializeGameLanguageTableFromEngineTable(lang_count))
+			{
 				s.ThrowReadException(new System.IO.InvalidDataException("Invalid game index data"));
+			}
 		}
 
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -212,14 +259,20 @@ namespace KSoft.Blam.Localization
 				ref mBuildHandle);
 
 			if (reading)
+			{
 				InitializeEngineLanguageTableWithBuildHandle();
+			}
 
 			using (s.EnterCursorBookmark("Entries"))
 			{
 				if (reading)
+				{
 					ReadEngineLanguageTable(s);
+				}
 				else
-					Contract.Assert(false, "Writing not supported");
+				{
+					throw new KSoft.Debug.UnreachableException("Writing not supported");
+				}
 			}
 		}
 		#endregion

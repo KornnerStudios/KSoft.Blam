@@ -11,7 +11,7 @@
 				<E id="5" lang="Italian" />
 				<E id="6" lang="Korean" />
 				<E id="7" lang="ChineseTrad" />
-				<E id="8" lang="Portuguese" />
+				<E id="8" lang="Portuguese" optional="true" />
 			</Entries>
 		</T>
 	</LanguageTables>
