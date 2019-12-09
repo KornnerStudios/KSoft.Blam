@@ -40,6 +40,8 @@ namespace KSoft.Blam.Blob
 	public sealed class BlobGroup
 		: IO.ITagElementStringNameStreamable
 	{
+		public BlobSystem ParentSystem { get; private set; }
+
 		GroupTagDatum mGroupTag;
 		public GroupTagDatum GroupTag { get { return mGroupTag; } }
 
@@ -56,6 +58,37 @@ namespace KSoft.Blam.Blob
 			mVersionAndBuildMap = new Dictionary<int, BlobGroupVersionAndBuildInfo>();
 		}
 
+		public BlobGroupVersionAndBuildInfo FindMostRelaventVersionInfo(Engine.EngineBuildHandle forBuild)
+		{
+			if (forBuild.IsNone)
+				throw new ArgumentNoneException(nameof(forBuild));
+
+			BlobGroupVersionAndBuildInfo exact_match = null;
+			BlobGroupVersionAndBuildInfo most_relevant = null;
+			int possibly_relevant_count = 0;
+
+			foreach (var kvp in VersionAndBuildMap)
+			{
+				var possible_info = kvp.Value;
+
+				// Solves for versions tied to a specific revision, if any
+				if (exact_match == null &&
+					possible_info.BuildHandle == forBuild)
+				{
+					exact_match = possible_info;
+				}
+
+				// Else, find the last one in the branch
+				if (forBuild.IsWithinSameBranch(possible_info.BuildHandle))
+				{
+					most_relevant = possible_info;
+					possibly_relevant_count++;
+				}
+			}
+
+			return exact_match ?? most_relevant;
+		}
+
 		#region ITagElementStreamable<string> Members
 		internal static void SerializeVersionToBuildMapKey<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			object _dontUse,
@@ -70,9 +103,13 @@ namespace KSoft.Blam.Blob
 			where TDoc : class
 			where TCursor : class
 		{
-			var system = KSoft.Debug.TypeCheck.CastReference<BlobSystem>(s.UserData);
+			if (s.IsReading)
+			{
+				var system = KSoft.Debug.TypeCheck.CastReference<BlobSystem>(s.UserData);
+				ParentSystem = system;
+			}
 
-			BlobSystem.SerializeGroupsKey(s, system, ref mGroupTag);
+			BlobSystem.SerializeGroupsKey(s, ParentSystem, ref mGroupTag);
 
 			s.StreamAttributeEnumOpt("type", ref mKnownAs, v => v != WellKnownBlob.NotWellKnown);
 

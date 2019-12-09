@@ -35,6 +35,7 @@ namespace KSoft.Blam.Engine
 
 			BlamEngine.InitializeEngineBuildHandles();
 			kNullValidTargetPlatforms = new Collections.BitSet(TargetPlatforms.Count);
+			InitializeTargetPlatformIndicies();
 		}
 		static void InitializeEngines()
 		{
@@ -58,11 +59,20 @@ namespace KSoft.Blam.Engine
 				select r)
 			{
 				if (gExportedBuildsByName.ContainsKey(r.ExportName))
+				{
 					throw new InvalidDataException(string.Format(
 						"build={0} tried to export with a name that is already in use: {1}",
 						r.BuildHandle.ToDisplayString(), r.ExportName));
+				}
 
 				gExportedBuildsByName.Add(r.ExportName, r);
+			}
+		}
+		static void InitializeTargetPlatformIndicies()
+		{
+			for (int x = 0; x < gTargetPlatforms.Count; x++)
+			{
+				gTargetPlatforms[x].TargetPlatformIndex = x;
 			}
 		}
 

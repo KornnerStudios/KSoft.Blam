@@ -9,6 +9,11 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Blam.Megalo.Proto
 {
+	using AllDatabasesTasksTuple = ValueTuple
+			< Task<MegaloStaticDatabase>
+			, Task<MegaloScriptDatabase>
+			>;
+
 	[Engine.EngineSystem(KeepExternsLoaded=true)]
 	public sealed class MegaloProtoSystem
 		: Engine.EngineSystemBase
@@ -113,9 +118,24 @@ namespace KSoft.Blam.Megalo.Proto
 		}
 		public Task<MegaloScriptDatabase> GetMegaloDatabaseAsync(Engine.EngineBuildHandle forBuild)
 		{
+			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+
 			return GetDatabaseAsync(forBuild, "script",
 				GetMegaloDatabasePath, mLoadedScriptDbs,
 				actualBuild => new MegaloScriptDatabase(actualBuild));
+		}
+
+		public AllDatabasesTasksTuple GetAllDatabasesAsync(Engine.EngineBuildHandle forBuild)
+		{
+			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+
+			var static_db_task = GetStaticDatabaseAsync(forBuild);
+			var megalo_db_task = GetMegaloDatabaseAsync(forBuild);
+
+			return new AllDatabasesTasksTuple
+				( static_db_task
+				, megalo_db_task
+				);
 		}
 		#endregion
 

@@ -142,6 +142,17 @@ namespace KSoft.Blam.Engine
 			// this only works because ALL bitfields are NONE encoded, meaning -1 values are encoded as 0
 			return mHandle == 0;
 		} }
+		[Contracts.Pure]
+		public bool IsNotNone { get { return !IsNone; } }
+		/// <summary>This handle refers to a fully formed build, down to the revision)</summary>
+		[Contracts.Pure]
+		public bool IsFullyFormed { get {
+			return IsNotNone
+				&& EngineIndex.IsNotNone()
+				&& BranchIndex.IsNotNone()
+				&& RevisionIndex.IsNotNone()
+				;
+		} }
 
 		#region Overrides
 		/// <summary>See <see cref="Object.Equals"/></summary>

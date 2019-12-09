@@ -78,6 +78,23 @@ namespace KSoft.Blam.Blob
 			BlobGroupVersionAndBuildInfo infoForVersion;
 			return TryGetBlobGroup(signature, binarySize, version, out group, out infoForVersion);
 		}
+
+		public bool TryGetBlobGroup(WellKnownBlob kind,
+			out BlobGroup group)
+		{
+			group = null;
+
+			foreach (var kvp in Groups)
+			{
+				if (kvp.Value.KnownAs == kind)
+				{
+					group = kvp.Value;
+					break;
+				}
+			}
+
+			return group != null;
+		}
 		#endregion
 
 		#region CreateObject
@@ -114,6 +131,39 @@ namespace KSoft.Blam.Blob
 			Contract.Requires(version.IsNoneOrPositive());
 
 			return CreateObjectImpl(gameTarget, blobGroup, version, binarySize);
+		}
+
+		public BlobObject CreateObject(Engine.BlamEngineTargetHandle gameTarget,
+			WellKnownBlob knownBlob)
+		{
+			if (gameTarget.IsNone)
+				throw new ArgumentNoneException(nameof(gameTarget));
+			if (!gameTarget.Build.IsFullyFormed)
+				throw new ArgumentException("Target build needs to be fully formed", nameof(gameTarget));
+			if (knownBlob == WellKnownBlob.NotWellKnown)
+				throw new ArgumentException(nameof(WellKnownBlob.NotWellKnown), nameof(knownBlob));
+
+			BlobGroup known_blob_group;
+			if (!TryGetBlobGroup(knownBlob, out known_blob_group))
+			{
+				throw new InvalidOperationException(string.Format(
+					"No blob groups marked to be known as {0} under {1}",
+					knownBlob,
+					this.Prototype.Engine));
+			}
+
+			BlobGroupVersionAndBuildInfo known_blob_group_version_info =
+				known_blob_group.FindMostRelaventVersionInfo(gameTarget.Build);
+			if (known_blob_group_version_info == null)
+			{
+				throw new InvalidOperationException(string.Format(
+					"No {0} blob group versions resolved possibly for {1} under {2}",
+					knownBlob,
+					gameTarget.Build,
+					this.Prototype.Engine));
+			}
+
+			return CreateObject(gameTarget, known_blob_group, known_blob_group_version_info.MajorVersion);
 		}
 		#endregion
 

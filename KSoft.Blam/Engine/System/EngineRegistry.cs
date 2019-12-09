@@ -47,12 +47,13 @@ namespace KSoft.Blam.Engine
 						if (string.Compare(branch.Name, branchNameToFind, StringComparison.OrdinalIgnoreCase)==0)
 						{
 							found_handle = branch.BranchHandle;
-							break;
+							goto exit;
 						}
 					}
 				}
 			}
 
+		exit:
 			return found_handle;
 		}
 		#endregion
@@ -125,6 +126,25 @@ namespace KSoft.Blam.Engine
 
 			return gExportedBuildsByName;
 		} }
+
+		public static EngineBuildRevision TryParseExportedBuildName(string exportedNameToFind)
+		{
+			EngineBuildRevision found_revision = null;
+
+			if (exportedNameToFind.IsNotNullOrEmpty())
+			{
+				foreach (var kvp in ExportedBuildsByName)
+				{
+					if (string.Compare(kvp.Key, exportedNameToFind, StringComparison.OrdinalIgnoreCase)==0)
+					{
+						found_revision = kvp.Value;
+						break;
+					}
+				}
+			}
+
+			return found_revision;
+		}
 		#endregion
 
 		#region Systems

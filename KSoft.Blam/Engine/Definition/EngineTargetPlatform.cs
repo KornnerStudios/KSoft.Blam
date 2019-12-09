@@ -24,6 +24,9 @@ namespace KSoft.Blam.Engine
 		}
 		#endregion
 
+		/// <summary>Index this object appears in the global registry</summary>
+		public int TargetPlatformIndex { get; internal set; }
+
 		public string Name { get; private set; }
 
 		Shell.Platform mPlatform;

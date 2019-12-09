@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Contracts = System.Diagnostics.Contracts;
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
@@ -55,6 +54,7 @@ namespace KSoft.Blam.Engine
 		public bool IsValid { get {
 			return mSystem != null;
 		} }
+		public bool IsNotValid { get { return !IsValid; } }
 
 		#region IDisposable Members
 		public void Dispose()
@@ -125,6 +125,7 @@ namespace KSoft.Blam.Engine
 		public bool IsValid { get {
 			return mSystem != null;
 		} }
+		public bool IsNotValid { get { return !IsValid; } }
 
 		#region IDisposable Members
 		public void Dispose()
