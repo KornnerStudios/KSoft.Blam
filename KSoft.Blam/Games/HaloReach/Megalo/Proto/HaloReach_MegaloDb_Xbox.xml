@@ -1,0 +1,950 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MegaloScriptDatabase game="HaloReach_Xbox" version="1">
+	<Limits>
+		<MaxTriggerGroups>128</MaxTriggerGroups>
+		<MaxScriptValues>4096</MaxScriptValues>
+
+		<!--scripting-->
+		<EntryPoints>Initialization, LocalInitialization, HostMigration, DoubleHostMigration, ObjectDeathEvent, Local, Pregame</EntryPoints>
+		<StreamEntryPointIndexAsPointer>true</StreamEntryPointIndexAsPointer>
+		<StreamConditionsAndActionsRefsAsRefs>true</StreamConditionsAndActionsRefsAsRefs>
+		<MaxConditions>512</MaxConditions>
+		<MaxActions>1024</MaxActions>
+		<MaxTriggers>320</MaxTriggers>
+
+		<!--static-->
+		<NumberOfGameEngineOptions>1272</NumberOfGameEngineOptions>
+		<MaxMultiplayerObjectTypes>2048</MaxMultiplayerObjectTypes>
+		<MaxMegaloStringIds>256</MaxMegaloStringIds>
+		<MaxMegaloEngineSounds>95</MaxMegaloEngineSounds> <!--actual limit-->
+		<MaxGameIncidentTypes>1024</MaxGameIncidentTypes>
+		<MaxGameMedals>256</MaxGameMedals>
+		<NumberOfEngineCategories>32</NumberOfEngineCategories>
+
+		<!--variant-->
+		<NumberOfLoadoutPalettes>5</NumberOfLoadoutPalettes>
+		<MaxUserDefinedOptions>16</MaxUserDefinedOptions>
+		<MaxUserDefinedOptionValues>8</MaxUserDefinedOptionValues>
+		<MaxVariantStrings>112</MaxVariantStrings>
+		<MaxPlayerTraits>16</MaxPlayerTraits>
+		<MaxGameStatistics>4</MaxGameStatistics>
+		<MaxHudWidgets>4</MaxHudWidgets>
+		<MaxObjectFilters>16</MaxObjectFilters>
+
+		<MaxMultiplayerObjects>512</MaxMultiplayerObjects>
+	</Limits>
+	<EnumTypes>
+		<Type name="TeamDisposition">
+			<Member>Type0</Member>
+			<Member>Type1</Member>
+			<Member>Type2</Member>
+		</Type>
+		<Type name="AddWeaponMode">
+			<Member>Add</Member>
+			<Member>Mode1</Member>
+			<Member>Swap?</Member>
+		</Type>
+		<Type name="DropWeaponMode">
+			<Member>Primary</Member>
+			<Member>Secondary</Member>
+		</Type>
+		<Type name="NavpointPriority"> <!--one of these is 'when in view'-->
+			<Member>None</Member>
+			<Member>Low</Member>
+			<Member>High</Member>
+			<Member>Default</Member>
+		</Type>
+		<Type name="PickupPriority">
+			<Member>Type0</Member>
+			<Member>HoldAction</Member>
+			<Member>Automatic</Member>
+			<Member>Type3</Member>
+		</Type>
+
+		<Type name="GrenadeType">
+			<Member>Frag</Member>
+			<Member>Plasma</Member>
+		</Type>
+
+		<Type name="ChudDestination">
+			<Member>Type0</Member>
+			<Member>Type1</Member>
+		</Type>
+
+		<Type name="KillerType">
+			<Member>Guardians</Member>
+			<Member>Suicide</Member>
+			<Member>Kill</Member>
+			<Member>Betrayal</Member>
+			<Member>Quit</Member>
+		</Type>
+		<Type name="CreateObjectFlags">
+			<Member>NeverGarbage</Member>
+			<Member>Bit1</Member>
+			<Member>Bit2</Member>
+		</Type>
+		<Type name="PlayerUnusedModeFlags">
+			<Member>Bit0</Member>
+			<Member>Bit1</Member>
+			<Member>Bit2</Member>
+			<Member>Bit3</Member>
+		</Type>
+
+		<Type name="PlayerType">
+			<Member>NONE</Member> <!--NOTE: Has none but doesn't use +1 encoding-->
+
+			<Member>Player0</Member>
+			<Member>Player1</Member>
+			<Member>Player2</Member>
+			<Member>Player3</Member>
+			<Member>Player4</Member>
+			<Member>Player5</Member>
+			<Member>Player6</Member>
+			<Member>Player7</Member>
+			<Member>Player8</Member>
+			<Member>Player9</Member>
+			<Member>Player10</Member>
+			<Member>Player11</Member>
+			<Member>Player12</Member>
+			<Member>Player13</Member>
+			<Member>Player14</Member>
+			<Member>Player15</Member>
+
+			<Member>GlobalPlayer0</Member> <!--0x11-->
+			<Member>GlobalPlayer1</Member>
+			<Member>GlobalPlayer2</Member>
+			<Member>GlobalPlayer3</Member>
+			<Member>GlobalPlayer4</Member>
+			<Member>GlobalPlayer5</Member>
+			<Member>GlobalPlayer6</Member>
+			<Member>GlobalPlayer7</Member>
+
+			<Member>Iterator.Player</Member> <!--0x19-->
+
+			<Member>HudInterface.Player</Member>
+			<Member>HudInterface.TargetPlayer</Member>
+
+			<Member>ObjectDeathEvent.KillerPlayer</Member>
+		</Type>
+		<Type name="ObjectType">
+			<Member>NONE</Member> <!--NOTE: Has none but doesn't use +1 encoding-->
+
+			<Member>GlobalObject0</Member>
+			<Member>GlobalObject1</Member>
+			<Member>GlobalObject2</Member>
+			<Member>GlobalObject3</Member>
+			<Member>GlobalObject4</Member>
+			<Member>GlobalObject5</Member>
+			<Member>GlobalObject6</Member>
+			<Member>GlobalObject7</Member>
+			<Member>GlobalObject8</Member>
+			<Member>GlobalObject9</Member>
+			<Member>GlobalObject10</Member>
+			<Member>GlobalObject11</Member>
+			<Member>GlobalObject12</Member>
+			<Member>GlobalObject13</Member>
+			<Member>GlobalObject14</Member>
+			<Member>GlobalObject15</Member>
+
+			<Member>Iterator.Object</Member> <!--0x11-->
+
+			<Member>HudInterface.TargetObject</Member> <!--HudInterface.TargetPlayer's slave object-->
+
+			<Member>ObjectDeathEvent.DeadObject</Member>
+			<Member>ObjectDeathEvent.KillerObject</Member>
+		</Type>
+		<Type name="TeamType">
+			<Member>NONE</Member>
+
+			<Member>Team0</Member> <!--also, defenders-->
+			<Member>Team1</Member> <!--also, attackers-->
+			<Member>Team2</Member>
+			<Member>Team3</Member>
+			<Member>Team4</Member>
+			<Member>Team5</Member>
+			<Member>Team6</Member>
+			<Member>Team7</Member>
+			<Member>TeamNeutral</Member>
+
+			<Member>GlobalTeam0</Member> <!--0x9-->
+			<Member>GlobalTeam1</Member>
+			<Member>GlobalTeam2</Member>
+			<Member>GlobalTeam3</Member>
+			<Member>GlobalTeam4</Member>
+			<Member>GlobalTeam5</Member>
+			<Member>GlobalTeam6</Member>
+			<Member>GlobalTeam7</Member>
+
+			<Member>Iterator.Team</Member> <!--0x11-->
+
+			<Member>HudInterface.PlayerTeam</Member>
+			<!--not positive where this ends, but I believe it's 0x13-->
+			<Member>HudInterface.TargetTeam</Member> <!--HudInterface.TargetPlayer's team-->
+
+			<Member>_TeamType14</Member>
+			<Member>_TeamType15</Member>
+		</Type>
+	</EnumTypes>
+	<VariableSets>
+		<Set type="Globals">
+			<Variable max="12">Numeric</Variable>
+			<Variable max="8" >Timer</Variable>
+			<Variable max="8" >Team</Variable>
+			<Variable max="8" >Player</Variable>
+			<Variable max="16">Object</Variable>
+		</Set>
+		<Set type="Player">
+			<Variable max="8" >Numeric</Variable>
+			<Variable max="4" >Timer</Variable>
+			<Variable max="4" >Team</Variable>
+			<Variable max="4" >Player</Variable>
+			<Variable max="4" >Object</Variable>
+		</Set>
+		<Set type="Object">
+			<Variable max="8" >Numeric</Variable>
+			<Variable max="4" >Timer</Variable>
+			<Variable max="2" >Team</Variable>
+			<Variable max="4" >Player</Variable>
+			<Variable max="4" >Object</Variable>
+		</Set>
+		<Set type="Team">
+			<Variable max="8" >Numeric</Variable>
+			<Variable max="4" >Timer</Variable>
+			<Variable max="4" >Team</Variable>
+			<Variable max="4" >Player</Variable>
+			<Variable max="6" >Object</Variable>
+		</Set>
+	</VariableSets>
+	<ValueTypes>
+		<Type baseType="None" name="None" />
+
+		<!-- VarReference -->
+			<Type baseType="VarReference" name="VarReference"		varReferenceType="Any" />
+			<Type baseType="VarReference" name="CustomReference"	varReferenceType="Custom" />
+			<Type baseType="VarReference" name="PlayerReference"	varReferenceType="Player" />
+			<Type baseType="VarReference" name="ObjectReference"	varReferenceType="Object" />
+			<Type baseType="VarReference" name="TeamReference"		varReferenceType="Team" />
+			<Type baseType="VarReference" name="TimerReference"		varReferenceType="Timer" />
+
+		<!-- Tokens -->
+			<Type baseType="Tokens" name="Tokens1" maxTokens="1" />
+			<Type baseType="Tokens" name="Tokens2" maxTokens="2" />
+			<Type baseType="Tokens" name="Tokens3" maxTokens="3" />
+
+		<!-- Integer -->
+			<Type baseType="Bool" name="Bool" />
+			<Type baseType="Int"  name="Int8"   bitLength="8" />
+			<Type baseType="UInt" name="UInt8"  bitLength="8" />
+			<Type baseType="Int"  name="Int16"  bitLength="16" />
+
+		<Type baseType="Point3d" name="Point3d" bitLength="8" signed="true" />
+
+		<!-- Flags -->
+			<Type baseType="Flags" name="KillerTypeFlags"	enumType="KillerType" />
+			<Type baseType="Flags" name="CreateObjectFlags"	enumType="CreateObjectFlags" />
+			<Type baseType="Flags" name="PlayerUnusedModes"	enumType="PlayerUnusedModeFlags" />
+
+		<!-- Enums -->
+			<Type baseType="Enum" name="TeamDesignator"		enumType="TeamDesignator" enumTraits="HasNoneMember" /> <!--builtin-->
+			<Type baseType="Enum" name="TeamDisposition"	enumType="TeamDisposition" />
+			<Type baseType="Enum" name="TimerRate"			enumType="TimerRate" /> <!--builtin-->
+			<Type baseType="Enum" name="ComparisonType"		enumType="ComparisonType" /> <!--builtin-->
+			<Type baseType="Enum" name="OperationType"		enumType="OperationType" /> <!--builtin-->
+			<Type baseType="Enum" name="NavpointIconType"	enumType="NavpointIconType" enumTraits="HasNoneMember" /> <!--builtin-->
+			<Type baseType="Enum" name="AddWeaponMode"		enumType="AddWeaponMode" />
+			<Type baseType="Enum" name="DropWeaponMode"		enumType="DropWeaponMode" />
+			<Type baseType="Enum" name="NavpointPriority"	enumType="NavpointPriority" />
+			<Type baseType="Enum" name="PickupPriority"		enumType="PickupPriority" />
+			<Type baseType="Enum" name="GrenadeType"		enumType="GrenadeType" />
+			<Type baseType="Enum" name="ChudDestination"	enumType="ChudDestination" />
+
+			<Type baseType="Enum" name="ExplicitPlayerType"	enumType="PlayerType" />
+			<Type baseType="Enum" name="ExplicitObjectType"	enumType="ObjectType" />
+			<Type baseType="Enum" name="ExplicitTeamType"	enumType="TeamType" enumTraits="HasNoneMember" />
+
+		<!--scripting-->
+		<Type baseType="Index" name="TriggerReference"
+														indexTarget="Trigger"	indexTraits="Reference" />
+		<!--static-->
+		<Type baseType="Index" name="ObjectTypeIndex"
+														indexTarget="ObjectType" indexTraits="PointerHasValue" />
+		<Type baseType="Index" name="NameIndex"
+														indexTarget="Name"		indexTraits="Pointer" />
+		<Type baseType="Index" name="SoundIndex"
+														indexTarget="Sound"		indexTraits="Pointer" />
+		<Type baseType="Index" name="IncidentId"
+														indexTarget="Incident"	indexTraits="Pointer" />
+			<!--widget icon?-->
+		<Type baseType="Index" name="IconIndex6"		bitLength="6"
+														indexTarget="Icon"		indexTraits="PointerHasValue" />
+			<!--player icon?-->
+		<Type baseType="Index" name="IconIndex7"		bitLength="7"
+														indexTarget="Icon"		indexTraits="PointerHasValue" />
+		<Type baseType="Index" name="MedalIndex"
+														indexTarget="Medal"		indexTraits="PointerHasValue" />
+		<!--variant-->
+		<Type baseType="UInt" name="RequisitionPaletteReference"  bitLength="4" /> <!-- probably should be an Index, but req palettes are unused anyway -->
+		<Type baseType="Index" name="OptionReference"
+														indexTarget="Option" indexTraits="Reference" />
+		<Type baseType="Index" name="StringIndex"
+														indexTarget="String" indexTraits="Pointer" />
+		<Type baseType="Index" name="LoadoutPaletteReference"
+														indexTarget="LoadoutPalette" indexTraits="Reference" />
+		<Type baseType="Index" name="PlayerTraitsReference"
+														indexTarget="PlayerTraits" indexTraits="Reference" />
+		<Type baseType="Index" name="StatisticReference"
+														indexTarget="Statistic" indexTraits="Reference" />
+		<Type baseType="Index" name="Widget"			bitLength="2"
+														indexTarget="Widget" indexTraits="PointerHasValue" />
+		<Type baseType="Index" name="ObjectFilterIndex"
+														indexTarget="ObjectFilter" indexTraits="PointerHasValue" />
+
+		<Type baseType="Shape"							name="Shape" />
+		<Type baseType="TargetVar"						name="TargetVar" />
+		<Type baseType="TeamFilterParameters"			name="TeamFilterParameters" />
+		<Type baseType="NavpointIconParameters"			name="NavpointIconParameters" />
+		<Type baseType="WidgetMeterParameters"			name="WidgetMeterParameters" />
+		<Type baseType="ObjectReferenceWithPlayerVarIndex"	name="ObjectReferenceWithPlayerVarIndex" />
+
+		<!-- Var: Only use these in VariableReferenceTypes prototypes -->
+			<Type baseType="Var" name="Global.Numeric"	varType="Numeric"	varSet="Globals" />
+			<Type baseType="Var" name="Global.Timer"	varType="Timer"		varSet="Globals" />
+			<Type baseType="Var" name="Global.Team"		varType="Team"		varSet="Globals" />
+			<Type baseType="Var" name="Global.Player"	varType="Player"	varSet="Globals" />
+			<Type baseType="Var" name="Global.Object"	varType="Object"	varSet="Globals" />
+
+			<Type baseType="Var" name="Player.Numeric"	varType="Numeric"	varSet="Player" />
+			<Type baseType="Var" name="Player.Timer"	varType="Timer"		varSet="Player" />
+			<Type baseType="Var" name="Player.Team"		varType="Team"		varSet="Player" />
+			<Type baseType="Var" name="Player.Player"	varType="Player"	varSet="Player" />
+			<Type baseType="Var" name="Player.Object"	varType="Object"	varSet="Player" />
+
+			<Type baseType="Var" name="Object.Numeric"	varType="Numeric"	varSet="Object" />
+			<Type baseType="Var" name="Object.Timer"	varType="Timer"		varSet="Object" />
+			<Type baseType="Var" name="Object.Team"		varType="Team"		varSet="Object" />
+			<Type baseType="Var" name="Object.Player"	varType="Player"	varSet="Object" />
+			<Type baseType="Var" name="Object.Object"	varType="Object"	varSet="Object" />
+
+			<Type baseType="Var" name="Team.Numeric"	varType="Numeric"	varSet="Team" />
+			<Type baseType="Var" name="Team.Timer"		varType="Timer"		varSet="Team" />
+			<Type baseType="Var" name="Team.Team"		varType="Team"		varSet="Team" />
+			<Type baseType="Var" name="Team.Player"		varType="Player"	varSet="Team" />
+			<Type baseType="Var" name="Team.Object"		varType="Object"	varSet="Team" />
+	</ValueTypes>
+	<VariableReferenceTypes>
+		<Type type="Custom">
+			<Member type="Numeric" name="Int16"							readonly="true"
+														paramValueType="Int16" paramValueName="Value" />
+
+			<Member type="Numeric" name="Player.NumericVar"
+														paramTypeEnum="ExplicitPlayerType"
+														paramValueType="Player.Numeric"	paramValueName="VariableIndex" />
+			<Member type="Numeric" name="Object.NumericVar"
+														paramTypeEnum="ExplicitObjectType"
+														paramValueType="Object.Numeric"	paramValueName="VariableIndex" />
+			<Member type="Numeric" name="Team.NumericVar"
+														paramTypeEnum="ExplicitTeamType"
+														paramValueType="Team.Numeric"	paramValueName="VariableIndex" />
+			<Member type="Numeric" name="Global.NumericVar"
+														paramValueType="Global.Numeric" paramValueName="VariableIndex" />
+			<Member type="Numeric" name="UserDefinedOption"				readonly="true"
+														paramValueType="OptionReference" paramValueName="OptionIndex" />
+
+			<Member type="Numeric" name="SpawnSequence"					readonly="true"
+														paramTypeEnum="ExplicitObjectType" /> <!--sbyte extended to int-->
+
+			<Member type="Numeric" name="TeamScore"
+														paramTypeEnum="ExplicitTeamType" /> <!--short extended to int-->
+			<Member type="Numeric" name="PlayerScore"
+														paramTypeEnum="ExplicitPlayerType" /> <!--short extended to int-->
+			<!--requisition related-->
+			<Member type="Numeric" name="Unknown9"
+														paramTypeEnum="ExplicitPlayerType" />
+			<Member type="Numeric" name="PlayerRating"					readonly="true"
+														paramTypeEnum="ExplicitPlayerType" /> <!--calculated float converted to int-->
+
+			<Member type="Numeric" name="PlayerStatistic"
+														paramTypeEnum="ExplicitPlayerType"
+														paramValueType="StatisticReference" paramValueName="StatIndex" />
+			<Member type="Numeric" name="TeamStatistic"
+														paramTypeEnum="ExplicitTeamType"
+														paramValueType="StatisticReference" paramValueName="StatIndex" />
+
+			<Member type="Numeric" name="CurrentRound"					readonly="true" /> <!--short extended to int-->
+			<Member type="Bool" name="SymmetryGet"						readonly="true" />
+			<Member type="Bool" name="Symmetry" /> <!--can both get and set-->
+
+			<Member type="Numeric" name="ScoreToWin" 					readonly="true" />
+			<Member type="Bool" name="unkF7A6" 							readonly="true" />
+			<Member type="Bool" name="TeamsEnabled" 					readonly="true" />
+			<Member type="Numeric" name="RoundTimeLimit" 				readonly="true" />
+			<Member type="Numeric" name="RoundLimit" 					readonly="true" />
+			<Member type="Bool" name="MiscOptions.unk0_bit3"			readonly="true" />
+			<Member type="Numeric" name="EarlyVictoryWinCount"			readonly="true" />
+			<Member type="Numeric" name="SuddenDeathTimeLimit"			readonly="true" />
+			<Member type="Numeric" name="GracePeriod"					readonly="true" />
+			<Member type="Numeric" name="LivesPerRound"					readonly="true" />
+			<Member type="Numeric" name="TeamLivesPerRound"				readonly="true" />
+			<Member type="Numeric" name="RespawnTime"					readonly="true" />
+			<Member type="Numeric" name="SuicideTime"					readonly="true" />
+			<Member type="Numeric" name="BetrayalTime"					readonly="true" />
+			<Member type="Numeric" name="RespawnGrowthTime"				readonly="true" />
+			<Member type="Numeric" name="InitialLoadoutSelectionTime"	readonly="true" />
+			<Member type="Numeric" name="RespawnPlayerTraitsDuration"	readonly="true" />
+			<Member type="Bool" name="FriendlyFireEnabled"				readonly="true" />
+			<Member type="Bool" name="BetrayalBootingEnabled"			readonly="true" />
+			<Member type="Bool" name="OptionsSocialFlags.bit2"			readonly="true" />
+			<Member type="Bool" name="OptionsSocialFlags.bit3"			readonly="true" />
+			<Member type="Bool" name="OptionsSocialFlags.bit4"			readonly="true" />
+			<Member type="Bool" name="GrenadesOnMap"					readonly="true" />
+			<Member type="Bool" name="IndestructibleVehiclesEnabled"	readonly="true" />
+			<Member type="Numeric" name="RedTraitsDuration"				readonly="true" />
+			<Member type="Numeric" name="BlueTraitsDuration"			readonly="true" />
+			<Member type="Numeric" name="YellowTraitsDuration" 			readonly="true" />
+			<Member type="Byte" name="ObjectDeathEvent.DamageType"		readonly="true" /> <!--DamageReportingType-->
+		</Type>
+		<Type type="Player">
+			<Member type="Player" name="ExplicitPlayerType"
+														paramTypeEnum="ExplicitPlayerType" />
+			<Member type="Player" name="Player.PlayerVar"
+														paramTypeEnum="ExplicitPlayerType"
+														paramValueType="Player.Player"	paramValueName="VariableIndex" />
+			<Member type="Player" name="Object.PlayerVar"
+														paramTypeEnum="ExplicitObjectType"
+														paramValueType="Object.Player"	paramValueName="VariableIndex" />
+			<Member type="Player" name="Team.PlayerVar"
+														paramTypeEnum="ExplicitTeamType"
+														paramValueType="Team.Player"	paramValueName="VariableIndex" />
+		</Type>
+		<Type type="Object">
+			<Member type="Object" name="ExplicitObjectType"
+														paramTypeEnum="ExplicitObjectType" />
+			<Member type="Object" name="Player.ObjectVar"
+														paramTypeEnum="ExplicitPlayerType"
+														paramValueType="Player.Object"	paramValueName="VariableIndex" />
+			<Member type="Object" name="Object.ObjectVar"
+														paramTypeEnum="ExplicitObjectType"
+														paramValueType="Object.Object"	paramValueName="VariableIndex" />
+			<Member type="Object" name="Team.ObjectVar"
+														paramTypeEnum="ExplicitTeamType"
+														paramValueType="Team.Object"	paramValueName="VariableIndex" />
+
+			<Member type="Object" name="Player.SlaveObject"				readonly="true"
+														paramTypeEnum="ExplicitPlayerType" />
+			<Member type="Object" name="Player.PlayerVar.SlaveObject"	readonly="true"
+														paramTypeEnum="ExplicitPlayerType"
+														paramValueType="Player.Player"	paramValueName="Index" />
+			<Member type="Object" name="Object.PlayerVar.SlaveObject"	readonly="true"
+														paramTypeEnum="ExplicitObjectType"
+														paramValueType="Object.Player"	paramValueName="Index" />
+			<Member type="Object" name="Team.PlayerVar.SlaveObject"		readonly="true"
+														paramTypeEnum="ExplicitTeamType"
+														paramValueType="Team.Player"	paramValueName="Index" />
+		</Type>
+		<Type type="Team">
+			<Member type="Team" name="ExplicitTeamType"
+														paramTypeEnum="ExplicitTeamType" />
+			<Member type="Team" name="Player.TeamVar"
+														paramTypeEnum="ExplicitPlayerType"
+														paramValueType="Player.Team" paramValueName="VariableIndex" />
+			<Member type="Team" name="Object.TeamVar"
+														paramTypeEnum="ExplicitObjectType"
+														paramValueType="Object.Team" paramValueName="VariableIndex" />
+			<Member type="Team" name="Team.TeamVar"
+														paramTypeEnum="ExplicitTeamType"
+														paramValueType="Team.Team"	 paramValueName="VariableIndex" />
+			<Member type="Team" name="Player.OwnerTeam"
+														paramTypeEnum="ExplicitPlayerType" />
+			<Member type="Team" name="Object.OwnerTeam"
+														paramTypeEnum="ExplicitObjectType" />
+		</Type>
+		<Type type="Timer">
+			<Member type="Numeric" name="Global.TimerVar" 
+														paramValueType="Global.Timer"	paramValueName="VariableIndex" />
+
+			<Member type="Numeric" name="Player.TimerVar" 
+														paramTypeEnum="ExplicitPlayerType"
+														paramValueType="Player.Timer"	paramValueName="VariableIndex" />
+			<Member type="Numeric" name="Team.TimerVar" 
+														paramTypeEnum="ExplicitTeamType"
+														paramValueType="Team.Timer"		paramValueName="VariableIndex" />
+			<Member type="Numeric" name="Object.TimerVar" 
+														paramTypeEnum="ExplicitObjectType"
+														paramValueType="Object.Timer"	paramValueName="VariableIndex" />
+
+			<Member type="Numeric" name="RoundTime" />
+			<Member type="Numeric" name="SuddenDeathTime" />
+			<Member type="Numeric" name="GracePeriodTime" />
+		</Type>
+	</VariableReferenceTypes>
+	<Conditions>
+		<Condition DBID="0" name="None" />
+		<Condition DBID="1" name="Comparison">
+			<Param sigID="0" type="VarReference" name="X" />
+			<Param sigID="1" type="VarReference" name="Y" />
+			<Param sigID="2" type="ComparisonType" name="Comparison" />
+		</Condition>
+		<Condition DBID="2" name="ObjectIsInBoundary"> <!--used in KOTH's 'drain on hill move'-->
+			<Param sigID="0" type="ObjectReference" name="Object" />
+			<Param sigID="1" type="ObjectReference" name="Boundry" />
+		</Condition>
+		<Condition DBID="3" name="CheckPlayerKillerType">
+			<Param sigID="0" type="PlayerReference" name="DeadPlayer" />
+			<Param sigID="1" type="KillerTypeFlags" name="KillerType" />
+		</Condition>
+		<Condition DBID="4" name="TeamsCompareDisposition">
+			<Param sigID="0" type="TeamReference" name="X" />
+			<Param sigID="1" type="TeamReference" name="Y" />
+			<Param sigID="2" type="TeamDisposition" name="Disposition" />
+		</Condition>
+		<Condition DBID="5" name="TimerIsZero">
+			<Param sigID="0" type="TimerReference" name="Timer" />
+		</Condition>
+		<Condition DBID="6" name="ObjectIsSameType">
+			<Param sigID="0" type="ObjectReference" name="Object" />
+			<Param sigID="1" type="ObjectTypeIndex" name="Type" />
+		</Condition>
+		<Condition DBID="7" name="TeamHasPlayers">
+			<Param sigID="0" type="TeamReference" name="Team" />
+		</Condition>
+		<Condition DBID="8" name="ObjectIsOutOfBounds">
+			<Param sigID="0" type="ObjectReference" name="Object" />
+		</Condition>
+		<Condition DBID="9"  name="Unused9" flags="Deprecated"> <!--logic at runtime has this always returning false-->
+			<Param sigID="0" type="PlayerReference" name="Player" />
+		</Condition>
+		<Condition DBID="10" name="PlayerAssistedKillOf"> <!--the actual killer won't count-->
+			<Param sigID="0" type="PlayerReference" name="Player" />
+			<Param sigID="1" type="PlayerReference" name="TargetPlayer" />
+		</Condition>
+		<Condition DBID="11" name="ObjectMatchesFilter">
+			<Param sigID="0" type="ObjectReference" name="Object" />
+			<Param sigID="1" type="ObjectFilterIndex" name="Filter" />
+		</Condition>
+		<Condition DBID="12" name="PlayerIsNotRespawning">
+			<Param sigID="0" type="PlayerReference" name="Player" />
+		</Condition>
+		<Condition DBID="13" name="EquipmentIsInUse">
+			<Param sigID="0" type="ObjectReference" name="Equipment" />
+		</Condition>
+		<Condition DBID="14" name="PlayerIsSpartan">
+			<Param sigID="0" type="PlayerReference" name="Player" />
+		</Condition>
+		<Condition DBID="15" name="PlayerIsElite">
+			<Param sigID="0" type="PlayerReference" name="Player" />
+		</Condition>
+		<Condition DBID="16" name="PlayerIsMonitor"> <!--involves a similar function call as in the logic of 14 and 15-->
+			<Param sigID="0" type="PlayerReference" name="Player" />
+		</Condition>
+		<Condition DBID="17" name="IsMatchMadeGame?" /> <!--game globals (gamestate) related-->
+	</Conditions>
+	<ActionTemplates>
+		<Template name="Bool">
+			<Param sigID="0" type="Bool" name="Bool" />
+		</Template>
+		<Template name="TargetVarBase">
+			<Param sigID="0" type="TargetVar" name="Target" />
+		</Template>
+
+		<!-- Custom -->
+			<Template name="CustomBase">
+				<Param sigID="0" type="CustomReference" name="CustomVar" />
+			</Template>
+			<Template name="CustomVar2x" template="CustomBase">
+				<Param sigID="1" type="CustomReference" name="CustomVar1" />
+			</Template>
+			<Template name="CustomVarGetter">
+				<Param sigID="0" type="CustomReference" name="Result" kind="Output" />
+			</Template>
+
+		<!-- Object -->
+			<Template name="ObjectBase">
+				<Param sigID="0" type="ObjectReference" name="ObjectVar" />
+			</Template>
+			<Template name="ObjectSetter" template="ObjectBase">
+				<Param sigID="1" type="CustomReference" name="Var" />
+			</Template>
+			<Template name="ObjectGetter" template="ObjectBase">
+				<Param sigID="1" type="CustomReference" name="Result" kind="Output" />
+			</Template>
+			<Template name="ObjectWithFilterBase" template="ObjectBase">
+				<Param sigID="1" type="TeamFilterParameters" />
+			</Template>
+			<Template name="ObjectVar2x" template="ObjectBase">
+				<Param sigID="1" type="ObjectReference" name="ObjectVar1" />
+			</Template>
+			<Template name="ObjectWithCustomVar" template="ObjectBase">
+				<Param sigID="1" type="CustomReference" name="Var" />
+			</Template>
+			<Template name="ObjectWithCustomVar2x" template="ObjectWithCustomVar">
+				<Param sigID="2" type="CustomReference" name="Var1" />
+			</Template>
+			<Template name="ObjectWithPlayerVar" template="ObjectBase">
+				<Param sigID="1" type="PlayerReference" name="Var" />
+			</Template>
+			<Template name="ObjectNavpointIconBase" template="ObjectBase">
+				<Param sigID="1" type="NavpointIconParameters" name="NavpointIcon" />
+			</Template>
+			<Template name="ObjectBool" template="ObjectBase">
+				<Param sigID="1" type="Bool" name="Bool" />
+			</Template>
+			<Template name="ObjectWithOperation" template="ObjectBase">
+				<Param sigID="1" type="OperationType" name="Operation" />
+				<Param sigID="2" type="CustomReference" name="OperationVar" />
+			</Template>
+
+		<!-- Player -->
+			<Template name="PlayerBase">
+				<Param sigID="0" type="PlayerReference" name="PlayerVar" />
+			</Template>
+			<Template name="PlayerWithCustomVar" template="PlayerBase">
+				<Param sigID="1" type="CustomReference" name="Var" />
+			</Template>
+			<Template name="PlayerSetter" template="PlayerBase">
+				<Param sigID="1" type="CustomReference" name="Var" />
+			</Template>
+			<Template name="PlayerGetter" template="PlayerBase">
+				<Param sigID="1" type="CustomReference" name="Result" kind="Output" />
+			</Template>
+			<Template name="PlayerObjectSetter" template="PlayerBase">
+				<Param sigID="1" type="ObjectReference" name="Var" />
+			</Template>
+			<Template name="PlayerObjectGetter" template="PlayerBase">
+				<Param sigID="1" type="ObjectReference" name="Result" kind="Output" />
+			</Template>
+			<Template name="PlayerWithObjectVar" template="PlayerBase">
+				<Param sigID="1" type="ObjectReference" name="Var" />
+			</Template>
+			<Template name="PlayerBool" template="PlayerBase">
+				<Param sigID="1" type="Bool" name="Bool" />
+			</Template>
+
+		<!-- Team -->
+			<Template name="TeamBase">
+				<Param sigID="0" type="TeamReference" name="TeamVar" />
+			</Template>
+			<Template name="TeamWithCustomVar" template="TeamBase">
+				<Param sigID="1" type="CustomReference" name="Var" />
+			</Template>
+			<Template name="TeamGetter" template="TeamBase">
+				<Param sigID="1" type="CustomReference" name="Result" kind="Output" />
+			</Template>
+			<Template name="TeamBool" template="TeamBase">
+				<Param sigID="1" type="Bool" name="Bool" />
+			</Template>
+
+		<!-- Widget -->
+			<Template name="WidgetBase">
+				<Param sigID="0" type="Widget" name="Widget" />
+			</Template>
+			<Template name="WidgetWithTokens2x" template="WidgetBase">
+				<Param sigID="1" type="Tokens2" name="Tokens" />
+			</Template>
+	</ActionTemplates>
+	<Actions>
+		<Action DBID="0" name="None" />
+		<Action DBID="1" name="ModifyScore" template="TargetVarBase">
+			<Param sigID="1" type="OperationType" name="Operation" />
+			<Param sigID="2" type="CustomReference" name="OperationVar" />
+		</Action>
+		<Action DBID="2" name="CreateObject">
+			<Param sigID="0" type="ObjectTypeIndex" name="Type" />
+			<Param sigID="1" type="ObjectReference" name="Object" kind="Output" />
+			<Param sigID="2" type="ObjectReference" name="SpawnLocation" />
+			<Param sigID="3" type="ObjectFilterIndex" name="Filter" />
+			<Param sigID="4" type="CreateObjectFlags" name="Flags" />
+			<Param sigID="5" type="Point3d" name="Offset" />
+			<Param sigID="6" type="NameIndex" name="VariantName" />
+		</Action>
+		<Action DBID="3" name="DeleteObject" template="ObjectBase" />
+		<Action DBID="4" name="ObjectSetNavpointVisibility" template="ObjectWithFilterBase" />
+		<Action DBID="5" name="ObjectSetNavpointIcon" template="ObjectNavpointIconBase" />
+		<Action DBID="6" name="ObjectSetNavpointPriority" template="ObjectBase">
+			<Param sigID="1" type="NavpointPriority" name="Priority" />
+		</Action>
+		<Action DBID="7" name="ObjectSetDisplayTimer" template="ObjectBase">
+			<Param sigID="1" type="Object.Timer" name="Timer" />
+		</Action>
+		<!--var1 and 2 numeric value range should be GTE -1 and LTE 100 -->
+		<Action DBID="8" name="ObjectSetDistanceRange" template="ObjectWithCustomVar2x">
+			<ParamNameOverrides>
+				<Param sigID="1" name="Min" />
+				<Param sigID="2" name="Max" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="9" name="VariableOperation">
+			<Param sigID="0" type="VarReference" name="Result" kind="Output" />
+			<Param sigID="1" type="VarReference" name="OperationVar" />
+			<Param sigID="2" type="OperationType" name="Operation" />
+		</Action>
+		<Action DBID="10" name="ObjectSetBoundary" template="ObjectBase">
+			<Param sigID="1" type="Shape" name="Shape" />
+		</Action>
+		<Action DBID="11" name="ApplyPlayerTraits" template="PlayerBase">
+			<Param sigID="1" type="PlayerTraitsReference" name="PlayerTrait" />
+		</Action>
+		<Action DBID="12" name="ObjectSetInteractionFilter" template="ObjectWithFilterBase" />
+		<Action DBID="13" name="PlayerSpawnLocationSetFilter" template="ObjectWithFilterBase" />
+		<Action DBID="14" name="PlayerSpawnLocationSetFireteamFilter" template="ObjectBase">
+			<Param sigID="1" type="Int8" name="FireteamFilter" />
+		</Action>
+		<Action DBID="15" name="ObjectSetProgressBar" template="ObjectWithFilterBase">
+			<Param sigID="2" type="Object.Timer" name="Timer" />
+		</Action>
+		<Action DBID="16" name="ChudMessage" template="TargetVarBase">
+			<Param sigID="1" type="SoundIndex" name="MessageSound" />
+			<Param sigID="2" type="Tokens2" name="MessageText" />
+		</Action>
+		<Action DBID="17" name="TimerRateSet">
+			<Param sigID="0" type="TimerReference" name="Timer" kind="InOut" />
+			<Param sigID="1" type="TimerRate" name="Rate" />
+		</Action>
+		<Action DBID="18" name="Unused18" flags="Deprecated"> <!--does nothing at runtime-->
+			<Param sigID="0" type="Tokens2" name="Tokens" />
+		</Action>
+		<Action DBID="19" name="ItemGetOwnerPlayer" template="ObjectBase">
+			<Param sigID="1" type="PlayerReference" name="Player" kind="Output" />
+			<ParamNameOverrides>
+				<Param sigID="0" name="Item" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="20" name="ActivateTrigger"> <!--branches execution as well-->
+			<Param sigID="0" type="TriggerReference" name="Trigger" />
+		</Action>
+		<Action DBID="21" name="EndRoundWithWinner" />
+		<Action DBID="22" name="ObjectSetBoundaryVisibilityFilter" template="ObjectWithFilterBase" />
+		<Action DBID="23" name="ObjectKillInstantly" template="ObjectBool">
+			<ParamNameOverrides>
+				<Param sigID="1" name="Silent?" />
+			</ParamNameOverrides>
+		</Action>
+		<!--numeric is treated as Bool-->
+		<Action DBID="24" name="ObjectSetInvincible" template="ObjectSetter" />
+		<Action DBID="25" name="RandomNumeric">
+			<Param sigID="0" type="CustomReference" name="Seed" />
+			<Param sigID="1" type="CustomReference" name="Result" kind="Output" />
+		</Action>
+		<Action DBID="26" name="Unused26" flags="Deprecated" /> <!--does nothing at runtime-->
+		<Action DBID="27" template="ObjectGetter" /> <!--result is between 1 and 6, inclusive-->
+		<Action DBID="28" name="ObjectGetVelocity" template="ObjectGetter" /> <!--some object field multiplied by 10.0f. if <= 0.1, result is 0-->
+		<!--kill incident stats-->
+		<Action DBID="29" name="PlayerGetKiller">
+			<Param sigID="0" type="PlayerReference" name="Player" />
+			<Param sigID="1" type="PlayerReference" name="Killer" kind="Output" />
+		</Action>
+		<!--DamageReportingType-->
+		<Action DBID="30" name="PlayerGetDeathDamageType" template="PlayerGetter" />
+		<!--1:pummel, 2:assassination, 3:splatter, 4:sticky, 5:headshot-->
+		<Action DBID="31" name="PlayerGetDeathDamageModifier" template="PlayerGetter" />
+		<Action DBID="32" template="Bool" />
+		<Action DBID="33" name="ObjectAttach">
+			<Param sigID="0" type="ObjectReference" name="Object" />
+			<Param sigID="1" type="ObjectReference" name="Destintation" />
+			<Param sigID="2" type="Point3d" name="Offset" />
+			<Param sigID="3" type="Bool" name="Bool" />
+		</Action>
+		<Action DBID="34" name="ObjectDetach" template="ObjectBase" />
+		<Action DBID="35" name="PlayerGetOverallPlace" template="PlayerGetter" />
+		<Action DBID="36" name="TeamGetIndex" template="TeamGetter" />
+		<Action DBID="37" name="PlayerGetConsecutiveKillsCount" template="PlayerGetter" />
+		<!--requisition related-->
+		<Action DBID="38" name="PlayerOperation" template="PlayerBase">
+			<Param sigID="1" type="OperationType" name="Operation" />
+			<Param sigID="2" type="CustomReference" name="OperationVar" />
+		</Action>
+		<Action DBID="39" name="PlayerToggleUnusedModes" template="PlayerBase">
+			<Param sigID="1" type="CustomReference" name="Bool" />
+			<Param sigID="2" type="PlayerUnusedModes" name="Mode" />
+		</Action>
+		<Action DBID="40" name="PlayerGetVehicle" template="PlayerObjectGetter">
+			<ParamNameOverrides>
+				<Param sigID="1" name="Vehicle" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="41" name="PlayerForceEnterVehicle" template="PlayerWithObjectVar" />
+		<Action DBID="42" name="PlayerSetUnit" template="PlayerObjectSetter" />
+		<Action DBID="43" name="TimerReset">
+			<Param sigID="0" type="TimerReference" name="Timer" kind="InOut" />
+		</Action>
+		<Action DBID="44" name="WeaponPickupPriority" template="ObjectBase">
+			<Param sigID="1" type="PickupPriority" name="Priority" />
+			<ParamNameOverrides>
+				<Param sigID="0" name="Weapon" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="45" name="ObjectPushUp" template="ObjectBase" /> <!--involves some randomized calculations-->
+		<Action DBID="46" name="WidgetSetText" template="WidgetWithTokens2x" />
+		<Action DBID="47" name="WidgetSetUnknownText" template="WidgetWithTokens2x" />
+		<Action DBID="48" name="WidgetSetMeter" template="WidgetBase">
+			<Param sigID="1" type="WidgetMeterParameters" name="MeterParameters" />
+		</Action>
+		<Action DBID="49" name="WidgetSetIcon" template="WidgetBase">
+			<Param sigID="1" type="IconIndex6" name="Icon" />
+		</Action>
+		<Action DBID="50" name="WidgetSetPlayerVisibility" template="WidgetBase">
+			<Param sigID="1" type="PlayerReference" name="Player" />
+			<Param sigID="2" type="Bool" name="IsVisible" />
+		</Action>
+		<Action DBID="51" name="ChudSoundMessage">
+			<Param sigID="0" type="SoundIndex" name="Sound" />
+			<Param sigID="1" type="ChudDestination" name="Destination" />
+			<Param sigID="2" type="TargetVar" name="Target" />
+		</Action>
+		<Action DBID="52" name="ObjectScale" template="ObjectWithCustomVar" />
+		<Action DBID="53" name="ObjectSetDisplayText" template="ObjectBase">
+			<Param sigID="1" type="Tokens2" name="Tokens" />
+		</Action>
+		<Action DBID="54" name="ObjectGetShields" template="ObjectGetter" /> <!--percentage, 0 to 100-->
+		<Action DBID="55" name="ObjectGetHealth" template="ObjectGetter" /> <!--percentage, 0 to 100-->
+		<Action DBID="56" name="PlayerSetObjectiveTitle" template="PlayerBase"> <!--In CTF: sets a player with Defense/Offense (via string index)-->
+			<Param sigID="1" type="Tokens2" name="Tokens" />
+		</Action>
+		<Action DBID="57" name="PlayerSetObjectiveDescription" template="PlayerBase"> <!--In CTF: description text -->
+			<Param sigID="1" type="Tokens2" name="Tokens" />
+		</Action>
+		<Action DBID="58" name="PlayerSetObjectiveIcon" template="PlayerBase"> <!--Grifball-->
+			<Param sigID="1" type="IconIndex7" name="Icon" />
+		</Action>
+		<Action DBID="59" name="TeamSetFireteamSpawning" template="TeamBool" />
+		<Action DBID="60" name="TeamSetRespawnObject" template="TeamBase">
+			<Param sigID="1" type="ObjectReference" name="RespawnZone" />
+		</Action>
+		<Action DBID="61" name="PlayerSetRespawnObject" template="PlayerWithObjectVar" />
+		<Action DBID="62" name="GetPlayerFireteam" template="PlayerGetter" />
+		<Action DBID="63" name="SetPlayerFireteam" template="PlayerSetter" />
+		<Action DBID="64" name="ObjectModifyShields" template="ObjectWithOperation" />
+		<Action DBID="65" name="ObjectModifyHealth" template="ObjectWithOperation" />
+		<Action DBID="66" name="DistanceBetweenObjects" template="ObjectVar2x">
+			<Param sigID="2" type="CustomReference" name="Result" kind="Output" />
+		</Action>
+		<Action DBID="67" name="ObjectModifyMaximumShieldVitality" template="ObjectWithOperation" />
+		<Action DBID="68" name="ObjectModifyMaximumBodyVitality" template="ObjectWithOperation" />
+		<Action DBID="69" name="PlayerSetRequisitionPalette" template="PlayerBase">
+			<Param sigID="1" type="RequisitionPaletteReference" name="NewPalette" />
+		</Action>
+		<Action DBID="70" name="DeviceSetPower" template="ObjectSetter">
+			<ParamNameOverrides>
+				<Param sigID="0" name="Device" />
+				<Param sigID="1" name="Power" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="71" name="DeviceGetPower" template="ObjectGetter">
+			<ParamNameOverrides>
+				<Param sigID="0" name="Device" />
+				<Param sigID="1" name="Power" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="72" name="DeviceSetPosition" template="ObjectSetter">
+			<ParamNameOverrides>
+				<Param sigID="0" name="Device" />
+				<Param sigID="1" name="Position" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="73" name="DeviceGetPosition" template="ObjectGetter">
+			<ParamNameOverrides>
+				<Param sigID="0" name="Device" />
+				<Param sigID="1" name="Position" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="74" name="PlayerAdjustGrenades" template="PlayerBase">
+			<Param sigID="1" type="GrenadeType" name="Grenade" />
+			<Param sigID="2" type="OperationType" name="Operation" />
+			<Param sigID="3" type="CustomReference" name="OperationVar" />
+		</Action>
+		<Action DBID="75" name="SubmitIncident">
+			<Param sigID="0" type="IncidentId" name="Incident" />
+			<Param sigID="1" type="TargetVar" name="Target1" /> <!--cause?-->
+			<Param sigID="2" type="TargetVar" name="Target2" /> <!--effect?-->
+		</Action>
+		<Action DBID="76" name="SubmitIncidentWithValue" template="SubmitIncident">
+			<Param sigID="3" type="CustomReference" name="CustomValue" />
+		</Action>
+		<Action DBID="77" name="SetLoadoutPalette" template="TargetVarBase">
+			<Param sigID="1" type="LoadoutPaletteReference" name="Palette" />
+		</Action>
+		<Action DBID="78" name="DeviceSetPositionTrack" template="ObjectBase">
+			<Param sigID="1" type="NameIndex" name="Animation" />
+			<Param sigID="2" type="CustomReference" name="Position" />
+			<ParamNameOverrides>
+				<Param sigID="0" name="Device" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="79" name="DeviceAnimatePosition" template="ObjectBase">
+			<Param sigID="1" type="CustomReference" name="Var" />
+			<Param sigID="2" type="CustomReference" name="Var1" />
+			<Param sigID="3" type="CustomReference" name="Var2" />
+			<Param sigID="4" type="CustomReference" name="Var3" />
+			<ParamNameOverrides>
+				<Param sigID="0" name="Device" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="80" name="DeviceSetActualPosition" template="ObjectSetter">
+			<ParamNameOverrides>
+				<Param sigID="0" name="Device" />
+				<Param sigID="1" name="Position" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="81" name="CustomVarWithTokens2x"> <!--set object display name?-->
+			<Param sigID="0" type="CustomReference" name="Var" />
+			<Param sigID="1" type="Tokens2" name="Tokens" />
+		</Action>
+		<Action DBID="82" name="SpawnZoneSetEnabled" template="ObjectWithCustomVar"> <!--var tested as a bool; toggles a flag in the object datum's MP properties-->
+			<ParamNameOverrides>
+				<Param sigID="1" name="Bool" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="83" name="PlayerGetWeapon" template="PlayerBase"> <!--Reach Grifball-->
+			<Param sigID="1" type="Bool" name="GetReadied" /> <!--false gets holstered weapon?-->
+			<Param sigID="2" type="ObjectReference" name="Weapon" kind="Output" />
+		</Action>
+		<Action DBID="84" name="PlayerGetArmorAbility" template="PlayerBase">
+			<Param sigID="1" type="ObjectReference" name="Equipment" kind="Output" />
+		</Action>
+		<Action DBID="85" name="ObjectSetNeverGarbage" template="ObjectSetter">
+			<ParamNameOverrides>
+				<Param sigID="1" name="Bool" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="86" template="PlayerWithObjectVar" />
+		<Action DBID="87" name="CreateObjectEquidistant">
+			<Param sigID="0" type="ObjectReference" name="ObjectVar1" />
+			<Param sigID="1" type="ObjectReference" name="ObjectVar2" />
+			<Param sigID="2" type="ObjectTypeIndex" name="Type" />
+			<Param sigID="3" type="CustomReference" name="Var" />
+			<Param sigID="4" type="ObjectReference" name="Result" />
+		</Action>
+		<Action DBID="88" name="Unused88" template="CustomBase" flags="Deprecated" /> <!--does nothing at runtime-->
+		<Action DBID="89" template="PlayerWithObjectVar" />
+		<Action DBID="90" template="PlayerBool" /> <!--used in Reach's StdRace-->
+		<Action DBID="91" name="ObjectCopyRotation" template="ObjectVar2x">
+			<Param sigID="2" type="Bool" name="CopyAxis" />
+		</Action>
+		<Action DBID="92" name="ObjectSetRelativeTo" template="ObjectVar2x">
+			<Param sigID="2" type="Point3d" name="Offset" />
+		</Action>
+		<Action DBID="93" name="BipedGiveWeapon" template="ObjectBase">
+			<Param sigID="1" type="ObjectTypeIndex" name="WeaponType" />
+			<Param sigID="2" type="AddWeaponMode" name="Mode" />
+			<ParamNameOverrides>
+				<Param sigID="0" name="Biped" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="94" name="BipedDropWeapon" template="ObjectBase">
+			<Param sigID="1" type="DropWeaponMode" name="Mode" />
+			<Param sigID="2" type="Bool" name="Delete" />
+			<ParamNameOverrides>
+				<Param sigID="0" name="Biped" />
+			</ParamNameOverrides>
+		</Action>
+		<Action DBID="95" name="SetScenarioInterpolatorState" template="CustomVar2x" />
+		<!--used to return the flag in CTF. first object var was NONE, second was flag object, filter was return filter-->
+		<Action DBID="96" template="ObjectBase">
+			<Param sigID="1" type="ObjectReference" name="Result" kind="Output" />
+			<Param sigID="2" type="ObjectFilterIndex" name="Filter" />
+		</Action>
+		<Action DBID="97" template="PlayerWithCustomVar" />
+		<Action DBID="98" name="ObjectSetBoundaryVisibilityFilterToPlayerVar">
+			<Param sigID="0" type="ObjectReferenceWithPlayerVarIndex" name="ObjectAndPlayerVar" />
+		</Action>
+	</Actions>
+</MegaloScriptDatabase>

@@ -1,0 +1,1322 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<megaloDefinitions game="HaloReach_Xbox">
+	<motl name="multiplayer\globals">
+		<types>
+			<entry name="spartan" groupTag="bipd" tagName="objects\characters\spartans\spartans" />
+			<entry name="elite" groupTag="bipd" tagName="objects\characters\elite\elite" />
+			<entry name="monitor" groupTag="bipd" tagName="objects\characters\monitor\monitor_editor" />
+			<entry name="flag" groupTag="weap" tagName="objects\weapons\multiplayer\flag\flag" />
+			<entry name="bomb" groupTag="weap" tagName="objects\weapons\multiplayer\assault_bomb\assault_bomb" />
+			<entry name="ball" groupTag="weap" tagName="objects\weapons\multiplayer\skull\skull" />
+			<entry name="area" groupTag="bloc" tagName="objects\multi\models\mp_hill_beacon\mp_hill_beacon" />
+			<entry name="stand" groupTag="bloc" tagName="objects\multi\models\mp_flag_base\mp_flag_base" />
+			<entry name="destination" groupTag="bloc" tagName="objects\multi\models\mp_circle\mp_circle" />
+			<entry name="frag_grenade" groupTag="eqip" tagName="objects\weapons\grenade\frag_grenade\frag_grenade" />
+			<entry name="plasma_grenade" groupTag="eqip" tagName="objects\weapons\grenade\plasma_grenade\plasma_grenade" />
+			<entry name="spike_grenade" />
+			<entry name="firebomb_grenade" />
+			<entry name="dmr" groupTag="weap" tagName="objects\weapons\rifle\dmr\dmr" />
+			<entry name="assault_rifle" groupTag="weap" tagName="objects\weapons\rifle\assault_rifle\assault_rifle" />
+			<entry name="plasma_pistol" groupTag="weap" tagName="objects\weapons\pistol\plasma_pistol\plasma_pistol" />
+			<entry name="spike_rifle" groupTag="weap" tagName="objects\weapons\rifle\spike_rifle\spike_rifle" />
+			<entry name="smg" />
+			<entry name="needle_rifle" groupTag="weap" tagName="objects\weapons\rifle\needle_rifle\needle_rifle" />
+			<entry name="plasma_repeater" groupTag="weap" tagName="objects\weapons\rifle\plasma_repeater\plasma_repeater" />
+			<entry name="energy_sword" groupTag="weap" tagName="objects\weapons\melee\energy_sword\energy_sword" />
+			<entry name="magnum" groupTag="weap" tagName="objects\weapons\pistol\magnum\magnum" />
+			<entry name="needler" groupTag="weap" tagName="objects\weapons\pistol\needler\needler" />
+			<entry name="plasma_rifle" groupTag="weap" tagName="objects\weapons\rifle\plasma_rifle\plasma_rifle" />
+			<entry name="rocket_launcher" groupTag="weap" tagName="objects\weapons\support_high\rocket_launcher\rocket_launcher" />
+			<entry name="shotgun" groupTag="weap" tagName="objects\weapons\rifle\shotgun\shotgun" />
+			<entry name="sniper_rifle" groupTag="weap" tagName="objects\weapons\rifle\sniper_rifle\sniper_rifle" />
+			<entry name="brute_shot" />
+			<entry name="beam_rifle" groupTag="weap" tagName="objects\weapons\rifle\focus_rifle\focus_rifle" />
+			<entry name="spartan_laser" groupTag="weap" tagName="objects\weapons\support_high\spartan_laser\spartan_laser" />
+			<entry name="gravity_hammer" groupTag="weap" tagName="objects\weapons\melee\gravity_hammer\gravity_hammer" />
+			<entry name="mauler" />
+			<entry name="flamethrower" />
+			<entry name="missile_pod" />
+			<entry name="warthog" groupTag="vehi" tagName="objects\vehicles\human\warthog\warthog" />
+			<entry name="ghost" groupTag="vehi" tagName="objects\vehicles\covenant\ghost\ghost" />
+			<entry name="scorpion" groupTag="vehi" tagName="objects\vehicles\human\scorpion\scorpion" />
+			<entry name="wraith" groupTag="vehi" tagName="objects\vehicles\covenant\wraith\wraith" />
+			<entry name="banshee" groupTag="vehi" tagName="objects\vehicles\covenant\banshee\banshee" />
+			<entry name="mongoose" groupTag="vehi" tagName="objects\vehicles\human\mongoose\mongoose" />
+			<entry name="chopper" />
+			<entry name="prowler" />
+			<entry name="hornet" />
+			<entry name="stingray" groupTag="vehi" />
+			<entry name="heavy_wraith" groupTag="vehi" />
+			<entry name="falcon" groupTag="vehi" tagName="objects\vehicles\human\falcon\falcon" />
+			<entry name="sabre" groupTag="vehi" />
+			<entry name="sprint_equipment" groupTag="eqip" tagName="objects\equipment\sprint\sprint" />
+			<entry name="jet_pack_equipment" groupTag="eqip" tagName="objects\equipment\jet_pack\jet_pack" />
+			<entry name="armor_lock_equipment" groupTag="eqip" tagName="objects\equipment\armor_lockup\armor_lockup" />
+			<entry name="power_fist_equipment" groupTag="eqip" />
+			<entry name="active_camo_equipment" groupTag="eqip" tagName="objects\equipment\active_camouflage\active_camouflage" />
+			<entry name="ammo_pack_equipment" groupTag="eqip" />
+			<entry name="sensor_pack_equipment" groupTag="eqip" />
+			<entry name="revenant" groupTag="vehi" />
+			<entry name="pickup" groupTag="vehi" />
+			<entry name="prototype_covey_sniper" groupTag="weap" tagName="objects\weapons\rifle\focus_rifle\focus_rifle" />
+			<entry name="territory_static" groupTag="bloc" />
+			<entry name="ctf_flag_return_area" groupTag="bloc" />
+			<entry name="ctf_flag_spawn_point" groupTag="bloc" />
+			<entry name="respawn_zone" groupTag="scen" tagName="objects\multi\spawning\respawn_zone" />
+			<entry name="invasion_elite_buy" groupTag="bloc" />
+			<entry name="invasion_elite_drop" groupTag="bloc" />
+			<entry name="invasion_slayer" groupTag="bloc" />
+			<entry name="invasion_spartan_buy" groupTag="bloc" />
+			<entry name="invasion_spartan_drop" groupTag="bloc" />
+			<entry name="invasion_spawn_controller" groupTag="bloc" />
+			<entry name="oddball_ball_spawn_point" groupTag="bloc" />
+			<entry name="plasma_launcher" groupTag="weap" tagName="objects\weapons\support_high\plasma_launcher\plasma_launcher" />
+			<entry name="fusion_coil" groupTag="bloc" tagName="objects\gear\human\military\fusion_coil\fusion_coil" />
+			<entry name="unsc_shield_generator" groupTag="scen" />
+			<entry name="cov_shield_generator" groupTag="scen" />
+			<entry name="initial_spawn_point" groupTag="scen" tagName="objects\multi\spawning\initial_spawn_point" />
+			<entry name="invasion_vehicle_req" groupTag="bloc" />
+			<entry name="vehicle_req_floor" groupTag="mach" />
+			<entry name="wall_switch" groupTag="ctrl" />
+			<entry name="health_station" groupTag="ctrl" tagName="objects\levels\shared\device_controls\health_station\health_station" />
+			<entry name="req_unsc_laser" groupTag="mach" />
+			<entry name="req_unsc_dmr" groupTag="mach" />
+			<entry name="req_unsc_rocket" groupTag="mach" />
+			<entry name="req_unsc_shotgun" groupTag="mach" />
+			<entry name="req_unsc_sniper" groupTag="mach" />
+			<entry name="req_covy_launcher" groupTag="mach" />
+			<entry name="req_covy_needler" groupTag="mach" />
+			<entry name="req_covy_sniper" groupTag="mach" />
+			<entry name="req_covy_sword" groupTag="mach" />
+			<entry name="shock_loadout" groupTag="eqip" />
+			<entry name="specialist_loadout" groupTag="eqip" />
+			<entry name="assassin_loadout" groupTag="eqip" />
+			<entry name="infiltrator_loadout" groupTag="eqip" />
+			<entry name="warrior_loadout" groupTag="eqip" />
+			<entry name="combatant_loadout" groupTag="eqip" />
+			<entry name="engineer_loadout" groupTag="eqip" />
+			<entry name="infantry_loadout" groupTag="eqip" />
+			<entry name="operator_loadout" groupTag="eqip" />
+			<entry name="recon_loadout" groupTag="eqip" />
+			<entry name="scout_loadout" groupTag="eqip" />
+			<entry name="seeker_loadout" groupTag="eqip" />
+			<entry name="airborne_loadout" groupTag="eqip" />
+			<entry name="ranger_loadout" groupTag="eqip" />
+			<entry name="req_buy_banshee" groupTag="ctrl" />
+			<entry name="req_buy_falcon" groupTag="ctrl" />
+			<entry name="req_buy_ghost" groupTag="ctrl" />
+			<entry name="req_buy_mongoose" groupTag="ctrl" />
+			<entry name="req_buy_revenant" groupTag="ctrl" />
+			<entry name="req_buy_scorpion" groupTag="ctrl" />
+			<entry name="req_buy_warthog" groupTag="ctrl" />
+			<entry name="req_buy_wraith" groupTag="ctrl" />
+			<entry name="fireteam_1_respawn_zone" groupTag="scen" />
+			<entry name="fireteam_2_respawn_zone" groupTag="scen" />
+			<entry name="fireteam_3_respawn_zone" groupTag="scen" />
+			<entry name="fireteam_4_respawn_zone" groupTag="scen" />
+			<entry name="semi" groupTag="vehi" />
+			<entry name="soccer_ball" groupTag="bloc" tagName="objects\levels\shared\soccer_ball\soccer_ball" />
+			<entry name="golf_ball" groupTag="bloc" tagName="objects\levels\shared\golf_ball\golf_ball" />
+			<entry name="golf_ball_blue" groupTag="bloc" />
+			<entry name="golf_ball_red" groupTag="bloc" />
+			<entry name="golf_club" groupTag="weap" tagName="objects\levels\shared\golf_club\golf_club" />
+			<entry name="golf_cup" groupTag="bloc" tagName="objects\levels\shared\golf_cup\golf_cup" />
+			<entry name="golf_tee" groupTag="bloc" />
+			<entry name="dice" groupTag="bloc" tagName="objects\multi\dice\dice" />
+			<entry name="space_crate" groupTag="bloc" />
+			<entry name="eradicator_loadout" groupTag="eqip" />
+			<entry name="saboteur_loadout" groupTag="eqip" />
+			<entry name="grenadier_loadout" groupTag="eqip" />
+			<entry name="marksman_loadout" groupTag="eqip" />
+			<entry name="flare" groupTag="bloc" />
+			<entry name="glow_stick" groupTag="bloc" />
+			<entry name="elite_shot" groupTag="weap" tagName="objects\weapons\rifle\concussion_rifle\concussion_rifle" />
+			<entry name="grenade_launcher" groupTag="weap" tagName="objects\weapons\rifle\grenade_launcher\grenade_launcher" />
+			<entry name="phantom_approach" groupTag="mach" />
+			<entry name="hologram_equipment" groupTag="eqip" tagName="objects\equipment\hologram\hologram" />
+			<entry name="evade_equipment" groupTag="eqip" tagName="objects\equipment\evade\evade" />
+			<entry name="unsc_data_core" groupTag="weap" tagName="objects\weapons\multiplayer\unsc_data_core\unsc_data_core" />
+			<entry name="danger_zone" groupTag="bloc" tagName="objects\multi\spawning\danger_zone" />
+			<entry name="teleporter_sender" groupTag="bloc" />
+			<entry name="teleporter_reciever" groupTag="bloc" />
+			<entry name="teleporter_2way" groupTag="bloc" />
+			<entry name="data_core_beam" groupTag="mach" />
+			<entry name="phantom_overwatch" groupTag="mach" />
+			<entry name="longsword" groupTag="mach" />
+			<entry name="invisible_cube_of_derek" groupTag="scen" tagName="objects\multi\invisible_cube_of_derek\invisible_cube_of_derek" />
+			<entry name="phantom_scenery" groupTag="scen" />
+			<entry name="pelican_scenery" groupTag="scen" />
+			<entry name="phantom" groupTag="vehi" />
+			<entry name="pelican" groupTag="mach" />
+			<entry name="armory_shelf" groupTag="scen" />
+			<entry name="cov_resupply_capsule" groupTag="scen" />
+			<entry name="covy_drop_pod" groupTag="mach" />
+			<entry name="invisible_marker" groupTag="bloc" />
+			<entry name="weak_respawn_zone" groupTag="scen" tagName="objects\multi\spawning\weak_respawn_zone" />
+			<entry name="weak_anti_respawn_zone" groupTag="scen" tagName="objects\multi\spawning\weak_anti_respawn_zone" />
+			<entry name="phantom_device" groupTag="mach" tagName="objects\vehicles\covenant\phantom\phantom" />
+			<entry name="resupply_capsule" groupTag="scen" />
+			<entry name="resupply_capsule_open" groupTag="scen" />
+			<entry name="weapon_box" groupTag="scen" />
+			<entry name="tech_console_stationary" groupTag="mach" />
+			<entry name="tech_console_wall" groupTag="mach" />
+			<entry name="mp_cinematic_camera" groupTag="scen" tagName="objects\multi\generic\mp_cinematic_camera" />
+			<entry name="invis_cov_resupply_capsule" groupTag="mach" />
+			<entry name="cov_power_module" groupTag="weap" tagName="objects\weapons\multiplayer\cov_power_module\cov_power_module" />
+			<entry name="flak_cannon" groupTag="weap" tagName="objects\weapons\support_high\flak_cannon\flak_cannon" />
+			<entry name="dropzone_boundary" groupTag="bloc" />
+			<entry name="shield_door_small" groupTag="bloc" />
+			<entry name="shield_door_medium" groupTag="bloc" />
+			<entry name="shield_door_large" groupTag="bloc" />
+			<entry name="drop_shield_equipment" groupTag="eqip" tagName="objects\equipment\drop_shield\drop_shield" />
+			<entry name="machinegun" groupTag="weap" tagName="objects\vehicles\human\turrets\machinegun\weapon\machinegun_turret\machinegun_turret" />
+			<entry name="machinegun_turret" groupTag="vehi" tagName="objects\vehicles\human\turrets\machinegun\machinegun" />
+			<entry name="plasma_turret_weapon" groupTag="weap" tagName="objects\vehicles\covenant\turrets\plasma_turret\weapon\plasma_turret\plasma_turret" />
+			<entry name="mounted_plasma_turret" groupTag="vehi" tagName="objects\vehicles\covenant\turrets\plasma_turret\plasma_turret_mounted" />
+			<entry name="shade_turret" groupTag="vehi" />
+			<entry name="cargo_truck" groupTag="vehi" />
+			<entry name="cart_electric" groupTag="vehi" />
+			<entry name="forklift" groupTag="vehi" />
+			<entry name="military_truck" groupTag="vehi" />
+			<entry name="oni_van" groupTag="vehi" />
+			<entry name="warthog_gunner" groupTag="vehi" tagName="objects\vehicles\human\warthog\weapons\warthog_chaingun\warthog_chaingun" />
+			<entry name="warthog_gauss_turret" groupTag="vehi" tagName="objects\vehicles\human\warthog\weapons\warthog_gauss\warthog_gauss" />
+			<entry name="warthog_rocket_turret" groupTag="vehi" tagName="objects\vehicles\human\warthog\weapons\warthog_rocket\warthog_rocket" />
+			<entry name="scorpion_infantry_gunner" groupTag="vehi" tagName="objects\vehicles\human\scorpion\turrets\scorpion_anti_infantry\scorpion_anti_infantry" />
+			<entry name="falcon_grenadier_left" groupTag="vehi" tagName="objects\vehicles\human\falcon\turrets\falcon_side_grenade_left\falcon_side_grenade_left" />
+			<entry name="falcon_grenadier_right" groupTag="vehi" tagName="objects\vehicles\human\falcon\turrets\falcon_side_grenade_right\falcon_side_grenade_right" />
+			<entry name="wraith_infantry_turret" groupTag="vehi" tagName="objects\vehicles\covenant\wraith\turrets\wraith_anti_infantry\wraith_anti_infantry" />
+			<entry name="land_mine" groupTag="bloc" tagName="objects\multi\land_mine\land_mine" />
+			<entry name="target_laser" groupTag="weap" />
+			<entry name="ff_kill_zone" groupTag="bloc" />
+			<entry name="ff_plat_1x1_flat" groupTag="bloc" />
+			<entry name="shade_anti_air" groupTag="vehi" />
+			<entry name="shade_flak" groupTag="vehi" />
+			<entry name="shade_plasma" groupTag="vehi" />
+			<entry name="killball" groupTag="bloc" tagName="objects\levels\shared\damage_sphere\damage_sphere" />
+			<entry name="ff_light_red" groupTag="bloc" tagName="objects\levels\forge\ff_light_red\ff_light_red" />
+			<entry name="ff_light_blue" groupTag="bloc" tagName="objects\levels\forge\ff_light_blue\ff_light_blue" />
+			<entry name="ff_light_green" groupTag="bloc" tagName="objects\levels\forge\ff_light_green\ff_light_green" />
+			<entry name="ff_light_orange" groupTag="bloc" tagName="objects\levels\forge\ff_light_orange\ff_light_orange" />
+			<entry name="ff_light_purple" groupTag="bloc" tagName="objects\levels\forge\ff_light_purple\ff_light_purple" />
+			<entry name="ff_light_yellow" groupTag="bloc" tagName="objects\levels\forge\ff_light_yellow\ff_light_yellow" />
+			<entry name="ff_light_white" groupTag="bloc" tagName="objects\levels\forge\ff_light_white\ff_light_white" />
+			<entry name="ff_light_flash_red" groupTag="bloc" tagName="objects\levels\forge\ff_light_flash_red\ff_light_flash_red" />
+			<entry name="ff_light_flash_yellow" groupTag="bloc" tagName="objects\levels\forge\ff_light_flash_yellow\ff_light_flash_yellow" />
+			<entry name="fx_colorblind" groupTag="bloc" tagName="objects\levels\shared\screen_fx_orb\fx\colorblind" />
+			<entry name="fx_gloomy" groupTag="bloc" tagName="objects\levels\shared\screen_fx_orb\fx\gloomy" />
+			<entry name="fx_juicy" groupTag="bloc" tagName="objects\levels\shared\screen_fx_orb\fx\juicy" />
+			<entry name="fx_nova" groupTag="bloc" tagName="objects\levels\shared\screen_fx_orb\fx\nova" />
+			<entry name="fx_olde_timey" groupTag="bloc" tagName="objects\levels\shared\screen_fx_orb\fx\olde_timey" />
+			<entry name="fx_pen_and_ink" groupTag="bloc" tagName="objects\levels\shared\screen_fx_orb\fx\pen_and_ink" />
+			<entry name="fx_dusk" groupTag="bloc" />
+			<entry name="fx_golden_hour" groupTag="bloc" />
+			<entry name="fx_eerie" groupTag="bloc" />
+			<entry name="ff_grid" groupTag="bloc" />
+			<entry name="invisible_cube_of_alarming_1" groupTag="scen" tagName="objects\multi\invisible_cube_of_derek\invisible_cube_of_alarming_1" />
+			<entry name="invisible_cube_of_alarming_2" groupTag="scen" tagName="objects\multi\invisible_cube_of_derek\invisible_cube_of_alarming_2" />
+			<entry name="spawning_safe" groupTag="scen" tagName="objects\multi\boundaries\safe_volume" />
+			<entry name="spawning_safe_soft" groupTag="scen" tagName="objects\multi\boundaries\soft_safe_volume" />
+			<entry name="spawning_kill" groupTag="scen" tagName="objects\multi\boundaries\kill_volume" />
+			<entry name="spawning_kill_soft" groupTag="scen" tagName="objects\multi\boundaries\soft_kill_volume" />
+			<entry name="package_cabinet" groupTag="mach" />
+			<entry name="cov_powermodule_stand" groupTag="mach" />
+			<entry name="dlc_covenant_bomb" groupTag="weap" tagName="levels\multi\dlc\objects\dlc_covenant_bomb\dlc_covenant_bomb" />
+			<entry name="dlc_invasion_heavy_shield" groupTag="bloc" tagName="levels\multi\dlc\objects\dlc_invasion_heavy_shield\dlc_invasion_heavy_shield" />
+			<entry name="dlc_invasion_bomb_door" groupTag="scen" tagName="levels\multi\dlc\objects\dlc_invasion_bomb_door\dlc_invasion_bomb_door" />
+		</types>
+		<weapons>
+			<entry typeIndex="13" typeName="dmr" />
+			<entry typeIndex="14" typeName="assault_rifle" />
+			<entry typeIndex="15" typeName="plasma_pistol" />
+			<entry typeIndex="16" typeName="spike_rifle" />
+			<entry typeIndex="20" typeName="energy_sword" />
+			<entry typeIndex="21" typeName="magnum" />
+			<entry typeIndex="22" typeName="needler" />
+			<entry typeIndex="23" typeName="plasma_rifle" />
+			<entry typeIndex="24" typeName="rocket_launcher" />
+			<entry typeIndex="25" typeName="shotgun" />
+			<entry typeIndex="26" typeName="sniper_rifle" />
+			<entry typeIndex="29" typeName="spartan_laser" />
+			<entry typeIndex="30" typeName="gravity_hammer" />
+			<entry typeIndex="19" typeName="plasma_repeater" />
+			<entry typeIndex="18" typeName="needle_rifle" />
+			<entry typeIndex="56" typeName="prototype_covey_sniper" />
+			<entry typeIndex="68" typeName="plasma_launcher" />
+			<entry typeIndex="128" typeName="elite_shot" />
+			<entry typeIndex="129" typeName="grenade_launcher" />
+			<entry typeIndex="117" typeName="golf_club" />
+			<entry typeIndex="161" typeName="flak_cannon" />
+			<entry typeIndex="167" typeName="machinegun" />
+			<entry typeIndex="169" typeName="plasma_turret_weapon" />
+			<entry typeIndex="185" typeName="target_laser" />
+		</weapons>
+		<vehicles>
+			<entry typeIndex="34" typeName="warthog" />
+			<entry typeIndex="35" typeName="ghost" />
+			<entry typeIndex="36" typeName="scorpion" />
+			<entry typeIndex="37" typeName="wraith" />
+			<entry typeIndex="38" typeName="banshee" />
+			<entry typeIndex="39" typeName="mongoose" />
+			<entry typeIndex="40" typeName="chopper" />
+			<entry typeIndex="31" typeName="mauler" />
+			<entry typeIndex="42" typeName="hornet" />
+			<entry typeIndex="43" typeName="stingray" />
+			<entry typeIndex="44" typeName="heavy_wraith" />
+			<entry typeIndex="45" typeName="falcon" />
+			<entry typeIndex="46" typeName="sabre" />
+			<entry typeIndex="54" typeName="revenant" />
+			<entry typeIndex="55" typeName="pickup" />
+			<entry typeIndex="112" typeName="semi" />
+			<entry typeIndex="144" typeName="phantom" />
+			<entry typeIndex="145" typeName="pelican" />
+			<entry typeIndex="168" typeName="machinegun_turret" />
+			<entry typeIndex="170" typeName="mounted_plasma_turret" />
+			<entry typeIndex="171" typeName="shade_turret" />
+			<entry typeIndex="172" typeName="cargo_truck" />
+			<entry typeIndex="173" typeName="cart_electric" />
+			<entry typeIndex="174" typeName="forklift" />
+			<entry typeIndex="180" typeName="scorpion_infantry_gunner" />
+			<entry typeIndex="177" typeName="warthog_gunner" />
+			<entry typeIndex="178" typeName="warthog_gauss_turret" />
+			<entry typeIndex="179" typeName="warthog_rocket_turret" />
+			<entry typeIndex="181" typeName="falcon_grenadier_left" />
+			<entry typeIndex="182" typeName="falcon_grenadier_right" />
+			<entry typeIndex="183" typeName="wraith_infantry_turret" />
+			<entry typeIndex="175" typeName="military_truck" />
+			<entry typeIndex="190" typeName="shade_plasma" />
+			<entry typeIndex="189" typeName="shade_flak" />
+			<entry typeIndex="188" typeName="shade_anti_air" />
+		</vehicles>
+		<grenades>
+			<entry typeIndex="9" typeName="frag_grenade" />
+			<entry typeIndex="10" typeName="plasma_grenade" />
+			<entry typeIndex="11" typeName="spike_grenade" />
+			<entry typeIndex="12" typeName="firebomb_grenade" />
+		</grenades>
+		<equipment>
+			<entry typeIndex="47" typeName="sprint_equipment" />
+			<entry typeIndex="48" typeName="jet_pack_equipment" />
+			<entry typeIndex="49" typeName="armor_lock_equipment" />
+			<entry typeIndex="50" typeName="power_fist_equipment" />
+			<entry typeIndex="51" typeName="active_camo_equipment" />
+			<entry typeIndex="52" typeName="ammo_pack_equipment" />
+			<entry typeIndex="53" typeName="sensor_pack_equipment" />
+			<entry typeIndex="131" typeName="hologram_equipment" />
+			<entry typeIndex="132" typeName="evade_equipment" />
+			<entry typeIndex="166" typeName="drop_shield_equipment" />
+		</equipment>
+		<weaponSets>
+			<entry name="human" />
+			<entry name="covenant" />
+			<entry name="no_snipers" />
+			<entry name="rockets_only" />
+			<entry name="no_power_weapons" />
+			<entry name="juggernaut" />
+			<entry name="slayer_pro" />
+			<entry name="rifles_only" />
+			<entry name="mid_range_only" />
+			<entry name="long_range_only" />
+			<entry name="human_snipers_only" />
+			<entry name="melee" />
+			<entry name="swords_only" />
+			<entry name="hammers_only" />
+			<entry name="mass_destruction" />
+			<entry name="no_weapons" />
+		</weaponSets>
+		<vehicleSets>
+			<entry name="mongoose_only" />
+			<entry name="warthog_only" />
+			<entry name="no_aircraft" />
+			<entry name="aircraft_only" />
+			<entry name="no_tanks" />
+			<entry name="tanks_only" />
+			<entry name="no_light_ground" />
+			<entry name="lightground_only" />
+			<entry name="no_covy_vehicles" />
+			<entry name="all_covy_vehicles" />
+			<entry name="no_human_vehicles" />
+			<entry name="all_human_vehicles" />
+			<entry name="no_vehicles" />
+			<entry name="all_vehicles" />
+		</vehicleSets>
+	</motl>
+	<gmeg name="globals\medals">
+		<medals>
+			<entry name="medal_extermination" />
+			<entry name="medal_perfection" />
+			<entry name="medal_multikill_2" />
+			<entry name="medal_multikill_3" />
+			<entry name="medal_multikill_4" />
+			<entry name="medal_multikill_5" />
+			<entry name="medal_multikill_6" />
+			<entry name="medal_multikill_7" />
+			<entry name="medal_multikill_8" />
+			<entry name="medal_multikill_9" />
+			<entry name="medal_multikill_10" />
+			<entry name="medal_kill_spree_5" />
+			<entry name="medal_kill_spree_10" />
+			<entry name="medal_kill_spree_15" />
+			<entry name="medal_kill_spree_20" />
+			<entry name="medal_kill_spree_25" />
+			<entry name="medal_kill_spree_30" />
+			<entry name="medal_kill_spree_35" />
+			<entry name="medal_kill_spree_40" />
+			<entry name="multikill" />
+			<entry name="medal_sniper_5" />
+			<entry name="medal_sniper_10" />
+			<entry name="medal_sniper_15" />
+			<entry name="medal_shotgun_5" />
+			<entry name="medal_shotgun_10" />
+			<entry name="medal_shotgun_15" />
+			<entry name="medal_splatter_5" />
+			<entry name="medal_splatter_10" />
+			<entry name="medal_splatter_15" />
+			<entry name="medal_sword_5" />
+			<entry name="medal_sword_10" />
+			<entry name="medal_sword_15" />
+			<entry name="medal_juggernaut_5" />
+			<entry name="medal_juggernaut_10" />
+			<entry name="medal_juggernaut_15" />
+			<entry name="medal_zombie_5" />
+			<entry name="medal_zombie_10" />
+			<entry name="medal_zombie_15" />
+			<entry name="medal_survivor_5" />
+			<entry name="medal_survivor_10" />
+			<entry name="medal_survivor_15" />
+			<entry name="medal_koth_5" />
+			<entry name="medal_koth_10" />
+			<entry name="medal_koth_15" />
+			<entry name="sticky_grenade_5x" />
+			<entry name="sticky_grenade_10x" />
+			<entry name="medal_sticky_15" />
+			<entry name="hammer_kill_5x" />
+			<entry name="hammer_kill_10x" />
+			<entry name="medal_hammerkill_15" />
+			<entry name="assist_5" />
+			<entry name="assist_10" />
+			<entry name="assist_15" />
+			<entry name="laser_5" />
+			<entry name="laser_10" />
+			<entry name="laser_15" />
+			<entry name="wheelman_5" />
+			<entry name="wheelman_10" />
+			<entry name="wheelman_15" />
+			<entry name="wingman_5x" />
+			<entry name="wingman_10x" />
+			<entry name="wingman_15x" />
+			<entry name="medal_shotgun_kill_sword" />
+			<entry name="medal_vehicle_impact_kill" />
+			<entry name="medal_vehicle_hijack" />
+			<entry name="medal_aircraft_hijack" />
+			<entry name="medal_deadplayer_kill_player" />
+			<entry name="medal_player_kill_spreeplayer" />
+			<entry name="medal_spartanlaser_kill" />
+			<entry name="medal_stickygrenade_kill" />
+			<entry name="medal_sniper_kill" />
+			<entry name="medal_bashbehind_kill" />
+			<entry name="medal_bash_kill" />
+			<entry name="medal_player_kill_occupiedvehicle" />
+			<entry name="medal_driver_assist_gunner" />
+			<entry name="medal_assault_bomb_planted" />
+			<entry name="medal_ctf_flag_captured" />
+			<entry name="medal_oddball_carrier_kill_player" />
+			<entry name="medal_ctf_flag_carrier_kill_player" />
+			<entry name="medal_oddball_player_kill_oddball" />
+			<entry name="medal_assault_player_kill_carrier" />
+			<entry name="medal_ctf_flag_player_kill_carrier" />
+			<entry name="medal_juggernaut_player_kill_juggernaut" />
+			<entry name="vip_player_kill_vip" />
+			<entry name="medal_infection_survive" />
+			<entry name="headshot_kill" />
+			<entry name="supercombine_kill" />
+			<entry name="emp_assist" />
+			<entry name="survival_hero" />
+			<entry name="assist" />
+			<entry name="undefined" />
+			<entry name="revenge" />
+			<entry name="first_blood" />
+			<entry name="opportunist" />
+			<entry name="berserker" />
+			<entry name="sprinting_kill" />
+			<entry name="pull_kill" />
+			<entry name="showstopper" />
+			<entry name="skullamanjaro" />
+			<entry name="yoink" />
+			<entry name="second_wind" />
+			<entry name="avenger" />
+			<entry name="lifesaver" />
+			<entry name="firebird" />
+			<entry name="assassination" />
+			<entry name="ff_medal_kill_spree_10" />
+			<entry name="ff_medal_kill_spree_20" />
+			<entry name="ff_medal_kill_spree_30" />
+			<entry name="ff_medal_kill_spree_40" />
+			<entry name="ff_medal_kill_spree_50" />
+			<entry name="ff_medal_kill_spree_100" />
+			<entry name="ff_medal_kill_spree_500" />
+			<entry name="ff_medal_kill_spree_1000" />
+			<entry name="medal_flame_kill" />
+		</medals>
+	</gmeg>
+	<ingd name="globals\game_incident">
+		<incidents>
+			<entry name="kill" />
+			<entry name="grenade_kill" />
+			<entry name="guardian_kill" />
+			<entry name="death" />
+			<entry name="assist" />
+			<entry name="suicide" />
+			<entry name="fell_to_death" />
+			<entry name="kill_betrayal" />
+			<entry name="melee_kill" />
+			<entry name="assassination_kill" />
+			<entry name="finishing_move_kill" />
+			<entry name="terminal_velocity_assassination" />
+			<entry name="recharge_health" />
+			<entry name="wildlife_kill" />
+			<entry name="headshot_kill" />
+			<entry name="sniper_headshot_kill" />
+			<entry name="emp_assist" />
+			<entry name="supercombine_kill" />
+			<entry name="sniper_kill" />
+			<entry name="laser_kill" />
+			<entry name="rocket_kill" />
+			<entry name="shotgun_kill" />
+			<entry name="hammer_kill" />
+			<entry name="small_arms_kill" />
+			<entry name="auto_kill" />
+			<entry name="precision_kill" />
+			<entry name="launcher_kill" />
+			<entry name="pistol_kill" />
+			<entry name="blamite_kill" />
+			<entry name="dmr_kill" />
+			<entry name="enemy_vehicle_kill" />
+			<entry name="sword_kill" />
+			<entry name="airstrike_kill" />
+			<entry name="airstrike_vehicle_kill" />
+			<entry name="sticky_grenade_kill" />
+			<entry name="splatter_kill" />
+			<entry name="zombie_kill_kill" />
+			<entry name="infection_kill" />
+			<entry name="kill_elite" />
+			<entry name="kill_grunt" />
+			<entry name="kill_elite_bob" />
+			<entry name="kill_enemy_leader" />
+			<entry name="kill_enemy_infantry" />
+			<entry name="kill_enemy_specialist" />
+			<entry name="kill_from_the_grave" />
+			<entry name="ordnance_kill" />
+			<entry name="vehicle_kill" />
+			<entry name="shade_aa_kill" />
+			<entry name="driver_assist_gunner" />
+			<entry name="highjack" />
+			<entry name="skyjack" />
+			<entry name="shotgun_kill_sword" />
+			<entry name="killjoy" />
+			<entry name="survival_wave_completed_deathless" />
+			<entry name="survival_wave_completed" />
+			<entry name="survival_set_completed" />
+			<entry name="survival_set_completed_deathless" />
+			<entry name="survival_full_round_completed" />
+			<entry name="survival_full_round_completed_deathless" />
+			<entry name="campaign_level_completed" />
+			<entry name="flagcarrier_kill" />
+			<entry name="kill_with_oddball" />
+			<entry name="bomb_carrier_kill" />
+			<entry name="juggernaut_game_start" />
+			<entry name="kill_as_juggernaut" />
+			<entry name="juggernaut_new" />
+			<entry name="juggernaut_kill" />
+			<entry name="vip_kill" />
+			<entry name="koth_game_start" />
+			<entry name="hill_controlled" />
+			<entry name="hill_contested" />
+			<entry name="hill_controlled_team" />
+			<entry name="hill_contested_team" />
+			<entry name="hill_moved" />
+			<entry name="kill_within_hill" />
+			<entry name="ball_game_start" />
+			<entry name="ball_taken" />
+			<entry name="ball_dropped" />
+			<entry name="ball_taken_team" />
+			<entry name="ball_dropped_team" />
+			<entry name="ball_spawned" />
+			<entry name="ball_reset" />
+			<entry name="ball_carrier_kill" />
+			<entry name="assault_game_start" />
+			<entry name="bomb_planted" />
+			<entry name="bomb_taken" />
+			<entry name="bomb_dropped" />
+			<entry name="bomb_armed" />
+			<entry name="bomb_reset_neutral" />
+			<entry name="bomb_returned" />
+			<entry name="bomb_disarmed" />
+			<entry name="bomb_arming" />
+			<entry name="bomb_detonated" />
+			<entry name="bomb_reset" />
+			<entry />
+			<entry />
+			<entry name="terr_game_start" />
+			<entry name="terr_captured" />
+			<entry name="terr_contested" />
+			<entry name="teleporter_used" />
+			<entry name="race_game_start" />
+			<entry name="rally_game_start" />
+			<entry name="checkpoint_reached" />
+			<entry name="checkpoint_reached_team" />
+			<entry name="lap_complete" />
+			<entry name="final_lap" />
+			<entry name="final_lap_team" />
+			<entry name="rocket_race_game_start" />
+			<entry name="ctf_game_start" />
+			<entry name="ctf_team" />
+			<entry name="flag_grabbed" />
+			<entry name="flag_dropped_neutral" />
+			<entry name="flag_dropped" />
+			<entry name="flag_grabbed_neutral" />
+			<entry />
+			<entry />
+			<entry name="flag_scored" />
+			<entry name="flag_reset_neutral" />
+			<entry name="flag_reset" />
+			<entry name="flag_recovered" />
+			<entry name="kill_with_flag" />
+			<entry name="team_offense" />
+			<entry name="team_defense" />
+			<entry name="headhunter_game_start" />
+			<entry name="skulls_taken" />
+			<entry name="skulls_scored" />
+			<entry name="skulls_dropped" />
+			<entry name="skullamanjaro" />
+			<entry />
+			<entry name="infection_game_start" />
+			<entry name="inf_new_alpha" />
+			<entry name="inf_new_infection" />
+			<entry name="inf_new_zombie" />
+			<entry name="inf_last_man" />
+			<entry name="infection_survivor_win" />
+			<entry name="infection_zombie_win" />
+			<entry name="stockpile_game_start" />
+			<entry name="stock_flags_collected" />
+			<entry name="stock_flag_reset" />
+			<entry name="swat_game_start" />
+			<entry name="action_sack_game_start" />
+			<entry name="bumper_cars_game_start" />
+			<entry name="custom_game_start" />
+			<entry name="dogfight_game_start" />
+			<entry name="fiesta_game_start" />
+			<entry name="golf_game_start" />
+			<entry name="grifball_game_start" />
+			<entry name="hogpile_game_start" />
+			<entry name="pinata_game_start" />
+			<entry name="soccer_game_start" />
+			<entry />
+			<entry name="new_juggernaut" />
+			<entry />
+			<entry />
+			<entry name="revenge_kill" />
+			<entry name="close_call" />
+			<entry name="opportunist_kill" />
+			<entry name="first_blood" />
+			<entry name="wingman_spawn" />
+			<entry name="sprinting_kill" />
+			<entry name="pull_kill" />
+			<entry name="perfection" />
+			<entry name="showstopper" />
+			<entry name="yoink" />
+			<entry name="second_wind" />
+			<entry name="avenged" />
+			<entry name="avenger" />
+			<entry name="life_saved" />
+			<entry name="lifesaver" />
+			<entry name="firebird" />
+			<entry />
+			<entry />
+			<entry />
+			<entry name="extermination" />
+			<entry name="multikill_x2" />
+			<entry name="multikill_x3" />
+			<entry name="multikill_x4" />
+			<entry name="multikill_x5" />
+			<entry name="multikill_x6" />
+			<entry name="multikill_x7" />
+			<entry name="multikill_x8" />
+			<entry name="multikill_x9" />
+			<entry name="multikill_x10" />
+			<entry name="5_in_a_row" />
+			<entry name="10_in_a_row" />
+			<entry name="15_in_a_row" />
+			<entry name="20_in_a_row" />
+			<entry name="25_in_a_row" />
+			<entry name="30_in_a_row" />
+			<entry name="35_in_a_row" />
+			<entry name="40_in_a_row" />
+			<entry />
+			<entry name="assist_5x" />
+			<entry name="assist_10x" />
+			<entry name="assist_15x" />
+			<entry name="wheelman_5x" />
+			<entry name="wheelman_10x" />
+			<entry name="wheelman_15x" />
+			<entry name="shotgun_5x" />
+			<entry name="shotgun_10x" />
+			<entry name="shotgun_15x" />
+			<entry name="sniper_5x" />
+			<entry name="sniper_10x" />
+			<entry name="sniper_15x" />
+			<entry name="sword_5x" />
+			<entry name="sword_10x" />
+			<entry name="sword_15x" />
+			<entry name="sticky_grenade_5x" />
+			<entry name="sticky_grenade_10x" />
+			<entry name="sticky_grenade_15x" />
+			<entry name="laser_5x" />
+			<entry name="laser_10x" />
+			<entry name="laser_15x" />
+			<entry name="gravity_hammer_5x" />
+			<entry name="gravity_hammer_10x" />
+			<entry name="gravity_hammer_15x" />
+			<entry name="splatter_5x" />
+			<entry name="splatter_10x" />
+			<entry name="splatter_15x" />
+			<entry name="juggernaut_5x" />
+			<entry name="juggernaut_10x" />
+			<entry name="juggernaut_15x" />
+			<entry name="infection_5x" />
+			<entry name="infection_10x" />
+			<entry name="infection_15x" />
+			<entry name="zombie_kill_5x" />
+			<entry name="zombie_kill_10x" />
+			<entry name="zombie_kill_15x" />
+			<entry name="infection_survive" />
+			<entry name="koth_spree" />
+			<entry name="wingman_5x" />
+			<entry name="wingman_10x" />
+			<entry name="wingman_15x" />
+			<entry name="invasion_game_start" />
+			<entry name="invasion_game_start_c" />
+			<entry name="inv_spartan_win" />
+			<entry name="inv_spartans_win_rd1" />
+			<entry name="inv_spartans_win_rd2" />
+			<entry name="inv_elite_win" />
+			<entry name="inv_elites_win_rd1" />
+			<entry name="invasion_elites_win_rd2" />
+			<entry name="inv_core_grabbed" />
+			<entry name="inv_core_stolen" />
+			<entry name="inv_core_dropped" />
+			<entry name="inv_core_captured" />
+			<entry name="inv_core_reset" />
+			<entry name="bone_cv_defeat" />
+			<entry name="bone_cv_ph1_defeat" />
+			<entry name="bone_cv_ph1_intro" />
+			<entry name="bone_cv_ph1_victory" />
+			<entry name="bone_cv_ph2_defeat" />
+			<entry name="bone_cv_ph2_victory" />
+			<entry name="bone_cv_ph3_victory" />
+			<entry name="bone_cv_victory" />
+			<entry name="bone_sp_defeat" />
+			<entry name="bone_sp_ph1_intro" />
+			<entry name="bone_sp_ph1_victory" />
+			<entry name="bone_sp_ph2_intro" />
+			<entry name="bone_sp_ph2_victory" />
+			<entry name="bone_sp_ph3_defeat" />
+			<entry name="bone_sp_ph3_intro" />
+			<entry name="bone_sp_ph3_victory" />
+			<entry name="isle_cv_defeat" />
+			<entry name="isle_cv_ph1_intro" />
+			<entry name="isle_cv_ph1_victory" />
+			<entry name="isle_cv_ph2_intro" />
+			<entry name="isle_cv_ph2_victory" />
+			<entry name="isle_cv_ph3_defeat" />
+			<entry name="isle_cv_ph3_intro" />
+			<entry name="isle_cv_ph3_victory" />
+			<entry name="isle_sp_defeat" />
+			<entry name="isle_sp_ph1_defeat" />
+			<entry name="isle_sp_ph1_extra" />
+			<entry name="isle_sp_ph1_intro" />
+			<entry name="isle_sp_ph1_victory" />
+			<entry name="isle_sp_ph2_defeat" />
+			<entry name="isle_sp_ph2_victory" />
+			<entry name="isle_sp_ph3_victory" />
+			<entry name="isle_sp_victory" />
+			<entry name="invasion_slayer_start" />
+			<entry />
+			<entry name="game_start_slayer" />
+			<entry name="team_game_start" />
+			<entry name="one_minute_win" />
+			<entry name="one_minute_team_win" />
+			<entry name="half_minute_win" />
+			<entry name="half_minute_team_win" />
+			<entry name="30_minutes_remaining" />
+			<entry name="15_minutes_remaining" />
+			<entry name="5_minutes_remaining" />
+			<entry name="1_minute_remaining" />
+			<entry name="30_seconds_remaining" />
+			<entry name="10_seconds_remaining" />
+			<entry name="round_over" />
+			<entry name="sudden_death" />
+			<entry name="game_over" />
+			<entry name="gained_lead" />
+			<entry name="gained_team_lead" />
+			<entry name="lost_lead" />
+			<entry name="lost_team_lead" />
+			<entry name="tied_leader" />
+			<entry name="tied_team_leader" />
+			<entry name="player_joined" />
+			<entry name="player_switched_team" />
+			<entry name="player_rejoined" />
+			<entry name="player_quit" />
+			<entry name="player_booted_player" />
+			<entry name="respawn_tick" />
+			<entry name="respawn_tick_final" />
+			<entry />
+			<entry />
+			<entry name="multikill_comm" />
+			<entry name="headshot_comm" />
+			<entry name="spree_comm" />
+			<entry name="assist_comm" />
+			<entry name="technician_comm" />
+			<entry name="wheelman_comm" />
+			<entry name="auto_comm" />
+			<entry name="small_arms_comm" />
+			<entry name="ordnance_comm" />
+			<entry name="vehicle_comm" />
+			<entry name="grenades_comm" />
+			<entry name="precision_comm" />
+			<entry name="finishing_move_comm" />
+			<entry name="cqc_comm" />
+			<entry name="set_clear_comm" />
+			<entry name="deathless_round_comm" />
+			<entry name="kill_leader_comm" />
+			<entry name="kill_infantry_comm" />
+			<entry name="kill_specialist_comm" />
+			<entry name="destroy_vehicle_comm" />
+			<entry name="clear_a_mission_comm" />
+			<entry name="campaign_level_completed_deathless" />
+			<entry name="player_kills_spartan" />
+			<entry name="player_kill_spartan_achieve" />
+			<entry name="core_killed_achieve" />
+			<entry name="m45_elite_pod" />
+			<entry name="dmr_acheive" />
+			<entry name="supercombine_achieve" />
+			<entry name="pistol_achieve" />
+			<entry name="wingman_achieve" />
+			<entry name="3kiva_clear" />
+			<entry name="leg_set_achieve" />
+			<entry name="2_for_1_achieve" />
+			<entry name="cruiser_fast_achieve" />
+			<entry name="firebird_achieve" />
+			<entry name="tank_survive_achieve" />
+			<entry name="race_m20" />
+			<entry name="race_m20_fast" />
+			<entry name="terminal_vel_achieve" />
+			<entry name="wildlife_achieve" />
+			<entry name="skunked_achieve" />
+			<entry name="m52_aa_kill" />
+			<entry name="zealot_achieve" />
+			<entry />
+			<entry />
+			<entry name="dlc_achieve_1" />
+			<entry name="dlc_achieve_2" />
+			<entry name="dlc_achieve_3" />
+			<entry name="dlc_achieve_4" />
+			<entry name="dlc_achieve_5" />
+			<entry name="dlc_achieve_6" />
+			<entry name="dlc_achieve_7" />
+			<entry name="dlc_achieve_8" />
+			<entry name="dlc_achieve_9" />
+			<entry name="dlc_achieve_10" />
+			<entry />
+		</incidents>
+	</ingd>
+	<ingd name="globals\survival_game_incident">
+		<incidents>
+			<entry name="survival_welcome" />
+			<entry name="survival_new_set" />
+			<entry name="survival_end_set" />
+			<entry name="survival_new_round" />
+			<entry name="survival_end_round" />
+			<entry name="survival_new_wave" />
+			<entry name="survival_end_wave" />
+			<entry name="survival_bonus_round" />
+			<entry name="survival_bonus_lives_awarded" />
+			<entry name="survival_bonus_round_over" />
+			<entry name="survival_awarded_lives" />
+			<entry name="survival_awarded_weapon" />
+			<entry name="survival_awarded_equipment" />
+			<entry name="sur_cla_unsc_start" />
+			<entry name="sur_cla_unsc_fail" />
+			<entry name="sur_gen_unsc_start" />
+			<entry name="sur_gen_unsc_fail" />
+			<entry name="sur_gen_unsc_win" />
+			<entry name="sur_unsc_timeout" />
+			<entry name="sur_cla_cov_start" />
+			<entry name="sur_cla_cov_fail" />
+			<entry name="sur_gen_cov_start" />
+			<entry name="sur_gen_cov_fail" />
+			<entry name="sur_cov_win" />
+			<entry name="sur_cov_timeout" />
+			<entry name="gen_alpha_locked" />
+			<entry name="gen_bravo_locked" />
+			<entry name="gen_charlie_locked" />
+			<entry name="survival_generator_destroyed" />
+			<entry name="survival_round_over" />
+			<entry name="survival_obj_complete" />
+			<entry name="survival_obj_failed" />
+			<entry name="survival_out_of_lives" />
+			<entry name="survival_generator_lost" />
+			<entry name="survival_alpha_under_attack" />
+			<entry name="survival_bravo_under_attack" />
+			<entry name="survival_charlie_under_attack" />
+			<entry name="survival_spartans_win" />
+			<entry name="survival_elites_win" />
+			<entry name="survival_sudden_death_over" />
+			<entry />
+			<entry name="hero" />
+			<entry name="survival_last_man_standing" />
+			<entry name="survival_skull_thunderstorm" />
+			<entry name="survival_skull_famine" />
+			<entry name="survival_skull_tilt" />
+			<entry name="survival_skull_mythic" />
+			<entry name="survival_skull_catch" />
+			<entry name="survival_skull_black_eye" />
+			<entry name="survival_skull_tough_luck" />
+			<entry name="survival_skull_iron" />
+			<entry name="survival_skull_assassin" />
+			<entry name="survival_skull_fog" />
+			<entry name="survival_skull_blind" />
+			<entry name="survival_skull_superman" />
+			<entry name="survival_skull_grunt_birthday_party" />
+			<entry name="survival_skull_iwhbyd" />
+			<entry name="survival_skull_blue" />
+			<entry name="survival_skull_yellow" />
+			<entry name="survival_skull_red" />
+			<entry name="survival_skulls_multiple" />
+			<entry name="survival_skull_single" />
+			<entry name="survival_5_lives_left" />
+			<entry name="survival_1_life_left" />
+			<entry name="survival_0_lives_left" />
+			<entry name="survival_game_over" />
+			<entry name="survival_5_ai_remaining" />
+			<entry name="survival_2_ai_remaining" />
+			<entry name="survival_1_ai_remaining" />
+			<entry name="survival_reinforcements" />
+			<entry name="survival_skull_all" />
+			<entry name="survival_skull_activation_finished" />
+			<entry name="survival_incredible_round" />
+			<entry name="survival_superb_set" />
+			<entry name="survival_bonus_information" />
+			<entry name="survival_next_round_timer" />
+			<entry name="survival_next_set_timer" />
+			<entry name="survival_bonus_skull_all" />
+			<entry name="survival_10_in_a_row" />
+			<entry name="survival_20_in_a_row" />
+			<entry name="survival_30_in_a_row" />
+			<entry name="survival_40_in_a_row" />
+			<entry name="survival_50_in_a_row" />
+			<entry name="survival_100_in_a_row" />
+			<entry name="survival_500_in_a_row" />
+			<entry name="survival_1000_in_a_row" />
+			<entry name="survival_10_aura" />
+			<entry name="survival_20_aura" />
+			<entry name="survival_30_aura" />
+			<entry name="survival_40_aura" />
+			<entry name="survival_50_aura" />
+			<entry name="survival_100_aura" />
+			<entry name="survival_500_aura" />
+			<entry name="survival_1000_aura" />
+			<entry name="team_generator_kill" />
+			<entry name="sur_airstrike_refill" />
+			<entry />
+			<entry />
+			<entry name="survival_mm_game_complete" />
+			<entry name="score_silver" />
+			<entry name="score_gold" />
+			<entry name="score_onyx" />
+			<entry name="mm_score_achieve" />
+		</incidents>
+	</ingd>
+	<lgtd name="multiplayer\invasion">
+		<types>
+			<entry name="loadout_name_scout" primary="assault_rifle" secondary="magnum" equipment="sprint_equipment" />
+			<entry name="loadout_name_guard" primary="assault_rifle" secondary="magnum" equipment="armor_lock_equipment" />
+			<entry name="loadout_name_air_assault" primary="assault_rifle" secondary="magnum" equipment="jet_pack_equipment" />
+			<entry name="loadout_name_marksman" primary="dmr" secondary="none" equipment="sprint_equipment" />
+			<entry name="loadout_name_recon_marksman" primary="dmr" secondary="assault_rifle" equipment="sprint_equipment" />
+			<entry name="loadout_name_expert_marksman" primary="dmr" secondary="magnum" equipment="sprint_equipment" />
+			<entry name="loadout_name_operator" primary="shotgun" secondary="magnum" equipment="armor_lock_equipment" />
+			<entry name="loadout_name_grenadier" primary="grenade_launcher" secondary="assault_rifle" equipment="hologram_equipment" />
+			<entry name="loadout_name_warrior" primary="plasma_repeater" secondary="plasma_pistol" equipment="evade_equipment" />
+			<entry name="loadout_name_ranger" primary="plasma_repeater" secondary="plasma_pistol" equipment="jet_pack_equipment" />
+			<entry name="loadout_name_zealot" primary="needle_rifle" secondary="plasma_pistol" equipment="evade_equipment" />
+			<entry name="loadout_name_royal_zealot" primary="needle_rifle" secondary="needler" equipment="evade_equipment" />
+			<entry name="loadout_name_assassin" primary="needler" secondary="none" equipment="active_camo_equipment" />
+			<entry name="loadout_name_dark_assassin" primary="needler" secondary="plasma_pistol" equipment="active_camo_equipment" />
+			<entry name="loadout_name_gladiator" primary="energy_sword" secondary="plasma_repeater" equipment="hologram_equipment" />
+			<entry name="loadout_name_champion_assassin" primary="elite_shot" secondary="plasma_pistol" equipment="active_camo_equipment" />
+			<entry name="loadout_name_stalker" primary="assault_rifle" secondary="magnum" equipment="active_camo_equipment" />
+			<entry name="loadout_name_warden" primary="needle_rifle" secondary="none" equipment="sprint_equipment" />
+			<entry name="loadout_name_security" primary="dmr" secondary="magnum" equipment="sprint_equipment" />
+			<entry name="loadout_name_spec_ops" primary="assault_rifle" secondary="magnum" equipment="hologram_equipment" />
+			<entry name="loadout_name_deceiver" primary="plasma_repeater" secondary="plasma_pistol" equipment="hologram_equipment" />
+			<entry name="loadout_name_saboteur" primary="needler" secondary="plasma_pistol" equipment="armor_lock_equipment" />
+			<entry name="loadout_name_sentry" primary="needle_rifle" secondary="plasma_pistol" equipment="drop_shield_equipment" />
+			<entry name="loadout_name_medic" primary="assault_rifle" secondary="magnum" equipment="drop_shield_equipment" />
+			<entry name="loadout_name_corpsman" primary="assault_rifle" secondary="magnum" equipment="drop_shield_equipment" />
+			<entry name="loadout_unchanged_sprint" primary="unchanged" secondary="unchanged" equipment="sprint_equipment" />
+			<entry name="loadout_unchanged_evade" primary="unchanged" secondary="unchanged" equipment="evade_equipment" />
+			<entry name="loadout_unchanged_armor_lock" primary="unchanged" secondary="unchanged" equipment="armor_lock_equipment" />
+			<entry name="loadout_unchanged_active_camo" primary="unchanged" secondary="unchanged" equipment="active_camo_equipment" />
+			<entry name="loadout_unchanged_hologram" primary="unchanged" secondary="unchanged" equipment="hologram_equipment" />
+			<entry name="loadout_unchanged_drop_shield" primary="unchanged" secondary="unchanged" equipment="drop_shield_equipment" />
+			<entry name="loadout_unchanged_jet_pack" primary="unchanged" secondary="unchanged" equipment="jet_pack_equipment" />
+			<entry name="loadout_name_specter" primary="grenade_launcher" secondary="magnum" equipment="active_camo_equipment" />
+		</types>
+		<sets>
+			<entry name="unsc_bronze">
+				<loadouts>
+					<entry typeName="loadout_name_scout" />
+					<entry typeName="loadout_name_marksman" />
+				</loadouts>
+			</entry>
+			<entry name="unsc_silver">
+				<loadouts>
+					<entry typeName="loadout_name_guard" />
+					<entry typeName="loadout_name_recon_marksman" />
+					<entry typeName="loadout_name_spec_ops" />
+				</loadouts>
+			</entry>
+			<entry name="unsc_gold">
+				<loadouts>
+					<entry typeName="loadout_name_air_assault" />
+					<entry typeName="loadout_name_expert_marksman" />
+					<entry typeName="loadout_name_operator" />
+					<entry typeName="loadout_name_grenadier" />
+					<entry typeName="loadout_name_medic" />
+				</loadouts>
+			</entry>
+			<entry name="covy_bronze">
+				<loadouts>
+					<entry typeName="loadout_name_warrior" />
+					<entry typeName="loadout_name_assassin" />
+				</loadouts>
+			</entry>
+			<entry name="covy_silver">
+				<loadouts>
+					<entry typeName="loadout_name_deceiver" />
+					<entry typeName="loadout_name_zealot" />
+					<entry typeName="loadout_name_dark_assassin" />
+				</loadouts>
+			</entry>
+			<entry name="covy_gold">
+				<loadouts>
+					<entry typeName="loadout_name_ranger" />
+					<entry typeName="loadout_name_royal_zealot" />
+					<entry typeName="loadout_name_champion_assassin" />
+					<entry typeName="loadout_name_gladiator" />
+					<entry typeName="loadout_name_sentry" />
+				</loadouts>
+			</entry>
+			<entry name="slayer_loadouts">
+				<loadouts>
+					<entry typeName="loadout_name_scout" />
+					<entry typeName="loadout_name_guard" />
+					<entry typeName="loadout_name_air_assault" />
+					<entry typeName="loadout_name_stalker" />
+					<entry typeName="loadout_name_spec_ops" />
+				</loadouts>
+			</entry>
+			<entry name="unsc_firefight">
+				<loadouts>
+					<entry typeName="loadout_name_air_assault" />
+					<entry typeName="loadout_name_recon_marksman" />
+					<entry typeName="loadout_name_operator" />
+					<entry typeName="loadout_name_specter" />
+					<entry typeName="loadout_name_medic" />
+				</loadouts>
+			</entry>
+			<entry name="covy_firefight">
+				<loadouts>
+					<entry typeName="loadout_name_ranger" />
+					<entry typeName="loadout_name_royal_zealot" />
+					<entry typeName="loadout_name_gladiator" />
+					<entry typeName="loadout_name_champion_assassin" />
+					<entry typeName="loadout_name_sentry" />
+				</loadouts>
+			</entry>
+			<entry name="slayer_pro_loadouts">
+				<loadouts>
+					<entry typeName="loadout_name_marksman" />
+					<entry typeName="loadout_name_warden" />
+				</loadouts>
+			</entry>
+			<entry name="swat_loadouts">
+				<loadouts>
+					<entry typeName="NONE" />
+					<entry typeName="loadout_name_security" />
+				</loadouts>
+			</entry>
+			<entry name="covy_slayer_loadouts">
+				<loadouts>
+					<entry typeName="loadout_name_zealot" />
+					<entry typeName="loadout_name_dark_assassin" />
+					<entry typeName="loadout_name_deceiver" />
+					<entry typeName="loadout_name_saboteur" />
+					<entry typeName="loadout_name_ranger" />
+				</loadouts>
+			</entry>
+			<entry name="objective_loadouts">
+				<loadouts>
+					<entry typeName="loadout_name_scout" />
+					<entry typeName="loadout_name_guard" />
+					<entry typeName="loadout_name_stalker" />
+					<entry typeName="loadout_name_spec_ops" />
+					<entry typeName="loadout_name_corpsman" />
+				</loadouts>
+			</entry>
+			<entry name="unsc_firefight_unchanged">
+				<loadouts>
+					<entry typeName="loadout_unchanged_jet_pack" />
+					<entry typeName="loadout_unchanged_sprint" />
+					<entry typeName="loadout_unchanged_armor_lock" />
+					<entry typeName="loadout_unchanged_active_camo" />
+					<entry typeName="loadout_unchanged_drop_shield" />
+				</loadouts>
+			</entry>
+			<entry name="covy_firefight_unchanged">
+				<loadouts>
+					<entry typeName="loadout_unchanged_jet_pack" />
+					<entry typeName="loadout_unchanged_evade" />
+					<entry typeName="loadout_unchanged_armor_lock" />
+					<entry typeName="loadout_unchanged_active_camo" />
+					<entry typeName="loadout_unchanged_drop_shield" />
+				</loadouts>
+			</entry>
+		</sets>
+		<names>
+			<entry name="loadout_name_noble1" />
+			<entry name="loadout_name_noble2" />
+			<entry name="loadout_name_noble3" />
+			<entry name="loadout_name_noble4" />
+			<entry name="loadout_name_noble5" />
+			<entry name="loadout_name_noble6" />
+			<entry name="loadout_name_carter" />
+			<entry name="loadout_name_kat" />
+			<entry name="loadout_name_jorge" />
+			<entry name="loadout_name_emile" />
+			<entry name="loadout_name_jun" />
+			<entry name="loadout_name_thom" />
+			<entry name="loadout_name_rosenda" />
+			<entry name="loadout_name_danny" />
+			<entry name="loadout_name_john" />
+			<entry name="loadout_name_kelly" />
+			<entry name="loadout_name_linda" />
+			<entry name="loadout_name_sam" />
+			<entry name="loadout_name_kurt" />
+			<entry name="loadout_name_jerry" />
+			<entry name="loadout_name_jimmy" />
+			<entry name="loadout_name_bobby" />
+			<entry name="loadout_name_marlo" />
+			<entry name="loadout_name_omar" />
+			<entry name="loadout_name_juggernaut" />
+			<entry name="loadout_name_berserker" />
+			<entry name="loadout_name_maverick" />
+			<entry name="loadout_name_zombie" />
+			<entry name="loadout_name_demon" />
+			<entry name="loadout_name_angel" />
+			<entry name="loadout_name_redshirt" />
+			<entry name="loadout_name_ling_ling" />
+			<entry name="loadout_name_pookie" />
+			<entry name="loadout_name_fng" />
+			<entry name="loadout_name_noob" />
+			<entry name="loadout_name_camper" />
+			<entry name="loadout_name_specter" />
+			<entry name="loadout_name_bunker" />
+			<entry name="loadout_name_claymore" />
+			<entry name="loadout_name_firebase" />
+			<entry name="loadout_name_intel" />
+			<entry name="loadout_name_ninja" />
+			<entry name="loadout_name_power" />
+			<entry name="loadout_name_cobra" />
+			<entry name="loadout_name_eagle" />
+			<entry name="loadout_name_hog" />
+			<entry name="loadout_name_bear" />
+			<entry name="loadout_name_warrior" />
+			<entry name="loadout_name_deceiver" />
+			<entry name="loadout_name_ranger" />
+			<entry name="loadout_name_zealot" />
+			<entry name="loadout_name_royal_zealot" />
+			<entry name="loadout_name_assassin" />
+			<entry name="loadout_name_dark_assassin" />
+			<entry name="loadout_name_champion_assassin" />
+			<entry name="loadout_name_gladiator" />
+			<entry name="loadout_name_sentry" />
+			<entry name="loadout_name_warden" />
+			<entry name="loadout_name_saboteur" />
+			<entry name="loadout_name_spec_ops" />
+			<entry name="loadout_name_scout" />
+			<entry name="loadout_name_guard" />
+			<entry name="loadout_name_air_assault" />
+			<entry name="loadout_name_marksman" />
+			<entry name="loadout_name_recon_marksman" />
+			<entry name="loadout_name_expert_marksman" />
+			<entry name="loadout_name_operator" />
+			<entry name="loadout_name_grenadier" />
+			<entry name="loadout_name_medic" />
+			<entry name="loadout_name_corpsman" />
+			<entry name="loadout_name_stalker" />
+			<entry name="loadout_name_demolitions" />
+			<entry name="loadout_name_infiltrator" />
+			<entry name="loadout_name_security" />
+			<entry name="loadout_unchanged_sprint" />
+			<entry name="loadout_unchanged_evade" />
+			<entry name="loadout_unchanged_armor_lock" />
+			<entry name="loadout_unchanged_active_camo" />
+			<entry name="loadout_unchanged_hologram" />
+			<entry name="loadout_unchanged_drop_shield" />
+			<entry name="loadout_unchanged_jet_pack" />
+		</names>
+	</lgtd>
+	<mgls name="multiplayer\megalo\english">
+		<sounds>
+			<entry tagName="sound\dialog\multiplayer\slayer\slayer" />
+			<entry tagName="sound\dialog\multiplayer\capture_the_flag\capture_the_flag" />
+			<entry tagName="sound\dialog\multiplayer\capture_the_flag\flag_captured" />
+			<entry tagName="sound\dialog\multiplayer\capture_the_flag\flag_dropped" />
+			<entry tagName="sound\dialog\multiplayer\capture_the_flag\flag_recovered" />
+			<entry tagName="sound\dialog\multiplayer\capture_the_flag\flag_reset" />
+			<entry tagName="sound\dialog\multiplayer\capture_the_flag\flag_stolen" />
+			<entry tagName="sound\dialog\multiplayer\capture_the_flag\flag_taken" />
+			<entry tagName="sound\dialog\multiplayer\vip\vip" />
+			<entry tagName="sound\dialog\multiplayer\vip\new_vip" />
+			<entry tagName="sound\dialog\multiplayer\vip\vip_killed" />
+			<entry tagName="sound\dialog\multiplayer\juggernaut\juggernaut" />
+			<entry tagName="sound\dialog\multiplayer\juggernaut\new_juggernaut" />
+			<entry tagName="sound\dialog\multiplayer\territories\territories" />
+			<entry tagName="sound\dialog\multiplayer\territories\territory_captured" />
+			<entry tagName="sound\dialog\multiplayer\territories\territory_lost" />
+			<entry tagName="sound\dialog\multiplayer\assault\assault" />
+			<entry tagName="sound\dialog\multiplayer\assault\bomb_armed" />
+			<entry tagName="sound\dialog\multiplayer\assault\bomb_detonated" />
+			<entry tagName="sound\dialog\multiplayer\assault\bomb_disarmed" />
+			<entry tagName="sound\dialog\multiplayer\assault\bomb_dropped" />
+			<entry tagName="sound\dialog\multiplayer\assault\bomb_reset" />
+			<entry tagName="sound\dialog\multiplayer\assault\bomb_returned" />
+			<entry tagName="sound\dialog\multiplayer\assault\bomb_taken" />
+			<entry tagName="sound\dialog\multiplayer\infection\infection" />
+			<entry tagName="sound\dialog\multiplayer\infection\infected" />
+			<entry tagName="sound\dialog\multiplayer\infection\last_man_standing" />
+			<entry tagName="sound\dialog\multiplayer\infection\new_zombie" />
+			<entry tagName="sound\dialog\multiplayer\oddball\oddball" />
+			<entry tagName="sound\dialog\multiplayer\oddball\play_ball" />
+			<entry tagName="sound\dialog\multiplayer\oddball\ball_taken" />
+			<entry tagName="sound\dialog\multiplayer\oddball\ball_dropped" />
+			<entry tagName="sound\dialog\multiplayer\oddball\ball_reset" />
+			<entry tagName="sound\dialog\multiplayer\king_of_the_hill\king_of_the_hill" />
+			<entry tagName="sound\dialog\multiplayer\king_of_the_hill\hill_controlled" />
+			<entry tagName="sound\dialog\multiplayer\king_of_the_hill\hill_contested" />
+			<entry tagName="sound\dialog\multiplayer\king_of_the_hill\hill_moved" />
+			<entry tagName="sound\dialog\multiplayer\misc\headhunter" />
+			<entry tagName="sound\dialog\multiplayer\misc\stockpile" />
+			<entry tagName="sound\dialog\multiplayer\misc\race" />
+			<entry tagName="sound\dialog\multiplayer\capture_the_flag\defense" />
+			<entry tagName="sound\dialog\multiplayer\capture_the_flag\offense" />
+			<entry tagName="sound\dialog\multiplayer\vip\destination_moved" />
+			<entry tagName="sound\dialog\multiplayer\assault\bomb_armed" />
+			<entry tagName="sound\dialog\multiplayer\assault\bomb_armed" />
+			<entry tagName="sound\dialog\multiplayer\assault\bomb_disarmed" />
+			<entry tagName="sound\dialog\multiplayer\assault\bomb_disarmed" />
+			<entry tagName="sound\dialog\multiplayer\general\sudden_death" />
+			<entry tagName="sound\dialog\multiplayer\general\game_over" />
+			<entry tagName="sound\dialog\invasion\bone_cv_defeat" />
+			<entry tagName="sound\dialog\invasion\bone_cv_ph1_defeat" />
+			<entry tagName="sound\dialog\invasion\bone_cv_ph1_intro" />
+			<entry tagName="sound\dialog\invasion\bone_cv_ph1_victory" />
+			<entry tagName="sound\dialog\invasion\bone_cv_ph2_defeat" />
+			<entry tagName="sound\dialog\invasion\bone_cv_ph2_victory" />
+			<entry tagName="sound\dialog\invasion\bone_cv_ph3_victory" />
+			<entry tagName="sound\dialog\invasion\bone_cv_victory" />
+			<entry tagName="sound\dialog\invasion\bone_sp_defeat" />
+			<entry tagName="sound\dialog\invasion\bone_sp_ph1_intro" />
+			<entry tagName="sound\dialog\invasion\bone_sp_ph1_victory" />
+			<entry tagName="sound\dialog\invasion\bone_sp_ph2_intro" />
+			<entry tagName="sound\dialog\invasion\bone_sp_ph2_victory" />
+			<entry tagName="sound\dialog\invasion\bone_sp_ph3_intro" />
+			<entry tagName="sound\dialog\invasion\bone_sp_ph3_victory" />
+			<entry tagName="sound\dialog\invasion\isle_cv_defeat" />
+			<entry tagName="sound\dialog\invasion\isle_cv_ph1_victory" />
+			<entry tagName="sound\dialog\invasion\isle_cv_ph1_intro" />
+			<entry tagName="sound\dialog\invasion\isle_cv_ph2_intro" />
+			<entry tagName="sound\dialog\invasion\isle_cv_ph2_victory" />
+			<entry tagName="sound\dialog\invasion\isle_cv_ph3_intro" />
+			<entry tagName="sound\dialog\invasion\isle_cv_ph3_victory" />
+			<entry tagName="sound\dialog\invasion\isle_sp_defeat" />
+			<entry tagName="sound\dialog\invasion\isle_sp_ph1_defeat" />
+			<entry tagName="sound\dialog\invasion\isle_sp_ph1_extra" />
+			<entry tagName="sound\dialog\invasion\isle_sp_ph1_intro" />
+			<entry tagName="sound\dialog\invasion\isle_sp_ph1_victory" />
+			<entry tagName="sound\dialog\invasion\isle_sp_ph2_defeat" />
+			<entry tagName="sound\dialog\invasion\isle_sp_ph2_victory" />
+			<entry tagName="sound\dialog\invasion\isle_sp_ph3_victory" />
+			<entry tagName="sound\dialog\invasion\isle_sp_victory" />
+			<entry tagName="sound\dialog\invasion\bone_sp_ph3_defeat" />
+			<entry tagName="sound\dialog\invasion\isle_cv_ph3_defeat" />
+			<entry tagName="sound\music\invasion_temp_cues\covy_big_win" />
+			<entry tagName="sound\music\invasion_temp_cues\covy_win1" />
+			<entry tagName="sound\music\invasion_temp_cues\covy_win2" />
+			<entry />
+			<entry tagName="sound\music\invasion_temp_cues\unsc_big_win" />
+			<entry tagName="sound\music\invasion_temp_cues\unsc_win1" />
+			<entry tagName="sound\music\invasion_temp_cues\unsc_win2" />
+			<entry tagName="sound\device_machines\omaha\boneyard_generator_power_down" />
+			<entry tagName="sound\dialog\multiplayer\firefight\survival_awarded_lives" />
+			<entry tagName="sound\game_sfx\multiplayer\player_timer_beep" />
+			<entry tagName="sound\dialog\multiplayer\reach\firefight\alpha_under_attack" />
+			<entry tagName="sound\dialog\multiplayer\reach\firefight\bravo_under_attack" />
+			<entry tagName="sound\dialog\multiplayer\reach\firefight\charlie_under_attack" />
+		</sounds>
+	</mgls>
+	<msit name="multiplayer\megalo\global">
+		<names>
+			<entry name="mp_boneyard_a_idle_start" />
+			<entry name="mp_boneyard_a_fly_in" />
+			<entry name="mp_boneyard_a_idle_mid" />
+			<entry name="mp_boneyard_a_fly_out" />
+			<entry name="mp_boneyard_b_fly_in" />
+			<entry name="mp_boneyard_b_idle_mid" />
+			<entry name="mp_boneyard_b_fly_out" />
+			<entry name="mp_boneyard_b_idle_start" />
+			<entry name="mp_boneyard_a_leave1" />
+			<entry name="mp_boneyard_b_leave1" />
+			<entry name="mp_boneyard_b_pickup" />
+			<entry name="mp_boneyard_b_idle_pickup" />
+			<entry name="mp_boneyard_a" />
+			<entry name="mp_boneyard_b" />
+			<entry name="default" />
+			<entry name="carter" />
+			<entry name="jun" />
+			<entry name="female" />
+			<entry name="male" />
+			<entry name="emile" />
+			<entry name="player_skull" />
+			<entry name="kat" />
+			<entry name="minor" />
+			<entry name="officer" />
+			<entry name="ultra" />
+			<entry name="space" />
+			<entry name="spec_ops" />
+			<entry name="general" />
+			<entry name="zealot" />
+			<entry name="mp" />
+			<entry name="jetpack" />
+			<entry name="gauss" />
+			<entry name="troop" />
+			<entry name="rocket" />
+			<entry name="fr" />
+			<entry name="pl" />
+			<entry name="35_spire_fp" />
+			<entry name="mp_spire_fp" />
+		</names>
+	</msit>
+</megaloDefinitions>
