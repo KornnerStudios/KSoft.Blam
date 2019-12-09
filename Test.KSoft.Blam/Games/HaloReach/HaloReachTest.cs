@@ -16,16 +16,17 @@ namespace KSoft.Blam.Games.HaloReach.Test
 				Assert.IsTrue(halo_reach_megalo_proto_system_ref.IsValid);
 				var megalo_proto_system = halo_reach_megalo_proto_system_ref.System;
 
-				var megalo_static_db_task = megalo_proto_system.GetStaticDatabaseAsync(halo_reach_branch.BranchHandle);
-				var megalo_script_db_task = megalo_proto_system.GetMegaloDatabaseAsync(halo_reach_branch.BranchHandle);
+				var all_dbs_tasks = megalo_proto_system.GetAllDatabasesAsync(halo_reach_branch.BranchHandle);
 
 				System.Threading.Tasks.Task.WaitAll
-					( megalo_static_db_task
-					, megalo_script_db_task
+					( all_dbs_tasks.Item1
+					, all_dbs_tasks.Item2
 					);
 
-				Assert.IsNotNull(megalo_static_db_task.Result);
-				Assert.IsNotNull(megalo_script_db_task.Result);
+				Assert.IsNotNull(all_dbs_tasks.Item1.Result);
+				Assert.IsNotNull(all_dbs_tasks.Item2.Result);
+
+				megalo_proto_system.PrepareDatabasesForUse(all_dbs_tasks.Item1.Result, all_dbs_tasks.Item2.Result);
 			}
 		}
 	};

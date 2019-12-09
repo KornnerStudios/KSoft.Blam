@@ -16,10 +16,7 @@ namespace KSoft.Blam.Localization
 	public sealed class LanguageSystem
 		: Engine.EngineSystemBase
 	{
-		#region SystemGuid
-		static readonly Values.KGuid kSystemGuid = new Values.KGuid("EF39D343-DAD5-43D4-A215-F91722ED1CC5");
-		public static Values.KGuid SystemGuid { get { return kSystemGuid; } }
-		#endregion
+		public static Values.KGuid SystemGuid { get; } = new Values.KGuid("EF39D343-DAD5-43D4-A215-F91722ED1CC5");
 
 #if LANGUAGE_SYSTEM_USE_ONLY_ONE_TABLE
 		// As it stands, all engines only need one table. All of their branches and pre-ship builds don't use different lang sets

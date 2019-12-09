@@ -8,6 +8,8 @@ namespace KSoft.Blam
 		[AssemblyInitialize]
 		public static void AssemblyInitialize(TestContext context)
 		{
+			KSoft.Blam.Program.RunningUnitTests = true;
+
 			KSoft.Program.Initialize();
 			KSoft.Blam.Program.Initialize();
 			Blam.Program.InitializeCoreSystems();
@@ -26,6 +28,8 @@ namespace KSoft.Blam
 			Blam.Program.DisposeCoreSystems();
 			KSoft.Blam.Program.Dispose();
 			KSoft.Program.Dispose();
+
+			KSoft.Blam.Program.RunningUnitTests = false;
 		}
 	};
 

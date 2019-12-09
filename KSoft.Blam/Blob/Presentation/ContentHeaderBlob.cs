@@ -12,9 +12,11 @@ namespace KSoft.Blam.Blob
 	{
 		public const int kSizeOf = 0x2C0 - Blob.Transport.BlobChunkHeader.kSizeOf;
 
-		ushort mBuildNumber;
-		ushort mFlags;
+		short mBuildMajor;
+		short mBuildMinor = TypeExtensions.kNone;
 		public RuntimeData.ContentHeader Data { get; private set; }
+
+		public bool IsFromMcc { get { return mBuildMajor == 0 && ((int)mBuildMinor).IsNone(); } }
 
 		internal ContentHeaderBlob()
 		{
@@ -31,26 +33,40 @@ namespace KSoft.Blam.Blob
 			Data = RuntimeData.ContentHeader.Create(gameTarget.Build);
 
 			Contract.Assert(gameTarget.Build.RevisionIndex.IsNotNone());
-			mBuildNumber = (ushort)gameTarget.Build.Revision.Version;
+			mBuildMajor = (short)gameTarget.Build.Revision.Version;
 		}
 
-		public void ChangeData(RuntimeData.ContentHeader newData, uint buildNumber = 0, uint flags = 0)
+		public void ChangeData(RuntimeData.ContentHeader newData, int buildMajor = 0, int buildMinor = TypeExtensions.kNone)
 		{
 			Contract.Requires<ArgumentNullException>(newData != null);
 			Contract.Requires<ArgumentException>(newData.GameBuild == Data.GameBuild);
 
-			if (buildNumber != 0)
-				mBuildNumber = (ushort)buildNumber;
-			mFlags = (ushort)flags;
+			if (buildMajor != 0)
+				mBuildMajor = (short)buildMajor;
+			if (buildMinor.IsNotNone())
+				mBuildMinor = (short)buildMinor;
 			Data = newData;
 		}
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref mBuildNumber);
-			s.Stream(ref mFlags);
-			s.Stream(Data);
+			s.Stream(ref mBuildMajor);
+			s.Stream(ref mBuildMinor);
+
+			bool stream_data_as_little_endian = false;
+			if (s.IsReading)
+			{
+				if (IsFromMcc)
+				{
+					stream_data_as_little_endian = true;
+				}
+			}
+
+			using (var endian_bm = s.BeginEndianSwitch(stream_data_as_little_endian ? Shell.EndianFormat.Little : s.ByteOrder))
+			{
+				s.Stream(Data);
+			}
 		}
 		#endregion
 
@@ -61,8 +77,8 @@ namespace KSoft.Blam.Blob
 
 			using (s.EnterCursorBookmark("ContentHeader"))
 			{
-				s.StreamAttribute("buildNumber", ref mBuildNumber);
-				s.StreamAttribute("flags", ref mFlags);
+				s.StreamAttribute("buildMajor", ref mBuildMajor);
+				s.StreamAttribute("buildMinor", ref mBuildMinor);
 				s.StreamObject(Data);
 			}
 		}

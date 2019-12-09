@@ -134,7 +134,7 @@ namespace KSoft.Blam.Megalo.Model
 		#region Type Factories
 		internal static MegaloScriptModel Create(Variants.GameEngineVariant variantManager, Variants.GameEngineMegaloVariant variant)
 		{
-			var gameBuild = variant.BuildHandle;
+			var gameBuild = variantManager.GameBuild;
 
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
 				return new Games.HaloReach.Megalo.Model.MegaloScriptModelHaloReach(variantManager,

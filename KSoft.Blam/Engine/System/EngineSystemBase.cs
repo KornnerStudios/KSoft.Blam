@@ -120,11 +120,6 @@ namespace KSoft.Blam.Engine
 
 			return side_effect;
 		}
-		void InitializeReferencesByBuildCounts()
-		{
-			if (Prototype.SystemRequiresReferenceTracking)
-				mReferencesByBuildCounts = new Dictionary<EngineBuildHandle, int>();
-		}
 
 		internal async Task AddReferenceAsync(EngineBuildHandle buildHandle)
 		{
@@ -143,6 +138,13 @@ namespace KSoft.Blam.Engine
 			if (load_externs)
 			{
 				Contract.Assert(mExternIOTask == null);
+				if (mExternIOTask != null)
+				{
+					throw new InvalidOperationException(string.Format(
+						"Tried to perform an externs IO task while one was in flight under {0}",
+						this.Prototype.Engine));
+				}
+
 				mExternIOTask = Task.Run((Action)LoadExternsBegin);
 				await mExternIOTask;
 			}
@@ -163,7 +165,7 @@ namespace KSoft.Blam.Engine
 
 				// This will remove the EngineSystem from the active systems, meaning UnloadExterns will be safe
 				// to call without locking or such as nothing can call LoadExterns on this object anymore
-				if (mReferencesByBuildCounts.Count == 0)
+				if (unload_externs)
 				{
 					Engine.CloseSystem(this);
 					mActiveInBlamEngine = false;
@@ -175,6 +177,13 @@ namespace KSoft.Blam.Engine
 				// mExternIOTask should previously be a Task for LoadExterns
 				bool didntTimeout = WaitForExternsIO();
 				Contract.Assert(didntTimeout);
+
+				if (mExternIOTask != null)
+				{
+					throw new InvalidOperationException(string.Format(
+						"Tried to perform an externs IO task while one was in flight under {0}",
+						this.Prototype.Engine));
+				}
 
 				mExternIOTask = Task.Run((Action)UnloadExternsBegin);
 				await mExternIOTask;
@@ -288,8 +297,6 @@ namespace KSoft.Blam.Engine
 					string.Format("{0} definition for {1} uses wrong engine id",
 						GetType().Name, Engine.Name),
 					expected_engine_index, actual_engine_index);
-
-				InitializeReferencesByBuildCounts();
 			}
 		}
 		#endregion

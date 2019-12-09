@@ -84,10 +84,12 @@ namespace KSoft.Blam.Megalo.Proto
 			Engine.EngineBuildHandle actual_build;
 			string path = getPathFunc(forBuild, out actual_build);
 			if (path == null)
+			{
 				throw new InvalidOperationException(string.Format(
 					"Tried to get the megalo {0} database for {1} when a build file wasn't defined for it",
 					dbTypeName,
 					forBuild.ToDisplayString()));
+			}
 
 			T db;
 			lock (loadedDbs)
@@ -124,6 +126,17 @@ namespace KSoft.Blam.Megalo.Proto
 				GetMegaloDatabasePath, mLoadedScriptDbs,
 				actualBuild => new MegaloScriptDatabase(actualBuild));
 		}
+		public static bool OutputMegaloDatabasePostprocessErrorTextToConsole { get; set; } = false;
+		static void PostprocessMegaloDatabase(MegaloScriptDatabase db)
+		{
+			System.IO.TextWriter errorOutput = null;
+			if (Blam.Program.RunningUnitTests || OutputMegaloDatabasePostprocessErrorTextToConsole)
+			{
+				errorOutput = Console.Out;
+			}
+
+			db.Postprocess(errorOutput);
+		}
 
 		public AllDatabasesTasksTuple GetAllDatabasesAsync(Engine.EngineBuildHandle forBuild)
 		{
@@ -136,6 +149,19 @@ namespace KSoft.Blam.Megalo.Proto
 				( static_db_task
 				, megalo_db_task
 				);
+		}
+
+		public void PrepareDatabasesForUse(MegaloStaticDatabase staticDb, MegaloScriptDatabase scriptDb)
+		{
+			if (staticDb == null)
+				throw new ArgumentNullException(nameof(staticDb));
+			if (scriptDb == null)
+				throw new ArgumentNullException(nameof(scriptDb));
+			if (scriptDb.StaticDatabase != null)
+				throw new ArgumentException("Script db already had a static db reference set", nameof(scriptDb));
+
+			scriptDb.StaticDatabase = staticDb;
+			PostprocessMegaloDatabase(scriptDb);
 		}
 		#endregion
 

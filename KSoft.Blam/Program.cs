@@ -3,6 +3,8 @@ namespace KSoft.Blam
 {
 	public static class Program
 	{
+		public static bool RunningUnitTests = false;
+
 		public static void Initialize()
 		{
 			Engine.EngineRegistry.InitializeForNewProgram();
