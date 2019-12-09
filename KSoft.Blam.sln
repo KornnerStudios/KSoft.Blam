@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KSoft.BCL", "KSoft.BCL", "{29A6065E-B7E7-43B1-BC6D-102F17ED9643}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSoft.T4", "..\..\KSoft\KSoft.T4\KSoft.T4.csproj", "{17AB134C-9C71-4CCF-84D9-D90F6DD58A0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.KSoft.Blam", "Test.KSoft.Blam\Test.KSoft.Blam.csproj", "{F67199ED-1C68-4138-BA8C-388DFC3EBFAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlamTool", "BlamTool\BlamTool.csproj", "{E654AA6C-4FCC-4828-9939-8B4A7D615361}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,18 @@ Global
 		{F67199ED-1C68-4138-BA8C-388DFC3EBFAF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F67199ED-1C68-4138-BA8C-388DFC3EBFAF}.Release|x64.ActiveCfg = Release|Any CPU
 		{F67199ED-1C68-4138-BA8C-388DFC3EBFAF}.Release|x86.ActiveCfg = Release|Any CPU
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Debug|x64.ActiveCfg = Debug|x64
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Debug|x64.Build.0 = Debug|x64
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Debug|x86.ActiveCfg = Debug|x86
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Debug|x86.Build.0 = Debug|x86
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Release|x64.ActiveCfg = Release|x64
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Release|x64.Build.0 = Release|x64
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Release|x86.ActiveCfg = Release|x86
+		{E654AA6C-4FCC-4828-9939-8B4A7D615361}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,5 +129,8 @@ Global
 		{0632A00B-DE9E-4350-A3F8-3A82F9C780AF} = {29A6065E-B7E7-43B1-BC6D-102F17ED9643}
 		{0B27603C-CEB1-4A3A-B56F-CBC14B8C06E7} = {29A6065E-B7E7-43B1-BC6D-102F17ED9643}
 		{17AB134C-9C71-4CCF-84D9-D90F6DD58A0A} = {29A6065E-B7E7-43B1-BC6D-102F17ED9643}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67C0E08D-C895-4661-B8CB-BDA95B1CF420}
 	EndGlobalSection
 EndGlobal
