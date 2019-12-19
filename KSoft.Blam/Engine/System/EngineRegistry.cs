@@ -26,6 +26,8 @@ namespace KSoft.Blam.Engine
 			return gEngines;
 		} }
 
+		public static bool IsInitialized { get { return gEngines != null; } }
+
 		public static EngineBuildBranch EngineBranchHalo1 { get; private set; }
 		public static EngineBuildBranch EngineBranchHalo2 { get; private set; }
 		public static EngineBuildBranch EngineBranchHalo3 { get; private set; }

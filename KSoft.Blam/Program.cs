@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace KSoft.Blam
 {
 	public static class Program
@@ -24,6 +25,8 @@ namespace KSoft.Blam
 			Engine.EngineRegistry.Dispose();
 			Localization.LanguageRegistry.Dispose();
 		}
+
+		public static Type DebugTraceClass { get { return typeof(Debug.Trace); } }
 
 		#region Security (temp setup)
 		// #TODO_BLAM: change this setup

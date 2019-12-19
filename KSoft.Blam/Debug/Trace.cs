@@ -13,6 +13,8 @@ namespace KSoft.Blam.Debug
 		public static Diag.TraceSource	Engine			{ get; } = new	Diag.TraceSource("KSoft.Blam.Engine",			Diag.SourceLevels.All);
 		public static Diag.TraceSource	Games			{ get; } = new	Diag.TraceSource("KSoft.Blam.Games",			Diag.SourceLevels.All);
 
+		public static Diag.TraceSource	Megalo			{ get; } = new	Diag.TraceSource("KSoft.Blam.Megalo",			Diag.SourceLevels.All);
+		public static Diag.TraceSource	MegaloProto		{ get; } = new	Diag.TraceSource("KSoft.Blam.Megalo.Proto",		Diag.SourceLevels.All);
 		//public static Diag.TraceSource	ResourceData	{ get; } = new	Diag.TraceSource("KSoft.Blam.ResourceData",		Diag.SourceLevels.All);
 		public static Diag.TraceSource	RuntimeData		{ get; } = new	Diag.TraceSource("KSoft.Blam.RuntimeData",		Diag.SourceLevels.All);
 		//public static Diag.TraceSource	TagInterface	{ get; } = new	Diag.TraceSource("KSoft.Blam.TagInterface",		Diag.SourceLevels.All);

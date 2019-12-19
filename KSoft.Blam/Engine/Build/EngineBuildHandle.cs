@@ -372,6 +372,15 @@ namespace KSoft.Blam.Engine
 			return new EngineBuildHandle(EngineIndex, BranchIndex, TypeExtensions.kNone);
 		}
 
+		/// <summary>
+		/// Creates an engine target handle using this build handle, but with the platform and resource model set to NONE
+		/// </summary>
+		/// <returns></returns>
+		public BlamEngineTargetHandle ToEngineTargetHandle()
+		{
+			return BlamEngineTargetHandle.FromBuildHandleOnly(this);
+		}
+
 		/// <summary>Decompose this handle into new handles consisting of just the macro indexes (ie, sans revision)</summary>
 		/// <param name="engine">A new handle consisting of <see cref="EngineIndex"/></param>
 		/// <param name="branch">A new handle consisting of <see cref="EngineIndex"/> and <see cref="BranchIndex"/></param>

@@ -91,13 +91,10 @@ namespace KSoft.Tool.Blam
 
 		void ParseGameBuildFromOptionValue(string v)
 		{
-			int target_platform_index = TypeExtensions.kNone;
-			int resource_model_index = TypeExtensions.kNone;
-
 			KBlam.Engine.EngineBuildRevision build_revision = KBlam.Engine.EngineRegistry.TryParseExportedBuildName(v);
 			if (build_revision != null)
 			{
-				mGameBuildAndTarget = new KBlam.Engine.BlamEngineTargetHandle(build_revision.BuildHandle, target_platform_index, resource_model_index);
+				mGameBuildAndTarget = build_revision.BuildHandle.ToEngineTargetHandle();
 				mGameEngineBlobSystemRef = KBlam.Engine.EngineRegistry.GetSystem<KBlam.Blob.BlobSystem>(mGameBuildAndTarget.Build);
 				mGameEngineLangystemRef = KBlam.Engine.EngineRegistry.GetSystem<KBlam.Localization.LanguageSystem>(mGameBuildAndTarget.Build);
 			}

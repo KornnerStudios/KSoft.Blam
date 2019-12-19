@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
@@ -28,6 +29,7 @@ namespace KSoft.Blam.Engine
 
 		// #NOTE_BLAM: will always be null if !Prototype.SystemRequiresReferenceTracking
 		Dictionary<EngineBuildHandle, int> mReferencesByBuildCounts;
+		int mNonBuildSpecificReferences;
 		bool mActiveInBlamEngine;
 		EngineBuildHandle mRootBuildHandleBaseline;
 
@@ -73,13 +75,30 @@ namespace KSoft.Blam.Engine
 		}
 		int UpdateReferencesByHandle(int amount, EngineBuildHandle handle, ref UpdateReferenceSideEffect sideEffect)
 		{
-			if (!handle.IsNone)
+			if (Prototype.SystemRequiresReferenceTracking)
 			{
-				int ref_count;
-				if (!mReferencesByBuildCounts.TryGetValue(handle, out ref_count))
-					mReferencesByBuildCounts[handle] = 0;
+				if (!handle.IsNone)
+				{
+					int ref_count;
+					if (!mReferencesByBuildCounts.TryGetValue(handle, out ref_count))
+						mReferencesByBuildCounts[handle] = 0;
 
-				int ref_count_update = ref_count + amount;
+					int ref_count_update = ref_count + amount;
+					if (sideEffect == UpdateReferenceSideEffect.None)
+					{
+						if (ref_count_update == 0)	// the update closed all existing references...
+							sideEffect = UpdateReferenceSideEffect.OldBuildUnreferenced;
+						else if (ref_count == 0)	// existing count is 0, this is the first reference
+							sideEffect = UpdateReferenceSideEffect.NewBuildReferenced;
+					}
+
+					return mReferencesByBuildCounts[handle] = ref_count_update;
+				}
+			}
+			else
+			{
+				int ref_count = Interlocked.CompareExchange(ref mNonBuildSpecificReferences, 0, 0);
+				int ref_count_update = Interlocked.Add(ref mNonBuildSpecificReferences, amount);
 				if (sideEffect == UpdateReferenceSideEffect.None)
 				{
 					if (ref_count_update == 0)	// the update closed all existing references...
@@ -88,33 +107,52 @@ namespace KSoft.Blam.Engine
 						sideEffect = UpdateReferenceSideEffect.NewBuildReferenced;
 				}
 
-				return mReferencesByBuildCounts[handle] = ref_count_update;
+				return ref_count_update;
 			}
 
 			return 0;
 		}
 		UpdateReferenceSideEffect UpdateReferencesByBuild(int amount, EngineBuildHandle buildHandle)
 		{
-			EngineBuildHandle engine, branch;
-			buildHandle.ExtractHandles(out engine, out branch);
-
-			int revisn_count, branch_count, engine_count;
 			var side_effect = UpdateReferenceSideEffect.None;
-			lock (mReferencesByBuildCounts)
-			{
-				revisn_count = UpdateReferencesByHandle(amount, buildHandle, ref side_effect);
-				branch_count = UpdateReferencesByHandle(amount, branch, ref side_effect);
-				engine_count = UpdateReferencesByHandle(amount, engine, ref side_effect);
-			}
 
-			// Validate that a RemoveReference hasn't made a count go negative (ie, there was an extra call)
-			if (amount < 0)
+			if (Prototype.SystemRequiresReferenceTracking)
 			{
-				if (revisn_count < 0 || branch_count < 0 || engine_count < 0)
+				EngineBuildHandle engine, branch;
+				buildHandle.ExtractHandles(out engine, out branch);
+
+				int revisn_count, branch_count, engine_count;
+				lock (mReferencesByBuildCounts)
 				{
-					throw new InvalidOperationException(string.Format(
-						"Extra or bad RemoveReference call detected for {0} using the handle {1}",
-						Prototype, buildHandle.ToDisplayString()));
+					revisn_count = UpdateReferencesByHandle(amount, buildHandle, ref side_effect);
+					branch_count = UpdateReferencesByHandle(amount, branch, ref side_effect);
+					engine_count = UpdateReferencesByHandle(amount, engine, ref side_effect);
+				}
+
+				// Validate that a RemoveReference hasn't made a count go negative (ie, there was an extra call)
+				if (amount < 0)
+				{
+					if (revisn_count < 0 || branch_count < 0 || engine_count < 0)
+					{
+						throw new InvalidOperationException(string.Format(
+							"Extra or bad RemoveReference call detected for {0} using the handle {1}",
+							Prototype, buildHandle.ToDisplayString()));
+					}
+				}
+			}
+			else
+			{
+				int new_count = UpdateReferencesByHandle(amount, EngineBuildHandle.None, ref side_effect);
+
+				// Validate that a RemoveReference hasn't made a count go negative (ie, there was an extra call)
+				if (amount < 0)
+				{
+					if (new_count < 0)
+					{
+						throw new InvalidOperationException(string.Format(
+							"Extra or bad RemoveReference call detected for {0}",
+							Prototype));
+					}
 				}
 			}
 
@@ -134,6 +172,11 @@ namespace KSoft.Blam.Engine
 				load_externs = mReferencesByBuildCounts.Count == 0;
 				update_refs_side_effect = UpdateReferencesByBuild(+1, buildHandle);
 			}
+			else
+			{
+				update_refs_side_effect = UpdateReferencesByBuild(+1, buildHandle);
+				load_externs = update_refs_side_effect == UpdateReferenceSideEffect.NewBuildReferenced;
+			}
 
 			if (load_externs)
 			{
@@ -147,8 +190,10 @@ namespace KSoft.Blam.Engine
 
 				mExternIOTask = Task.Run((Action)LoadExternsBegin);
 				await mExternIOTask;
+				mExternIOTask = null;
 			}
 
+			// #REVIEW_BLAM: also don't do this if Prototype.SystemRequiresReferenceTracking==false?
 			if (update_refs_side_effect == UpdateReferenceSideEffect.NewBuildReferenced)
 				InitializeForNewBuildReference(buildHandle);
 		}
@@ -162,6 +207,19 @@ namespace KSoft.Blam.Engine
 			{
 				update_refs_side_effect = UpdateReferencesByBuild(-1, buildHandle);
 				unload_externs = mReferencesByBuildCounts.Count == 0;
+
+				// This will remove the EngineSystem from the active systems, meaning UnloadExterns will be safe
+				// to call without locking or such as nothing can call LoadExterns on this object anymore
+				if (unload_externs)
+				{
+					Engine.CloseSystem(this);
+					mActiveInBlamEngine = false;
+				}
+			}
+			else
+			{
+				update_refs_side_effect = UpdateReferencesByBuild(-1, buildHandle);
+				unload_externs = update_refs_side_effect == UpdateReferenceSideEffect.OldBuildUnreferenced;
 
 				// This will remove the EngineSystem from the active systems, meaning UnloadExterns will be safe
 				// to call without locking or such as nothing can call LoadExterns on this object anymore
@@ -187,8 +245,10 @@ namespace KSoft.Blam.Engine
 
 				mExternIOTask = Task.Run((Action)UnloadExternsBegin);
 				await mExternIOTask;
+				mExternIOTask = null;
 			}
 
+			// #REVIEW_BLAM: also don't do this if Prototype.SystemRequiresReferenceTracking==false?
 			// reminder: we're calling this AFTER externs are unloaded...be sure your dispose code handles this
 			if (update_refs_side_effect == UpdateReferenceSideEffect.OldBuildUnreferenced)
 				DisposeFromOldBuildReference(buildHandle);

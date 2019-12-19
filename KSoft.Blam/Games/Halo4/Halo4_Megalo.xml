@@ -2,7 +2,7 @@
 <System engine="Halo4" branch="Halo4">
 	<BuildFiles>
 		<!--rev="20810"-->
-		<Files
+		<Files rev="20810"
 				staticDb="Games\Halo4\Megalo\Proto\Halo4_MegaloStaticDb_Xbox.xml"
 				megaloDb="Games\Halo4\Megalo\Proto\Halo4_MegaloDb_Xbox.xml"
 				/>

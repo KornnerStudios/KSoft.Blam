@@ -81,6 +81,19 @@ namespace KSoft.Blam.Engine
 
 			mHandle = handle;
 		}
+
+		/// <summary>
+		/// Creates an engine target handle using the build handlew, but with the platform and resource model set to NONE
+		/// </summary>
+		/// <param name="buildHandle"></param>
+		/// <returns></returns>
+		public static BlamEngineTargetHandle FromBuildHandleOnly(EngineBuildHandle buildHandle)
+		{
+			int target_platform_index = TypeExtensions.kNone;
+			int resource_model_index = TypeExtensions.kNone;
+
+			return new BlamEngineTargetHandle(buildHandle, target_platform_index, resource_model_index);
+		}
 		#endregion
 
 		#region Value properties

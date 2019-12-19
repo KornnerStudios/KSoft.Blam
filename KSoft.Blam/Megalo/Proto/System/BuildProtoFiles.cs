@@ -9,6 +9,8 @@ namespace KSoft.Blam.Megalo.Proto
 		public string StaticDatabaseFile;
 		public string MegaloDatabaseFile;
 
+		public bool IsEmpty { get { return StaticDatabaseFile.IsNullOrEmpty() || MegaloDatabaseFile.IsNullOrEmpty(); } }
+
 		#region ITagElementStreamable<string> Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class

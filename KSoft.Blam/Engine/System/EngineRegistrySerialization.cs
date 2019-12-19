@@ -69,11 +69,13 @@ namespace KSoft.Blam.Engine
 			string extern_stream_path = GetTagElementStreamPath(engine, externFileName);
 
 			if (!File.Exists(extern_stream_path))
+			{
 				throw new FileNotFoundException(string.Format(
 					"Can't initialize the {0} engine's {1} system, need the following file: {2}",
 					engine.Name,
-					systemGuid.ToString(Values.KGuid.kFormatHyphenated),
+					GetSystemDebugDisplayString(systemGuid),
 					extern_stream_path));
+			}
 
 			var stream = IO.TagElementStreamFactory.Open(extern_stream_path);
 			stream.StreamMode = streamMode;

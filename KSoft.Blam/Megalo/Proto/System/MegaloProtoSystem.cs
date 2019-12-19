@@ -35,6 +35,20 @@ namespace KSoft.Blam.Megalo.Proto
 			mLoadedScriptDbs = new Dictionary<string, MegaloScriptDatabase>();
 		}
 
+		public bool IsSpecificBuildSupported(Engine.EngineBuildHandle forBuild)
+		{
+			Engine.EngineBuildHandle actual_build;
+
+			return IsSpecificBuildSupported(forBuild, out actual_build);
+		}
+		public bool IsSpecificBuildSupported(Engine.EngineBuildHandle forBuild, out Engine.EngineBuildHandle actualBuild)
+		{
+			var files = BuildProtoFiles.Empty;
+			forBuild.TryGetValue(mBuildProtoFiles, ref files, out actualBuild);
+
+			return !files.IsEmpty;
+		}
+
 		#region GetDatabasePath
 		private delegate string GetDatabasePathFunc(Engine.EngineBuildHandle forBuild, out Engine.EngineBuildHandle actualBuild);
 
