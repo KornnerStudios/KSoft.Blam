@@ -23,7 +23,7 @@ namespace KSoft.Blam.Megalo.Model
 					(from id in Model.TriggerExecutionOrder
 						select Model.Triggers[id]).Union
 					(from t in Model.Triggers
-						where t.TriggerType != MegaloScriptTriggerType.Subroutine
+						where t.TriggerType != MegaloScriptTriggerType.InnerLoop
 						select t);
 
 				mOwnerState = state;
@@ -70,10 +70,10 @@ namespace KSoft.Blam.Megalo.Model
 
 	partial class MegaloScriptModelDecompilerState
 	{
-		sealed class TriggerSubroutineDecompiler
+		sealed class TriggerInnerLoopDecompiler
 			: MegaloScriptTriggerProcessor
 		{
-			public TriggerSubroutineDecompiler(MegaloScriptModel model,
+			public TriggerInnerLoopDecompiler(MegaloScriptModel model,
 				IEnumerable<MegaloScriptTrigger> rootTriggers) : base(model, rootTriggers)
 			{
 			}
@@ -83,7 +83,9 @@ namespace KSoft.Blam.Megalo.Model
 			protected override bool PreProcessTrigger(MegaloScriptTrigger root, MegaloScriptTrigger parent, MegaloScriptTriggerBase current)
 			{
 				if (current.ObjectType != MegaloScriptModelObjectType.VirtualTrigger && string.IsNullOrEmpty(current.Name))
-					current.Name = string.Format("{0}_Subroutine{1}", parent.Name, current.Id.ToString());
+				{
+					current.Name = string.Format("{0}_InnerLoop{1}", parent.Name, current.Id.ToString());
+				}
 
 				return true;
 			}
@@ -94,7 +96,7 @@ namespace KSoft.Blam.Megalo.Model
 			var root_triggers = new List<MegaloScriptTrigger>(Model.Triggers.Count);
 			foreach (var obj in Model.Triggers)
 			{
-				if (obj.TriggerType != MegaloScriptTriggerType.Subroutine)
+				if (obj.TriggerType != MegaloScriptTriggerType.InnerLoop)
 				{
 					string prefix = obj.TriggerType != MegaloScriptTriggerType.Normal ? obj.TriggerType.ToString() : "";
 					obj.Name = prefix + "Trigger";
@@ -108,11 +110,14 @@ namespace KSoft.Blam.Megalo.Model
 				Decompile(obj.References);
 			}
 			if (Model.DoubleHostMigrationTriggerIndex.IsNotNone())
+			{
+				// #REVIEW_BLAM: wouldn't nameof() work just as well here?
 				Model.Triggers[Model.DoubleHostMigrationTriggerIndex].Name =
 					Proto.MegaloScriptTriggerEntryPoints.DoubleHostMigration.ToString(); // Why? because find references will pick it up, that's why
+			}
 
-			var subroutine_decompiler = new TriggerSubroutineDecompiler(Model, root_triggers);
-			subroutine_decompiler.Process();
+			var inner_loop_decompiler = new TriggerInnerLoopDecompiler(Model, root_triggers);
+			inner_loop_decompiler.Process();
 		}
 		void DecompileVirtualTriggers()
 		{

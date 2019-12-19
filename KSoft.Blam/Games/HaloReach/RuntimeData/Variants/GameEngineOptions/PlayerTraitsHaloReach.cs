@@ -17,17 +17,16 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 			BodyMultiplier,
 			BodyRechargeRate,
 			ShieldMultiplier,
-			ShieldRechargeRate0, ShieldRechargeRate1; // ShieldStunDuration, OvershieldRechargeRate?
-		public byte HeadshotImmunity, Vampirism, AssassinationImmunity,
-			unk9;
+			ShieldRechargeRate, OverShieldRechargeRate;
+		public byte HeadshotImmunity, Vampirism, AssassinationImmunity, Deathless;
 
 		protected override bool ModifiersAreUnchanged { get {
 			return DamageResistance == 0 && BodyMultiplier == 0 && BodyRechargeRate == 0 &&
-				ShieldMultiplier == 0 && ShieldRechargeRate0 == 0 && ShieldRechargeRate1 == 0;
+				ShieldMultiplier == 0 && ShieldRechargeRate == 0 && OverShieldRechargeRate == 0;
 		} }
 		public override bool IsUnchanged { get {
 			return ModifiersAreUnchanged && HeadshotImmunity == 0 && Vampirism == 0 && AssassinationImmunity == 0 &&
-				unk9 == 0;
+				Deathless == 0;
 		} }
 
 		#region IBitStreamSerializable Members
@@ -37,12 +36,12 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 			s.Stream(ref BodyMultiplier, 3);
 			s.Stream(ref BodyRechargeRate, 4);
 			s.Stream(ref ShieldMultiplier, 3);
-			s.Stream(ref ShieldRechargeRate0, 4);
-			s.Stream(ref ShieldRechargeRate1, 4);
+			s.Stream(ref ShieldRechargeRate, 4);
+			s.Stream(ref OverShieldRechargeRate, 4);
 			s.Stream(ref HeadshotImmunity, 2);
 			s.Stream(ref Vampirism, 3);
 			s.Stream(ref AssassinationImmunity, 2);
-			s.Stream(ref unk9, 2);
+			s.Stream(ref Deathless, 2);
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -52,9 +51,9 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 			s.StreamAttributeOptUnchangedZero("BodyMultiplier", ref BodyMultiplier);
 			s.StreamAttributeOptUnchangedZero("BodyRechargeRate", ref BodyRechargeRate);
 			s.StreamAttributeOptUnchangedZero("ShieldMultiplier", ref ShieldMultiplier);
-			s.StreamAttributeOptUnchangedZero("ShieldStunDuration_", ref ShieldRechargeRate0);
-			s.StreamAttributeOptUnchangedZero("ShieldRechargeRate_", ref ShieldRechargeRate1);
-			s.StreamAttributeOptUnchangedZero("VampirismPercent", ref unk9);
+			s.StreamAttributeOptUnchangedZero("ShieldRechargeRate", ref ShieldRechargeRate);
+			s.StreamAttributeOptUnchangedZero("OverShieldRechargeRate", ref OverShieldRechargeRate);
+			s.StreamAttributeOptUnchangedZero("VampirismPercent", ref Vampirism);
 		}
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
@@ -62,7 +61,7 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 
 			s.StreamAttributeOptUnchangedZero("headshotImmunity", ref HeadshotImmunity);
 			s.StreamAttributeOptUnchangedZero("assassinationImmunity", ref AssassinationImmunity);
-			s.StreamAttributeOptUnchangedZero("unk9", ref unk9);
+			s.StreamAttributeOptUnchangedZero("deathless", ref Deathless);
 		}
 		#endregion
 	};
@@ -159,8 +158,7 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 	public sealed class PlayerTraitsMovement
 		: Blam.RuntimeData.Variants.PlayerTraitsMovementBase
 	{
-		public byte Speed, GravityMultiplier, VehicleUsage,
-			unknown0; // DoubleJump or AutomaticMomentumUsage?;
+		public byte Speed, GravityMultiplier, VehicleUsage, DoubleJump;
 		public int JumpMultiplier;
 
 		protected override bool ModifiersAreUnchanged { get {
@@ -170,7 +168,7 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 			return VehicleUsage == 0;
 		} }
 		public override bool IsUnchanged { get {
-			return ModifiersAreUnchanged && UsageIsUnchanged && unknown0 == 0;
+			return ModifiersAreUnchanged && UsageIsUnchanged && DoubleJump == 0;
 		} }
 
 		public PlayerTraitsMovement()
@@ -184,7 +182,7 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 			s.Stream(ref Speed, 5);
 			s.Stream(ref GravityMultiplier, 4);
 			s.Stream(ref VehicleUsage, 4);
-			s.Stream(ref unknown0, 2);
+			s.Stream(ref DoubleJump, 2);
 			s.StreamIndexPos(ref JumpMultiplier, 9);
 		}
 		#endregion
@@ -198,7 +196,7 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 		{
 			base.Serialize(s);
 
-			s.StreamAttributeOptUnchangedZero("unknown0", ref unknown0);
+			s.StreamAttributeOptUnchangedZero("doubleJump", ref DoubleJump);
 
 			using (var bm = s.EnterCursorBookmarkOpt("Usage", this, obj=>!obj.UsageIsUnchanged)) if(bm.IsNotNull)
 			{

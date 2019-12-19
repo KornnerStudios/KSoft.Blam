@@ -33,10 +33,15 @@ namespace KSoft.Blam.Megalo.Proto
 			mErrorWriter = errorWriter;
 		}
 
-		void WriteError(string format, params object[] arg)
+		void WriteError(string format, params object[] args)
 		{
-			mErrorWriter.Write(mErrorPrefix);
-			mErrorWriter.WriteLine(format, arg);
+			Debug.Trace.MegaloProto.TraceInformation(format, args);
+
+			if (mErrorWriter != null)
+			{
+				mErrorWriter.Write(mErrorPrefix);
+				mErrorWriter.WriteLine(format, args);
+			}
 		}
 
 		void ParamVisited(MegaloScriptProtoParam param)

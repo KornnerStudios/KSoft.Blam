@@ -14,9 +14,36 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 		StickyGrenadeOnArmorLockEnabled = 1<<2,
 		ActiveCamoModifiersEnabled = 1<<3,
 		SwordBlockWithSwordOnlyEnabled = 1<<4,
-		AutomaticMagnumEnabled = 1<<5,
+		MagnumIsAutomatic = 1<<5,
+
+		#region Unused
 		Unused6 = 1<<6,
 		Unused7 = 1<<7,
+		Unused8 = 1<<8,
+		Unused9 = 1<<9,
+		Unused10 = 1<<10,
+		Unused11 = 1<<11,
+		Unused12 = 1<<12,
+		Unused13 = 1<<13,
+		Unused14 = 1<<14,
+		Unused15 = 1<<15,
+		Unused16 = 1<<16,
+		Unused17 = 1<<17,
+		Unused18 = 1<<18,
+		Unused19 = 1<<19,
+		Unused20 = 1<<20,
+		Unused21 = 1<<21,
+		Unused22 = 1<<22,
+		Unused23 = 1<<23,
+		Unused24 = 1<<24,
+		Unused25 = 1<<25,
+		Unused26 = 1<<26,
+		Unused27 = 1<<27,
+		Unused28 = 1<<28,
+		Unused29 = 1<<29,
+		Unused30 = 1<<30,
+		Unused31 = 1U<<31,
+		#endregion
 	};
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public sealed class MegaloVariantTU1
@@ -41,27 +68,27 @@ Disable the ability to block Sword attacks using melee with anything other than 
 		*/
 		public MegaloVariantTitleUpdateFlags Flags; // 0xF7A8 bitvector
 		public float PrecisionWeaponBloom; // 0xF7AC
-		public float ArmorLockEnergyBleedFromDamage; // 0xF7B0
-		public float ArmorLockEnergyBleedFromDamageLimit; // 0xF7B4
-		public float ActiveCamoEnergyBonus; // 0xF7B8
-		public float ActiveCamoEnergy; // 0xF7BC
-		public float MagnumProjectileDamage; // 0xF7C0
-		public float MagnumFireRecoveryTime; // 0xF7C4
+		public float ArmorLockDamageToEnergyTransfer; // 0xF7B0
+		public float ArmorLockDamageToEnergyCap; // 0xF7B4
+		public float ActiveCamoOverrideEnergyCurveMin; // 0xF7B8
+		public float ActiveCamoOverrideEnergyCurveMax; // 0xF7BC
+		public float MagnumDamageMultiplier; // 0xF7C0
+		public float MagnumFireRecoveryTimeMultiplier; // 0xF7C4
 
 		public bool IsUnchanged { get {
-			return Flags == 0 && PrecisionWeaponBloom == 1.0f && MagnumProjectileDamage == 1.0f && MagnumFireRecoveryTime == 1.0f &&
-				ArmorLockEnergyBleedFromDamage == 0.0f && ArmorLockEnergyBleedFromDamageLimit == 0.0f &&
-				ActiveCamoEnergyBonus == 0.02f &&
-				ActiveCamoEnergy == 0.07f;
+			return Flags == 0 && PrecisionWeaponBloom == 1.0f && MagnumDamageMultiplier == 1.0f && MagnumFireRecoveryTimeMultiplier == 1.0f &&
+				ArmorLockDamageToEnergyTransfer == 0.0f && ArmorLockDamageToEnergyCap == 0.0f &&
+				ActiveCamoOverrideEnergyCurveMin == 0.02f &&
+				ActiveCamoOverrideEnergyCurveMax == 0.07f;
 		} }
 
 		public void Clear()
 		{
 			Flags = 0;
-			PrecisionWeaponBloom = MagnumProjectileDamage = MagnumFireRecoveryTime = 1.0f;
-			ArmorLockEnergyBleedFromDamage = ArmorLockEnergyBleedFromDamageLimit = 0.0f;
-			ActiveCamoEnergyBonus = 0.02f;
-			ActiveCamoEnergy = 0.07f;
+			PrecisionWeaponBloom = MagnumDamageMultiplier = MagnumFireRecoveryTimeMultiplier = 1.0f;
+			ArmorLockDamageToEnergyTransfer = ArmorLockDamageToEnergyCap = 0.0f;
+			ActiveCamoOverrideEnergyCurveMin = 0.02f;
+			ActiveCamoOverrideEnergyCurveMax = 0.07f;
 		}
 
 		#region IBitStreamSerializable Members
@@ -69,14 +96,14 @@ Disable the ability to block Sword attacks using melee with anything other than 
 		{
 			const int k_bit_length = 8;
 
-			s.Stream(ref Flags, Bits.kInt32BitCount, MegaloVariantTitleUpdateFlagsBitStreamer.Instance);
+			s.Stream(ref Flags, Bits.kInt32BitCount, MegaloVariantTitleUpdateFlagsBitStreamer.Instance); // big_flags have their entire chunk written, instead of only the used flags
 			s.Stream(ref PrecisionWeaponBloom, 0.0f, 10.0f, k_bit_length, false, true);
-			s.Stream(ref ArmorLockEnergyBleedFromDamage, 0.0f, 2.0f, k_bit_length, false, true);
-			s.Stream(ref ArmorLockEnergyBleedFromDamageLimit, 0.0f, 2.0f, k_bit_length, false, true);
-			s.Stream(ref ActiveCamoEnergyBonus, 0.0f, 2.0f, k_bit_length, false, true);
-			s.Stream(ref ActiveCamoEnergy, 0.0f, 2.0f, k_bit_length, false, true);
-			s.Stream(ref MagnumProjectileDamage, 0.0f, 10.0f, k_bit_length, false, true);
-			s.Stream(ref MagnumFireRecoveryTime, 0.0f, 10.0f, k_bit_length, false, true);
+			s.Stream(ref ArmorLockDamageToEnergyTransfer, 0.0f, 2.0f, k_bit_length, false, true);
+			s.Stream(ref ArmorLockDamageToEnergyCap, 0.0f, 2.0f, k_bit_length, false, true);
+			s.Stream(ref ActiveCamoOverrideEnergyCurveMin, 0.0f, 2.0f, k_bit_length, false, true);
+			s.Stream(ref ActiveCamoOverrideEnergyCurveMax, 0.0f, 2.0f, k_bit_length, false, true);
+			s.Stream(ref MagnumDamageMultiplier, 0.0f, 10.0f, k_bit_length, false, true);
+			s.Stream(ref MagnumFireRecoveryTimeMultiplier, 0.0f, 10.0f, k_bit_length, false, true);
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -85,20 +112,17 @@ Disable the ability to block Sword attacks using melee with anything other than 
 			where TCursor : class
 		{
 			s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags!=0, true);
-			s.StreamAttributeOpt("PrecisionWeaponReticleBloom", ref PrecisionWeaponBloom, f=>f!=1.0f);
+			s.StreamAttributeOpt("PrecisionWeaponReticuleBloom", ref PrecisionWeaponBloom, f=>f!=1.0f);
 
-			if (s.StreamElementOpt("ArmorLockEnergyBleedFromDamage", ref ArmorLockEnergyBleedFromDamage, f => f != 0.0f))
+			if (s.StreamElementOpt("ArmorLockDamageToEnergyTransfer", ref ArmorLockDamageToEnergyTransfer, f => f != 0.0f))
 				s.WriteComment("Damage received while in Armor Lock is transferred to remaining Armor Ability energy");
-			if (s.StreamElementOpt("ArmorLockEnergyBleedFromDamageLimit", ref ArmorLockEnergyBleedFromDamageLimit, f => f != 0.0f))
-				s.WriteComment("How much the damage depletes your Armor Lock energy");
+			s.StreamElementOpt("ArmorLockDamageToEnergyCap", ref ArmorLockDamageToEnergyCap, f => f != 0.0f);
 
-			if (s.StreamElementOpt("ActiveCamoEnergyBonus", ref ActiveCamoEnergyBonus, f=>f!=0.02f))
-				s.WriteComment("Bonus time the player gets in Active Camo while standing still");
-			if (s.StreamElementOpt("ActiveCamoEnergy", ref ActiveCamoEnergy, f=>f!=0.07f))
-				s.WriteComment("Overall length of time the player can be in Active Camo");
+			s.StreamElementOpt("ActiveCamoOverrideEnergyCurveMin", ref ActiveCamoOverrideEnergyCurveMin, f => f != 0.02f);
+			s.StreamElementOpt("ActiveCamoOverrideEnergyCurveMax", ref ActiveCamoOverrideEnergyCurveMax, f => f != 0.07f);
 
-			s.StreamAttributeOpt("MagnumProjectileDamage", ref MagnumProjectileDamage, f=>f!=1.0f); // magnum bullet force and damage
-			s.StreamAttributeOpt("MagnumFireRecoveryTime", ref MagnumFireRecoveryTime, f=>f!=1.0f);
+			s.StreamAttributeOpt("MagnumDamageMultiplier", ref MagnumDamageMultiplier, f=>f!=1.0f);
+			s.StreamAttributeOpt("MagnumFireRecoveryTimeMultiplier", ref MagnumFireRecoveryTimeMultiplier, f=>f!=1.0f);
 		}
 		#endregion
 	};
@@ -121,7 +145,7 @@ Disable the ability to block Sword attacks using melee with anything other than 
 		readonly GameEngineBaseVariantHaloReach mBaseVariant;
 		public override Blam.RuntimeData.Variants.GameEngineBaseVariant BaseVariant { get { return mBaseVariant; } }
 
-		bool unkF7A6, unkF7A7;
+		public bool FireTeamsEnabled, SymmetricGametype;
 
 		public MegaloVariantTU1 TU1 { get; private set; }
 
@@ -134,7 +158,7 @@ Disable the ability to block Sword attacks using melee with anything other than 
 			TU1 = new MegaloVariantTU1();
 		}
 
-		public override void ClearWeaponTunings()
+		public override void ClearTitleUpdateData()
 		{
 			TU1.Clear();
 		}
@@ -172,8 +196,8 @@ Disable the ability to block Sword attacks using melee with anything other than 
 			// 0xE7B0	HiddenUserOptions
 			#endregion
 
-			s.Stream(ref unkF7A6);
-			s.Stream(ref unkF7A7);
+			s.Stream(ref FireTeamsEnabled);
+			s.Stream(ref SymmetricGametype);
 			SerializeOptionToggles(s);
 			s.StreamObject(EngineDefinition);			// 0x63A8
 
@@ -187,8 +211,8 @@ Disable the ability to block Sword attacks using melee with anything other than 
 		{
 			base.SerializeImpl(s);
 
-			s.StreamAttribute("unkF7A6", ref unkF7A6);
-			s.StreamAttribute("unkF7A7", ref unkF7A7);
+			s.StreamAttribute("fireTeamsEnabled", ref FireTeamsEnabled);
+			s.StreamAttribute("symmetricGametype", ref SymmetricGametype);
 
 			if (mEncodingVersion >= kEncodingVersionTU1)
 			{

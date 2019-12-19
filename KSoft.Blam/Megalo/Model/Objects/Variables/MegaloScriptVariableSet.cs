@@ -62,15 +62,15 @@ namespace KSoft.Blam.Megalo.Model
 			Objects = new ObservableCollection<MegaloScriptObjectVariable>();
 		}
 
-		internal void ValidateVariableListCounts()
+		internal void ValidateVariableListCounts(IO.ICanThrowReadExceptionsWithExtraDetails readExceptionThrower)
 		{
 			var set = SetType.ToString();
 
-			ProtoData.Traits[MegaloScriptVariableType.Numeric].ValidateListCount(Numerics, set+".Numerics");
-			ProtoData.Traits[MegaloScriptVariableType.Timer].ValidateListCount(Timers, set+".Timers");
-			ProtoData.Traits[MegaloScriptVariableType.Team].ValidateListCount(Teams, set+".Teams");
-			ProtoData.Traits[MegaloScriptVariableType.Player].ValidateListCount(Players, set+".Players");
-			ProtoData.Traits[MegaloScriptVariableType.Object].ValidateListCount(Objects, set+".Objects");
+			ProtoData.Traits[MegaloScriptVariableType.Numeric].ValidateListCount(Numerics, set+".Numerics", readExceptionThrower);
+			ProtoData.Traits[MegaloScriptVariableType.Timer].ValidateListCount(Timers, set+".Timers", readExceptionThrower);
+			ProtoData.Traits[MegaloScriptVariableType.Team].ValidateListCount(Teams, set+".Teams", readExceptionThrower);
+			ProtoData.Traits[MegaloScriptVariableType.Player].ValidateListCount(Players, set+".Players", readExceptionThrower);
+			ProtoData.Traits[MegaloScriptVariableType.Object].ValidateListCount(Objects, set+".Objects", readExceptionThrower);
 		}
 		internal bool ValidateVariableCounts()
 		{

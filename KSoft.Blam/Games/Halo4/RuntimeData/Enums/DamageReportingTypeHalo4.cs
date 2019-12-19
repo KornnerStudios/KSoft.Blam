@@ -2,20 +2,23 @@
 namespace KSoft.Blam.Games.Halo4.RuntimeData
 {
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
-	public enum DamageReportingType
+	public enum DamageReportingTypeHalo4
 	{
-		Unknown,
+		Invalid,
+
 		Guardians,
 		Scripting,
 		AISuicide,
-		BurstGun,
+
+		ForerunnerSmg,
 		SpreadGun,
-		HomingRifle,
-		AttachBeam,
+		ForerunnerRifle,
+		ForerunnerSniper,
 		BishopBeam,
-		StatisGun,
-		HardLightGrenade,
-		ScaleshotRifle,//IncinerationCannon
+		BoltPistol,
+		PulseGrenade,
+		IncinerationLauncher,//IncinerationCannon
+
 		MagnumPistol,
 		AssaultRifle,
 		MarksmanRifle, // DMR
@@ -26,8 +29,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData
 		SpartanLaser,
 		FragGrenade,
 		StickyGrenadeLauncher,
-		LMG,
+		LightMachineGun,
 		RailGun,
+
 		PlasmaPistol,
 		Needler,
 		GravityHammer,
@@ -35,9 +39,10 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData
 		PlasmaGrenade,
 		Carbine,
 		BeamRifle,
-		StormRifle,
+		AssaultCarbine,
 		ConcussionRifle,
-		FlakCannon, // FRG
+		FuelRodCannon, // FRG
+
 		Ghost,
 		RevenantDriver,
 		RevenantGunner,
@@ -50,18 +55,19 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData
 		RevenantDeuxGunner,
 		LichDriver,
 		LichGunner,
+
 		Mongoose,
 		WarthogDriver,
 		WarthogGunner,
-		WarthogGunner_Gauss,
-		WarthogGunner_Rocket,
+		WarthogGunnerGauss,
+		WarthogGunnerRocket,
 		Scorpion,
 		ScorpionGunner,
-		FalconDriver,
-		FalconGunner,
+		MammothTurret,
+		Pelican,
 		WaspDriver,
 		WaspGunner,
-		WaspGunner_Heavy,
+		WaspGunnerHeavy,
 		MechMelee,
 		MechChaingun,
 		MechCannon,
@@ -70,38 +76,44 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData
 		BroadswordMissle,
 		TortoiseDriver,
 		TortoiseGunner,
+
 		MacCannon,
 		TargetDesignator,
-		OrdnanceDropPod,
-		OrbitalCruiseMissle,
+		DropPod,
+		CruiseMissle,
+
 		PortableShield,
 		PersonalAutoTurret,
 		ThrusterPack,
+
 		FallingDamage,
-		GenericCollisionDamage,
-		GenericMeleeDamage,
-		GenericExplosion,
-		Unknown_4D,
+		CollisionDamage,
+		Melee,
+		Explosion,
+		Fire,
 		BirthdayPartyExplosion,
-		FlagMeleeDamage,
-		BombMeleeDamage,
-		BombExplosionDamage,
-		BallMeleeDamage,
+		Flag,
+		BombMelee,
+		BombExplosion,
+		BallMelee,
 		Teleporter,
 		TransferDamage,
 		ArmorLockCrush,
+
 		HumanTurret,
 		PlasmaCannon,
 		PlasmaMortar,
 		PlasmaTurret,
 		ShadeTurret,
-		Unknown_5B,
+		ForerunnerTurret,
+
 		Tank,
 		Chopper,
 		Hornet,
 		Mantis,
-		MagnumPistol_CTF,
-		FloodTalons,
+
+		CtfMagnumPistol,
+		FloodProngs,
 
 		kNumberOf,
 	};

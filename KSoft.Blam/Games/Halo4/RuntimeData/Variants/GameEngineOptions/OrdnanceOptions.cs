@@ -54,8 +54,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public GameOptionsOrdnancePossibility[] Possibilities;
 
 		public bool IsDefault { get {
-			foreach(var poss in Possibilities)
-				if (!poss.IsDefault) return false;
+			foreach (var poss in Possibilities)
+				if (!poss.IsDefault)
+					return false;
 
 			return true;
 		} }

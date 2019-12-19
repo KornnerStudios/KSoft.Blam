@@ -8,13 +8,21 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 namespace KSoft.Blam.RuntimeData.Variants
 {
 	using GameEngineSandboxVariantFlagsBitStreamer = IO.EnumBitStreamer<GameEngineSandboxVariantFlags>;
+	using SandboxEditingModeBitStreamer = IO.EnumBitStreamer<SandboxEditingMode>;
 
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
 	[Flags]
 	public enum GameEngineSandboxVariantFlags : byte // bits are individually streamed in the engine
 	{
 		OpenChannelVoiceEnabled = 1<<0, // sandbox-open-channel-voice
-		Unknown1 = 1<<1,
+		RequiresAllObjects = 1<<1,
+	};
+	public enum SandboxEditingMode : sbyte
+	{
+		AllPlayers,
+		LeaderOnly,
+
+		kNumberOf
 	};
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public abstract class GameEngineSandboxVariant
@@ -22,7 +30,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 	{
 		public GameEngineMegaloVariant MegaloVariant { get; private set; }
 		public GameEngineSandboxVariantFlags Flags;
-		public byte EditMode; // 0...2
+		public SandboxEditingMode EditMode;
 		public short RespawnTime; // 0...60
 		public PlayerTraitsBase EditorTraits { get; private set; }
 
@@ -31,6 +39,21 @@ namespace KSoft.Blam.RuntimeData.Variants
 			MegaloVariant = GameEngineMegaloVariant.Create(variantManager);
 
 			EditorTraits = MegaloVariant.BaseVariant.NewPlayerTraits();
+
+			RevertToDefault();
+		}
+
+		public void RevertToDefault()
+		{
+			Flags |= GameEngineSandboxVariantFlags.OpenChannelVoiceEnabled;
+			EditMode = SandboxEditingMode.AllPlayers;
+			RespawnTime = TypeExtensionsBlam.kUsualDefaultRespawnTimeInSeconds;
+			// #TODO_BLAM: EditorTraits
+
+			MegaloVariant.BaseVariant.OptionsMisc.RoundLimit = 1;
+			MegaloVariant.BaseVariant.OptionsMisc.RoundTimeLimit = 0;
+			MegaloVariant.BaseVariant.OptionsMisc.Flags |= GameOptionsMiscFlags.TeamsEnabled;
+			MegaloVariant.BaseVariant.OptionsRespawning.InitialLoadoutSelectionTime = 0;
 		}
 
 		internal static GameEngineSandboxVariant Create(GameEngineVariant variantManager)
@@ -53,7 +76,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		{
 			MegaloVariant.Serialize(s);
 			s.Stream(ref Flags, 2, GameEngineSandboxVariantFlagsBitStreamer.Instance);
-			s.Stream(ref EditMode, 2);
+			s.Stream(ref EditMode, 1, SandboxEditingModeBitStreamer.Instance);
 			s.Stream(ref RespawnTime, 6);
 			EditorTraits.Serialize(s);
 		}
@@ -71,9 +94,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		{
 			using (s.EnterCursorBookmark("Sandbox"))
 			{
-				s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags != 0, true);
-				s.StreamAttribute("editMode", ref EditMode);
-				s.StreamAttribute("respawnTime", ref RespawnTime);
+				s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags != GameEngineSandboxVariantFlags.OpenChannelVoiceEnabled, true);
+				s.StreamAttributeEnumOpt("editMode", ref EditMode, e => e != SandboxEditingMode.AllPlayers);
+				s.StreamAttributeEnumOpt("respawnTime", ref RespawnTime, v => v!=TypeExtensionsBlam.kUsualDefaultRespawnTimeInSeconds);
 
 				using (var bm = s.EnterCursorBookmarkOpt("EditorTraits", EditorTraits, obj=>!obj.IsUnchanged)) if (bm.IsNotNull)
 					EditorTraits.Serialize(s);

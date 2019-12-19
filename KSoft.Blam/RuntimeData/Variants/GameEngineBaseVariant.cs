@@ -16,8 +16,8 @@ namespace KSoft.Blam.RuntimeData.Variants
 	[Flags]
 	public enum GameEngineBaseVariantFlags : byte // bits are individually streamed in the engine
 	{
-		Unknown0 = 1<<0,
-		Unknown1 = 1<<1, // Halo4
+		VariantBuiltIn = 1<<0,
+		UserCreatedVariant = 1<<1, // Halo4
 	};
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public abstract partial class GameEngineBaseVariant

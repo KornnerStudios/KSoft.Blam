@@ -14,9 +14,10 @@ namespace KSoft.Blam.Megalo.Proto
 		Name,
 		Sound,
 		Incident,
-		Icon, // idk...
+		HudWidgetIcon,
+		GameEngineIcon,
 		Medal, // H4
-		Ordnance, // H4. TODO: There may not be any actual instances of an Ordnance index...
+		Ordnance, // H4. #REVIEW_BLAM: There may not be any actual instances of an Ordnance index...
 		// variant
 		LoadoutPalette,
 		Option,
@@ -26,7 +27,6 @@ namespace KSoft.Blam.Megalo.Proto
 		Widget,
 		ObjectFilter,
 		GameObjectFilter, // H4. Currently not used in any script values, only for Trigger utils (which contains refs)
-		// If you remove a member, chances are the required bits will drop to 4
 
 		/// <remarks>5 bits</remarks>
 		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,

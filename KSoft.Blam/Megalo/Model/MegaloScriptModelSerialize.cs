@@ -25,9 +25,14 @@ namespace KSoft.Blam.Megalo.Model
 				{
 					Proto.MegaloScriptProtoCondition proto;
 					if (Database.TryGetCondition(name, out proto))
+					{
 						type = proto.DBID;
+					}
 					else
-						throw new KeyNotFoundException("Not a valid condition name: " + name);
+					{
+						var ex = new KeyNotFoundException("Not a valid condition name: " + name);
+						s.ThrowReadException(ex);
+					}
 				}
 			}
 			else if (objType == MegaloScriptModelObjectType.Action && TagElementStreamSerializeFlags.UseActionTypeNames())
@@ -38,13 +43,20 @@ namespace KSoft.Blam.Megalo.Model
 				{
 					Proto.MegaloScriptProtoAction proto;
 					if (Database.TryGetAction(name, out proto))
+					{
 						type = proto.DBID;
+					}
 					else
-						throw new KeyNotFoundException("Not a valid action name: " + name);
+					{
+						var ex = new KeyNotFoundException("Not a valid action name: " + name);
+						s.ThrowReadException(ex);
+					}
 				}
 			}
 			else
+			{
 				s.StreamAttribute("DBID", ref type);
+			}
 		}
 
 		static Collections.ActiveListUtil.TagElementStreamReadMode GetTriggersTagElementStreamReadMode(MegaloScriptModel @this)
@@ -65,7 +77,7 @@ namespace KSoft.Blam.Megalo.Model
 				s.ReadCursor(ref object_name);
 				bitIndex = model.FromIndexName(Proto.MegaloScriptValueIndexTarget.ObjectType, object_name);
 			}
-			else if(s.IsWriting)
+			else if (s.IsWriting)
 			{
 				string object_name = model.ToIndexName(Proto.MegaloScriptValueIndexTarget.ObjectType, bitIndex);
 				s.WriteCursor(object_name);
@@ -92,15 +104,21 @@ namespace KSoft.Blam.Megalo.Model
 				s.StreamCursor(ref triggerIndex);
 
 				if (model.Triggers.SlotIsFreeOrInvalidIndex(triggerIndex))
-					throw new System.IO.InvalidDataException(string.Format(
+				{
+					var ex =  new System.IO.InvalidDataException(string.Format(
 						"Couldn't define execution order for invalid trigger index {0}", triggerIndex));
+					s.ThrowReadException(ex);
+				}
 			}
 
-			if(!model.Triggers[triggerIndex].TriggerType.IsUpdatedOnGameTick())
-				throw new System.IO.InvalidDataException(string.Format(
-						"Trigger '{0}' can't have its execution explicitly ordered",
-						triggerIndex.ToString()
-						));
+			if (!model.Triggers[triggerIndex].TriggerType.IsUpdatedOnGameTick())
+			{
+				var ex = new System.IO.InvalidDataException(string.Format(
+					"Trigger '{0}' can't have its execution explicitly ordered",
+					triggerIndex.ToString()
+					));
+				s.ThrowReadException(ex);
+			}
 		}
 
 		protected void SerializeGameObjectFilters<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -120,11 +138,20 @@ namespace KSoft.Blam.Megalo.Model
 
 			#region TryToPort sanity checks
 			if ((TagElementStreamSerializeFlags & MegaloScriptModelTagElementStreamFlags.TryToPort) != 0)
+			{
 				if (s.IsWriting)
-					Contract.Assert(Proto.MegaloScriptDatabase.HaloReach != null && Proto.MegaloScriptDatabase.Halo4 != null,
-						"Can't port, other game's DB isn't loaded");
-				else if(s.IsReading)
-					throw new InvalidOperationException("Can't load variants saved with TryToPort");
+				{
+					if (Proto.MegaloScriptDatabase.HaloReach == null || Proto.MegaloScriptDatabase.Halo4 == null)
+					{
+						throw new InvalidOperationException("Can't port, other game's DB isn't loaded");
+					}
+				}
+				else if (s.IsReading)
+				{
+					var ex = new InvalidOperationException("Can't load variants saved with TryToPort");
+					s.ThrowReadException(ex);
+				}
+			}
 			#endregion
 
 			bool embed_model_objects = TagElementStreamSerializeFlags.EmbedObjects();
@@ -147,7 +174,7 @@ namespace KSoft.Blam.Megalo.Model
 					s.WriteAttribute("NextActionID", Actions.FirstInactiveIndex);
 					s.WriteAttribute("NextValueID", Values.FirstInactiveIndex);
 					s.WriteAttribute("NextTrigID", Triggers.FirstInactiveIndex);
-					if(Database.Limits.SupportsVirtualTriggers)
+					if (Database.Limits.SupportsVirtualTriggers)
 						s.WriteAttribute("NextVirtualTriggerID", VirtualTriggers.FirstInactiveIndex);
 				}
 				#endregion
@@ -247,14 +274,14 @@ namespace KSoft.Blam.Megalo.Model
 				// #TODO_IMPLEMENT: sanity check list counts
 				var limits = Database.Limits;
 
-				limits.GameStatistics.ValidateListCount(GameStatistics, "GameStatistics");
-				GlobalVariables.ValidateVariableListCounts();
-				PlayerVariables.ValidateVariableListCounts();
-				ObjectVariables.ValidateVariableListCounts();
-				TeamVariables.ValidateVariableListCounts();
-				limits.HudWidgets.ValidateListCount(HudWidgets, "HudWidgets");
-				limits.ObjectFilters.ValidateListCount(ObjectFilters, "ObjectFilters");
-				limits.GameObjectFilters.ValidateListCount(CandySpawnerFilters, "GameObjectFilters");
+				limits.GameStatistics.ValidateListCount(GameStatistics, "GameStatistics", s);
+				GlobalVariables.ValidateVariableListCounts(s);
+				PlayerVariables.ValidateVariableListCounts(s);
+				ObjectVariables.ValidateVariableListCounts(s);
+				TeamVariables.ValidateVariableListCounts(s);
+				limits.HudWidgets.ValidateListCount(HudWidgets, "HudWidgets", s);
+				limits.ObjectFilters.ValidateListCount(ObjectFilters, "ObjectFilters", s);
+				limits.GameObjectFilters.ValidateListCount(CandySpawnerFilters, "GameObjectFilters", s);
 			}
 			#endregion
 		}

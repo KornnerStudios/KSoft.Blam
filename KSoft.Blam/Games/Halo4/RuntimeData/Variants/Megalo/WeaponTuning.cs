@@ -385,55 +385,55 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		}
 		public float? Value1 {
 			get { return GetImpl(mValue1, WeaponTuningModifiers.Value1); }
-			set { SetImpl(Value1, ref mValue1, WeaponTuningModifiers.Value1); }
+			set { SetImpl(value, ref mValue1, WeaponTuningModifiers.Value1); }
 		}
 		public float? Value2 {
 			get { return GetImpl(mValue2, WeaponTuningModifiers.Value2); }
-			set { SetImpl(Value2, ref mValue2, WeaponTuningModifiers.Value2); }
+			set { SetImpl(value, ref mValue2, WeaponTuningModifiers.Value2); }
 		}
 		public float? Value3 {
 			get { return GetImpl(mValue3, WeaponTuningModifiers.Value3); }
-			set { SetImpl(Value3, ref mValue3, WeaponTuningModifiers.Value3); }
+			set { SetImpl(value, ref mValue3, WeaponTuningModifiers.Value3); }
 		}
 		public float? Value4 {
 			get { return GetImpl(mValue4, WeaponTuningModifiers.Value4); }
-			set { SetImpl(Value4, ref mValue4, WeaponTuningModifiers.Value4); }
+			set { SetImpl(value, ref mValue4, WeaponTuningModifiers.Value4); }
 		}
 		public float? Value5 {
 			get { return GetImpl(mValue5, WeaponTuningModifiers.Value5); }
-			set { SetImpl(Value5, ref mValue5, WeaponTuningModifiers.Value5); }
+			set { SetImpl(value, ref mValue5, WeaponTuningModifiers.Value5); }
 		}
 		public float? Value6 {
 			get { return GetImpl(mValue6, WeaponTuningModifiers.Value6); }
-			set { SetImpl(Value6, ref mValue6, WeaponTuningModifiers.Value6); }
+			set { SetImpl(value, ref mValue6, WeaponTuningModifiers.Value6); }
 		}
 		public float? Value7 {
 			get { return GetImpl(mValue7, WeaponTuningModifiers.Value7); }
-			set { SetImpl(Value7, ref mValue7, WeaponTuningModifiers.Value7); }
+			set { SetImpl(value, ref mValue7, WeaponTuningModifiers.Value7); }
 		}
 		public float? Value8 {
 			get { return GetImpl(mValue8, WeaponTuningModifiers.Value8); }
-			set { SetImpl(Value8, ref mValue8, WeaponTuningModifiers.Value8); }
+			set { SetImpl(value, ref mValue8, WeaponTuningModifiers.Value8); }
 		}
 		public float? Value9 {
 			get { return GetImpl(mValue9, WeaponTuningModifiers.Value9); }
-			set { SetImpl(Value9, ref mValue9, WeaponTuningModifiers.Value9); }
+			set { SetImpl(value, ref mValue9, WeaponTuningModifiers.Value9); }
 		}
 		public float? Value10 {
 			get { return GetImpl(mValue10, WeaponTuningModifiers.Value10); }
-			set { SetImpl(Value10, ref mValue10, WeaponTuningModifiers.Value10); }
+			set { SetImpl(value, ref mValue10, WeaponTuningModifiers.Value10); }
 		}
 		public float? Value11 {
 			get { return GetImpl(mValue11, WeaponTuningModifiers.Value11); }
-			set { SetImpl(Value11, ref mValue11, WeaponTuningModifiers.Value11); }
+			set { SetImpl(value, ref mValue11, WeaponTuningModifiers.Value11); }
 		}
 		public float? Value12 {
 			get { return GetImpl(mValue12, WeaponTuningModifiers.Value12); }
-			set { SetImpl(Value12, ref mValue12, WeaponTuningModifiers.Value12); }
+			set { SetImpl(value, ref mValue12, WeaponTuningModifiers.Value12); }
 		}
 		public float? Value13 {
 			get { return GetImpl(mValue13, WeaponTuningModifiers.Value13); }
-			set { SetImpl(Value13, ref mValue13, WeaponTuningModifiers.Value13); }
+			set { SetImpl(value, ref mValue13, WeaponTuningModifiers.Value13); }
 		}
 		#endregion
 
@@ -604,57 +604,57 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 #endif
 		#endregion
 		#region kOneBarrelEntries
-		static readonly DamageReportingType[] kOneBarrelEntries = new DamageReportingType[] {
-			DamageReportingType.BurstGun, // suppressor
-			DamageReportingType.SpreadGun, // scattershot
-			DamageReportingType.AttachBeam, // binary_rifle
-			DamageReportingType.ScaleshotRifle,//IncinerationCannon
-			DamageReportingType.MagnumPistol,
-			DamageReportingType.AssaultRifle,
-			DamageReportingType.MarksmanRifle, // DMR
-			DamageReportingType.Shotgun,
-			DamageReportingType.BattleRifle,
-			DamageReportingType.SniperRifle,
-			DamageReportingType.RocketLauncher,
-			DamageReportingType.StickyGrenadeLauncher,
-			DamageReportingType.LMG,
-			DamageReportingType.Needler,
-			DamageReportingType.Carbine,
-			DamageReportingType.BeamRifle,
-			DamageReportingType.StormRifle,
-			DamageReportingType.ConcussionRifle,
-			DamageReportingType.FlakCannon, // FRG
-			DamageReportingType.Ghost,
-			DamageReportingType.Wraith,
-			DamageReportingType.WraithAntiInfantry,
-			DamageReportingType.Banshee,
-			DamageReportingType.BansheeBomb,
-			DamageReportingType.WarthogGunner,
-			DamageReportingType.WarthogGunner_Gauss,
-			DamageReportingType.WarthogGunner_Rocket,
-			DamageReportingType.Scorpion,
-			DamageReportingType.ScorpionGunner, // turret
-			DamageReportingType.MechChaingun,
-			DamageReportingType.MechRocket,
-			DamageReportingType.MagnumPistol_CTF,
-			DamageReportingType.FloodTalons,
+		static readonly DamageReportingTypeHalo4[] kOneBarrelEntries = new DamageReportingTypeHalo4[] {
+			DamageReportingTypeHalo4.ForerunnerSmg, // suppressor
+			DamageReportingTypeHalo4.SpreadGun, // scattershot
+			DamageReportingTypeHalo4.ForerunnerSniper, // binary_rifle
+			DamageReportingTypeHalo4.IncinerationLauncher,//IncinerationCannon
+			DamageReportingTypeHalo4.MagnumPistol,
+			DamageReportingTypeHalo4.AssaultRifle,
+			DamageReportingTypeHalo4.MarksmanRifle, // DMR
+			DamageReportingTypeHalo4.Shotgun,
+			DamageReportingTypeHalo4.BattleRifle,
+			DamageReportingTypeHalo4.SniperRifle,
+			DamageReportingTypeHalo4.RocketLauncher,
+			DamageReportingTypeHalo4.StickyGrenadeLauncher,
+			DamageReportingTypeHalo4.LightMachineGun,
+			DamageReportingTypeHalo4.Needler,
+			DamageReportingTypeHalo4.Carbine,
+			DamageReportingTypeHalo4.BeamRifle,
+			DamageReportingTypeHalo4.AssaultCarbine,
+			DamageReportingTypeHalo4.ConcussionRifle,
+			DamageReportingTypeHalo4.FuelRodCannon, // FRG
+			DamageReportingTypeHalo4.Ghost,
+			DamageReportingTypeHalo4.Wraith,
+			DamageReportingTypeHalo4.WraithAntiInfantry,
+			DamageReportingTypeHalo4.Banshee,
+			DamageReportingTypeHalo4.BansheeBomb,
+			DamageReportingTypeHalo4.WarthogGunner,
+			DamageReportingTypeHalo4.WarthogGunnerGauss,
+			DamageReportingTypeHalo4.WarthogGunnerRocket,
+			DamageReportingTypeHalo4.Scorpion,
+			DamageReportingTypeHalo4.ScorpionGunner, // turret
+			DamageReportingTypeHalo4.MechChaingun,
+			DamageReportingTypeHalo4.MechRocket,
+			DamageReportingTypeHalo4.CtfMagnumPistol,
+			DamageReportingTypeHalo4.FloodProngs,
 		};
 		#endregion
 		#region kTwoBarrelsEntries
-		static readonly DamageReportingType[] kTwoBarrelsEntries = new DamageReportingType[] {
-			DamageReportingType.HomingRifle, // light rifle
-			DamageReportingType.StatisGun, // bolt shot
-			DamageReportingType.SpartanLaser,
-			DamageReportingType.RailGun,
-			DamageReportingType.PlasmaPistol,
-			DamageReportingType.PersonalAutoTurret,
+		static readonly DamageReportingTypeHalo4[] kTwoBarrelsEntries = new DamageReportingTypeHalo4[] {
+			DamageReportingTypeHalo4.ForerunnerRifle, // light rifle
+			DamageReportingTypeHalo4.BoltPistol, // bolt shot
+			DamageReportingTypeHalo4.SpartanLaser,
+			DamageReportingTypeHalo4.RailGun,
+			DamageReportingTypeHalo4.PlasmaPistol,
+			DamageReportingTypeHalo4.PersonalAutoTurret,
 		};
 		#endregion
 
-		static readonly string[] kUnk000_Names = new string[6];
-		static readonly string[] kUnk408_Names = new string[33];
-		static readonly string[] kUnk109E_Names = new string[33];
-		static readonly string[] kUnkF1E_Names = new string[6];
+		static readonly string[] kDualBarrelModifiers_Names = new string[6];
+		static readonly string[] kSingleBarrelModifiers_Names = new string[33];
+		static readonly string[] kSingleBarrelWeaponModifiers_Names = new string[33];
+		static readonly string[] kDualBarrelWeaponModifiers_Names = new string[6];
 
 		static WeaponTuningData()
 		{
@@ -662,7 +662,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			Contract.Assert(kTwoBarrelsEntries.Length == 6);
 			#region kDamageReportingTypeToTuningEntry
 #if false
-			kDamageReportingTypeToTuningEntry = new List<DamageReportingTypeToTuningMap>((int)DamageReportingType.kNumberOf);
+			kDamageReportingTypeToTuningEntry = new List<DamageReportingTypeToTuningMap>((int)DamageReportingTypeHalo4.kNumberOf);
 			for (int x = 0; x < kDamageReportingTypeToTuningEntry.Capacity; x++)
 				kDamageReportingTypeToTuningEntry.Add(DamageReportingTypeToTuningMap.None);
 
@@ -674,58 +674,63 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			#endregion
 
 #if false
-			for (int x = 0; x < kUnk000_Names.Length; x++)	kUnk000_Names[x] = "Unk000_" + x.ToString();
-			for (int x = 0; x < kUnk408_Names.Length; x++)	kUnk408_Names[x] = "Unk408_" + x.ToString();
-			for (int x = 0; x < kUnk109E_Names.Length; x++)	kUnk109E_Names[x] = "Unk109E_" + x.ToString();
-			for (int x = 0; x < kUnkF1E_Names.Length; x++)	kUnkF1E_Names[x] = "UnkF1E_" + x.ToString();
+			for (int x = 0; x < kDualBarrelModifiers_Names.Length; x++)	kDualBarrelModifiers_Names[x] = "Unk000_" + x.ToString();
+			for (int x = 0; x < kSingleBarrelModifiers_Names.Length; x++)	kSingleBarrelModifiers_Names[x] = "Unk408_" + x.ToString();
+			for (int x = 0; x < kSingleBarrelWeaponModifiers_Names.Length; x++)	kSingleBarrelWeaponModifiers_Names[x] = "Unk109E_" + x.ToString();
+			for (int x = 0; x < kDualBarrelWeaponModifiers_Names.Length; x++)	kDualBarrelWeaponModifiers_Names[x] = "UnkF1E_" + x.ToString();
 #else
-			for (int x = 0; x < kUnk000_Names.Length; x++) kUnk000_Names[x] = kTwoBarrelsEntries[x].ToString();
-			for (int x = 0; x < kUnk408_Names.Length; x++) kUnk408_Names[x] = kOneBarrelEntries[x].ToString();
-			for (int x = 0; x < kUnk109E_Names.Length; x++) kUnk109E_Names[x] = kOneBarrelEntries[x].ToString();
-			for (int x = 0; x < kUnkF1E_Names.Length; x++) kUnkF1E_Names[x] = kTwoBarrelsEntries[x].ToString();
+			for (int x = 0; x < kDualBarrelModifiers_Names.Length; x++) kDualBarrelModifiers_Names[x] = kTwoBarrelsEntries[x].ToString();
+			for (int x = 0; x < kSingleBarrelModifiers_Names.Length; x++) kSingleBarrelModifiers_Names[x] = kOneBarrelEntries[x].ToString();
+			for (int x = 0; x < kSingleBarrelWeaponModifiers_Names.Length; x++) kSingleBarrelWeaponModifiers_Names[x] = kOneBarrelEntries[x].ToString();
+			for (int x = 0; x < kDualBarrelWeaponModifiers_Names.Length; x++) kDualBarrelWeaponModifiers_Names[x] = kTwoBarrelsEntries[x].ToString();
 #endif
 		}
 
-		public WeaponTuningBarrelsModifierData[] Unk000 = new WeaponTuningBarrelsModifierData[6];
-		public WeaponTuningBarrelModifierData[] Unk408 = new WeaponTuningBarrelModifierData[33];
-		public WeaponTuningWeaponModifierData[] Unk109E = new WeaponTuningWeaponModifierData[33];
-		public WeaponTuningWeaponModifierData[] UnkF1E = new WeaponTuningWeaponModifierData[6];
+		public WeaponTuningBarrelsModifierData[] DualBarrelModifiers = new WeaponTuningBarrelsModifierData[6];
+		public WeaponTuningBarrelModifierData[] SingleBarrelModifiers = new WeaponTuningBarrelModifierData[33];
+		public WeaponTuningWeaponModifierData[] SingleBarrelWeaponModifiers = new WeaponTuningWeaponModifierData[33];
+		public WeaponTuningWeaponModifierData[] DualBarrelWeaponModifiers = new WeaponTuningWeaponModifierData[6];
 
 		#region IsUnchanged
-		public bool Unk000_IsUnchanged { get { return Array.TrueForAll(Unk000, unk => unk.IsUnchanged); } }
-		public bool Unk408_IsUnchanged { get { return Array.TrueForAll(Unk408, unk => unk.IsUnchanged); } }
-		public bool Unk109E_IsUnchanged { get { return Array.TrueForAll(Unk109E, unk => unk.IsUnchanged); } }
-		public bool UnkF1E_IsUnchanged { get { return Array.TrueForAll(UnkF1E, unk => unk.IsUnchanged); } }
-		public bool IsUnchanged { get { return Unk000_IsUnchanged && Unk408_IsUnchanged && Unk109E_IsUnchanged && UnkF1E_IsUnchanged; } }
+		public bool DualBarrelModifiers_IsUnchanged { get { return Array.TrueForAll(DualBarrelModifiers, unk => unk.IsUnchanged); } }
+		public bool SingleBarrelModifiers_IsUnchanged { get { return Array.TrueForAll(SingleBarrelModifiers, unk => unk.IsUnchanged); } }
+		public bool SingleBarrelWeaponModifiers_IsUnchanged { get { return Array.TrueForAll(SingleBarrelWeaponModifiers, unk => unk.IsUnchanged); } }
+		public bool DualBarrelWeaponModifiers_IsUnchanged { get { return Array.TrueForAll(DualBarrelWeaponModifiers, unk => unk.IsUnchanged); } }
+		public bool IsUnchanged { get {
+			return DualBarrelModifiers_IsUnchanged
+				&& SingleBarrelModifiers_IsUnchanged
+				&& SingleBarrelWeaponModifiers_IsUnchanged
+				&& DualBarrelWeaponModifiers_IsUnchanged;
+		} }
 		#endregion
 
 		public WeaponTuningData()
 		{
-			for (int x = 0; x < Unk000.Length; x++)	Unk000[x] = new WeaponTuningBarrelsModifierData();
-			for (int x = 0; x < Unk408.Length; x++)	Unk408[x] = new WeaponTuningBarrelModifierData();
-			for (int x = 0; x < Unk109E.Length; x++)Unk109E[x] = new WeaponTuningWeaponModifierData();
-			for (int x = 0; x < UnkF1E.Length; x++)	UnkF1E[x] = new WeaponTuningWeaponModifierData();
+			for (int x = 0; x < DualBarrelModifiers.Length; x++)	DualBarrelModifiers[x] = new WeaponTuningBarrelsModifierData();
+			for (int x = 0; x < SingleBarrelModifiers.Length; x++)	SingleBarrelModifiers[x] = new WeaponTuningBarrelModifierData();
+			for (int x = 0; x < SingleBarrelWeaponModifiers.Length; x++)SingleBarrelWeaponModifiers[x] = new WeaponTuningWeaponModifierData();
+			for (int x = 0; x < DualBarrelWeaponModifiers.Length; x++)	DualBarrelWeaponModifiers[x] = new WeaponTuningWeaponModifierData();
 		}
 
 		public void Clear()
 		{
-			foreach (var obj in Unk000) obj.Clear();
-			foreach (var obj in Unk408) obj.Clear();
-			foreach (var obj in Unk109E) obj.Clear();
-			foreach (var obj in UnkF1E) obj.Clear();
+			foreach (var obj in DualBarrelModifiers) obj.Clear();
+			foreach (var obj in SingleBarrelModifiers) obj.Clear();
+			foreach (var obj in SingleBarrelWeaponModifiers) obj.Clear();
+			foreach (var obj in DualBarrelWeaponModifiers) obj.Clear();
 		}
 
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
 		{
-			for (int x = 0; x < Unk000.Length; x++)
-				Unk000[x].Serialize(s);
-			for (int x = 0; x < Unk408.Length; x++)
-				Unk408[x].Serialize(s);
-			for (int x = 0; x < Unk109E.Length; x++)
-				Unk109E[x].Serialize(s);
-			for (int x = 0; x < UnkF1E.Length; x++)
-				UnkF1E[x].Serialize(s);
+			for (int x = 0; x < DualBarrelModifiers.Length; x++)
+				DualBarrelModifiers[x].Serialize(s);
+			for (int x = 0; x < SingleBarrelModifiers.Length; x++)
+				SingleBarrelModifiers[x].Serialize(s);
+			for (int x = 0; x < SingleBarrelWeaponModifiers.Length; x++)
+				SingleBarrelWeaponModifiers[x].Serialize(s);
+			for (int x = 0; x < DualBarrelWeaponModifiers.Length; x++)
+				DualBarrelWeaponModifiers[x].Serialize(s);
 		}
 		#endregion
 
@@ -734,25 +739,25 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			using (var bm = s.EnterCursorBookmarkOpt("TwoBarrels", this, obj=>!obj.Unk000_IsUnchanged)) if (bm.IsNotNull)
-				for (int x = 0; x < Unk000.Length; x++)
-					using (var bm2 = s.EnterCursorBookmarkOpt(kUnk000_Names[x], Unk000[x], obj=>!obj.IsUnchanged)) if(bm2.IsNotNull)
-						Unk000[x].Serialize(s);
+			using (var bm = s.EnterCursorBookmarkOpt("DualBarrels", this, obj=>!obj.DualBarrelModifiers_IsUnchanged)) if (bm.IsNotNull)
+				for (int x = 0; x < DualBarrelModifiers.Length; x++)
+					using (var bm2 = s.EnterCursorBookmarkOpt(kDualBarrelModifiers_Names[x], DualBarrelModifiers[x], obj=>!obj.IsUnchanged)) if(bm2.IsNotNull)
+						DualBarrelModifiers[x].Serialize(s);
 
-			using (var bm = s.EnterCursorBookmarkOpt("OneBarrel", this, obj=>!obj.Unk408_IsUnchanged)) if (bm.IsNotNull)
-				for (int x = 0; x < Unk408.Length; x++)
-					using (var bm2 = s.EnterCursorBookmarkOpt(kUnk408_Names[x], Unk408[x], obj=>!obj.IsUnchanged)) if (bm2.IsNotNull)
-						Unk408[x].Serialize(s);
+			using (var bm = s.EnterCursorBookmarkOpt("SingleBarrel", this, obj=>!obj.SingleBarrelModifiers_IsUnchanged)) if (bm.IsNotNull)
+				for (int x = 0; x < SingleBarrelModifiers.Length; x++)
+					using (var bm2 = s.EnterCursorBookmarkOpt(kSingleBarrelModifiers_Names[x], SingleBarrelModifiers[x], obj=>!obj.IsUnchanged)) if (bm2.IsNotNull)
+						SingleBarrelModifiers[x].Serialize(s);
 
-			using (var bm = s.EnterCursorBookmarkOpt("OneBarrelWeapons", this, obj=>!obj.Unk109E_IsUnchanged)) if (bm.IsNotNull)
-				for (int x = 0; x < Unk109E.Length; x++)
-					using (var bm2 = s.EnterCursorBookmarkOpt(kUnk109E_Names[x], Unk109E[x], obj=>!obj.IsUnchanged)) if (bm2.IsNotNull)
-						Unk109E[x].Serialize(s);
+			using (var bm = s.EnterCursorBookmarkOpt("OneBarrelWeapons", this, obj=>!obj.SingleBarrelWeaponModifiers_IsUnchanged)) if (bm.IsNotNull)
+				for (int x = 0; x < SingleBarrelWeaponModifiers.Length; x++)
+					using (var bm2 = s.EnterCursorBookmarkOpt(kSingleBarrelWeaponModifiers_Names[x], SingleBarrelWeaponModifiers[x], obj=>!obj.IsUnchanged)) if (bm2.IsNotNull)
+						SingleBarrelWeaponModifiers[x].Serialize(s);
 
-			using (var bm = s.EnterCursorBookmarkOpt("TwoBarrelWeapons", this, obj=>!obj.UnkF1E_IsUnchanged)) if (bm.IsNotNull)
-				for (int x = 0; x < UnkF1E.Length; x++)
-					using (var bm2 = s.EnterCursorBookmarkOpt(kUnkF1E_Names[x], UnkF1E[x], obj=>!obj.IsUnchanged)) if (bm2.IsNotNull)
-						UnkF1E[x].Serialize(s);
+			using (var bm = s.EnterCursorBookmarkOpt("TwoBarrelWeapons", this, obj=>!obj.DualBarrelWeaponModifiers_IsUnchanged)) if (bm.IsNotNull)
+				for (int x = 0; x < DualBarrelWeaponModifiers.Length; x++)
+					using (var bm2 = s.EnterCursorBookmarkOpt(kDualBarrelWeaponModifiers_Names[x], DualBarrelWeaponModifiers[x], obj=>!obj.IsUnchanged)) if (bm2.IsNotNull)
+						DualBarrelWeaponModifiers[x].Serialize(s);
 		}
 		#endregion
 	};

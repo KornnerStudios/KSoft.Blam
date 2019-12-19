@@ -8,10 +8,13 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 {
-	using GameOptionsOrdnanceOptionsFlagsBitStreamer = IO.EnumBitStreamerWithOptions
-		< GameOptionsOrdnanceOptionsFlags
-		, IO.EnumBitStreamerOptions.ShouldBitSwap
-		>;
+	public enum GameOptionsPrototypeMode
+	{
+		NotNewVersion,
+		IsNewVersion,
+
+		kNumberOf
+	};
 
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public sealed class GameOptionsPrototype
@@ -24,11 +27,11 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			PrometheanEnergyTime,	// max: 7
 			PrometheanEnergyMedal,	// max: 9
 			PrometheanDuration;		// beta max: 9
-		bool unk2C1;
+		public bool ClassColorOverride;
 
 		public bool IsEmpty { get {
-			return Mode == 0 && PrometheanEnergyKill == 0 && PrometheanEnergyTime == 0 &&
-				PrometheanEnergyMedal == 0 && PrometheanDuration == 0 && unk2C1 == false;
+			return Mode == (int)GameOptionsPrototypeMode.NotNewVersion && PrometheanEnergyKill == 0 && PrometheanEnergyTime == 0 &&
+				PrometheanEnergyMedal == 0 && PrometheanDuration == 0 && ClassColorOverride == false;
 		} }
 
 		#region IsDefault
@@ -41,14 +44,14 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 				PrometheanEnergyMedal == 3 && PrometheanDuration == 0;
 		} }
 		bool IsDefaultPromethean { get {
-			return Mode == 1 ? IsDefaultPrometheanMode1 : IsDefaultPrometheanMode0;
+			return Mode == (int)GameOptionsPrototypeMode.IsNewVersion ? IsDefaultPrometheanMode1 : IsDefaultPrometheanMode0;
 		} }
 
 		public bool IsDefaultMode0 { get {
-			return Mode == 0 && IsDefaultPrometheanMode0 && unk2C1 == false;
+			return Mode == (int)GameOptionsPrototypeMode.NotNewVersion && IsDefaultPrometheanMode0 && ClassColorOverride == false;
 		} }
 		public bool IsDefaultMode1 { get {
-			return Mode == 1 && IsDefaultPrometheanMode1 && unk2C1 == false;
+			return Mode == (int)GameOptionsPrototypeMode.IsNewVersion && IsDefaultPrometheanMode1 && ClassColorOverride == false;
 		} }
 		#endregion
 
@@ -56,13 +59,13 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		{
 			Mode = mode;
 
-			if (Mode == 1)
+			if (Mode == (int)GameOptionsPrototypeMode.IsNewVersion)
 				PrometheanEnergyKill = PrometheanEnergyTime = PrometheanEnergyMedal = 3;
 			else
 				PrometheanEnergyKill = PrometheanEnergyTime = PrometheanEnergyMedal = 0;
 
 			PrometheanDuration = 0;
-			unk2C1 = false;
+			ClassColorOverride = false;
 		}
 
 		#region IBitStreamSerializable Members
@@ -73,7 +76,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			s.Stream(ref PrometheanEnergyTime, 3);
 			s.Stream(ref PrometheanEnergyMedal, 3);
 			s.Stream(ref PrometheanDuration, 4);
-			s.Stream(ref unk2C1);
+			s.Stream(ref ClassColorOverride);
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -92,7 +95,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			else
 				RevertToDefault(Mode);
 
-			s.StreamAttributeOpt("unk2C1", ref unk2C1, Predicates.IsTrue);
+			s.StreamAttributeOpt("classColorOverride", ref ClassColorOverride, Predicates.IsTrue);
 		}
 		#endregion
 	};
@@ -104,7 +107,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public GameOptionsPrototype OptionsPrototype { get; private set; }
 
 		RequisitionData OptionsRequisitions { get; /*private*/ set; }
-		int unk33E4;
+		public int InfinityMissionId;
 
 		public GameOptionsOrdnanceOptions OrdnanceOptions { get; private set; }
 
@@ -116,7 +119,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 
 			OptionsMapOverrides = new GameOptionsMapOverridesHalo4(this);
 			OptionsRequisitions = new RequisitionData();
-			unk33E4 = TypeExtensions.kNone;
+			InfinityMissionId = TypeExtensions.kNone;
 			TeamOptions = new GameOptionsTeamOptionsHalo4(variantManager.GameBuild);
 			LoadoutOptions = new GameOptionsLoadoutsHalo4();
 			OrdnanceOptions = new GameOptionsOrdnanceOptions();
@@ -133,8 +136,8 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			s.StreamObject(OptionsSocial);
 			s.StreamObject(OptionsMapOverrides);					// 0x3D4
 			s.StreamObject(OptionsRequisitions);					// 0x26D8
-			s.Stream(ref unk33E4);
-			Contract.Assert(unk33E4 == -1); // haven't see it equal anything but -1
+			s.Stream(ref InfinityMissionId);
+			Contract.Assert(InfinityMissionId.IsNone()); // haven't see it equal anything but -1
 			s.StreamObject(TeamOptions);							// 0xD00
 			s.StreamObject(LoadoutOptions);							// 0x2084
 			s.StreamObject(OrdnanceOptions);						// 0x21B4
@@ -145,8 +148,8 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		{
 			s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags != 0, true);
 
-			if (!s.StreamAttributeOpt("unk33E4", ref unk33E4, Predicates.IsNotNone))
-				unk33E4 = -1;
+			if (!s.StreamAttributeOpt("infinityMissionId", ref InfinityMissionId, Predicates.IsNotNone))
+				InfinityMissionId = TypeExtensions.kNone;
 
 			SerializeContentHeader(s);
 			SerializeMiscOptions(s);
@@ -175,30 +178,34 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		, IO.ITagElementStringNameStreamable
 	{
 		public int PaletteIndex;
-		bool unk0_bit0;
-		int unk8;
+		public bool Locked;
+		public int DesignerId;
+		public byte SubMenu;
 		public int MaxInstances;
-		float unk14;
+		public float Price;
 		public int ModelVariantName,
 			StartingAmmo;
-		float unk20;
-		uint unk24, unk28, unk2C;
+		public float WarmUpSeconds;
+		public float PurchaseFrequencySecondsPerPlayer;
+		public float PurchaseFrequencySecondsPerTeam;
+		public float PriceIncreaseFactor;
 		public byte MaxBuyPlayer, MaxBuyTeam;
 
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
 		{
 			s.Stream(ref PaletteIndex, 7);
-			s.Stream(ref unk0_bit0);
-			s.Stream(ref unk8);
+			s.Stream(ref Locked);
+			s.Stream(ref DesignerId);
+			s.Stream(ref SubMenu, 1);
 			s.Stream(ref MaxInstances, 30);
-			s.Stream(ref unk14);
+			s.Stream(ref Price);
 			s.Stream(ref ModelVariantName, 30);
 			s.Stream(ref StartingAmmo, 30);
-			s.Stream(ref unk20);
-			s.Stream(ref unk24);
-			s.Stream(ref unk28);
-			s.Stream(ref unk2C);
+			s.Stream(ref WarmUpSeconds);
+			s.Stream(ref PurchaseFrequencySecondsPerPlayer);
+			s.Stream(ref PurchaseFrequencySecondsPerTeam);
+			s.Stream(ref PriceIncreaseFactor);
 			s.Stream(ref MaxBuyPlayer);
 			s.Stream(ref MaxBuyTeam);
 		}
@@ -217,12 +224,12 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
-		float unk26D8;
-		int unk26DC;
-		List<RequisitionItem> RequisitionItems { get; /*private*/ set; }
+		public float PlayerRequisitionFrequencySeconds;
+		public int InitialGameCurrency;
+		public List<RequisitionItem> RequisitionItems { get; /*private*/ set; }
 
 		public bool IsDefault { get {
-			return unk26D8 == 0.0f && unk26DC == 0 && RequisitionItems.Count == 0;
+			return PlayerRequisitionFrequencySeconds == 0.0f && InitialGameCurrency == 0 && RequisitionItems.Count == 0;
 		} }
 
 		public RequisitionData()
@@ -233,8 +240,8 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
 		{
-			s.Stream(ref unk26D8);
-			s.Stream(ref unk26DC);
+			s.Stream(ref PlayerRequisitionFrequencySeconds);
+			s.Stream(ref InitialGameCurrency);
 			s.StreamElements(RequisitionItems, 7);					// 0x26E0	0x26E4
 			Contract.Assert(RequisitionItems.Count == 0);
 		}
@@ -244,8 +251,8 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttributeOpt("unk26D8", ref unk26D8, Predicates.IsNotZero);
-			s.StreamAttributeOpt("unk26DC", ref unk26DC, Predicates.IsNotZero);
+			s.StreamAttributeOpt("playerRequisitionFrequencySeconds", ref PlayerRequisitionFrequencySeconds, Predicates.IsNotZero);
+			s.StreamAttributeOpt("initialGameCurrency", ref InitialGameCurrency, Predicates.IsNotZero);
 
 			using(var bm = s.EnterCursorBookmarkOpt("Items", RequisitionItems, Predicates.HasItems)) if(bm.IsNotNull)
 				s.StreamableElements("entry", RequisitionItems);

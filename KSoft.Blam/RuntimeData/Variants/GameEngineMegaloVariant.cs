@@ -106,6 +106,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
 		}
 
+		public virtual void ClearTitleUpdateData() { }
 		public virtual void ClearWeaponTunings() { }
 
 		protected abstract bool VerifyEncodingVersion();
@@ -294,7 +295,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 				s.StreamCursorEnum(ref TagElementStreamSerializeFlags, true);
 
 			s.StreamAttribute("encoding", ref mEncodingVersion, NumeralBase.Hex);
-			s.StreamAttribute("version", ref EngineVersion, NumeralBase.Hex);
+			s.StreamAttribute("version", ref EngineVersion);
 			// Must come first. Most of the other variant data contains string references
 			SerializeLocaleStrings(s);
 
@@ -310,8 +311,16 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 			using (var bm = s.EnterCursorBookmarkOpt("MapPermissions", MapPermissions, mp=>!mp.IsDefault)) if (bm.IsNotNull)
 				s.StreamObject(MapPermissions);
-			using (s.EnterCursorBookmark("PlayerRatingParams"))
+
+			using (var bm = s.EnterCursorBookmarkOpt("PlayerRatingParams", PlayerRatingParameters, prp=>!prp.IsDefault)) if (bm.IsNotNull)
+			{
 				s.StreamObject(PlayerRatingParameters);
+			}
+			else
+			{
+				PlayerRatingParameters.RevertToDefault();
+			}
+
 			s.StreamAttributeOpt("scoreToWinRound", ref ScoreToWinRound, Predicates.IsNotZero);
 
 			SerializeOptionToggles(s);
@@ -328,8 +337,12 @@ namespace KSoft.Blam.RuntimeData.Variants
 				using (s.EnterCursorBookmark("Megalo"))
 					SerializeImpl(s);
 
-				if (s.IsWriting && s.IgnoreWritePredicates) // #HACK: IgnoreWritePredicates hack!
+				if (s.IsWriting && s.IgnoreWritePredicates) // #HACK_BLAM: IgnoreWritePredicates hack!
 				{
+					Debug.Trace.Megalo.TraceInformation("Always write 'default' data HACK: Skipping MegaloScript element (output will be incomplete) in {0}, '{1}'",
+						s.StreamName,
+						BaseVariant.Header.Title);
+
 					Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine();
 					Console.WriteLine("Always write 'default' data HACK: Skipping MegaloScript element (output will be incomplete)");

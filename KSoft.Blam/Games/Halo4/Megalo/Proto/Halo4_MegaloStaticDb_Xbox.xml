@@ -2335,4 +2335,99 @@
 			<entry name="navpoint_oddball_thrown" />
 		</names>
 	</msit>
+	<hud_widget_icons>
+		<icons>
+			<entry name="ctf" />
+			<entry name="slayer" />
+			<entry name="oddball" />
+			<entry name="koth" />
+			<entry name="juggernaut" />
+			<entry name="territories" />
+			<entry name="assault" />
+			<entry name="infection" />
+			<entry name="vip" />
+			<entry name="invasion" />
+			<entry name="extermination" />
+			<entry name="stockpile" />
+			<entry name="action_sack" />
+			<entry name="race" />
+			<entry name="rocket_race" />
+			<entry name="grifball" />
+			<entry name="soccer" />
+			<entry name="headhunter" />
+			<entry name="generic_icon_2" />
+			<entry name="generic_icon_3" />
+			<entry name="generic_icon_4" />
+			<entry name="generic_icon_5" />
+			<entry name="generic_icon_6" />
+			<entry name="generic_icon_7" />
+			<entry name="generic_icon_8" />
+			<entry name="generic_icon_9" />
+			<entry name="spartan" />
+			<entry name="elite" />
+			<entry name="offense" />
+			<entry name="defense" />
+			<entry name="ordnance" />
+			<entry name="interface" />
+			<entry name="recon" />
+			<entry name="retrieve" />
+			<entry name="ammunition" />
+		</icons>
+	</hud_widget_icons>
+	<engine_icons>
+		<icons>
+			<entry name="default" />
+			<entry name="slayer" />
+			<entry name="ctf" />
+			<entry name="oddball" />
+			<entry name="regicide" />
+			<entry name="king" />
+			<entry name="infection" />
+			<entry name="race" />
+			<entry name="blam" />
+			<entry name="dominion" />
+			<entry name="payback" />
+			<entry name="grifball" />
+			<entry name="juggermech" />
+			<entry name="forge" />
+			<entry name="rocket_race" />
+			<entry name="ricochet" />
+			<entry name="soccer" />
+			<entry name="headhunter" />
+			<entry name="crosshair" />
+			<entry name="wheel" />
+			<entry name="swirl" />
+			<entry name="bunker" />
+			<entry name="healthpack" />
+			<entry name="towershield" />
+			<entry name="return" />
+			<entry name="junk" />
+			<entry name="cartographer" />
+			<entry name="eightball" />
+			<entry name="spartan" />
+			<entry name="elite" />
+			<entry name="attack" />
+			<entry name="defend" />
+			<entry name="ordnance" />
+			<entry name="circle" />
+			<entry name="recon" />
+			<entry name="recover" />
+			<entry name="ammo" />
+			<entry name="skull" />
+			<entry name="forge2" />
+			<entry />
+			<entry />
+			<entry />
+			<entry />
+			<entry />
+			<entry />
+			<entry />
+			<entry />
+			<entry />
+			<entry />
+			<entry />
+			<entry name="recent_games" />
+			<entry name="file_share" />
+		</icons>
+	</engine_icons>
 </megaloDefinitions>

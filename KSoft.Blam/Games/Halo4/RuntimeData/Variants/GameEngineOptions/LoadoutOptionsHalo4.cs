@@ -1,6 +1,18 @@
-﻿
+﻿using System;
+
 namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 {
+	using GameOptionsLoadoutFlagsBitStreamer = IO.EnumBitStreamer<GameOptionsLoadoutFlagsHalo4>;
+
+	[Flags]
+	public enum GameOptionsLoadoutFlagsHalo4
+	{
+		CustomLoadouts = 1<<0,
+		SpartanLoadouts = 1<<1,
+		EliteLoadouts = 1<<2,
+		MapLoadouts = 1<<3,
+	};
+
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public sealed class GameOptionsLoadoutHalo4
 		: Blam.RuntimeData.Variants.GameOptionsLoadout
@@ -12,7 +24,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		bool WeaponSkinsAreUnchanged { get { return PrimaryWeaponSkin == 0 && SecondaryWeaponSkin == 0; } }
 
 		public override bool IsDefault { get {
-			return base.IsDefault && 
+			return base.IsDefault &&
 				TacticalPackage == TypeExtensionsBlam.kUnchanged && SupportUpgrade == TypeExtensionsBlam.kUnchanged &&
 				WeaponSkinsAreUnchanged;
 		} }
@@ -99,6 +111,12 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	public sealed class GameOptionsLoadoutsHalo4
 		: Blam.RuntimeData.Variants.GameOptionsLoadouts
 	{
+		const GameOptionsLoadoutFlagsHalo4 kDefaultFlags =
+			GameOptionsLoadoutFlagsHalo4.CustomLoadouts |
+			GameOptionsLoadoutFlagsHalo4.MapLoadouts;
+
+		public GameOptionsLoadoutFlagsHalo4 Flags;
+
 		public GameOptionsLoadoutsHalo4()
 		{
 			Palettes = new GameOptionsLoadoutPaletteHalo4[6];
@@ -107,12 +125,27 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 				Palettes[x] = new GameOptionsLoadoutPaletteHalo4();
 		}
 
-		#region IBitStreamSerializable Members
-		public override void Serialize(IO.BitStream s)
+		public override bool IsDefault { get {
+			return Flags == kDefaultFlags && base.IsDefault;
+		} }
+
+		public override void RevertToDefault()
 		{
-			SerializeFlags(s, 4);
-			SerializePalettes(s);
+			base.RevertToDefault();
+
+			Flags = kDefaultFlags;
+		}
+
+		#region IBitStreamSerializable Members
+		protected override void SerializeLoadoutFlags(IO.BitStream s)
+		{
+			s.Stream(ref Flags, 4, GameOptionsLoadoutFlagsBitStreamer.Instance);
 		}
 		#endregion
+
+		protected override void SerializeLoadoutFlags<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
+		{
+			s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags != kDefaultFlags, true);
+		}
 	};
 }

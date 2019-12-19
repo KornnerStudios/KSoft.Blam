@@ -361,6 +361,8 @@ namespace KSoft.Blam
 		#region DefaultOption utils
 		public const int kDefaultOption = -2;
 
+		public const int kUsualDefaultRespawnTimeInSeconds = 5;
+
 		readonly static Predicate<int> kNotDefaultOption32 = x => x != kDefaultOption;
 
 		public static void StreamAttributeOptDefaultOption<TDoc, TCursor>(this IO.TagElementStream<TDoc, TCursor, string> s,
@@ -462,7 +464,8 @@ namespace KSoft.Blam
 				case MegaloProto.MegaloScriptValueIndexTarget.Name:
 				case MegaloProto.MegaloScriptValueIndexTarget.Sound:
 				case MegaloProto.MegaloScriptValueIndexTarget.Incident:
-				case MegaloProto.MegaloScriptValueIndexTarget.Icon:
+				case MegaloProto.MegaloScriptValueIndexTarget.HudWidgetIcon:
+				case MegaloProto.MegaloScriptValueIndexTarget.GameEngineIcon:
 				case MegaloProto.MegaloScriptValueIndexTarget.Medal:
 				case MegaloProto.MegaloScriptValueIndexTarget.Ordnance:
 					return true;
@@ -503,7 +506,8 @@ namespace KSoft.Blam
 				case MegaloProto.MegaloScriptValueIndexTarget.Name:
 				case MegaloProto.MegaloScriptValueIndexTarget.Sound:
 				case MegaloProto.MegaloScriptValueIndexTarget.Incident:
-//				case MegaloProto.MegaloScriptValueIndexTarget.Icon:
+				case MegaloProto.MegaloScriptValueIndexTarget.HudWidgetIcon:
+				case MegaloProto.MegaloScriptValueIndexTarget.GameEngineIcon:
 				case MegaloProto.MegaloScriptValueIndexTarget.Medal:
 				case MegaloProto.MegaloScriptValueIndexTarget.Ordnance:
 

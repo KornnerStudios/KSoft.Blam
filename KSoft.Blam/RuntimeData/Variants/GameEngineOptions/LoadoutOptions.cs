@@ -8,7 +8,6 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 namespace KSoft.Blam.RuntimeData.Variants
 {
 	using GameOptionsSingleLoadoutFlagsBitStreamer = IO.EnumBitStreamer<GameOptionsSingleLoadoutFlags>;
-	using GameOptionsLoadoutFlagsBitStreamer = IO.EnumBitStreamer<GameOptionsLoadoutFlags>;
 
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
 	[Flags]
@@ -123,53 +122,47 @@ namespace KSoft.Blam.RuntimeData.Variants
 		#endregion
 	};
 
-	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
-	[Flags]
-	public enum GameOptionsLoadoutFlags : byte
-	{
-		MapLoadoutsEnabled = 1<<0, // ?
-		Unknown1 = 1<<1,
-		Unknown2 = 1<<2,				// Halo4
-		PersonalLoadoutsEnabled = 1<<3,	// Halo4
-	};
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public abstract class GameOptionsLoadouts
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
-		public GameOptionsLoadoutFlags Flags;
 		public GameOptionsLoadoutPalette[] Palettes { get; protected set; }
 
-		public bool IsDefault { get {
-			return Flags == 0 && Array.TrueForAll(Palettes, p => p.IsDefault);
+		public virtual bool IsDefault { get {
+			return Array.TrueForAll(Palettes, p => p.IsDefault);
 		} }
 
 		public virtual void RevertToDefault()
 		{
-			Flags = 0;
 			foreach (var p in Palettes)
 				p.RevertToDefault();
 		}
 
 		#region IBitStreamSerializable Members
-		protected void SerializeFlags(IO.BitStream s, int flagsBitLength)
-		{
-			s.Stream(ref Flags, flagsBitLength, GameOptionsLoadoutFlagsBitStreamer.Instance);
-		}
-		protected void SerializePalettes(IO.BitStream s)
+		protected abstract void SerializeLoadoutFlags(IO.BitStream s);
+		private void SerializePalettes(IO.BitStream s)
 		{
 			foreach (var p in Palettes) p.Serialize(s);
 		}
-		public abstract void Serialize(IO.BitStream s);
+		public void Serialize(IO.BitStream s)
+		{
+			SerializeLoadoutFlags(s);
+			SerializePalettes(s);
+		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
+		protected abstract void SerializeLoadoutFlags<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
+			where TDoc : class
+			where TCursor : class;
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
 		{
 			Contract.Assert(Palettes.Length == 6, "Need to redo the streaming logic!");
 
-			s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags != 0, true);
+			SerializeLoadoutFlags(s);
+
 			GameOptionsLoadoutPalette p;
 			Predicate<GameOptionsLoadoutPalette> p_is_not_default = obj => !obj.IsDefault;
 

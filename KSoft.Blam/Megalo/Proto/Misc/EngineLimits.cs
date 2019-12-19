@@ -42,6 +42,8 @@ namespace KSoft.Blam.Megalo.Proto
 		public ListLimitTraits MegaloStringIds = ListLimitTraits.Null;
 		public ListLimitTraits MegaloEngineSounds = ListLimitTraits.Null;
 		public ListLimitTraits GameIncidentTypes = ListLimitTraits.Null;
+		public ListLimitTraits MegaloHudWidgetIcons = ListLimitTraits.Null;
+		public ListLimitTraits GameEngineIcons = ListLimitTraits.Null;
 		public ListLimitTraits GameMedals = ListLimitTraits.Null;
 		public ListLimitTraits GameOrdnanceTypes = ListLimitTraits.Null;
 
@@ -79,7 +81,8 @@ namespace KSoft.Blam.Megalo.Proto
 				case MegaloScriptValueIndexTarget.Name:				return MegaloStringIds.IndexBitLength;
 				case MegaloScriptValueIndexTarget.Sound:			return MegaloEngineSounds.IndexBitLength;
 				case MegaloScriptValueIndexTarget.Incident:			return GameIncidentTypes.IndexBitLength;
-				//case MegaloScriptValueIndexTarget.Icon:				return 0;
+				case MegaloScriptValueIndexTarget.HudWidgetIcon:	return MegaloHudWidgetIcons.IndexBitLength;
+				case MegaloScriptValueIndexTarget.GameEngineIcon:	return GameEngineIcons.IndexBitLength;
 				case MegaloScriptValueIndexTarget.Medal:			return GameMedals.IndexBitLength;
 				case MegaloScriptValueIndexTarget.Ordnance:			return GameOrdnanceTypes.IndexBitLength;
 				#endregion
@@ -173,6 +176,8 @@ namespace KSoft.Blam.Megalo.Proto
 			ListLimitTraits.SerializeViaElement(s, "MaxMegaloStringIds", ref MegaloStringIds);
 			ListLimitTraits.SerializeViaElement(s, "MaxMegaloEngineSounds", ref MegaloEngineSounds);
 			ListLimitTraits.SerializeViaElement(s, "MaxGameIncidentTypes", ref GameIncidentTypes);
+			ListLimitTraits.SerializeViaElement(s, "MaxMegaloHudWidgetIcons", ref MegaloHudWidgetIcons);
+			ListLimitTraits.SerializeViaElement(s, "MaxGameEngineIcons", ref GameEngineIcons);
 			ListLimitTraits.SerializeViaElement(s, "MaxGameMedals", ref GameMedals);
 			ListLimitTraits.SerializeViaElementOpt(s, "MaxGameOrdnanceTypes", ref GameOrdnanceTypes);
 

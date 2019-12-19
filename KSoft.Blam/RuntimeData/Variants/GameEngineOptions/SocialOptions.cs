@@ -33,7 +33,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public GameOptionsSocialFlags Flags;
 
 		public bool IsDefault { get {
-			return ObserversAllowed == false && TeamChanging == 0 && Flags == kDefaultFlags;
+			return ObserversAllowed == false && TeamChanging == (int)TeamChangingType.Disabled && Flags == kDefaultFlags;
 		} }
 
 		public GameOptionsSocial()
@@ -44,7 +44,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public /*virtual*/ void RevertToDefault()
 		{
 			ObserversAllowed = false;
-			TeamChanging = 1;
+			TeamChanging = (byte)TeamChangingType.Enabled;
 			Flags = kDefaultFlags;
 		}
 
@@ -61,9 +61,16 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
+			var teamChanging = s.IsReading ? TeamChangingType.Enabled : (TeamChangingType)TeamChanging;
+
 			//s.StreamAttributeOpt("observersAllowed", ref ObserversAllowed, Predicates.IsTrue);
-			s.StreamAttributeOpt("teamChanging", ref TeamChanging, v => v != 1);
+			s.StreamAttributeEnumOpt("teamChanging", ref teamChanging, v => v != TeamChangingType.Enabled);
 			s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags != kDefaultFlags, true);
+
+			if (s.IsReading)
+			{
+				TeamChanging = (byte)teamChanging;
+			}
 		}
 		#endregion
 	};

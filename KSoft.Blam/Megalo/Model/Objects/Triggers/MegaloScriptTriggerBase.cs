@@ -28,10 +28,10 @@ namespace KSoft.Blam.Megalo.Model
 			return CreateObjectPostprocess(VirtualTriggers, NewVirtualTrigger(), id);
 		}
 
-		public MegaloScriptModelObjectHandle CreateActivateTriggerAction(MegaloScriptModelObjectHandle triggerHandle)
+		public MegaloScriptModelObjectHandle CreateForEachAction(MegaloScriptModelObjectHandle triggerHandle)
 		{
 			var activate_action = CreateAction();
-			activate_action.InitializeForType(this, Database.ActivateTriggerAction.DBID);
+			activate_action.InitializeForType(this, Database.ForEachAction.DBID);
 
 			var action_arg0 = CreateValue(Database.GetValueType("TriggerReference"))
 				as Megalo.Model.MegaloScriptIndexValue;
@@ -41,10 +41,10 @@ namespace KSoft.Blam.Megalo.Model
 
 			return activate_action.Handle;
 		}
-		public MegaloScriptModelObjectHandle CreateVirtualTriggerAction(MegaloScriptModelObjectHandle virtualTriggerHandle)
+		public MegaloScriptModelObjectHandle CreateBeginAction(MegaloScriptModelObjectHandle virtualTriggerHandle)
 		{
 			var vt_action = CreateAction();
-			vt_action.InitializeForType(this, Database.ActivateVirtualTriggerAction.DBID);
+			vt_action.InitializeForType(this, Database.BeginAction.DBID);
 
 			var vt_action_arg0 = CreateValue(Database.GetValueType("VirtualTrigger"))
 				as Megalo.Model.MegaloScriptVirtualTriggerValue;

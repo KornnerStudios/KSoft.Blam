@@ -33,4 +33,21 @@ namespace KSoft.Blam.Megalo.Proto
 		}
 		#endregion
 	};
+
+	/// <summary>
+	/// Availability exposed by having a non-empty Name
+	/// </summary>
+	[System.Reflection.Obfuscation(Exclude=false)]
+	public abstract class MegaloStaticDataNamedObjectWithAvailability
+		: MegaloStaticDataNamedObject
+	{
+		public bool IsAvailable { get { return kIsAvailable(Name); } }
+
+		#region ITagElementStringNameStreamable Members
+		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
+		{
+			s.StreamAttributeOpt("name", ref Name, kIsAvailable);
+		}
+		#endregion
+	};
 }

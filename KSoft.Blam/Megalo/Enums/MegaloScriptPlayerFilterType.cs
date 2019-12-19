@@ -4,11 +4,11 @@ namespace KSoft.Blam.Megalo
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
 	public enum MegaloScriptPlayerFilterType
 	{
-		None, // compare always returns false
-		Anyone, // compare always returns true
-		Allies, // (this/owner team filter?)
-		Enemies, // (enemy team filter?)
+		NoOne, // compare always returns false
+		Everyone, // compare always returns true
+		AlliesOfTeam,
+		EnemiesOfTeam,
 		PlayerMask,
-		NoOne, // compare always returns false; no_one?
+		Default, // players: use their traits. objects: same as NoOne
 	};
 }

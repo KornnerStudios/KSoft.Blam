@@ -77,8 +77,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		: Blam.RuntimeData.Variants.GameOptionsMapOverrides
 	{
 		internal int EquipmentSet; // actually shorts at runtime
-		// damage boost, speed boost, overshield
-		// 4th = unused custom?
+		// damage boost, speed boost, overshield, custom
 		public GameOptionsPowerup[] Powerups { get; private set; }
 
 		protected override bool ObjectSetsAreNotDefault { get {

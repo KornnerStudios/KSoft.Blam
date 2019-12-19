@@ -21,6 +21,8 @@ namespace KSoft.Blam.Megalo.Proto
 		public GameGlobalsOrdnanceList OrdnanceList { get; private set; }
 		public List<GameMedal> Medals { get; private set; }
 		public List<GameIncident> Incidents { get; private set; }
+		public List<MegaloHudWidgetIcon> HudWidgetIcons { get; private set; }
+		public List<GameEngineIcon> GameEngineIcons { get; private set; }
 		public List<MegaloEngineSound> Sounds { get; private set; }
 		public List<MegaloEngineStringId> Names { get; private set; }
 
@@ -38,6 +40,8 @@ namespace KSoft.Blam.Megalo.Proto
 			OrdnanceList = new GameGlobalsOrdnanceList(limits);
 			Medals = new List<GameMedal>(limits.GameMedals.MaxCount);
 			Incidents = new List<GameIncident>(limits.GameIncidentTypes.MaxCount);
+			HudWidgetIcons = new List<MegaloHudWidgetIcon>(limits.MegaloHudWidgetIcons.MaxCount);
+			GameEngineIcons = new List<GameEngineIcon>(limits.GameEngineIcons.MaxCount);
 			Sounds = new List<MegaloEngineSound>(limits.MegaloEngineSounds.MaxCount);
 			Names = new List<MegaloEngineStringId>(limits.MegaloStringIds.MaxCount);
 		}
@@ -53,12 +57,14 @@ namespace KSoft.Blam.Megalo.Proto
 		{
 			switch (target)
 			{
-				case MegaloScriptValueIndexTarget.ObjectType:	return ObjectTypeList.Types[index].Name;
-				case MegaloScriptValueIndexTarget.Name:			return Names[index].Name;
-				case MegaloScriptValueIndexTarget.Sound:		return Sounds[index].Name;
-				case MegaloScriptValueIndexTarget.Incident:		return Incidents[index].Name;
-				case MegaloScriptValueIndexTarget.Medal:		return Medals[index].Name;
-				case MegaloScriptValueIndexTarget.Ordnance:		return OrdnanceList.Sets[index].Name;
+				case MegaloScriptValueIndexTarget.ObjectType:		return ObjectTypeList.Types[index].Name;
+				case MegaloScriptValueIndexTarget.Name:				return Names[index].Name;
+				case MegaloScriptValueIndexTarget.Sound:			return Sounds[index].Name;
+				case MegaloScriptValueIndexTarget.Incident:			return Incidents[index].Name;
+				case MegaloScriptValueIndexTarget.HudWidgetIcon:	return HudWidgetIcons[index].Name;
+				case MegaloScriptValueIndexTarget.GameEngineIcon:	return GameEngineIcons[index].Name;
+				case MegaloScriptValueIndexTarget.Medal:			return Medals[index].Name;
+				case MegaloScriptValueIndexTarget.Ordnance:			return OrdnanceList.Sets[index].Name;
 
 				default: throw new KSoft.Debug.UnreachableException(target.ToString());
 			}
@@ -69,12 +75,14 @@ namespace KSoft.Blam.Megalo.Proto
 
 			switch (target)
 			{
-				case MegaloScriptValueIndexTarget.ObjectType:	id = FindNameIndex(ObjectTypeList.Types, name); break;
-				case MegaloScriptValueIndexTarget.Name:			id = FindNameIndex(Names, name); break;
-				case MegaloScriptValueIndexTarget.Sound:		id = FindNameIndex(Sounds, name); break;
-				case MegaloScriptValueIndexTarget.Incident:		id = FindNameIndex(Incidents, name); break;
-				case MegaloScriptValueIndexTarget.Medal:		id = FindNameIndex(Medals, name); break;
-				case MegaloScriptValueIndexTarget.Ordnance:		id = FindNameIndex(OrdnanceList.Sets, name); break;
+				case MegaloScriptValueIndexTarget.ObjectType:		id = FindNameIndex(ObjectTypeList.Types, name); break;
+				case MegaloScriptValueIndexTarget.Name:				id = FindNameIndex(Names, name); break;
+				case MegaloScriptValueIndexTarget.Sound:			id = FindNameIndex(Sounds, name); break;
+				case MegaloScriptValueIndexTarget.Incident:			id = FindNameIndex(Incidents, name); break;
+				case MegaloScriptValueIndexTarget.HudWidgetIcon:	id = FindNameIndex(HudWidgetIcons, name); break;
+				case MegaloScriptValueIndexTarget.GameEngineIcon:	id = FindNameIndex(GameEngineIcons, name); break;
+				case MegaloScriptValueIndexTarget.Medal:			id = FindNameIndex(Medals, name); break;
+				case MegaloScriptValueIndexTarget.Ordnance:			id = FindNameIndex(OrdnanceList.Sets, name); break;
 
 				default: throw new KSoft.Debug.UnreachableException(target.ToString());
 			}
@@ -164,6 +172,22 @@ namespace KSoft.Blam.Megalo.Proto
 			Contract.Assert(Names.Count <= mLimits.MegaloStringIds.MaxCount);
 			#endregion
 
+			#region HudWidgetIcons
+			using (s.EnterCursorBookmark("hud_widget_icons"))
+			using (s.EnterCursorBookmark("icons"))
+				s.StreamableElements("entry", HudWidgetIcons);
+
+			Contract.Assert(HudWidgetIcons.Count <= mLimits.MegaloHudWidgetIcons.MaxCount);
+			#endregion
+
+			#region GameEngineIcons
+			using (s.EnterCursorBookmark("engine_icons"))
+			using (s.EnterCursorBookmark("icons"))
+				s.StreamableElements("entry", GameEngineIcons);
+
+			Contract.Assert(GameEngineIcons.Count <= mLimits.GameEngineIcons.MaxCount);
+			#endregion
+
 			if (s.IsReading)
 			{
 				MultiplayerEffects.TrimExcess();
@@ -172,6 +196,8 @@ namespace KSoft.Blam.Megalo.Proto
 				Incidents.TrimExcess();
 				Sounds.TrimExcess();
 				Names.TrimExcess();
+				HudWidgetIcons.TrimExcess();
+				GameEngineIcons.TrimExcess();
 
 				for (int x = 0; x < Sounds.Count; x++)
 				{
@@ -185,6 +211,20 @@ namespace KSoft.Blam.Megalo.Proto
 					if (Incidents[x].IsAvailable) continue;
 
 					Incidents[x].UpdateForUndefined("INCIDENT", x);
+				}
+
+				for (int x = 0; x < HudWidgetIcons.Count; x++)
+				{
+					if (HudWidgetIcons[x].IsAvailable) continue;
+
+					HudWidgetIcons[x].UpdateForUndefined("HUD_WIDGET", x);
+				}
+
+				for (int x = 0; x < GameEngineIcons.Count; x++)
+				{
+					if (GameEngineIcons[x].IsAvailable) continue;
+
+					GameEngineIcons[x].UpdateForUndefined("ENGINE_ICON", x);
 				}
 			}
 		}

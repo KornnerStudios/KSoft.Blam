@@ -29,11 +29,16 @@ namespace KSoft.Blam.Megalo.Proto
 			return useIndex ? IndexBitLength : CountBitLength;
 		}
 
-		internal void ValidateListCount(System.Collections.IList list, string listName)
+		internal void ValidateListCount(System.Collections.IList list, string listName
+			, IO.ICanThrowReadExceptionsWithExtraDetails readExceptionThrower)
 		{
 			if (list.Count > MaxCount)
-				throw new System.IO.InvalidDataException(string.Format(
+			{
+				var ex = new System.IO.InvalidDataException(string.Format(
 					"{0} exceeded its maximum number of elements; {1} > {2}", listName, list.Count, MaxCount));
+
+				readExceptionThrower.ThrowReadExeception(ex);
+			}
 		}
 
 		#region ITagElementStringNameStreamable Members

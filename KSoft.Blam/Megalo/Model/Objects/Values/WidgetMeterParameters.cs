@@ -82,21 +82,21 @@ namespace KSoft.Blam.Megalo.Model
 		}
 
 		#region SetAs
-		public void SetAsNone()
+		public void SetAsOff()
 		{
 			Numeric1 = MegaloScriptVariableReferenceData.Custom;
 			Numeric2 = MegaloScriptVariableReferenceData.Custom;
 			Timer = MegaloScriptVariableReferenceData.Timer;
 
-			Type = MegaloScriptWidgetMeterType.None;
+			Type = MegaloScriptWidgetMeterType.Off;
 		}
-		public void SetAsNumeric(MegaloScriptVariableReferenceData value, MegaloScriptVariableReferenceData valueScale)
+		public void SetAsNumeric(MegaloScriptVariableReferenceData value, MegaloScriptVariableReferenceData maxValue)
 		{
 			Contract.Requires(value.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
-			Contract.Requires(valueScale.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
+			Contract.Requires(maxValue.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
 
 			Numeric1 = value;
-			Numeric2 = valueScale;
+			Numeric2 = maxValue;
 			Timer = MegaloScriptVariableReferenceData.Timer;
 
 			Type = MegaloScriptWidgetMeterType.Numeric;
@@ -109,7 +109,7 @@ namespace KSoft.Blam.Megalo.Model
 			Numeric2 = MegaloScriptVariableReferenceData.Custom;
 			Timer = timer;
 
-			Type = MegaloScriptWidgetMeterType.Numeric;
+			Type = MegaloScriptWidgetMeterType.Timer;
 		}
 		#endregion
 
@@ -135,7 +135,7 @@ namespace KSoft.Blam.Megalo.Model
 			if (Type == MegaloScriptWidgetMeterType.Numeric)
 			{
 				using (s.EnterCursorBookmark("Value")) mNumeric1.SerializeCustom(model, s);
-				using (s.EnterCursorBookmark("ValueScale")) mNumeric2.SerializeCustom(model, s);
+				using (s.EnterCursorBookmark("MaxValue")) mNumeric2.SerializeCustom(model, s);
 			}
 			else if (Type == MegaloScriptWidgetMeterType.Timer)
 				using (s.EnterCursorBookmark("Timer"))

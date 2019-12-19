@@ -14,7 +14,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		TeamsEnabled = 1<<0,
 		ResetPlayersOnNewRound = 1<<1,
 		ResetMapOnNewRound = 1<<2,
-		Unknown3 = 1<<3,
+		PerfectionEnabled = 1<<3,
 	};
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public abstract class GameOptionsMisc

@@ -1,13 +1,13 @@
 ﻿
 namespace KSoft.Blam.Games.HaloReach.RuntimeData
 {
-	using GameActivityBitStreamer = IO.EnumBitStreamerWithOptions<GameActivity, IO.EnumBitStreamerOptions.ShouldUseNoneSentinelEncoding>;
+	using GameActivityBitStreamer = IO.EnumBitStreamerWithOptions<GameActivityHaloReach, IO.EnumBitStreamerOptions.ShouldUseNoneSentinelEncoding>;
 
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public sealed class ContentMiniMetadataHaloReach
 		: Blam.RuntimeData.ContentMiniMetadata
 	{
-		public GameActivity Activity = GameActivity.None;
+		public GameActivityHaloReach Activity = GameActivityHaloReach.None;
 
 		public ContentMiniMetadataHaloReach(Engine.EngineBuildHandle buildHandle) : base(buildHandle)
 		{
@@ -19,7 +19,7 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData
 		}
 		protected override void SerializeActivity<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			s.StreamAttributeEnumOpt("activity", ref Activity, e => e != GameActivity.None);
+			s.StreamAttributeEnumOpt("activity", ref Activity, e => e != GameActivityHaloReach.None);
 		}
 	};
 }

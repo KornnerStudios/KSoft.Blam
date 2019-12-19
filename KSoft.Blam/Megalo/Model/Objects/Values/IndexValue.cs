@@ -102,7 +102,9 @@ namespace KSoft.Blam.Megalo.Model
 			var handle = s.IsWriting ? new MegaloScriptModelObjectHandle(MegaloScriptModelObjectType.Trigger, value) : MegaloScriptModelObjectHandle.Null;
 
 			if (s.IsWriting)
-				Contract.Assert(model.Triggers[handle.Id].TriggerType == MegaloScriptTriggerType.Subroutine);
+			{
+				Contract.Assert(model.Triggers[handle.Id].TriggerType == MegaloScriptTriggerType.InnerLoop);
+			}
 			using (s.EnterCursorBookmark("T")) // have to nest or MegaloScriptModelObjectHandle will overwrite our Param ID with the Trigger's
 				MegaloScriptModelObjectHandle.SerializeForEmbed(s, model, ref handle);
 
@@ -121,7 +123,9 @@ namespace KSoft.Blam.Megalo.Model
 
 			if ((model.TagElementStreamSerializeFlags & MegaloScriptModelTagElementStreamFlags.EmbedObjects) != 0 &&
 				target == MegaloScriptValueIndexTarget.Trigger)
+			{
 				SerializeTriggerReferenceValue(model, s, valueType, ref value);
+			}
 			#region UseIndexNames
 			else if ((model.TagElementStreamSerializeFlags & MegaloScriptModelTagElementStreamFlags.UseIndexNames) != 0 &&
 				target.HasIndexName())
@@ -158,9 +162,13 @@ namespace KSoft.Blam.Megalo.Model
 			if (s.IsReading &&
 				((model.TagElementStreamSerializeFlags & MegaloScriptModelTagElementStreamFlags.EmbedObjects) == 0 || target != MegaloScriptValueIndexTarget.Trigger)
 				)
+			{
 				if (!model.IndexTargetIsValid(target, valueType.IndexTraits, value))
-					throw new System.IO.InvalidDataException(string.Format(
-						"A {0} reference has an invalid value {1}", target, value));
+				{
+					s.ThrowReadException(new System.IO.InvalidDataException(string.Format(
+						"A {0} reference has an invalid value {1}", target, value)));
+				}
+			}
 		}
 
 		protected override void SerializeValue<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)

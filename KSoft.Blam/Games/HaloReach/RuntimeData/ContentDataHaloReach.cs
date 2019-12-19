@@ -71,10 +71,10 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData
 		protected override void SerializeActivity<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string attrName, ref sbyte value)
 		{
-			var activity = s.IsReading ? GameActivity.None : (GameActivity)value;
+			var activity = s.IsReading ? GameActivityHaloReach.None : (GameActivityHaloReach)value;
 			s.StreamAttributeEnum(attrName, ref activity);
 
-			Contract.Assert(activity < GameActivity.kNumberOf);
+			Contract.Assert(activity < GameActivityHaloReach.kNumberOf);
 
 			if (s.IsReading)
 				value = (sbyte)activity;

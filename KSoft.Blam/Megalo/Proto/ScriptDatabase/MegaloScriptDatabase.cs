@@ -45,8 +45,8 @@ namespace KSoft.Blam.Megalo.Proto
 		internal MegaloScriptValueType TeamDesignatorValueType;
 		internal MegaloScriptValueType ObjectTypeIndexValueType;
 
-		internal MegaloScriptProtoAction ActivateTriggerAction;
-		internal MegaloScriptProtoAction ActivateVirtualTriggerAction;
+		internal MegaloScriptProtoAction ForEachAction;
+		internal MegaloScriptProtoAction BeginAction;
 
 		#region ObjectReferenceWithPlayerVarIndex
 		internal struct ProtoObjectReferenceWithPlayerVarIndex
@@ -173,11 +173,11 @@ namespace KSoft.Blam.Megalo.Proto
 
 		void InitializeForHaloReach()
 		{
-			ImportCodeEnum<Games.HaloReach.RuntimeData.DamageReportingType>("DamageReportingType");
+			ImportCodeEnum<Games.HaloReach.RuntimeData.DamageReportingTypeHaloReach>("DamageReportingType");
 		}
 		void InitializeForHalo4()
 		{
-			ImportCodeEnum<Games.Halo4.RuntimeData.DamageReportingType>("DamageReportingType");
+			ImportCodeEnum<Games.Halo4.RuntimeData.DamageReportingTypeHalo4>("DamageReportingType");
 		}
 		#endregion
 
@@ -228,8 +228,7 @@ namespace KSoft.Blam.Megalo.Proto
 		{
 			Contract.Requires(associatedStaticDb != null);
 
-			if (errorWriter == null)
-				errorWriter = Console.Out;
+			// #REVIEW_BLAM: I've added TraceInformation calls now, can we get rid of the TextWriter?
 
 			this.StaticDatabase = associatedStaticDb;
 
@@ -237,7 +236,12 @@ namespace KSoft.Blam.Megalo.Proto
 			foreach (var type in ValueTypes)
 			{
 				if (type.BaseType.RequiresBitLength() && type.BitLength == 0)
-					errorWriter.WriteLine("ValueType '{0}' doesn't define bitLength", ValueTypeNames[type.NameIndex]);
+				{
+					string msg = string.Format("ValueType '{0}' doesn't define bitLength", ValueTypeNames[type.NameIndex]);
+
+					Debug.Trace.MegaloProto.TraceInformation(msg);
+					errorWriter?.WriteLine(msg);
+				}
 
 				switch (type.BaseType)
 				{
@@ -246,18 +250,28 @@ namespace KSoft.Blam.Megalo.Proto
 						var etype = Enums[type.EnumIndex];
 						int bc_difference = etype.ValidBitLengthForFlags(type.BitLength);
 						if (bc_difference < 0)
-							errorWriter.WriteLine("Flags '{0}->{1}' bitLength '{2}' is too small (need {3} more bits)",
+						{
+							string msg = string.Format("Flags '{0}->{1}' bitLength '{2}' is too small (need {3} more bits)",
 								etype.Name, ValueTypeNames[type.NameIndex],
 								type.BitLength, -bc_difference);
+
+							Debug.Trace.MegaloProto.TraceInformation(msg);
+							errorWriter?.WriteLine(msg);
+						}
 					} break;
 					case MegaloScriptValueBaseType.Enum:
 					{
 						var etype = Enums[type.EnumIndex];
 						int bc_difference = etype.ValidBitLengthForEnum(type.BitLength, type.EnumTraits);
 						if (bc_difference < 0)
-							errorWriter.WriteLine("Enum '{0}->{1}' bitLength '{2}' is too small (need {3} more bits)",
+						{
+							string msg = string.Format("Enum '{0}->{1}' bitLength '{2}' is too small (need {3} more bits)",
 								etype.Name, ValueTypeNames[type.NameIndex],
 								type.BitLength, -bc_difference);
+
+							Debug.Trace.MegaloProto.TraceInformation(msg);
+							errorWriter?.WriteLine(msg);
+						}
 					} break;
 					case MegaloScriptValueBaseType.Index:
 					{
@@ -265,8 +279,13 @@ namespace KSoft.Blam.Megalo.Proto
 						{
 							int bit_length = type.BitLength;
 							if (bit_length != Bits.kByteBitCount && bit_length != Bits.kInt16BitCount && bit_length != Bits.kInt32BitCount)
-								errorWriter.WriteLine("Index-type '{0}' is a 'raw' value but doesn't use a natural word size: {1}",
+							{
+								string msg = string.Format("Index-type '{0}' is a 'raw' value but doesn't use a natural word size: {1}",
 									ValueTypeNames[type.NameIndex], bit_length);
+
+								Debug.Trace.MegaloProto.TraceInformation(msg);
+								errorWriter?.WriteLine(msg);
+							}
 						}
 					} break;
 				}

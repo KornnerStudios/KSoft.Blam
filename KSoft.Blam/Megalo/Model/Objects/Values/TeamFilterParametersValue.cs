@@ -83,33 +83,33 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region SetAs
-		public void SetAsNone()
+		public void SetAsNoOne()
 		{
 			Player = MegaloScriptVariableReferenceData.Player;
 			PlayerAddOrRemove = MegaloScriptVariableReferenceData.Custom;
 
-			FilterType = MegaloScriptPlayerFilterType.None;
+			FilterType = MegaloScriptPlayerFilterType.NoOne;
 		}
-		public void SetAsAnyone()
+		public void SetAsEveryone()
 		{
 			Player = MegaloScriptVariableReferenceData.Player;
 			PlayerAddOrRemove = MegaloScriptVariableReferenceData.Custom;
 
-			FilterType = MegaloScriptPlayerFilterType.Anyone;
+			FilterType = MegaloScriptPlayerFilterType.Everyone;
 		}
-		public void SetAsAllies()
+		public void SetAsAlliesOfTeam()
 		{
 			Player = MegaloScriptVariableReferenceData.Player;
 			PlayerAddOrRemove = MegaloScriptVariableReferenceData.Custom;
 
-			FilterType = MegaloScriptPlayerFilterType.Allies;
+			FilterType = MegaloScriptPlayerFilterType.AlliesOfTeam;
 		}
-		public void SetAsEnemies()
+		public void SetAsEnemiesOfTeam()
 		{
 			Player = MegaloScriptVariableReferenceData.Player;
 			PlayerAddOrRemove = MegaloScriptVariableReferenceData.Custom;
 
-			FilterType = MegaloScriptPlayerFilterType.Enemies;
+			FilterType = MegaloScriptPlayerFilterType.EnemiesOfTeam;
 		}
 		public void SetAsPlayerMask(MegaloScriptVariableReferenceData player, MegaloScriptVariableReferenceData addOrRemove)
 		{
@@ -121,7 +121,7 @@ namespace KSoft.Blam.Megalo.Model
 
 			FilterType = MegaloScriptPlayerFilterType.PlayerMask;
 		}
-		public void SetAsNoOne()
+		public void SetAsDefault()
 		{
 			Player = MegaloScriptVariableReferenceData.Player;
 			PlayerAddOrRemove = MegaloScriptVariableReferenceData.Custom;

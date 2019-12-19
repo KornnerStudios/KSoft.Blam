@@ -52,7 +52,7 @@ namespace KSoft.Blam.Megalo.Model
 			where TCursor : class
 		{
 			if (HasNetworkState)
-				s.StreamAttributeEnumOpt("networkState", ref mNetworkState, e => e != MegaloScriptVariableNetworkState.None);
+				s.StreamAttributeEnumOpt("networkState", ref mNetworkState, e => e != MegaloScriptVariableNetworkState.Local);
 
 			SerializeCodeName(s);
 

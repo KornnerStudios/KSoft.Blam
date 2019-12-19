@@ -170,7 +170,8 @@ namespace KSoft.Blam.Megalo.Model
 		public bool IndexTargetIsValid(Proto.MegaloScriptValueIndexTarget target, Proto.MegaloScriptValueIndexTraits traits,
 			int index)
 		{
-			if(traits == Proto.MegaloScriptValueIndexTraits.Reference && index < 0) return false;
+			if (traits == Proto.MegaloScriptValueIndexTraits.Reference && index < 0)
+				return false;
 
 			var sdb = Database.StaticDatabase;
 			switch (target)
@@ -182,8 +183,8 @@ namespace KSoft.Blam.Megalo.Model
 				case Proto.MegaloScriptValueIndexTarget.Name:			return index < sdb.Names.Count;
 				case Proto.MegaloScriptValueIndexTarget.Sound:			return index < sdb.Sounds.Count;
 				case Proto.MegaloScriptValueIndexTarget.Incident:		return index < sdb.Incidents.Count;
-				// #TODO_IMPLEMENT:
-				case Proto.MegaloScriptValueIndexTarget.Icon:			return true;//index < ;
+				case Proto.MegaloScriptValueIndexTarget.HudWidgetIcon:	return index < sdb.HudWidgetIcons.Count;
+				case Proto.MegaloScriptValueIndexTarget.GameEngineIcon:	return index < sdb.GameEngineIcons.Count;
 				case Proto.MegaloScriptValueIndexTarget.Medal:			return index < sdb.Medals.Count;
 				case Proto.MegaloScriptValueIndexTarget.Ordnance:		return index < sdb.OrdnanceList.Types.Count;
 				#endregion
@@ -480,7 +481,7 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		public MegaloScriptTrigger CreateTrigger(string codeName,
-			MegaloScriptTriggerExecutionMode mode = MegaloScriptTriggerExecutionMode.Normal,
+			MegaloScriptTriggerExecutionMode mode = MegaloScriptTriggerExecutionMode.General,
 			MegaloScriptTriggerType type = MegaloScriptTriggerType.Normal)
 		{
 			var trigger = CreateTrigger();

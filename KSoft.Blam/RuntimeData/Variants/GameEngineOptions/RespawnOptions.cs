@@ -11,10 +11,10 @@ namespace KSoft.Blam.RuntimeData.Variants
 	[Flags]
 	public enum GameOptionsRepawningFlags : byte // bits are individually streamed in the engine
 	{
-		SynchronizeWithTeam = 1<<0, // respawn-options-inherit-respawn-time
-		Unknown1 = 1<<1, // respawn-options-respawn-with-teammate
-		Unknown2 = 1<<2, // respawn-options-respawn-at-location
-		RespawnOnKill = 1<<3, // teammates respawns on kills
+		InheritRespawnTime = 1<<0,
+		RespawnWithTeammateEnabled = 1<<1,
+		RespawnAtLocationEnabled = 1<<2,
+		RespawnOnKillsEnabled = 1<<3,
 		InstantRespawnEnabled = 1<<4, // Halo4
 	};
 	[System.Reflection.Obfuscation(Exclude=false)]
@@ -53,9 +53,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		{
 			Flags = 0;
 			LivesPerRound = TeamLivesPerRound = 0;
-			RespawnTime = 5;
+			RespawnTime = TypeExtensionsBlam.kUsualDefaultRespawnTimeInSeconds;
 			SuicideTime = BetrayalTime =
-				TraitsDuration = 5;
+				TraitsDuration = TypeExtensionsBlam.kUsualDefaultRespawnTimeInSeconds;
 			RespawnGrowthTime = 0;
 			InitialLoadoutSelectionTime = 10;
 		}
@@ -72,9 +72,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttributeOpt("respawn", ref RespawnTime/*, v=>v!=5*/); // #HACK: default respawn times differ in Reach and H4, so leaving predicate out for now
-			s.StreamAttributeOpt("suicide", ref SuicideTime, v=>v!=5);
-			s.StreamAttributeOpt("betrayal", ref BetrayalTime, v=>v!=5);
+			s.StreamAttributeOpt("respawn", ref RespawnTime/*, v=>v!=5*/); // #HACK_BLAM: default respawn times differ in Reach and H4, so leaving predicate out for now
+			s.StreamAttributeOpt("suicide", ref SuicideTime, v=>v!=TypeExtensionsBlam.kUsualDefaultRespawnTimeInSeconds);
+			s.StreamAttributeOpt("betrayal", ref BetrayalTime, v=>v!=TypeExtensionsBlam.kUsualDefaultRespawnTimeInSeconds);
 			s.StreamAttributeOpt("respawnGrowth", ref RespawnGrowthTime, Predicates.IsNotZero);
 			s.StreamAttributeOpt("initialLoadoutSelection", ref InitialLoadoutSelectionTime, v=>v!=10);
 		}

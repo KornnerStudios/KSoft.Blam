@@ -8,8 +8,6 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 		internal GameOptionsRepawningHaloReach(GameEngineBaseVariantHaloReach variant) : base(variant)
 		{
 			RevertToDefault();
-
-			// #TODO_BLAM: default TraitsDuration
 		}
 
 		#region IBitStreamSerializable Members

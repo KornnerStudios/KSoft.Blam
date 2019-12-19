@@ -1,8 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <System engine="Halo4" branch="Halo4">
 	<BuildFiles>
+		<!--No support for the beta-->
+		<Files rev="14064"
+				staticDb=""
+				megaloDb=""
+				/>
 		<!--rev="20810"-->
-		<Files rev="20810"
+		<Files
 				staticDb="Games\Halo4\Megalo\Proto\Halo4_MegaloStaticDb_Xbox.xml"
 				megaloDb="Games\Halo4\Megalo\Proto\Halo4_MegaloDb_Xbox.xml"
 				/>

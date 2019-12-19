@@ -1,6 +1,16 @@
-﻿
+﻿using System;
+
 namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 {
+	using GameOptionsLoadoutFlagsBitStreamer = IO.EnumBitStreamer<GameOptionsLoadoutFlagsHaloReach>;
+
+	[Flags]
+	public enum GameOptionsLoadoutFlagsHaloReach
+	{
+		SpartanLoadouts = 1<<0,
+		EliteLoadouts = 1<<1,
+	};
+
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public sealed class GameOptionsLoadoutHaloReach
 		: Blam.RuntimeData.Variants.GameOptionsLoadout
@@ -51,6 +61,8 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 	public sealed class GameOptionsLoadoutsHaloReach
 		: Blam.RuntimeData.Variants.GameOptionsLoadouts
 	{
+		public GameOptionsLoadoutFlagsHaloReach Flags;
+
 		public GameOptionsLoadoutsHaloReach()
 		{
 			Palettes = new GameOptionsLoadoutPaletteHaloReach[6];
@@ -59,12 +71,27 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 				Palettes[x] = new GameOptionsLoadoutPaletteHaloReach();
 		}
 
-		#region IBitStreamSerializable Members
-		public override void Serialize(IO.BitStream s)
+		public override bool IsDefault { get {
+			return Flags == 0 && base.IsDefault;
+		} }
+
+		public override void RevertToDefault()
 		{
-			SerializeFlags(s, 2);
-			SerializePalettes(s);
+			base.RevertToDefault();
+
+			Flags = 0;
+		}
+
+		#region IBitStreamSerializable Members
+		protected override void SerializeLoadoutFlags(IO.BitStream s)
+		{
+			s.Stream(ref Flags, 2, GameOptionsLoadoutFlagsBitStreamer.Instance);
 		}
 		#endregion
+
+		protected override void SerializeLoadoutFlags<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
+		{
+			s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags != 0, true);
+		}
 	};
 }

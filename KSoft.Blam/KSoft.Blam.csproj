@@ -125,6 +125,7 @@
     <Compile Include="Megalo\Enums\MegaloScriptVariableSet.cs" />
     <Compile Include="Megalo\Enums\MegaloScriptVariableType.cs" />
     <Compile Include="Megalo\Enums\MegaloScriptWidgetMeterType.cs" />
+    <Compile Include="Megalo\Enums\MegaloScriptWidgetPosition.cs" />
     <Compile Include="Megalo\Model\Enums\MegaloScriptModelObjectType.cs" />
     <Compile Include="Megalo\Model\Enums\MegaloScriptModelTagElementStreamFlags.cs" />
     <Compile Include="Megalo\Model\IMegaloScriptModelObjectContainer.cs" />
@@ -210,11 +211,13 @@
     <Compile Include="Megalo\Proto\StaticDatabase\MegaloStaticDataNamedObject.cs" />
     <Compile Include="Megalo\Proto\StaticDatabase\MegaloStaticDataReMappingObject.cs" />
     <Compile Include="Megalo\Proto\StaticDatabase\MegaloStaticDataTagNamedObject.cs" />
+    <Compile Include="Megalo\Proto\StaticDatabase\Objects\GameEngineIcon.cs" />
     <Compile Include="Megalo\Proto\StaticDatabase\Objects\GameIncident.cs" />
     <Compile Include="Megalo\Proto\StaticDatabase\Objects\GameMedal.cs" />
     <Compile Include="Megalo\Proto\StaticDatabase\Objects\game_globals_ordnance_list.cs" />
     <Compile Include="Megalo\Proto\StaticDatabase\Objects\MegaloEngineSound.cs" />
     <Compile Include="Megalo\Proto\StaticDatabase\Objects\MegaloEngineStringId.cs" />
+    <Compile Include="Megalo\Proto\StaticDatabase\Objects\MegaloHudWidgetIcon.cs" />
     <Compile Include="Megalo\Proto\StaticDatabase\Objects\MultiplayerEffect.cs" />
     <Compile Include="Megalo\Proto\StaticDatabase\Objects\multiplayer_object_type_list.cs" />
     <Compile Include="Megalo\Proto\StaticDatabase\Objects\UnitCustomApp.cs" />
@@ -232,6 +235,7 @@
     <Compile Include="RuntimeData\Enums\GameMode.cs" />
     <Compile Include="RuntimeData\Enums\GameTeamDesignator.cs" />
     <Compile Include="RuntimeData\Enums\MetagameScoring.cs" />
+    <Compile Include="RuntimeData\Enums\TeamChangingType.cs" />
     <Compile Include="RuntimeData\Variants\GameEngineBaseVariant.cs" />
     <Compile Include="RuntimeData\Variants\GameEngineCampaignVariant.cs" />
     <Compile Include="RuntimeData\Variants\GameEngineMegaloVariant.cs" />
@@ -321,6 +325,7 @@
     </Content>
     <Content Include="Games\Halo4\Megalo\Proto\Halo4_MegaloDb_Xbox.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Games\HaloReach\HaloReach.xml">
       <SubType>Designer</SubType>
@@ -343,6 +348,7 @@
     </Content>
     <Content Include="Games\HaloReach\Megalo\Proto\HaloReach_MegaloDb_Xbox.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Localization\LanguageRegistry.xml">
       <SubType>Designer</SubType>

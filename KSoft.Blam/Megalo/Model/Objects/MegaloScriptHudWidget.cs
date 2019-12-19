@@ -1,6 +1,8 @@
 ﻿
 namespace KSoft.Blam.Megalo.Model
 {
+	using MegaloScriptWidgetPositionBitStreamer = IO.EnumBitStreamer<MegaloScriptWidgetPosition>;
+
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public sealed partial class MegaloScriptHudWidget
 		: MegaloScriptAccessibleObjectBase
@@ -8,8 +10,8 @@ namespace KSoft.Blam.Megalo.Model
 		, IO.ITagElementStringNameStreamable
 	{
 		#region Position
-		int mPosition; // byte at runtime
-		public int Position {
+		MegaloScriptWidgetPosition mPosition; // byte at runtime
+		public MegaloScriptWidgetPosition Position {
 			get { return mPosition; }
 			set { mPosition = value;
 				NotifyPropertyChanged(kPositionChanged);
@@ -19,7 +21,7 @@ namespace KSoft.Blam.Megalo.Model
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
 		{
-			s.Stream(ref mPosition, 4);
+			s.Stream(ref mPosition, 4, MegaloScriptWidgetPositionBitStreamer.Instance);
 		}
 		#endregion
 
@@ -28,7 +30,7 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttribute("position", ref mPosition);
+			s.StreamAttributeEnum("position", ref mPosition);
 
 			SerializeCodeName(s);
 		}

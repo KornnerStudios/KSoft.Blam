@@ -4,12 +4,12 @@ namespace KSoft.Blam.Megalo
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
 	public enum MegaloScriptTriggerType : byte
 	{
-		Normal, // 'normal'?
-		Subroutine, // preserves iterator values
+		Normal,
+		InnerLoop, // preserves iterator values
 		Initialization,
-		LocalInitialization, // Haven't verified (nor seen used yet)
+		LocalInitialization,
 		HostMigration, // HostMigration, DoubleHostMigration
-		ObjectDeathEvent,
+		ObjectDeath,
 		Local,
 		Pregame,
 		Incident, // Halo4

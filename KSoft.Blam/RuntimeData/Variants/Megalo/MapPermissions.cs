@@ -16,6 +16,8 @@ namespace KSoft.Blam.RuntimeData.Variants
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
+		const int kMaximumMapPermissionsExceptions = 32;
+
 		public List<int> MapIds { get; private set; }
 		public MapPermissionsExceptionType ExceptionType;
 
@@ -25,7 +27,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 		public MegaloVariantMapPermissions()
 		{
-			MapIds = new List<int>();
+			MapIds = new List<int>(kMaximumMapPermissionsExceptions);
 			ExceptionType = MapPermissionsExceptionType.Exclusive;
 		}
 

@@ -19,6 +19,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		, IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
+		public const string kGameVariantBinExtension = ".bin";
+		public const string kGameVariantXmlExtension = ".gvarxml";
+
 		Engine.EngineBuildHandle mGameBuild;
 		GameEngineType mType = GameEngineType.None;
 

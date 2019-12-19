@@ -166,6 +166,7 @@ namespace KSoft.Blam.Megalo.Model
 			bool reading = s.IsReading;
 			bool streamed_sans_id = model.TagElementStreamSerializeFlags.EmbedObjectsWriteSansIds();
 			Serialize(s, model, ref handle);
+			// #REVIEW_BLAM: ThrowReadException?
 			if (!CanEmbed(handle.Type))
 				throw new System.IO.InvalidDataException(string.Format("{0}s can't be embedded (ID={1})",
 					handle.Type, handle.Id));

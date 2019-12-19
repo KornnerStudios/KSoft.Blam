@@ -115,7 +115,7 @@ namespace KSoft.Blam.Megalo.Model
 		#region ITagElementStringNameStreamable Members
 		/// <summary>When we're streaming in 'EmbedObjects' mode we only want to write root triggers in the root script node</summary>
 		internal static Predicate<MegaloScriptTrigger> SkipIfNotRootPredicate =
-			value => value.TriggerType == MegaloScriptTriggerType.Subroutine;
+			value => value.TriggerType == MegaloScriptTriggerType.InnerLoop;
 
 		protected void SerializeFrameUpdate<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
@@ -145,7 +145,7 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			SerializeIdOpt(model, s);
 			s.StreamAttributeEnumOpt("trigType", ref mTriggerType, e => e != MegaloScriptTriggerType.Normal);
-			s.StreamAttributeEnumOpt("execMode", ref mExecutionMode, e => e != MegaloScriptTriggerExecutionMode.Normal);
+			s.StreamAttributeEnumOpt("execMode", ref mExecutionMode, e => e != MegaloScriptTriggerExecutionMode.General);
 			SerializeNameOpt(s);
 
 			if (ExecutionMode == MegaloScriptTriggerExecutionMode.OnObjectFilter)

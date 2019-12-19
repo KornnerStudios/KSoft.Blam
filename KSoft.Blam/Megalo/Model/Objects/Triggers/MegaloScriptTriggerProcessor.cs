@@ -36,14 +36,14 @@ namespace KSoft.Blam.Megalo.Model
 				{
 					var action = Model.Actions[handle.Id];
 
-					if (action.ProtoData == Database.ActivateTriggerAction)
+					if (action.ProtoData == Database.ForEachAction)
 					{
 						var index_param = action.GetArgument<MegaloScriptIndexValue>(Model, 0);
 						int trigger_index = index_param.Value;
 						var recurse_parent = current as MegaloScriptTrigger ?? parent;
 						ProcessTriggerRecursive(root, recurse_parent, Model.Triggers[trigger_index]);
 					}
-					else if (action.ProtoData == Database.ActivateVirtualTriggerAction)
+					else if (action.ProtoData == Database.BeginAction)
 					{
 						var index_param = action.GetArgument<MegaloScriptVirtualTriggerValue>(Model, 0);
 						int trigger_index = index_param.VirtualTriggerHandle.Id;

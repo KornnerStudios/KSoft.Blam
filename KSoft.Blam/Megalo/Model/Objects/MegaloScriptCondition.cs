@@ -216,6 +216,7 @@ namespace KSoft.Blam.Megalo.Model
 
 				s.StreamAttributeOpt("invert", ref mInverted, Predicates.IsTrue);
 
+				// #REVIEW_BLAM: ThrowReadException?
 				if (!UnionGroupIdIsValid(model, s.IsReading))
 					throw new System.IO.InvalidDataException(string.Format("Condition #{0} has an invalid union group id #{1}",
 						Id, UnionGroup));

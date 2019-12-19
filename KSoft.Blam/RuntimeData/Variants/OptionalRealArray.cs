@@ -135,7 +135,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 						s.ThrowReadException(new System.IO.InvalidDataException("Invalid name value: " + name));
 
 					mArray[name_index] = 0.0f;
-					if (s.ReadAttributeOpt(kEntryAttrValueName, ref mArray[name_index])) // #HACK: IgnoreWritePredicates hack! didn't used to be Opt
+					if (s.ReadAttributeOpt(kEntryAttrValueName, ref mArray[name_index])) // #HACK_BLAM: IgnoreWritePredicates hack! didn't used to be Opt
 						mValidFlags |= 1U << name_index;
 				}
 		}
@@ -155,7 +155,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 						s.WriteAttribute(kEntryAttrValueName, mArray[x].ToString("r")); // round-trip for full float value
 					}
 				}
-				else if (s.IgnoreWritePredicates) // #HACK: IgnoreWritePredicates hack!
+				else if (s.IgnoreWritePredicates) // #HACK_BLAM: IgnoreWritePredicates hack!
 				{
 					using (s.EnterCursorBookmark(kEntryElementName))
 						s.WriteAttribute(kEntryAttrKeyName, names[x]);

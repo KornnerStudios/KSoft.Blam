@@ -18,6 +18,8 @@
 		<MaxMegaloStringIds>256</MaxMegaloStringIds>
 		<MaxMegaloEngineSounds>240</MaxMegaloEngineSounds> <!--actual limit-->
 		<MaxGameIncidentTypes>1024</MaxGameIncidentTypes>
+		<MaxMegaloHudWidgetIcons>64</MaxMegaloHudWidgetIcons>
+		<MaxGameEngineIcons>128</MaxGameEngineIcons>
 		<MaxGameMedals>256</MaxGameMedals>
 		<MaxGameOrdnanceTypes>256</MaxGameOrdnanceTypes>
 		<NumberOfEngineCategories>32</NumberOfEngineCategories>
@@ -138,7 +140,7 @@
 		</Type>
 		<Type name="PlayerType">
 			<Member>NONE</Member> <!--NOTE: Has none but doesn't use +1 encoding-->
-			
+
 			<Member>Player0</Member>
 			<Member>Player1</Member>
 			<Member>Player2</Member>
@@ -305,7 +307,7 @@
 		<Type baseType="None" name="None" />
 
 		<!-- VarReference -->
-			<Type baseType="VarReference" name="VarReference"		varReferenceType="Any" />
+			<Type baseType="VarReference" name="VarReference"			varReferenceType="Any" />
 			<Type baseType="VarReference" name="CustomReference"	varReferenceType="Custom" />
 			<Type baseType="VarReference" name="PlayerReference"	varReferenceType="Player" />
 			<Type baseType="VarReference" name="ObjectReference"	varReferenceType="Object" />
@@ -328,7 +330,7 @@
 			<Type baseType="UInt" name="UInt5"  bitLength="5" />
 
 		<Type baseType="Point3d" name="Point3d" bitLength="8" signed="true" />
-		
+
 		<Type baseType="Single" name="Single7_0_10"  encoding="Single7_0_10" />
 
 		<!-- Flags -->
@@ -366,20 +368,18 @@
 														indexTarget="ObjectType" indexTraits="PointerHasValue" />
 		<Type baseType="Index" name="NameIndex"
 														indexTarget="Name"		indexTraits="Pointer" />
-		<Type baseType="Index" name="NameIndex32"		bitLength="32" 
+		<Type baseType="Index" name="NameIndex32"		bitLength="32"
 														indexTarget="Name"		indexTraits="PointerRaw" />
 		<Type baseType="Index" name="SoundIndex"
 														indexTarget="Sound"		indexTraits="Pointer" />
 		<Type baseType="Index" name="IncidentId"
 														indexTarget="Incident"	indexTraits="Pointer" />
-		<Type baseType="Index" name="IncidentIdRef"		bitLength="32" 
+		<Type baseType="Index" name="IncidentIdRef"		bitLength="32"
 														indexTarget="Incident"	indexTraits="Reference" />
-			<!--widget icon?-->
-		<Type baseType="Index" name="IconIndex6"		bitLength="6"
-														indexTarget="Icon"		indexTraits="PointerHasValue" />
-			<!--player icon?-->
-		<Type baseType="Index" name="IconIndex7"		bitLength="7"
-														indexTarget="Icon"		indexTraits="PointerHasValue" />
+		<Type baseType="Index" name="HudWidgetIconIndex"
+														indexTarget="HudWidgetIcon"		indexTraits="PointerHasValue" />
+		<Type baseType="Index" name="GameEngineIconIndex"
+														indexTarget="GameEngineIcon"		indexTraits="PointerHasValue" />
 		<Type baseType="Index" name="MedalIndex"
 														indexTarget="Medal"		indexTraits="PointerHasValue" />
 		<!--<Type baseType="Index" name="OrdnanceIndex"
@@ -556,7 +556,7 @@
 			<Member type="Bool" name="KillCamEnabled" 					readonly="true" />
 			<Member type="Bool" name="FinalKillCamEnabled" 				readonly="true" />
 			<Member type="Byte" name="SuddenDeathTimeLimit" 			readonly="true" />
-			<Member type="Byte" name="ObjectDeathEvent.DamageType"		readonly="true" /> <!--DamageReportingType-->
+			<Member type="Byte" name="ObjectDeath.DamageType"		readonly="true" /> <!--DamageReportingType-->
 		</Type>
 		<Type type="Player">
 			<Member type="Player" name="ExplicitPlayerType"
@@ -614,16 +614,16 @@
 														paramTypeEnum="ExplicitObjectType" />
 		</Type>
 		<Type type="Timer">
-			<Member type="Numeric" name="Global.TimerVar" 
+			<Member type="Numeric" name="Global.TimerVar"
 														paramValueType="Global.Timer"	paramValueName="VariableIndex" />
 
-			<Member type="Numeric" name="Player.TimerVar" 
+			<Member type="Numeric" name="Player.TimerVar"
 														paramTypeEnum="ExplicitPlayerType"
 														paramValueType="Player.Timer"	paramValueName="VariableIndex" />
-			<Member type="Numeric" name="Team.TimerVar" 
+			<Member type="Numeric" name="Team.TimerVar"
 														paramTypeEnum="ExplicitTeamType"
 														paramValueType="Team.Timer"		paramValueName="VariableIndex" />
-			<Member type="Numeric" name="Object.TimerVar" 
+			<Member type="Numeric" name="Object.TimerVar"
 														paramTypeEnum="ExplicitObjectType"
 														paramValueType="Object.Timer"	paramValueName="VariableIndex" />
 
@@ -924,10 +924,10 @@
 				<Param sigID="0" name="Item" />
 			</ParamNameOverrides>
 		</Action>
-		<Action DBID="31" name="ActivateTrigger"> <!--branches execution as well-->
+		<Action DBID="31" name="for_each"> <!--branches execution as well-->
 			<Param sigID="0" type="TriggerReference" name="Trigger" />
 		</Action>
-		<Action DBID="32" name="Branch"> <!-- H4 -->
+		<Action DBID="32" name="begin"> <!-- H4 -->
 			<Param sigID="0" type="VirtualTrigger" name="Trigger" />
 		</Action>
 		<Action DBID="33" name="EndRoundWithWinner" /> <!--these two actions call the same function with only one differing parameter-->
@@ -1011,7 +1011,7 @@
 			<Param sigID="1" type="WidgetMeterParameters" name="MeterParameters" />
 		</Action>
 		<Action DBID="70" name="WidgetSetIcon" template="WidgetBase">
-			<Param sigID="1" type="IconIndex6" name="Icon" />
+			<Param sigID="1" type="HudWidgetIconIndex" name="Icon" />
 		</Action>
 		<Action DBID="71" name="WidgetSetPlayerVisibility" template="WidgetBase">
 			<Param sigID="1" type="PlayerReference" name="Player" />
@@ -1054,7 +1054,7 @@
 			<Param sigID="1" type="Tokens2" name="Tokens" />
 		</Action>
 		<Action DBID="86" name="PlayerSetObjectiveIcon" template="PlayerBase">
-			<Param sigID="1" type="IconIndex7" name="Icon" />
+			<Param sigID="1" type="GameEngineIconIndex" name="Icon" />
 		</Action>
 		<Action DBID="87" name="TeamSetFireteamSpawning" template="TeamBool" />
 		<Action DBID="88" name="TeamSetRespawnObject" template="TeamBase">
@@ -1198,9 +1198,9 @@
 		<Action DBID="126" name="ObjectSetBoundaryVisibilityFilterToPlayerVar">
 			<Param sigID="0" type="ObjectReferenceWithPlayerVarIndex" name="ObjectAndPlayerVar" />
 		</Action>
-		
+
 		<!--everything after here was added after reach retail-->
-		
+
 		<Action DBID="127" name="RunScriptFunction">
 			<Param sigID="0" type="NameIndex" name="Function" />
 		</Action>

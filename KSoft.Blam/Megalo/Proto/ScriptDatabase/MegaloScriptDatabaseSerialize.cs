@@ -336,9 +336,9 @@ namespace KSoft.Blam.Megalo.Proto
 					TeamDesignatorValueType = NameToValueType["TeamDesignator"];
 					ObjectTypeIndexValueType = NameToValueType["ObjectTypeIndex"];
 
-					ActivateTriggerAction = NameToActionMap["ActivateTrigger"];
+					ForEachAction = NameToActionMap["for_each"];
 					if (Limits.SupportsVirtualTriggers)
-						ActivateVirtualTriggerAction = NameToActionMap["Branch"];
+						BeginAction = NameToActionMap["begin"];
 
 					ObjectReferenceWithPlayerVarIndex.Initialize(this);
 				}
