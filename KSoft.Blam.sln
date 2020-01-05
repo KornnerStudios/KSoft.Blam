@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSoft.Blam", "KSoft.Blam\KSoft.Blam.csproj", "{74372FF0-FCDA-405B-8DA3-E4BFBA051D27}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KSoft.BCL", "KSoft.BCL", "{29A6065E-B7E7-43B1-BC6D-102F17ED9643}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSoft", "..\..\KSoft\KSoft\KSoft.csproj", "{EB07F515-E27C-4768-8BD8-2829F657807E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSoft.IO.TagElementStreams", "..\..\KSoft\KSoft.IO.TagElementStreams\KSoft.IO.TagElementStreams.csproj", "{18F32228-8351-4F99-992F-78E9D1CE83D9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSoft.Blam", "KSoft.Blam\KSoft.Blam.csproj", "{74372FF0-FCDA-405B-8DA3-E4BFBA051D27}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSoft.Security", "..\..\KSoft\KSoft.Security\KSoft.Security.csproj", "{0632A00B-DE9E-4350-A3F8-3A82F9C780AF}"
 EndProject

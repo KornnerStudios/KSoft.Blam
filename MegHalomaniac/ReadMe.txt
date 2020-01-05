@@ -20,6 +20,10 @@ This tool is a drag-n-drop style desktop app.
 
 ## Change Log
 
+### NEXT_RELEASE
+
+* Fix [Issue #1](https://github.com/KornnerStudios/KSoft.Blam/issues/1)
+
 ### 2019.12.19
 
 * Initial alpha release.

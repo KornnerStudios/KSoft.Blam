@@ -392,8 +392,8 @@
 														indexTarget="String" indexTraits="Pointer" />
 		<!--<Type baseType="Index" name="StringReference"
 														indexTarget="String" indexTraits="Reference" />--> <!--unused?-->
-		<Type baseType="Index" name="LoadoutPaletteReference"
-														indexTarget="LoadoutPalette" indexTraits="Reference" />
+		<Type baseType="Index" name="LoadoutPaletteIndex"
+														indexTarget="LoadoutPalette" indexTraits="Pointer" />
 		<Type baseType="Index" name="PlayerTraitsReference"
 														indexTarget="PlayerTraits" indexTraits="Reference" />
 		<Type baseType="Index" name="StatisticReference"
@@ -1112,7 +1112,7 @@
 			<Param sigID="3" type="CustomReference" name="CustomValue" />
 		</Action>
 		<Action DBID="105" name="SetLoadoutPalette" template="TargetVarBase">
-			<Param sigID="1" type="LoadoutPaletteReference" name="Palette" />
+			<Param sigID="1" type="LoadoutPaletteIndex" name="Palette" />
 		</Action>
 		<Action DBID="106" name="DeviceSetPositionTrack" template="ObjectBase">
 			<Param sigID="1" type="NameIndex" name="Animation" />

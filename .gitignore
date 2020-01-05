@@ -1,0 +1,12 @@
+/packages/
+!packages/repositories.config
+
+*.dotnet
+*.opensdf
+*.sdf
+*.user
+*.cache
+*.suo
+*.db
+*.opendb
+.vs
