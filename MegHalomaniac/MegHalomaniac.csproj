@@ -11,7 +11,8 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
+    <!-- Don't do this. See https://stackoverflow.com/a/55348070/444977 -->
+    <!-- <Deterministic>true</Deterministic> -->
   </PropertyGroup>
   <Import Project="$(MSBuildProjectDirectory)\..\KSoft.Blam.props" />
   <ItemGroup>
