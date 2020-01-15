@@ -108,7 +108,7 @@
     </ProjectReference>
     <ProjectReference Include="..\KSoft.Blam\KSoft.Blam.csproj">
       <Project>{74372FF0-FCDA-405B-8DA3-E4BFBA051D27}</Project>
-      <Name>KSoft.Phoenix</Name>
+      <Name>KSoft.Blam</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
