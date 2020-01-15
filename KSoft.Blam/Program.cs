@@ -6,10 +6,16 @@ namespace KSoft.Blam
 	{
 		public static bool RunningUnitTests = false;
 
+		// If we don't do this, this function will get inlined to the assembly who called this (eg, Test.KSoft.Blam)
+		// which is Bad News Bears when nested code calls Assembly.GetCallingAssembly
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
 		public static void Initialize()
 		{
 			Engine.EngineRegistry.InitializeForNewProgram();
 		}
+		// If we don't do this, this function will get inlined to the assembly who called this (eg, Test.KSoft.Blam)
+		// which is Bad News Bears when nested code calls Assembly.GetCallingAssembly
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
 		public static void Dispose()
 		{
 			Engine.EngineRegistry.DisposeFromOldProgram();

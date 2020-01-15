@@ -22,12 +22,14 @@ namespace KSoft.Blam.Engine
 				string invalid_guid_msg = null;
 
 				if (systemGuid == Values.KGuid.Empty)
-					invalid_guid_msg = "Invalid system guid";
+					invalid_guid_msg = "Invalid system guid: ";
 				else if (EngineRegistry.TryGetRegisteredSystem(systemGuid) == null)
-					invalid_guid_msg = "Unknown system guid";
+					invalid_guid_msg = "Unknown system guid: ";
 
 				if (invalid_guid_msg != null)
-					s.ThrowReadException(new System.IO.InvalidDataException(invalid_guid_msg));
+				{
+					s.ThrowReadException(new System.IO.InvalidDataException(invalid_guid_msg + systemGuid.ToString(Values.KGuid.kFormatHyphenated)));
+				}
 			}
 		}
 /*		static void StreamDeclaredSystemsValue<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
