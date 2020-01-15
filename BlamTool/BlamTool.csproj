@@ -35,25 +35,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(VitaRootDir)KSoft\KSoft.IO.TagElementStreams\KSoft.IO.TagElementStreams.csproj">
-      <Project>{18f32228-8351-4f99-992f-78e9d1ce83d9}</Project>
-      <Name>KSoft.IO.TagElementStreams</Name>
-    </ProjectReference>
     <ProjectReference Include="$(VitaRootDir)KSoft\KSoft\KSoft.csproj">
       <Project>{eb07f515-e27c-4768-8bd8-2829f657807e}</Project>
       <Name>KSoft</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(VitaRootDir)KSoft\KSoft.Security\KSoft.Security.csproj">
-      <Project>{0632a00b-de9e-4350-a3f8-3a82f9c780af}</Project>
-      <Name>KSoft.Security</Name>
     </ProjectReference>
     <ProjectReference Include="$(VitaRootDir)KSoft\KSoft.Compression\KSoft.Compression.csproj">
       <Project>{0b27603c-ceb1-4a3a-b56f-cbc14b8c06e7}</Project>
       <Name>KSoft.Compression</Name>
     </ProjectReference>
-    <ProjectReference Include="U:\Kornner\Vita\Games\Blam\BlamTool\..\..\..\KSoft\KSoft.Math\KSoft.Math.csproj">
-      <Project>{423f13fc-da0c-4c82-b75e-60a1bfea7bb6}</Project>
-      <Name>KSoft.Math</Name>
+    <ProjectReference Include="$(VitaRootDir)KSoft\KSoft.IO.TagElementStreams\KSoft.IO.TagElementStreams.csproj">
+      <Project>{18f32228-8351-4f99-992f-78e9d1ce83d9}</Project>
+      <Name>KSoft.IO.TagElementStreams</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(VitaRootDir)KSoft\KSoft.Security\KSoft.Security.csproj">
+      <Project>{0632a00b-de9e-4350-a3f8-3a82f9c780af}</Project>
+      <Name>KSoft.Security</Name>
     </ProjectReference>
     <ProjectReference Include="..\KSoft.Blam\KSoft.Blam.csproj">
       <Project>{74372FF0-FCDA-405B-8DA3-E4BFBA051D27}</Project>
