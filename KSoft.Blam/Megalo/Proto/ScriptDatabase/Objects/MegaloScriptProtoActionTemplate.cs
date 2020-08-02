@@ -28,7 +28,7 @@ namespace KSoft.Blam.Megalo.Proto
 
 			s.StreamAttribute("name", ref Name);
 			if (db.SerializeActionTemplateReference(s, "template", ref Parent) && Parent == null)
-				throw new System.IO.InvalidDataException(string.Format(
+				throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 					"Action Template '{0}' references undefined template", Name));
 
 			Parameters.Serialize(s);

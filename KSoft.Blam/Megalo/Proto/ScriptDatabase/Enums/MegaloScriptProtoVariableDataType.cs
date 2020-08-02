@@ -6,6 +6,7 @@ namespace KSoft.Blam.Megalo.Proto
 	{
 		Numeric,
 		Player,
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		Object,
 		Team,
 		Timer,

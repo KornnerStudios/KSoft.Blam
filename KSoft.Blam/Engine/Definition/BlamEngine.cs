@@ -16,13 +16,9 @@ namespace KSoft.Blam.Engine
 		#region Constants
 		internal const int kMaxCount = 8 - 1; // 3 bits. per registry
 		internal static readonly int kIndexBitCount;
-		private static readonly uint kIndexBitMask;
-
-		static BlamEngine()
-		{
-			kIndexBitMask = Bits.GetNoneableEncodingTraits(kMaxCount,
+		private static readonly uint kIndexBitMask =
+			Bits.GetNoneableEncodingTraits(kMaxCount,
 				out kIndexBitCount);
-		}
 		#endregion
 
 		/// <summary>A handle with just the engine index populated, that tracks back to this engine instance</summary>
@@ -48,10 +44,7 @@ namespace KSoft.Blam.Engine
 			mSystemPrototypes = new Dictionary<Values.KGuid, BlamEngineSystem>();
 		}
 
-		public override string ToString()
-		{
-			return Name;
-		}
+		public override string ToString() => Name;
 
 		#region Engine System interfaces
 		Dictionary<Values.KGuid, EngineSystemBase> mActiveSystems;
@@ -70,7 +63,7 @@ namespace KSoft.Blam.Engine
 		{
 			Contract.Assume(activeSystem != null);
 
-			var system_guid = activeSystem.Prototype.SystemMetadata.Guid;
+			var system_guid = activeSystem.Prototype.SystemMetadata.SystemGuid;
 			lock (mActiveSystems)
 			{
 				Contract.Assume(mActiveSystems.ContainsKey(system_guid));
@@ -83,13 +76,13 @@ namespace KSoft.Blam.Engine
 			// All we care about doing here is getting or constructing a new system.
 			// Referencing counting and the like is handled elsewhere (hopefully only in EngineSystemReference)
 
-			var proto_system = mSystemPrototypes[systemMetadata.Guid];
+			var proto_system = mSystemPrototypes[systemMetadata.SystemGuid];
 
 			EngineSystemBase system;
-			lock (mActiveSystems) if (!mActiveSystems.TryGetValue(systemMetadata.Guid, out system))
+			lock (mActiveSystems) if (!mActiveSystems.TryGetValue(systemMetadata.SystemGuid, out system))
 			{
 				system = systemMetadata.NewInstance(proto_system);
-				mActiveSystems.Add(systemMetadata.Guid, system);
+				mActiveSystems.Add(systemMetadata.SystemGuid, system);
 			}
 
 			return system;
@@ -100,7 +93,8 @@ namespace KSoft.Blam.Engine
 			{
 				string system_display_name = EngineRegistry.GetSystemDebugDisplayString(systemGuid);
 
-				string msg = string.Format("{0} doesn't support the system {1}",
+				string msg = string.Format(Util.InvariantCultureInfo,
+					"{0} doesn't support the system {1}",
 					forBuild.ToDisplayString(), system_display_name);
 
 				throw new InvalidOperationException(msg);
@@ -202,10 +196,8 @@ namespace KSoft.Blam.Engine
 		}
 
 		[Contracts.Pure]
-		public static bool IsValidIndex(int engineIndex)
-		{
-			return engineIndex.IsNoneOrPositive() && engineIndex < EngineRegistry.Engines.Count;
-		}
+		public static bool IsValidIndex(int engineIndex) =>
+			engineIndex.IsNoneOrPositive() && engineIndex < EngineRegistry.Engines.Count;
 
 		static int EngineIdResolver(object _null, string name)
 		{
@@ -216,8 +208,11 @@ namespace KSoft.Blam.Engine
 				id = EngineRegistry.Engines.FindIndex(x => x.Name == name);
 
 				if (id.IsNone())
-					throw new KeyNotFoundException(string.Format("No engine is registered with the name '{0}'",
+				{
+					throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
+						"No engine is registered with the name '{0}'",
 						name));
+				}
 			}
 
 			return id;

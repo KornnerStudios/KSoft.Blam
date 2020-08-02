@@ -5,6 +5,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	using GameOptionsLoadoutFlagsBitStreamer = IO.EnumBitStreamer<GameOptionsLoadoutFlagsHalo4>;
 
 	[Flags]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1714:FlagsEnumsShouldHavePluralNames")] // It does...
 	public enum GameOptionsLoadoutFlagsHalo4
 	{
 		CustomLoadouts = 1<<0,

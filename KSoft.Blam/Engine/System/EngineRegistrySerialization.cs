@@ -51,7 +51,7 @@ namespace KSoft.Blam.Engine
 			engine_stream_path += ".xml";
 
 			if (!File.Exists(engine_stream_path))
-				throw new FileNotFoundException(string.Format(
+				throw new FileNotFoundException(string.Format(Util.InvariantCultureInfo,
 					"Can't initialize the {0} engine, need the following file: {1}",
 					engine.Name,
 					engine_stream_path));
@@ -70,7 +70,7 @@ namespace KSoft.Blam.Engine
 
 			if (!File.Exists(extern_stream_path))
 			{
-				throw new FileNotFoundException(string.Format(
+				throw new FileNotFoundException(string.Format(Util.InvariantCultureInfo,
 					"Can't initialize the {0} engine's {1} system, need the following file: {2}",
 					engine.Name,
 					GetSystemDebugDisplayString(systemGuid),

@@ -16,6 +16,7 @@ namespace KSoft.Collections
 	[System.Reflection.Obfuscation(Exclude=false)]
 	[System.Diagnostics.DebuggerDisplay("Count = {Count}, Length = {Length}"),
 	 System.Diagnostics.DebuggerTypeProxy(typeof(ActiveList<>.DebugView))]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
 	public partial class ActiveList<T>
 		: IList<T>
 		where T : class
@@ -38,7 +39,7 @@ namespace KSoft.Collections
 		};
 
 		const bool kSlotStateInvalid = false;
-		const bool kSlotStateValid = true;
+		//const bool kSlotStateValid = true;
 
 		readonly ActiveListDesc<T> mDesc;
 		readonly List<T> mSlots;

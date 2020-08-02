@@ -105,7 +105,7 @@ namespace KSoft.Blam.Megalo.Model
 
 				if (model.Triggers.SlotIsFreeOrInvalidIndex(triggerIndex))
 				{
-					var ex =  new System.IO.InvalidDataException(string.Format(
+					var ex =  new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 						"Couldn't define execution order for invalid trigger index {0}", triggerIndex));
 					s.ThrowReadException(ex);
 				}
@@ -113,9 +113,9 @@ namespace KSoft.Blam.Megalo.Model
 
 			if (!model.Triggers[triggerIndex].TriggerType.IsUpdatedOnGameTick())
 			{
-				var ex = new System.IO.InvalidDataException(string.Format(
+				var ex = new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 					"Trigger '{0}' can't have its execution explicitly ordered",
-					triggerIndex.ToString()
+					triggerIndex.ToString(Util.InvariantCultureInfo)
 					));
 				s.ThrowReadException(ex);
 			}

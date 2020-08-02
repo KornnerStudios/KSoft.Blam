@@ -4,6 +4,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	using LocaleStringTableInfo = Localization.StringTables.LocaleStringTableInfo;
 
 	[System.Reflection.Obfuscation(Exclude=false)]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct GameOptionsSingleTeamEmblemInfo
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
@@ -52,7 +53,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	public sealed class GameOptionsSingleTeamOptionsHalo4
 		: Blam.RuntimeData.Variants.GameOptionsSingleTeamOptions
 	{
-		public static LocaleStringTableInfo kNameStringTableInfo = new LocaleStringTableInfo(1, 0x220);
+		public static readonly LocaleStringTableInfo kNameStringTableInfo = new LocaleStringTableInfo(1, 0x220);
 
 		public uint InterfaceColorOverride;
 

@@ -20,7 +20,8 @@ namespace KSoft.Blam.Megalo.Proto
 
 			if (!s.StreamAttributeOpt("name", ref Name, Predicates.IsNotNullOrEmpty) &&
 				 s.IsReading)
-				Name = string.Format("Condition{0}", DBID.ToString());
+				Name = string.Format(Util.InvariantCultureInfo,
+					"Condition{0}", DBID.ToString(Util.InvariantCultureInfo));
 
 			s.StreamableElements("Param", Parameters);
 		}
@@ -41,7 +42,7 @@ namespace KSoft.Blam.Megalo.Proto
 				: MegaloScriptDatabase.HaloReach;
 
 			MegaloScriptProtoCondition other;
-			if (db.TryGetCondition(Name, out other) && !other.Name.StartsWith("Cond"))
+			if (db.TryGetCondition(Name, out other) && !other.Name.StartsWith("Cond", System.StringComparison.Ordinal))
 			{
 				s.WriteAttribute("DBID", other.DBID);
 				s.WriteAttribute("origDBID", DBID);

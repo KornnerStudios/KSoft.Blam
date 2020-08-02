@@ -93,6 +93,8 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected void SerializeFrameUpdate(MegaloScriptModel model, IO.BitStream s)
 		{
+			Util.MarkUnusedVariable(ref model);
+
 			s.StreamNoneable(ref mFrameUpdateFrequency, 8);
 			s.StreamNoneable(ref mFrameUpdateOffset, 8);
 		}

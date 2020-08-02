@@ -28,7 +28,9 @@ namespace KSoft.Blam.Engine
 
 				if (invalid_guid_msg != null)
 				{
-					s.ThrowReadException(new System.IO.InvalidDataException(invalid_guid_msg + systemGuid.ToString(Values.KGuid.kFormatHyphenated)));
+					s.ThrowReadException(new System.IO.InvalidDataException(
+						invalid_guid_msg +
+						systemGuid.ToString(Values.KGuid.kFormatHyphenated, Util.InvariantCultureInfo)));
 				}
 			}
 		}

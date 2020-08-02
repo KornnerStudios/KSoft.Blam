@@ -74,9 +74,11 @@ namespace KSoft.Blam.Megalo.Model
 		void ValidateTokenCount()
 		{
 			if (TokenCount > ValueType.MaxTokens)
-				throw new System.IO.InvalidDataException(string.Format(
+			{
+				throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 					"Value #{0} referencing string #{1} specified too many tokens; {2} > {3}",
 					Id, StringIndex, TokenCount, ValueType.MaxTokens));
+			}
 		}
 
 		#region IBitStreamSerializable Members

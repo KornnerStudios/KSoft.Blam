@@ -11,7 +11,7 @@ namespace KSoft.Blam.Blob
 	public sealed class GameEngineVariantBlob
 		: BlobObject
 	{
-		public static bool RequireValidHashes = true;
+		public static bool RequireValidHashes { get; set; } = true;
 
 		#region Constants
 		const int kSizeOfBitStreamHaloReach = 0x5000;
@@ -61,7 +61,7 @@ namespace KSoft.Blam.Blob
 			{
 				if (RequireValidHashes)
 				{
-					throw new System.IO.InvalidDataException(string.Format(
+					throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 						"{0}: game variant bitstream is invalid, can't operate", streamName));
 				}
 				else
@@ -112,10 +112,10 @@ namespace KSoft.Blam.Blob
 				}
 				else
 				{
-					throw new System.IO.InvalidDataException(string.Format(
+					throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 						"Invalid bitstream size {0}, data is probably corrupt. Max size is {1}",
-						assumed_size.ToString("X8"),
-						maxBitStreamSize.ToString("X8")));
+						assumed_size.ToString("X8", Util.InvariantCultureInfo),
+						maxBitStreamSize.ToString("X8", Util.InvariantCultureInfo)));
 				}
 			}
 

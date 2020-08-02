@@ -39,6 +39,7 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData
 		Mongoose,
 		WarthogDriver,
 		WarthogGunner,
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
 		WarthogGunner_Gauss,
 		Scorpion,
 		ScorpionGunner,

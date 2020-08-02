@@ -6,6 +6,7 @@ namespace KSoft.Blam.Megalo
 	{
 		Globals,
 		Player,
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		Object,
 		Team,
 

@@ -235,8 +235,11 @@ namespace KSoft.Blam.Megalo.Model
 			}
 
 			if (id == TypeExtensionsBlam.IndexOfByPropertyNotFoundResult)
-				throw new KeyNotFoundException(string.Format("Couldn't find an {0} object named {1}",
+			{
+				throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
+					"Couldn't find an {0} object named {1}",
 					target, name));
+			}
 
 			return id;
 		}

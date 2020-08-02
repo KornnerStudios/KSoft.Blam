@@ -9,6 +9,7 @@ namespace KSoft.Blam.Megalo
 
 		Player, // player's name
 		Team, // 'team_none' or team designator string
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		Object, // 'none' or 'unknown'
 		Numeric, // %i
 		SignedNumeric, // +%i when positive, else %i

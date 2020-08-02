@@ -13,7 +13,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public byte Size;
 		public GameOptionsLoadoutHalo4 Loadout { get; private set; }
 
-		public bool IsUsed { get { return Loadout.IsUsed; } }
+		public bool IsUsed => Loadout.IsUsed;
 
 		public MegaloVariantLoadout()
 		{
@@ -42,14 +42,14 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	public sealed partial class GameEngineMegaloVariantHalo4 : Blam.RuntimeData.Variants.GameEngineMegaloVariant
 	{
 		#region Constants
-		const int kSizeOf = 0x1AD40;
-		const int kSizeOfTU5 = 0x1C724;
-		const int kEncodingVersionStock = 0x103;
+		public const int kSizeOf = 0x1AD40;
+		public const int kSizeOfTU5 = 0x1C724;
+		public const int kEncodingVersionStock = 0x103;
 
-		public static LocaleStringTableInfo kStringTableInfo = new LocaleStringTableInfo(148, 0xA000);
-		public static LocaleStringTableInfo kNameStringTableInfo = new LocaleStringTableInfo(1, 0x440); // 32 chars per?
-		public static LocaleStringTableInfo kDescriptionStringTableInfo = new LocaleStringTableInfo(1, 0x1100); // 256 chars per?
-		public static LocaleStringTableInfo kCategoryStringTableInfo = GameOptionsSingleTeamOptionsHalo4.kNameStringTableInfo;
+		public static readonly LocaleStringTableInfo kStringTableInfo = new LocaleStringTableInfo(148, 0xA000);
+		public static readonly LocaleStringTableInfo kNameStringTableInfo = new LocaleStringTableInfo(1, 0x440); // 32 chars per?
+		public static readonly LocaleStringTableInfo kDescriptionStringTableInfo = new LocaleStringTableInfo(1, 0x1100); // 256 chars per?
+		public static readonly LocaleStringTableInfo kCategoryStringTableInfo = GameOptionsSingleTeamOptionsHalo4.kNameStringTableInfo;
 		#endregion
 
 		readonly GameEngineBaseVariantHalo4 mBaseVariant;
@@ -61,9 +61,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public List<MegaloVariantLoadout> Loadouts { get; private set; }
 		public WeaponTuningData WeaponTuning;
 
-		public bool HasWeaponTuning { get {
-			return mBaseVariant.OptionsPrototype.Mode == 1;
-		} }
+		public bool HasWeaponTuning => mBaseVariant.OptionsPrototype.Mode == 1;
 
 		public GameEngineMegaloVariantHalo4(Blam.RuntimeData.Variants.GameEngineVariant variantManager) : base(variantManager,
 			kStringTableInfo,

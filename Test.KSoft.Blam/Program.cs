@@ -3,6 +3,7 @@
 namespace KSoft.Blam
 {
 	[TestClass] // required for AssemblyInitialize & AssemblyCleanup to work
+	public // VS2017 this started: UTA001: TestClass attribute defined on non-public class KSoft.TestLibrary
 	static partial class TestLibrary
 	{
 		[AssemblyInitialize]

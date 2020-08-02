@@ -42,7 +42,8 @@ namespace KSoft.Blam.Megalo.Proto
 			db.SerializeValueTypeReference(s, kTypeAttributeName, ref Type);
 			if (!s.StreamAttributeOpt(kNameAttirbuteName, ref Name, Predicates.IsNotNullOrEmpty) &&
 				 reading)
-				Name = string.Format("Param{0}", SigId.ToString());
+				Name = string.Format(Util.InvariantCultureInfo,
+					"Param{0}", SigId.ToString(Util.InvariantCultureInfo));
 			s.StreamAttributeEnumOpt(kKindAttributeName, ref Kind);
 			s.StreamAttributeOpt("optional", ref Optional, Predicates.IsTrue);
 		}

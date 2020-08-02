@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace KSoft.Blam.Megalo.Proto
 {
@@ -12,10 +13,13 @@ namespace KSoft.Blam.Megalo.Proto
 
 		/// <summary>A standard signed integer</summary>
 		/// <remarks>When decoded, the sign is always extended</remarks>
+		[SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		Int,
 		/// <summary>A standard unsigned integer</summary>
+		[SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		UInt,
 		/// <summary>A value whose proto TypeParameter is an index to a SingleEncoding</summary>
+		[SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		Single,
 
 		Point3d,

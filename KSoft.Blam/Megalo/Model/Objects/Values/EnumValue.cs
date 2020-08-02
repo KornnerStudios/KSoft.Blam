@@ -63,8 +63,11 @@ namespace KSoft.Blam.Megalo.Model
 				s.Stream(ref value, valueType.BitLength);
 
 			if (s.IsReading && !model.EnumIndexIsValid(valueType, value))
-				throw new System.IO.InvalidDataException(string.Format("{0} doesn't have a #{1} member",
+			{
+				throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+					"{0} doesn't have a #{1} member",
 					model.Database.Enums[valueType.EnumIndex].Name, value));
+			}
 		}
 		public override void Serialize(MegaloScriptModel model, IO.BitStream s)
 		{

@@ -133,17 +133,17 @@ Disable the ability to block Sword attacks using melee with anything other than 
 	{
 		#region Constants
 		//const int kSizeOf = 0x;
-		const int kEncodingVersionStock = 0x6A;
-		const int kEncodingVersionTU1 = 0x6B;
+		public const int kEncodingVersionStock = 0x6A;
+		public const int kEncodingVersionTU1 = 0x6B;
 
-		public static LocaleStringTableInfo kStringTableInfo = new LocaleStringTableInfo(112, 0x4C00);
-		public static LocaleStringTableInfo kNameStringTableInfo = new LocaleStringTableInfo(1, 0x180); // 32 chars per?
-		public static LocaleStringTableInfo kDescriptionStringTableInfo = new LocaleStringTableInfo(1, 0xC00); // 256 chars per?
-		public static LocaleStringTableInfo kCategoryStringTableInfo = kNameStringTableInfo;
+		public static readonly LocaleStringTableInfo kStringTableInfo = new LocaleStringTableInfo(112, 0x4C00);
+		public static readonly LocaleStringTableInfo kNameStringTableInfo = new LocaleStringTableInfo(1, 0x180); // 32 chars per?
+		public static readonly LocaleStringTableInfo kDescriptionStringTableInfo = new LocaleStringTableInfo(1, 0xC00); // 256 chars per?
+		public static readonly LocaleStringTableInfo kCategoryStringTableInfo = kNameStringTableInfo;
 		#endregion
 
 		readonly GameEngineBaseVariantHaloReach mBaseVariant;
-		public override Blam.RuntimeData.Variants.GameEngineBaseVariant BaseVariant { get { return mBaseVariant; } }
+		public override Blam.RuntimeData.Variants.GameEngineBaseVariant BaseVariant => mBaseVariant;
 
 		public bool FireTeamsEnabled, SymmetricGametype;
 
@@ -163,10 +163,8 @@ Disable the ability to block Sword attacks using melee with anything other than 
 			TU1.Clear();
 		}
 
-		protected override bool VerifyEncodingVersion()
-		{
-			return mEncodingVersion >= kEncodingVersionStock && mEncodingVersion <= kEncodingVersionTU1;
-		}
+		protected override bool VerifyEncodingVersion() =>
+			mEncodingVersion >= kEncodingVersionStock && mEncodingVersion <= kEncodingVersionTU1;
 
 		#region IBitStreamSerializable Members
 		protected override void SerializeDescriptionLocaleStrings(IO.BitStream s)

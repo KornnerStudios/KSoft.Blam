@@ -155,7 +155,7 @@ namespace MgloGui
 				, all_dbs_tasks.Item2
 				);
 
-			megalo_proto_system.PrepareDatabasesForUse(all_dbs_tasks.Item1.Result, all_dbs_tasks.Item2.Result);
+			MegaloProto.MegaloProtoSystem/*megalo_proto_system*/.PrepareDatabasesForUse(all_dbs_tasks.Item1.Result, all_dbs_tasks.Item2.Result);
 		}
 
 		static Dictionary<string, MgloBlamGameRequiredSystems> gCachedGames = new Dictionary<string, MgloBlamGameRequiredSystems>();

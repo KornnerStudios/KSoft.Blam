@@ -7,6 +7,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 namespace KSoft.Blam.Megalo.Proto
 {
 	[System.Reflection.Obfuscation(Exclude=false)]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct ListLimitTraits
 		: IO.ITagElementStringNameStreamable
 	{
@@ -34,7 +35,7 @@ namespace KSoft.Blam.Megalo.Proto
 		{
 			if (list.Count > MaxCount)
 			{
-				var ex = new System.IO.InvalidDataException(string.Format(
+				var ex = new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 					"{0} exceeded its maximum number of elements; {1} > {2}", listName, list.Count, MaxCount));
 
 				readExceptionThrower.ThrowReadExeception(ex);

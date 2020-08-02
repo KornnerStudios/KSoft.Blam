@@ -98,6 +98,8 @@ namespace KSoft.Blam.Megalo.Proto
 			{
 				Contract.Assert(refTypeIndex >= 0 && refTypeIndex < ObjectReferenceType.Members.Count);
 
+				Util.MarkUnusedVariable(ref model);
+
 				var varIndexType = GetPlayerVarIndexValueType(refTypeIndex);
 				s.StreamIndex(ref playerVarIndex, varIndexType.BitLength);
 			}
@@ -165,7 +167,7 @@ namespace KSoft.Blam.Megalo.Proto
 			else
 			{
 				Contract.Assert(false);
-				throw new KSoft.Debug.UnreachableException(string.Format(
+				throw new KSoft.Debug.UnreachableException(string.Format(Util.InvariantCultureInfo,
 					"Failed to handle build: {0}",
 					forBuild));
 			}
@@ -237,7 +239,8 @@ namespace KSoft.Blam.Megalo.Proto
 			{
 				if (type.BaseType.RequiresBitLength() && type.BitLength == 0)
 				{
-					string msg = string.Format("ValueType '{0}' doesn't define bitLength", ValueTypeNames[type.NameIndex]);
+					string msg = string.Format(Util.InvariantCultureInfo,
+						"ValueType '{0}' doesn't define bitLength", ValueTypeNames[type.NameIndex]);
 
 					Debug.Trace.MegaloProto.TraceInformation(msg);
 					errorWriter?.WriteLine(msg);
@@ -251,7 +254,8 @@ namespace KSoft.Blam.Megalo.Proto
 						int bc_difference = etype.ValidBitLengthForFlags(type.BitLength);
 						if (bc_difference < 0)
 						{
-							string msg = string.Format("Flags '{0}->{1}' bitLength '{2}' is too small (need {3} more bits)",
+							string msg = string.Format(Util.InvariantCultureInfo,
+								"Flags '{0}->{1}' bitLength '{2}' is too small (need {3} more bits)",
 								etype.Name, ValueTypeNames[type.NameIndex],
 								type.BitLength, -bc_difference);
 
@@ -265,7 +269,8 @@ namespace KSoft.Blam.Megalo.Proto
 						int bc_difference = etype.ValidBitLengthForEnum(type.BitLength, type.EnumTraits);
 						if (bc_difference < 0)
 						{
-							string msg = string.Format("Enum '{0}->{1}' bitLength '{2}' is too small (need {3} more bits)",
+							string msg = string.Format(Util.InvariantCultureInfo,
+								"Enum '{0}->{1}' bitLength '{2}' is too small (need {3} more bits)",
 								etype.Name, ValueTypeNames[type.NameIndex],
 								type.BitLength, -bc_difference);
 
@@ -280,7 +285,8 @@ namespace KSoft.Blam.Megalo.Proto
 							int bit_length = type.BitLength;
 							if (bit_length != Bits.kByteBitCount && bit_length != Bits.kInt16BitCount && bit_length != Bits.kInt32BitCount)
 							{
-								string msg = string.Format("Index-type '{0}' is a 'raw' value but doesn't use a natural word size: {1}",
+								string msg = string.Format(Util.InvariantCultureInfo,
+									"Index-type '{0}' is a 'raw' value but doesn't use a natural word size: {1}",
 									ValueTypeNames[type.NameIndex], bit_length);
 
 								Debug.Trace.MegaloProto.TraceInformation(msg);

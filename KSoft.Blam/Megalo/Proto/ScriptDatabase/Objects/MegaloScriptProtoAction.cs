@@ -31,9 +31,10 @@ namespace KSoft.Blam.Megalo.Proto
 
 			if (!s.StreamAttributeOpt("name", ref Name, Predicates.IsNotNullOrEmpty) &&
 				 s.IsReading)
-				Name = string.Format("Action{0}", DBID.ToString());
+				Name = string.Format(Util.InvariantCultureInfo,
+					"Action{0}", DBID.ToString(Util.InvariantCultureInfo));
 			if (db.SerializeProtoActionReference(s, "template", ref Template) && Template == null)
-				throw new System.IO.InvalidDataException(string.Format(
+				throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 					"Action '{0}' references undefined proto action {1}", Name, Template));
 			s.StreamAttributeEnumOpt("flags", ref Flags, f => f != 0);
 
@@ -71,7 +72,7 @@ namespace KSoft.Blam.Megalo.Proto
 				: MegaloScriptDatabase.HaloReach;
 
 			MegaloScriptProtoAction other;
-			if (db.TryGetAction(Name, out other) && !other.Name.StartsWith("Action"))
+			if (db.TryGetAction(Name, out other) && !other.Name.StartsWith("Action", System.StringComparison.Ordinal))
 			{
 				s.WriteAttribute("DBID", other.DBID);
 				s.WriteAttribute("origDBID", DBID);

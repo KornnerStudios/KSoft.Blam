@@ -134,7 +134,7 @@ namespace KSoft.Blam.Engine
 				{
 					if (revisn_count < 0 || branch_count < 0 || engine_count < 0)
 					{
-						throw new InvalidOperationException(string.Format(
+						throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 							"Extra or bad RemoveReference call detected for {0} using the handle {1}",
 							Prototype, buildHandle.ToDisplayString()));
 					}
@@ -149,7 +149,7 @@ namespace KSoft.Blam.Engine
 				{
 					if (new_count < 0)
 					{
-						throw new InvalidOperationException(string.Format(
+						throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 							"Extra or bad RemoveReference call detected for {0}",
 							Prototype));
 					}
@@ -183,13 +183,13 @@ namespace KSoft.Blam.Engine
 				Contract.Assert(mExternIOTask == null);
 				if (mExternIOTask != null)
 				{
-					throw new InvalidOperationException(string.Format(
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 						"Tried to perform an externs IO task while one was in flight under {0}",
 						this.Prototype.Engine));
 				}
 
 				mExternIOTask = Task.Run((Action)LoadExternsBegin);
-				await mExternIOTask;
+				await mExternIOTask.ConfigureAwait(false);
 				mExternIOTask = null;
 			}
 
@@ -238,13 +238,13 @@ namespace KSoft.Blam.Engine
 
 				if (mExternIOTask != null)
 				{
-					throw new InvalidOperationException(string.Format(
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 						"Tried to perform an externs IO task while one was in flight under {0}",
 						this.Prototype.Engine));
 				}
 
 				mExternIOTask = Task.Run((Action)UnloadExternsBegin);
-				await mExternIOTask;
+				await mExternIOTask.ConfigureAwait(false);
 				mExternIOTask = null;
 			}
 
@@ -257,16 +257,13 @@ namespace KSoft.Blam.Engine
 		/// <summary>Create a new reference to this system using an existing build handle</summary>
 		/// <param name="buildHandle">The engine build which is in need of this system</param>
 		/// <returns></returns>
-		public EngineSystemReference NewReference(EngineBuildHandle buildHandle)
-		{
-			return new EngineSystemReference(this, buildHandle);
-		}
+		public EngineSystemReference NewReference(EngineBuildHandle buildHandle) =>
+			new EngineSystemReference(this, buildHandle);
+
 		/// <summary>Create a new reference to this system using its <see cref="RootBuildHandle"/> (which may more specific than <see cref="Engine"/>'s root build handle)</summary>
 		/// <returns></returns>
-		public EngineSystemReference NewReference()
-		{
-			return new EngineSystemReference(this, this.RootBuildHandle);
-		}
+		public EngineSystemReference NewReference() =>
+			new EngineSystemReference(this, this.RootBuildHandle);
 		#endregion
 
 		/// <summary>Handle a specific build being referenced for the first time</summary>
@@ -302,7 +299,7 @@ namespace KSoft.Blam.Engine
 		void LoadExternsBegin()
 		{
 			using (var s = EngineRegistry.OpenEngineSystemTagElementStream(
-				Engine, Prototype.SystemMetadata.Guid, Prototype.ExternsFile))
+				Engine, Prototype.SystemMetadata.SystemGuid, Prototype.ExternsFile))
 			{
 				s.Owner = Prototype;
 				SerializeExtern(s);
@@ -354,7 +351,8 @@ namespace KSoft.Blam.Engine
 				int expected_engine_index = Engine.RootBuildHandle.EngineIndex;
 				int actual_engine_index = RootBuildHandle.EngineIndex;
 				KSoft.Debug.ValueCheck.AreEqual(
-					string.Format("{0} definition for {1} uses wrong engine id",
+					string.Format(Util.InvariantCultureInfo,
+						"{0} definition for {1} uses wrong engine id",
 						GetType().Name, Engine.Name),
 					expected_engine_index, actual_engine_index);
 			}

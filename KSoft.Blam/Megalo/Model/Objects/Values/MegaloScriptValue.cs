@@ -25,6 +25,7 @@ namespace KSoft.Blam.Megalo.Model
 	};
 
 	[System.Reflection.Obfuscation(Exclude=false)]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1067:Override Equals when implementing IEquatable")]
 	public abstract partial class MegaloScriptValueBase
 		: MegaloScriptModelNamedObject
 		, IEquatable<MegaloScriptValueBase>

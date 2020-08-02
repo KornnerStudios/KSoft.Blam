@@ -104,10 +104,10 @@ namespace KSoft.Blam
 		#region Single
 		// interesting: http://stackoverflow.com/a/3542975/444977
 
-		public static float DecodeSingle(uint rawBits, float min, float max, int bitCount, bool signed, bool unknown)
+		public static float DecodeSingle(uint rawBits, float min, float max, int bitCount, bool isSigned, bool unknown)
 		{
 			int r10 = 1 << bitCount;
-			if (signed)
+			if (isSigned)
 				r10 -= 1;
 
 			float fp1;
@@ -147,7 +147,7 @@ namespace KSoft.Blam
 				fp1 = fp3 + min;
 			}
 
-			if (signed)
+			if (isSigned)
 			{
 				r10 -= 1;
 				uint r8 = rawBits << 1;
@@ -160,10 +160,10 @@ namespace KSoft.Blam
 
 			return fp1;
 		}
-		public static uint EncodeSingle(float real, float min, float max, int bitCount, bool signed, bool unknown)
+		public static uint EncodeSingle(float real, float min, float max, int bitCount, bool isSigned, bool unknown)
 		{
 			uint r11 = 1U << bitCount;
-			if (signed)
+			if (isSigned)
 				r11 -= 1;
 
 			uint r10;
@@ -213,26 +213,26 @@ namespace KSoft.Blam
 			return r11;
 		}
 
-		static uint Read(IO.BitStream s, out float real, float min, float max, int bitCount, bool signed, bool unknown)
+		static uint Read(IO.BitStream s, out float real, float min, float max, int bitCount, bool isSigned, bool unknown)
 		{
 			uint raw_bits;
 			s.Read(out raw_bits, bitCount);
 
-			real = DecodeSingle(raw_bits, min, max, bitCount, signed, unknown);
+			real = DecodeSingle(raw_bits, min, max, bitCount, isSigned, unknown);
 			return raw_bits;
 		}
-		static void Write(IO.BitStream s, float real, float min, float max, int bitCount, bool signed, bool unknown)
+		static void Write(IO.BitStream s, float real, float min, float max, int bitCount, bool isSigned, bool unknown)
 		{
-			uint raw_bits = EncodeSingle(real, min, max, bitCount, signed, unknown);
+			uint raw_bits = EncodeSingle(real, min, max, bitCount, isSigned, unknown);
 
 			s.Write(raw_bits, bitCount);
 		}
-		public static void Stream(this IO.BitStream s, ref float real, float min, float max, int bitCount, bool signed, bool unknown)
+		public static void Stream(this IO.BitStream s, ref float real, float min, float max, int bitCount, bool isSigned, bool unknown)
 		{
 			Contract.Requires(bitCount <= Bits.kInt32BitCount);
 
-				 if (s.IsReading)	Read(s, out real, min, max, bitCount, signed, unknown);
-			else if (s.IsWriting)	Write(s, real, min, max, bitCount, signed, unknown);
+				 if (s.IsReading)	Read(s, out real, min, max, bitCount, isSigned, unknown);
+			else if (s.IsWriting)	Write(s, real, min, max, bitCount, isSigned, unknown);
 		}
 		#endregion
 

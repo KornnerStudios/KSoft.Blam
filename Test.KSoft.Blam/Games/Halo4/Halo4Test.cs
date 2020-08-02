@@ -27,7 +27,7 @@ namespace KSoft.Blam.Games.Halo4.Test
 				Assert.IsNotNull(all_dbs_tasks.Item1.Result);
 				Assert.IsNotNull(all_dbs_tasks.Item2.Result);
 
-				megalo_proto_system.PrepareDatabasesForUse(all_dbs_tasks.Item1.Result, all_dbs_tasks.Item2.Result);
+				MegaloProto.MegaloProtoSystem/*megalo_proto_system*/.PrepareDatabasesForUse(all_dbs_tasks.Item1.Result, all_dbs_tasks.Item2.Result);
 			}
 		}
 

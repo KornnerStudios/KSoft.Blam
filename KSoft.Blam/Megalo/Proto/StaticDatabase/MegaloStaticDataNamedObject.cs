@@ -8,7 +8,7 @@ namespace KSoft.Blam.Megalo.Proto
 	{
 		public const string kUndefinedPrefix = "UNDEFINED";
 		protected static readonly Predicate<string> kIsAvailable =
-			s => !string.IsNullOrEmpty(s) && !s.StartsWith(kUndefinedPrefix);
+			s => !string.IsNullOrEmpty(s) && !s.StartsWith(kUndefinedPrefix, StringComparison.Ordinal);
 
 		public string Name;
 
@@ -17,7 +17,11 @@ namespace KSoft.Blam.Megalo.Proto
 			if (index.IsNone())
 				Name = kUndefinedPrefix + "_" + suffix;
 			else
-				Name = string.Format(kUndefinedPrefix + "_{0}_{1}", suffix, index.ToString());
+			{
+				Name = string.Format(Util.InvariantCultureInfo,
+					kUndefinedPrefix + "_{0}_{1}",
+					suffix, index.ToString(Util.InvariantCultureInfo));
+			}
 		}
 
 		#region IMegaloStaticDataNamedObject Members

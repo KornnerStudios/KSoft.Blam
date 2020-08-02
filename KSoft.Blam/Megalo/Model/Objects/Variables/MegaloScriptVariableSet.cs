@@ -11,7 +11,8 @@ namespace KSoft.Blam.Megalo.Model
 {
 	partial class MegaloScriptModel
 	{
-		public MegaloScriptModelVariableSet this[MegaloScriptVariableSet set] { get {
+		public MegaloScriptModelVariableSet GetModelVariableSet(MegaloScriptVariableSet set)
+		{
 			switch (set)
 			{
 				case MegaloScriptVariableSet.Globals: return GlobalVariables;
@@ -20,7 +21,9 @@ namespace KSoft.Blam.Megalo.Model
 				case MegaloScriptVariableSet.Team: return TeamVariables;
 				default: throw new KSoft.Debug.UnreachableException(set.ToString());
 			}
-		} }
+		}
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1043:UseIntegralOrStringArgumentForIndexers")]
+		public MegaloScriptModelVariableSet this[MegaloScriptVariableSet set] => GetModelVariableSet(set);
 
 		/// <summary>Validates that the variable index in a given set is valid based on its type</summary>
 		/// <param name="type">Type of variable</param>
@@ -109,16 +112,22 @@ namespace KSoft.Blam.Megalo.Model
 			}
 
 			if (id == TypeExtensionsBlam.IndexOfByPropertyNotFoundResult)
-				throw new KeyNotFoundException(string.Format("Couldn't find {0} {1} variable named {2}",
+			{
+				throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
+					"Couldn't find {0} {1} variable named {2}",
 					SetType, type, name));
+			}
 
 			return id;
 		}
 		string ToVariableIndexName(MegaloScriptVariableType type, int index)
 		{
 			if (index < 0 || !VarIndexIsValid(type, index))
-				throw new System.IO.InvalidDataException(string.Format("#{0} is not a valid {1}.{2} variable index",
-					index.ToString(), SetType.ToString(), type.ToString()));
+			{
+				throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+					"#{0} is not a valid {1}.{2} variable index",
+					index.ToString(Util.InvariantCultureInfo), SetType.ToString(), type.ToString()));
+			}
 
 			switch (type)
 			{
@@ -146,7 +155,8 @@ namespace KSoft.Blam.Megalo.Model
 				if (supportNone)
 					return MegaloScriptModel.kIndexNameNone;
 				else
-					throw new System.IO.InvalidDataException(string.Format("Encountered a {0}.{1} variable reference that was NONE, where NONE isn't supported",
+					throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+						"Encountered a {0}.{1} variable reference that was NONE, where NONE isn't supported",
 						varSet.ToString(), varType.ToString()));
 			}
 

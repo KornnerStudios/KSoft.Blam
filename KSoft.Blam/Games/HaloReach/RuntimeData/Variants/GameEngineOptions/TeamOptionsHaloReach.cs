@@ -8,7 +8,7 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 		: Blam.RuntimeData.Variants.GameOptionsSingleTeamOptions
 	{
 		// max size: 0x20, but size bit length would suggest 0x40
-		public static LocaleStringTableInfo kNameStringTableInfo = new LocaleStringTableInfo(1, 0x20)
+		public static readonly LocaleStringTableInfo kNameStringTableInfo = new LocaleStringTableInfo(1, 0x20)
 			.SetBufferRelatedBitLengths(5, 6);
 
 		public GameOptionsSingleTeamOptionsHaloReach(Engine.EngineBuildHandle reachBuild)

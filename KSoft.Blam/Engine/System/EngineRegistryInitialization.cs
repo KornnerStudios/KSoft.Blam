@@ -60,7 +60,7 @@ namespace KSoft.Blam.Engine
 			{
 				if (gExportedBuildsByName.ContainsKey(r.ExportName))
 				{
-					throw new InvalidDataException(string.Format(
+					throw new InvalidDataException(string.Format(Util.InvariantCultureInfo,
 						"build={0} tried to export with a name that is already in use: {1}",
 						r.BuildHandle.ToDisplayString(), r.ExportName));
 				}

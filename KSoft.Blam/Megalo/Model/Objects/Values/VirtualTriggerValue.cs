@@ -73,8 +73,10 @@ namespace KSoft.Blam.Megalo.Model
 				{
 					int id = TypeExtensions.kNone; s.ReadCursor(ref id);
 					if (id < 0)
-						throw new System.IO.InvalidDataException(string.Format(
+					{
+						throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 							"VirtualTrigger value #{0} has an invalid value {1}", Id, id));
+					}
 
 					mVirtualTriggerHandle = model.VirtualTriggers[id].Handle;
 				}

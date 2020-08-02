@@ -48,11 +48,11 @@ namespace KSoft.Blam.Megalo.Proto
 		{
 			int sig_id = param.SigId;
 			if (sig_id >= ParamsBySigId.Length)
-				WriteError("Param {0}-{1} has an invalid SigID", sig_id.ToString(), param.Name);
+				WriteError("Param {0}-{1} has an invalid SigID", sig_id.ToString(Util.InvariantCultureInfo), param.Name);
 			else if (ParamsBySigId[sig_id] == null)
 				ParamsBySigId[sig_id] = param;
 			else
-				WriteError("SigID {0} already in use by {1}", sig_id.ToString(), ParamsBySigId[sig_id].Name);
+				WriteError("SigID {0} already in use by {1}", sig_id.ToString(Util.InvariantCultureInfo), ParamsBySigId[sig_id].Name);
 		}
 
 		void PostprocessParameters(IEnumerable<MegaloScriptProtoParam> parameters,
@@ -80,7 +80,8 @@ namespace KSoft.Blam.Megalo.Proto
 		void PostprocessObjectWithParams(IMegaloScriptProtoObjectWithParams obj, string typeName,
 			out bool containsVirtualTriggerParam)
 		{
-			mErrorPrefix = string.Format("{2} {0}/{1} ", obj.DBID.ToString(), obj.Name, typeName);
+			mErrorPrefix = string.Format(Util.InvariantCultureInfo,
+				"{2} {0}/{1} ", obj.DBID.ToString(Util.InvariantCultureInfo), obj.Name, typeName);
 
 			bool contains_object_type_param;
 			PostprocessParameters(obj.ParameterList, out containsVirtualTriggerParam,
@@ -88,7 +89,7 @@ namespace KSoft.Blam.Megalo.Proto
 
 			for (int x = 0; x < ParamsBySigId.Length; x++)
 				if (ParamsBySigId[x] == null)
-					WriteError("SigID {0} is undefined", x.ToString());
+					WriteError("SigID {0} is undefined", x.ToString(Util.InvariantCultureInfo));
 
 			if (contains_object_type_param)
 				obj.ContainsObjectTypeParameter = contains_object_type_param;

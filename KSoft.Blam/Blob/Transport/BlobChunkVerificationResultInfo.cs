@@ -5,6 +5,7 @@ namespace KSoft.Blam.Blob.Transport
 {
 	[System.Reflection.Obfuscation(Exclude=false)]
 	[System.Diagnostics.DebuggerDisplay("{Context}, {Result}, Data = {Data}")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct BlobChunkVerificationResultInfo
 	{
 		public static readonly BlobChunkVerificationResultInfo ValidResult =
@@ -109,19 +110,22 @@ namespace KSoft.Blam.Blob.Transport
 			switch (Result)
 			{
 				case BlobChunkVerificationResult.Invalid:
-					sb.AppendFormat("Unknown error ({0})", Data.ToString("X8"));
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						"Unknown error ({0})", Data.ToString("X8", Util.InvariantCultureInfo));
 					break;
 
 				#region Stream
 				case BlobChunkVerificationResult.EndOfStream:
-					sb.AppendFormat("Encountered EOF during a read in {0}. Only had {1} bytes left",
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						"Encountered EOF during a read in {0}. Only had {1} bytes left",
 						ctxt_string, DataAsLength);
 					break;
 				case BlobChunkVerificationResult.StreamNotOpen:
 					sb.Append("Tried to operate on a BLF stream without opening it first");
 					break;
 				case BlobChunkVerificationResult.StreamTooSmall:
-					sb.AppendFormat("Stream is too small to be a BLF source ({0} bytes)", DataAsLength);
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						"Stream is too small to be a BLF source ({0} bytes)", DataAsLength);
 					break;
 				case BlobChunkVerificationResult.AuthenticationFailed:
 					sb.Append("Failed to authenticate the BLF stream");
@@ -129,35 +133,43 @@ namespace KSoft.Blam.Blob.Transport
 				#endregion
 				#region Chunk
 				case BlobChunkVerificationResult.InvalidSignature:
-					sb.AppendFormat("Encountered an invalid chunk signature '{0}' while reading {1}",
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						"Encountered an invalid chunk signature '{0}' while reading {1}",
 						DataAsSignature, ctxt_string);
 					break;
 				case BlobChunkVerificationResult.InvalidSize:
-					sb.AppendFormat("Encountered an invalid chunk size '{0}' while reading {1}",
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						"Encountered an invalid chunk size '{0}' while reading {1}",
 						DataAsSize, ctxt_string);
 					break;
 				case BlobChunkVerificationResult.InvalidVersion:
-					sb.AppendFormat("Encountered an invalid chunk version '{0}' while reading {1}",
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						"Encountered an invalid chunk version '{0}' while reading {1}",
 						DataAsVersion, ctxt_string);
 					break;
 				#endregion
 				#region Header
 				case BlobChunkVerificationResult.InvalidEndian:
-					sb.AppendFormat("BLF header endian bytes is invalid '{0}'", Data.ToString("X4"));
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						"BLF header endian bytes is invalid '{0}'", Data.ToString("X4", Util.InvariantCultureInfo));
 					break;
 				#endregion
 				#region Footer
 				case BlobChunkVerificationResult.InvalidBlobSize:
-					sb.AppendFormat("Footer's blob size didn't match actual blob stream length", DataAsLength);
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						"Footer's blob size didn't match actual blob stream length", DataAsLength);
 					break;
 				case BlobChunkVerificationResult.InvalidAuthentication:
-					sb.AppendFormat("Footer specified an invalid authentication '{0}'", DataAsAuthentication);
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						"Footer specified an invalid authentication '{0}'", DataAsAuthentication);
 					break;
 				case BlobChunkVerificationResult.InvalidAuthenticationSize:
-					sb.AppendFormat("Footer's authentication size is invalid '{0}'", DataAsSize);
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						"Footer's authentication size is invalid '{0}'", DataAsSize);
 					break;
 				case BlobChunkVerificationResult.AuthenticationMismatch:
-					sb.AppendFormat("Footer specified an unexpected authentication '{0}'", DataAsAuthentication);
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						"Footer specified an unexpected authentication '{0}'", DataAsAuthentication);
 					break;
 				#endregion
 

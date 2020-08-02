@@ -56,8 +56,11 @@ namespace KSoft.Blam.Localization
 				id = LanguageNames.FindIndex(name.Equals);
 
 				if (id.IsNone())
-					throw new KeyNotFoundException(string.Format("No language is registered with the name '{0}'",
+				{
+					throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
+						"No language is registered with the name '{0}'",
 						name));
+				}
 			}
 
 			return id;
@@ -111,9 +114,11 @@ namespace KSoft.Blam.Localization
 			int index = LanguageIdResolverSansKeyNotFoundException(null, name);
 
 			if (index.IsNone())
-				throw new InvalidDataException(string.Format(
+			{
+				throw new InvalidDataException(string.Format(Util.InvariantCultureInfo,
 					"{0} doesn't define the required language {1}",
 					kRegistryFilePath, name));
+			}
 
 			return index;
 		}

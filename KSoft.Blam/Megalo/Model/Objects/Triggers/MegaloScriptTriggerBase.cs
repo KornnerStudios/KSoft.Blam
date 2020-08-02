@@ -83,6 +83,7 @@ namespace KSoft.Blam.Megalo.Model
 			return result;
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
 		static readonly Func<IO.BitStream, MegaloScriptModel, MegaloScriptVirtualTrigger> NewVirtualTriggerFromBitStream =
 			(s, model) => model.CreateVirtualTrigger();
 		static MegaloScriptVirtualTrigger NewVirtualTriggerFromTagStream<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, MegaloScriptModel model)

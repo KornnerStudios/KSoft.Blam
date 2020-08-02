@@ -21,6 +21,7 @@ namespace KSoft.Blam.Megalo.Proto
 		// variant
 		LoadoutPalette,
 		Option,
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		String,
 		PlayerTraits,
 		Statistic,

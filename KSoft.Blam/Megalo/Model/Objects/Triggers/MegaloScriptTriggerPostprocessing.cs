@@ -84,7 +84,9 @@ namespace KSoft.Blam.Megalo.Model
 			{
 				if (current.ObjectType != MegaloScriptModelObjectType.VirtualTrigger && string.IsNullOrEmpty(current.Name))
 				{
-					current.Name = string.Format("{0}_InnerLoop{1}", parent.Name, current.Id.ToString());
+					current.Name = string.Format(Util.InvariantCultureInfo,
+						"{0}_InnerLoop{1}",
+						parent.Name, current.Id.ToString(Util.InvariantCultureInfo));
 				}
 
 				return true;
@@ -102,7 +104,7 @@ namespace KSoft.Blam.Megalo.Model
 					obj.Name = prefix + "Trigger";
 					// if the trigger isn't an entry point
 					if (obj.TriggerType == MegaloScriptTriggerType.Normal)
-						obj.Name += obj.Id.ToString();
+						obj.Name += obj.Id.ToString(Util.InvariantCultureInfo);
 
 					root_triggers.Add(obj);
 				}

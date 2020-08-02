@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -31,3 +32,21 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("0.0.*")]
 
 [assembly: InternalsVisibleTo("Test.KSoft.Blam")]
+
+[assembly: SuppressMessage("Microsoft.Design",
+	"CA1028:EnumStorageShouldBeInt32")]
+[assembly: SuppressMessage("Microsoft.Design",
+	"CA1034:NestedTypesShouldNotBeVisible",
+	Justification = "Because I do this all over the place")]
+[assembly: SuppressMessage("Microsoft.Design",
+	"CA1051:DoNotDeclareVisibleInstanceFields",
+	Justification = "Because I do this all over the place")]
+[assembly: SuppressMessage("Microsoft.Design",
+	"CA1062:ValidateArgumentsOfPublicMethods",
+	Justification = "CodeContracts generally handle this already")]
+[assembly: SuppressMessage("Microsoft.Design",
+	"CA1303:DoNotPassLiteralsAsLocalizedParameters")]
+
+[assembly: SuppressMessage("Style",
+	"IDE1005:Delegate invocation can be simplified.",
+	Justification = "Can't breakpoint simplification")]

@@ -8,6 +8,7 @@ namespace KSoft.Blam.Megalo
 		Timer,
 		Team,
 		Player,
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		Object,
 
 		/// <remarks>3 bits</remarks>

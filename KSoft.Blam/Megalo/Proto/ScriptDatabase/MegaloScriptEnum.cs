@@ -107,11 +107,16 @@ namespace KSoft.Blam.Megalo.Proto
 		{
 			var e = db.Enums[enumValueType.EnumIndex];
 			int index = 0;
-			if(e.NameToIndex.TryGetValue(name, out index))
-				return enumValueType.EnumTraits != Proto.MegaloScriptValueEnumTraits.HasNoneMember ? index : index-1;
+			if (e.NameToIndex.TryGetValue(name, out index))
+			{
+				return enumValueType.EnumTraits != Proto.MegaloScriptValueEnumTraits.HasNoneMember ? index : index - 1;
+			}
 			else
-				throw new KeyNotFoundException(string.Format("'{0}' is not a valid member name in {1}",
+			{
+				throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
+					"'{0}' is not a valid member name in {1}",
 					name, e.Name));
+			}
 		}
 		internal static string ToMemberName(MegaloScriptDatabase db, MegaloScriptValueType enumValueType, int index)
 		{
@@ -146,14 +151,19 @@ namespace KSoft.Blam.Megalo.Proto
 			uint flags = 0;
 
 			string[] parts = names.Split(kFlagsSeperator, StringSplitOptions.RemoveEmptyEntries);
-			for(int x = 0; x < parts.Length; x++)
+			for (int x = 0; x < parts.Length; x++)
 			{
 				int bit;
 				if (e.NameToIndex.TryGetValue(parts[x], out bit))
+				{
 					flags |= 1U << bit;
+				}
 				else
-					throw new KeyNotFoundException(string.Format("'{0}' is not a valid bit name in {1}",
+				{
+					throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
+						"'{0}' is not a valid bit name in {1}",
 						parts[x], e.Name));
+				}
 			}
 
 			return flags;

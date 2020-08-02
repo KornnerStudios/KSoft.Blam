@@ -12,24 +12,25 @@ namespace KSoft.Blam.Megalo.Model
 		/// <summary>Setup a newly created object in its respective list, with an optional existing id</summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="list"></param>
-		/// <param name="obj"></param>
+		/// <param name="theObject"></param>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		protected T CreateObjectPostprocess<T>(Collections.ActiveList<T> list, T obj, int id = TypeExtensions.kNone)
+		protected static T CreateObjectPostprocess<T>(Collections.ActiveList<T> list, T theObject, int id = TypeExtensions.kNone)
 			where T : MegaloScriptModelObject
 		{
 			if (id.IsNone())
 			{
-				list.Add(obj, out id);
-				obj.Id = id;
+				list.Add(theObject, out id);
+				theObject.Id = id;
 			}
 			else
-				list.AddExplicit(obj, id);
+				list.AddExplicit(theObject, id);
 
-			return obj;
+			return theObject;
 		}
 
-		public MegaloScriptModelObject this[MegaloScriptModelObjectHandle handle] { get {
+		public MegaloScriptModelObject GetModelObjectFromHandle(MegaloScriptModelObjectHandle handle)
+		{
 			int id = handle.Id;
 			switch (handle.Type)
 			{
@@ -43,7 +44,10 @@ namespace KSoft.Blam.Megalo.Model
 
 				default: throw new KSoft.Debug.UnreachableException(handle.Type.ToString());
 			}
-		} }
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1043:UseIntegralOrStringArgumentForIndexers")]
+		public MegaloScriptModelObject this[MegaloScriptModelObjectHandle handle] => GetModelObjectFromHandle(handle);
 	};
 
 	[System.Reflection.Obfuscation(Exclude=false)]

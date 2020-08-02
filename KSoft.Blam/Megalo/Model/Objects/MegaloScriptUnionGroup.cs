@@ -10,7 +10,7 @@ namespace KSoft.Blam.Megalo.Model
 {
 	partial class MegaloScriptModel
 	{
-		protected MegaloScriptUnionGroup NewUnionGroup()
+		protected static MegaloScriptUnionGroup NewUnionGroup()
 		{
 			return new MegaloScriptUnionGroup();
 		}
@@ -37,7 +37,7 @@ namespace KSoft.Blam.Megalo.Model
 		static MegaloScriptUnionGroup NewUnionGroupFromTagStream<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, MegaloScriptModel model)
 			where TDoc : class
 			where TCursor : class
-		{ return model.NewUnionGroup(); }
+		{ return /*model.*/NewUnionGroup(); }
 		#endregion
 	};
 
@@ -47,6 +47,7 @@ namespace KSoft.Blam.Megalo.Model
 	/// any lookups lightweight
 	/// </remarks>
 	[System.Reflection.Obfuscation(Exclude=false)]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
 	public sealed partial class MegaloScriptUnionGroup
 		: MegaloScriptModelObject
 		, IList<MegaloScriptModelObjectHandle>
@@ -122,6 +123,8 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
+			Util.MarkUnusedVariable(ref s);
+
 			MegaloScriptUnionGroup prev_union_group = null;
 			foreach (var obj in elements)
 			{
@@ -144,7 +147,9 @@ namespace KSoft.Blam.Megalo.Model
 					prev_union_group.Add(cond);
 				}
 				else
-					throw new KSoft.Debug.UnreachableException(cond.UnionGroup.ToString());
+				{
+					throw new KSoft.Debug.UnreachableException(cond.UnionGroup.ToString(Util.InvariantCultureInfo));
+				}
 			}
 		}
 		internal static void ReadPostprocessConditions<TDoc, TCursor>(
@@ -153,6 +158,8 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
+			Util.MarkUnusedVariable(ref s);
+
 			foreach (var obj in elements)
 			{
 				if (obj.Type != MegaloScriptModelObjectType.Condition) continue;
@@ -163,7 +170,8 @@ namespace KSoft.Blam.Megalo.Model
 			}
 		}
 
-		public override void Serialize<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)
+		public override void Serialize<TDoc, TCursor>(
+			MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)
 		{
 			base.Serialize(model, s);
 

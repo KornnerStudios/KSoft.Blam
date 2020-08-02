@@ -8,6 +8,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 namespace KSoft.Blam.Megalo.Proto
 {
 	[System.Reflection.Obfuscation(Exclude=false)]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
 	public sealed class MegaloScriptProtoActionParameters
 		: IO.ITagElementStringNameStreamable
 		, IReadOnlyList<MegaloScriptProtoParam>

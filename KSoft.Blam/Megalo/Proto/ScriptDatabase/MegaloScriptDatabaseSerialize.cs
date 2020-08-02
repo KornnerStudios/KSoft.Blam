@@ -43,7 +43,7 @@ namespace KSoft.Blam.Megalo.Proto
 
 		#region SerializeEnumTypeReference
 		static readonly Func<MegaloScriptDatabase, string, int> kEnumIdResolver =
-			(_db, name) => _db.Enums.FindLastIndex(x => name.Equals(x.Name)); // #NOTE_BLAM: we use FindLastIndex so that it is possible to override builtin enums
+			(_db, name) => _db.Enums.FindLastIndex(x => name.Equals(x.Name, StringComparison.Ordinal)); // #NOTE_BLAM: we use FindLastIndex so that it is possible to override builtin enums
 		static readonly Func<MegaloScriptDatabase, int, string> kEnumNameResolver =
 			(_db, id) => id.IsNotNone() ? _db.Enums[id].Name : null;
 		internal bool SerializeEnumTypeReference<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
@@ -70,7 +70,7 @@ namespace KSoft.Blam.Megalo.Proto
 
 		#region SerializeActionTemplateReference
 		static readonly Func<MegaloScriptDatabase, string, MegaloScriptProtoActionTemplate> kActionTemplateResolver =
-			(_db, name) => _db.ActionTemplates.Find(x => name.Equals(x.Name));
+			(_db, name) => _db.ActionTemplates.Find(x => name.Equals(x.Name, StringComparison.Ordinal));
 		static readonly Func<MegaloScriptDatabase, MegaloScriptProtoActionTemplate, string> kActionTemplateNameResolver =
 			(_db, id) => id != null ? id.Name : null;
 		internal bool SerializeActionTemplateReference<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
@@ -91,7 +91,7 @@ namespace KSoft.Blam.Megalo.Proto
 		#region SerializeProtoActionReference
 		static readonly Func<MegaloScriptDatabase, string, IMegaloScriptProtoAction> kProtoActionResolver =
 			(_db, name) => (IMegaloScriptProtoAction)
-				_db.ActionTemplates.Find(x => name.Equals(x.Name)) ?? _db.Actions.Find(x => name.Equals(x.Name))
+				_db.ActionTemplates.Find(x => name.Equals(x.Name, StringComparison.Ordinal)) ?? _db.Actions.Find(x => name.Equals(x.Name, StringComparison.Ordinal))
 			;
 		static readonly Func<MegaloScriptDatabase, IMegaloScriptProtoAction, string> kProtoActionNameResolver =
 			(_db, id) => id != null ? id.Name : null;
@@ -146,7 +146,7 @@ namespace KSoft.Blam.Megalo.Proto
 						int encoding_index = reading ? 0 : value.EncodingIndex;
 
 						s.StreamAttributeIdAsString("encoding", ref encoding_index, db,
-							(_db, str) => _db.SingleEncodings.FindIndex((x) => str.Equals(x.Name)),
+							(_db, str) => _db.SingleEncodings.FindIndex((x) => str.Equals(x.Name, StringComparison.Ordinal)),
 							(_db, id) => _db.SingleEncodings[id].Name);
 
 						if (reading) // #NOTE_BLAM: requires -1 when reading the TypeParam as the encoding index
@@ -157,15 +157,20 @@ namespace KSoft.Blam.Megalo.Proto
 				case MegaloScriptValueBaseType.Point3d:
 					{
 						if (!has_bit_length)
-							throw new System.IO.InvalidDataException(string.Format("Point3d {0} didn't define a bit-length",
+						{
+							throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+								"Point3d {0} didn't define a bit-length",
 								name));
+						}
 
 						bool is_signed = reading ? false : value.PointIsSigned;
 						s.StreamAttributeOpt("signed", ref is_signed, Predicates.IsTrue);
 
 						if (reading)
+						{
 							value = new MegaloScriptValueType(name_index, base_type, bit_length,
 								0, is_signed ? 1U : 0U);
+						}
 					} break;
 				#endregion
 				#region MegaloScriptValueBaseType.Flags

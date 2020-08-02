@@ -8,6 +8,7 @@ namespace KSoft.Blam.Games.Halo4.Megalo
 
 		AbsolutePlayerIndex, // player's name
 		TeamDesignator, // 'team_none' or team designator string
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		Object, // 'none' or 'unknown'
 		Numeric, // %i
 		SignedNumeric, // +%i when positive, else %i

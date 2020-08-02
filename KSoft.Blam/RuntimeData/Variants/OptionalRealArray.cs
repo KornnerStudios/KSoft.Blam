@@ -16,14 +16,14 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public readonly bool kSigned, kUnknown;
 		public Type kValuesEnum;
 
-		public OptionalRealArrayInfo(int len, int bits = 16, float min = -200.0f, float max = 200.0f, bool signed = true, bool unknown = true,
+		public OptionalRealArrayInfo(int len, int bits = 16, float min = -200.0f, float max = 200.0f, bool isSigned = true, bool unknown = true,
 			Type valuesEnum = null)
 		{
 			kLength = len;
 			kBitCount = bits;
 			kRangeMin = min;
 			kRangeMax = max;
-			kSigned = signed;
+			kSigned = isSigned;
 			kUnknown = unknown;
 			kValuesEnum = valuesEnum;
 		}
@@ -152,7 +152,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 					using (s.EnterCursorBookmark(kEntryElementName))
 					{
 						s.WriteAttribute(kEntryAttrKeyName, names[x]);
-						s.WriteAttribute(kEntryAttrValueName, mArray[x].ToString("r")); // round-trip for full float value
+						s.WriteAttribute(kEntryAttrValueName, mArray[x].ToString(Numbers.kFloatRoundTripFormatSpecifier, Util.InvariantCultureInfo)); // round-trip for full float value
 					}
 				}
 				else if (s.IgnoreWritePredicates) // #HACK_BLAM: IgnoreWritePredicates hack!

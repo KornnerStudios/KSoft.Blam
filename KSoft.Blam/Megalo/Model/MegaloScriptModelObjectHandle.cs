@@ -168,8 +168,11 @@ namespace KSoft.Blam.Megalo.Model
 			Serialize(s, model, ref handle);
 			// #REVIEW_BLAM: ThrowReadException?
 			if (!CanEmbed(handle.Type))
-				throw new System.IO.InvalidDataException(string.Format("{0}s can't be embedded (ID={1})",
+			{
+				throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+					"{0}s can't be embedded (ID={1})",
 					handle.Type, handle.Id));
+			}
 
 			// Only try to recreate when we're reading and the script wasn't streamed without IDs
 			// Else, Serialize would have already created

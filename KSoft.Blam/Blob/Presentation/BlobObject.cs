@@ -19,6 +19,8 @@ namespace KSoft.Blam.Blob
 		internal void Initialize(BlobSystem system, Engine.BlamEngineTargetHandle gameTarget,
 			BlobGroup blobGroup, int version)
 		{
+			Util.MarkUnusedVariable(ref system);
+
 			SystemGroup = blobGroup;
 			GameTarget = gameTarget;
 			Version = version;

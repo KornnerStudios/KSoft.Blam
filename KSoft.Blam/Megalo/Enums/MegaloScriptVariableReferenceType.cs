@@ -7,6 +7,7 @@ namespace KSoft.Blam.Megalo
 		Undefined = TypeExtensions.kNone,
 		Custom,
 		Player,
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		Object,
 		Team,
 		Timer,

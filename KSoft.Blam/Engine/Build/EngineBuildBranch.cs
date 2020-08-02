@@ -14,13 +14,8 @@ namespace KSoft.Blam.Engine
 		#region Constants
 		internal const int kMaxCount = 8 - 1; // 3 bits. per repository
 		internal static readonly int kIndexBitCount;
-		private static readonly uint kIndexBitMask;
-
-		static EngineBuildBranch()
-		{
-			kIndexBitMask = Bits.GetNoneableEncodingTraits(kMaxCount,
-				out kIndexBitCount);
-		}
+		private static readonly uint kIndexBitMask = Bits.GetNoneableEncodingTraits(kMaxCount,
+			out kIndexBitCount);
 		#endregion
 
 		public EngineBuildRepository Repository { get; private set; }
@@ -53,12 +48,16 @@ namespace KSoft.Blam.Engine
 				id = branch.Revisions.FindIndex(x => x.Version == version);
 
 				if (id.IsNone())
-					throw new KeyNotFoundException(string.Format("Engine branch {0} doesn't define a revision for version #{1}",
+				{
+					throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
+						"Engine branch {0} doesn't define a revision for version #{1}",
 						branch.Name, version));
+				}
 			}
 
 			return id;
 		}
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
 		static readonly Func<EngineBuildBranch, int/*version*/, int> RevisionIdResolverSansKeyNotFoundException =
 			(branch, version) => version.IsNotNone()
 				? branch.Revisions.FindIndex(x => x.Version == version)

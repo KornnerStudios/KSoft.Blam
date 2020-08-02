@@ -99,7 +99,11 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
-			var handle = s.IsWriting ? new MegaloScriptModelObjectHandle(MegaloScriptModelObjectType.Trigger, value) : MegaloScriptModelObjectHandle.Null;
+			Util.MarkUnusedVariable(ref valueType);
+
+			var handle = s.IsWriting
+				? new MegaloScriptModelObjectHandle(MegaloScriptModelObjectType.Trigger, value)
+				: MegaloScriptModelObjectHandle.Null;
 
 			if (s.IsWriting)
 			{
@@ -165,7 +169,7 @@ namespace KSoft.Blam.Megalo.Model
 			{
 				if (!model.IndexTargetIsValid(target, valueType.IndexTraits, value))
 				{
-					s.ThrowReadException(new System.IO.InvalidDataException(string.Format(
+					s.ThrowReadException(new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 						"A {0} reference has an invalid value {1}", target, value)));
 				}
 			}

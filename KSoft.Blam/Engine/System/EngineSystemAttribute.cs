@@ -56,13 +56,14 @@ namespace KSoft.Blam.Engine
 
 		public Type EngineSystemType { get; private set; }
 
-		public Values.KGuid Guid { get; private set; }
+		public Values.KGuid SystemGuid { get; private set; }
+		public string GetSystemGuidString() => SystemGuid.ToString(Values.KGuid.kFormatHyphenated, Util.InvariantCultureInfo);
 
-		public string DebugDisplayString { get {
-			return string.Format("{{{0}}}={1}",
-				Guid.ToString(Values.KGuid.kFormatHyphenated),
+		public string DebugDisplayString =>
+			string.Format(Util.InvariantCultureInfo,
+				"{{{0}}}={1}",
+				GetSystemGuidString(),
 				EngineSystemType);
-		} }
 
 		EngineSystemCtorSignature mFactoryMethod;
 
@@ -86,27 +87,18 @@ namespace KSoft.Blam.Engine
 		}
 
 		#region Overrides
-		public override int GetHashCode()
-		{
-			return Guid.GetHashCode();
-		}
+		public override int GetHashCode() => SystemGuid.GetHashCode();
 
-		public override bool Equals(object obj)
-		{
-			return obj is EngineSystemAttribute && ((EngineSystemAttribute)obj).Guid == Guid;
-		}
+		public override bool Equals(object obj) =>
+			obj is EngineSystemAttribute
+			&& ((EngineSystemAttribute)obj).SystemGuid == SystemGuid;
 
-		public override string ToString()
-		{
-			return Guid.ToString(Values.KGuid.kFormatHyphenated);
-		}
+		public override string ToString() => GetSystemGuidString();
 		#endregion
 
 		/// <summary>For unit testing purposes only. Verifies this instance was properly initialized</summary>
-		internal bool IsValid { get {
-			return
-				mFactoryMethod != null;
-		} }
+		internal bool IsValid =>
+			mFactoryMethod != null;
 
 		/// <summary>Create a new instance of the system. Only call me if you are <see cref="BlamEngine"/>!</summary>
 		/// <param name="prototype"></param>
@@ -131,24 +123,24 @@ namespace KSoft.Blam.Engine
 			#region validate guid_prop
 			if (guid_prop == null)
 			{
-				throw new InvalidOperationException(string.Format(
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 					"{0} doesn't specify a static property named {1}",
 					EngineSystemType.Name, kSystemGuidPropertyName));
 			}
 			else if (guid_prop.PropertyType != typeof(Values.KGuid))
 			{
-				throw new InvalidOperationException(string.Format(
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 					"{0}'s {1} isn't defined as a {2}",
 					EngineSystemType.Name, kSystemGuidPropertyName, typeof(Values.KGuid).Name));
 			}
 			#endregion
 
 			#region Get and validate Guid
-			Guid = (Values.KGuid)guid_prop.GetValue(null);
+			SystemGuid = (Values.KGuid)guid_prop.GetValue(null);
 
-			if (Guid.IsEmpty)
+			if (SystemGuid.IsEmpty)
 			{
-				throw new InvalidOperationException(string.Format(
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 					"{0}'s {1} is Empty, this isn't allowed",
 					EngineSystemType.Name, kSystemGuidPropertyName));
 			}
@@ -158,15 +150,18 @@ namespace KSoft.Blam.Engine
 		{
 			// Validate the type is valid for being described as a engine system
 			if (!systemType.IsSubclassOf(typeof(EngineSystemBase)))
-				throw new System.InvalidOperationException(string.Format(
+			{
+				throw new System.InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 					"{0} is applied to {1} which is not a subclass of {2}",
 					typeof(EngineSystemAttribute).Name, systemType.Name, typeof(EngineSystemBase).Name));
+			}
 
 			EngineSystemType = systemType;
 
 			FindSystemGuid();
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:Do not catch general exception types")]
 		void FindEngineSystemFactoryMethod()
 		{
 			const BindingFlags k_factory_method_binding_flags =
@@ -177,7 +172,7 @@ namespace KSoft.Blam.Engine
 				mFactoryMethod = Reflection.Util.GenerateConstructorFunc<EngineSystemBase, EngineSystemCtorSignature>(
 					EngineSystemType, k_factory_method_binding_flags);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Debug.Trace.Engine.TraceInformation("Failed to get factory method for {0}: {1}",
 					EngineSystemType, ex);
@@ -186,10 +181,12 @@ namespace KSoft.Blam.Engine
 
 		void RegisterSystem()
 		{
-			if (Engine.EngineRegistry.Systems.ContainsKey(Guid))
-				throw new InvalidOperationException(string.Format(
+			if (Engine.EngineRegistry.Systems.ContainsKey(SystemGuid))
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 					"An engine system other than {0} is already registered with the {1} guid",
-					EngineSystemType.Name, Guid.ToString(Values.KGuid.kFormatHyphenated)));
+					EngineSystemType.Name, GetSystemGuidString()));
+			}
 
 			EngineRegistry.Register(this);
 		}
@@ -210,20 +207,23 @@ namespace KSoft.Blam.Engine
 		{
 			Contract.Requires<ArgumentNullException>(assembly != null);
 
-			var attrs = from type in assembly.GetTypes()
-						// attribute should only be applied to non-abstract classes
-						where type.IsClass && !type.IsAbstract
-						// there should actually only be one result...
-						from attribute in type.GetCustomAttributes<EngineSystemAttribute>()
-						select new KeyValuePair<Type, EngineSystemAttribute>(type, attribute);
+			var attrs =
+				from type in assembly.GetTypes()
+				// attribute should only be applied to non-abstract classes
+				where type.IsClass && !type.IsAbstract
+				// there should actually only be one result...
+				from attribute in type.GetCustomAttributes<EngineSystemAttribute>()
+				select new KeyValuePair<Type, EngineSystemAttribute>(type, attribute);
 
 			foreach (var esa in attrs)
+			{
 				esa.Value.InitializeForNewProgram(esa.Key);
+			}
 		}
 
 		internal static void DisposeFromOldAssembly(Assembly assembly)
 		{
-
+			Util.MarkUnusedVariable(ref assembly);
 		}
 	};
 }

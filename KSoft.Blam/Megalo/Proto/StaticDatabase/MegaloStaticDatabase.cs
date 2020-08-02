@@ -88,8 +88,11 @@ namespace KSoft.Blam.Megalo.Proto
 			}
 
 			if (id == TypeExtensionsBlam.IndexOfByPropertyNotFoundResult)
-				throw new KeyNotFoundException(string.Format("Couldn't find an {0} entry named {1}",
+			{
+				throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
+					"Couldn't find an {0} entry named {1}",
 					target, name));
+			}
 
 			return id;
 		}
@@ -102,7 +105,7 @@ namespace KSoft.Blam.Megalo.Proto
 		const string kGroupTagGameGlobalsOrdnanceList = "ggol";
 		const string kGroupTagGameMedalGlobals = "gmeg";
 		const string kGroupTagIncidentGlobalsDefinition = "ingd";
-		const string kGroupTagLoadoutGlobalsDefinition = "lgtd";
+		//const string kGroupTagLoadoutGlobalsDefinition = "lgtd";
 		const string kGroupTagMegaloGamEngineSounds = "mgls";
 		const string kGroupTagMegaloStringIdTable = "msit";
 

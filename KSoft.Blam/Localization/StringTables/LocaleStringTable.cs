@@ -9,6 +9,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 namespace KSoft.Blam.Localization.StringTables
 {
 	[System.Reflection.Obfuscation(Exclude=false)]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
 	public partial class LocaleStringTable
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
@@ -48,7 +49,7 @@ namespace KSoft.Blam.Localization.StringTables
 		{
 			int index = Count;
 			if (kInfo.CodeNameEntries && string.IsNullOrEmpty(sref.CodeName))
-				sref.CodeName = "String" + index.ToString();
+				sref.CodeName = "String" + index.ToString(Util.InvariantCultureInfo);
 
 			mStringReferences.Add(sref);
 			NotifyItemInserted(index, sref);
@@ -59,7 +60,8 @@ namespace KSoft.Blam.Localization.StringTables
 		{
 			return this.mStringReferences.IndexOfByProperty(codeName,
 				sref => sref.CodeName,
-				x => string.Format("Couldn't find a string named {0}", x));
+				x => string.Format(Util.InvariantCultureInfo,
+					"Couldn't find a string named {0}", x));
 		}
 
 		#region IBitStreamSerializable Members
@@ -152,12 +154,18 @@ namespace KSoft.Blam.Localization.StringTables
 			{
 				var sref = this[x];
 				if (string.IsNullOrWhiteSpace(sref.CodeName))
-					return new System.IO.InvalidDataException(string.Format("Multilingual string #{0} has an invalid name",
+				{
+					return new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+						"Multilingual string #{0} has an invalid name",
 						x));
+				}
 
 				if (names_set.Add(sref.CodeName)==false)
-					return new System.IO.InvalidDataException(string.Format("Multilingual string #{0} has a name already in use",
+				{
+					return new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+						"Multilingual string #{0} has a name already in use",
 						x));
+				}
 			}
 
 			return null;
@@ -174,7 +182,7 @@ namespace KSoft.Blam.Localization.StringTables
 
 			if (Count > Capacity)
 			{
-				var ex = new System.IO.InvalidDataException(string.Format(
+				var ex = new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 					"Serialized multilingual string table with {0} strings, which exceeds its maximum of {1}",
 					Count, kInfo.MaxCount));
 

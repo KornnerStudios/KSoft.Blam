@@ -102,18 +102,22 @@ namespace KSoft.Blam.Engine
 
 			if (!string.IsNullOrEmpty(name))
 			{
-				id = ResourceModels.FindIndex(x => name.Equals(x));
+				id = ResourceModels.FindIndex(x => name.Equals(x, StringComparison.Ordinal));
 
 				if (id.IsNone())
-					throw new KeyNotFoundException(string.Format("No resource model is registered with the name '{0}'",
+				{
+					throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
+						"No resource model is registered with the name '{0}'",
 						name));
+				}
 			}
 
 			return id;
 		}
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
 		static readonly Func<object, string, int> ResourceModelIdResolverSansKeyNotFoundException =
 			(_null, name) => !string.IsNullOrEmpty(name)
-				? ResourceModels.FindIndex(x => name.Equals(x))
+				? ResourceModels.FindIndex(x => name.Equals(x, StringComparison.Ordinal))
 				: TypeExtensions.kNone;
 		static readonly Func<object, int, string> ResourceModelNameResolver =
 			(_null, id) => id.IsNotNone()
@@ -152,9 +156,7 @@ namespace KSoft.Blam.Engine
 		#region Systems
 		static Dictionary<Values.KGuid, EngineSystemAttribute> gSystems =
 			new Dictionary<Values.KGuid, EngineSystemAttribute>();
-		internal static IReadOnlyDictionary<Values.KGuid, EngineSystemAttribute> Systems { get {
-			return gSystems;
-		} }
+		internal static IReadOnlyDictionary<Values.KGuid, EngineSystemAttribute> Systems => gSystems;
 
 		/// <summary>Don't call me unless your name is <see cref="EngineSystemAttribute"/>!</summary>
 		/// <param name="systemMetadata">	The system metadata. </param>
@@ -162,9 +164,9 @@ namespace KSoft.Blam.Engine
 		{
 			Contract.Requires(systemMetadata != null);
 			// IReadOnlyDictionary's ContainsKey is not Pure. Check is instead performed in EngineSystemAttribute code
-			//Contract.Requires(!Systems.ContainsKey(systemMetadata.Guid));
+			//Contract.Requires(!Systems.ContainsKey(systemMetadata.SystemGuid));
 
-			gSystems.Add(systemMetadata.Guid, systemMetadata);
+			gSystems.Add(systemMetadata.SystemGuid, systemMetadata);
 		}
 
 		/// <summary>Try to get the metadata for an <see cref="EngineSystemBase"/> via its guid</summary>
@@ -191,8 +193,9 @@ namespace KSoft.Blam.Engine
 			if (systemGuid.IsNotEmpty)
 				system_attribute = TryGetRegisteredSystem(systemGuid);
 
-			string display_string = string.Format("{{{0}}}={1}",
-				systemGuid.ToString(Values.KGuid.kFormatHyphenated),
+			string display_string = string.Format(Util.InvariantCultureInfo,
+				"{{{0}}}={1}",
+				systemGuid.ToString(Values.KGuid.kFormatHyphenated, Util.InvariantCultureInfo),
 				system_attribute != null
 					? system_attribute.EngineSystemType.ToString()
 					: "UNDEFINED_SYSTEM");

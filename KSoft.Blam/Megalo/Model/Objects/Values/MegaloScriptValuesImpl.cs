@@ -385,8 +385,11 @@ namespace KSoft.Blam.Megalo.Model
 				s.StreamCursor(ref mValue);
 
 			if (!ValidateValue(model))
-				throw new System.IO.InvalidDataException(string.Format("VarIndex value #{0} has an invalid value {1}",
+			{
+				throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+					"VarIndex value #{0} has an invalid value {1}",
 					Id, Value));
+			}
 		}
 		#endregion
 	};

@@ -3,6 +3,7 @@ namespace KSoft.Blam.Blob.Transport
 {
 	[System.Reflection.Obfuscation(Exclude=false)]
 	[System.Diagnostics.DebuggerDisplay("{Signature}, {DataSize}, {Version}, {Flags}")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct BlobChunkHeader
 		: IO.IEndianStreamSerializable
 	{

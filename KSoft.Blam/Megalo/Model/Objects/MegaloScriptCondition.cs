@@ -218,8 +218,11 @@ namespace KSoft.Blam.Megalo.Model
 
 				// #REVIEW_BLAM: ThrowReadException?
 				if (!UnionGroupIdIsValid(model, s.IsReading))
-					throw new System.IO.InvalidDataException(string.Format("Condition #{0} has an invalid union group id #{1}",
+				{
+					throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+						"Condition #{0} has an invalid union group id #{1}",
 						Id, UnionGroup));
+				}
 			}
 			return type;
 		}

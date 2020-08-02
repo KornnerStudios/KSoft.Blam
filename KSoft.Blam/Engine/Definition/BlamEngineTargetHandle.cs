@@ -14,6 +14,7 @@ namespace KSoft.Blam.Engine
 
 	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
 	[System.Diagnostics.DebuggerDisplay("Engine# = {Build.EngineIndex}, TargetPlatform# = {TargetPlatformIndex}, ResourceModel# = {ResourceModelIndex}")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
 	public struct BlamEngineTargetHandle
 		: IComparer<BlamEngineTargetHandle>, System.Collections.IComparer
 		, IComparable<BlamEngineTargetHandle>, IComparable
@@ -150,10 +151,11 @@ namespace KSoft.Blam.Engine
 		{
 			Contract.Ensures(Contract.Result<string>() != null);
 
-			return string.Format("[{0}\t{1}\t{2}]",
+			return string.Format(Util.InvariantCultureInfo,
+				"[{0}\t{1}\t{2}]",
 				Build.ToString(),
 				TargetPlatform,
-				ResourceModelIndex.ToString());
+				ResourceModelIndex.ToString(Util.InvariantCultureInfo));
 		}
 		#endregion
 
@@ -175,13 +177,15 @@ namespace KSoft.Blam.Engine
 			if (platform_index.IsNotNone())
 			{
 				var platform = EngineRegistry.TargetPlatforms[platform_index];
-				sb.AppendFormat(".{0}", platform);
+				sb.AppendFormat(Util.InvariantCultureInfo,
+					".{0}", platform);
 
 				#region ResourceModel
 				if (rsrc_model_index.IsNotNone())
 				{
 					var rsrc_model = EngineRegistry.ResourceModels[rsrc_model_index];
-					sb.AppendFormat(".{0}", rsrc_model);
+					sb.AppendFormat(Util.InvariantCultureInfo,
+						".{0}", rsrc_model);
 				}
 				#endregion
 			}

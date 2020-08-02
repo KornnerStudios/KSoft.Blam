@@ -16,6 +16,8 @@ namespace KSoft.Blam.Megalo.Proto
 	[System.Reflection.Obfuscation(Exclude=false)]
 	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
 	[System.Diagnostics.DebuggerDisplay("Name = {NameIndex}, Base = {BaseType}, BitLength = {BitLength}")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct MegaloScriptValueType
 		: IComparable<MegaloScriptValueType>, IComparable
 		, IEquatable<MegaloScriptValueType>
@@ -27,6 +29,7 @@ namespace KSoft.Blam.Megalo.Proto
 			public static readonly IEnumBitEncoder<uint> TypeParam;
 			public static readonly IEnumBitEncoder<uint> TypeTraits;
 
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
 			static EncoderTraitsChoice()
 			{
 				TypeParam = Util.MaxChoice(
@@ -50,11 +53,11 @@ namespace KSoft.Blam.Megalo.Proto
 		};
 
 		const int kBitCountNameIndex =				7;
-		static readonly int kMaxNameIndex =			127;
+		const int kMaxNameIndex =					127;
 
 		// If we wanted to save a bit, we could internally store the bit length as base zero
 		const int kBitCountBitLength =				7;
-		static readonly uint kMaxBitLength =		64;
+		const uint kMaxBitLength =					64;
 
 		// nesting these into a static class makes them run before the struct's static ctor...
 		// which, being a value type cctor, may not run when we want it
@@ -216,6 +219,13 @@ namespace KSoft.Blam.Megalo.Proto
 			return false;
 		}
 		public override int GetHashCode() { return (int)mHandle; }
+		#endregion
+
+		#region Operators
+		[Contracts.Pure]
+		public static bool operator ==(MegaloScriptValueType lhs, MegaloScriptValueType rhs)	{ return lhs.mHandle == rhs.mHandle; }
+		[Contracts.Pure]
+		public static bool operator !=(MegaloScriptValueType lhs, MegaloScriptValueType rhs)	{ return lhs.mHandle != rhs.mHandle; }
 		#endregion
 
 		#region IComparable<MegaloScriptValueType> Members

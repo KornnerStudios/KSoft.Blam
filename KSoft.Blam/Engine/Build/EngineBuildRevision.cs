@@ -17,13 +17,8 @@ namespace KSoft.Blam.Engine
 
 		internal const int kMaxCount = 32 - 1; // 5 bits. per branch
 		internal static readonly int kIndexBitCount;
-		private static readonly uint kIndexBitMask;
-
-		static EngineBuildRevision()
-		{
-			kIndexBitMask = Bits.GetNoneableEncodingTraits(kMaxCount,
-				out kIndexBitCount);
-		}
+		private static readonly uint kIndexBitMask = Bits.GetNoneableEncodingTraits(kMaxCount,
+			out kIndexBitCount);
 		#endregion
 
 		public EngineBuildBranch Branch { get; private set; }
@@ -64,8 +59,8 @@ namespace KSoft.Blam.Engine
 				TypeExtensions.kNone;
 
 			Date = DateTime.MinValue;
-			mDateString = Date.ToString(kDateFormat);
-			mTimeString = Date.ToString(kDateTimeFormat + " " + kDateTimeOffsetFormat);
+			mDateString = Date.ToString(kDateFormat, Util.InvariantCultureInfo);
+			mTimeString = Date.ToString(kDateTimeFormat + " " + kDateTimeOffsetFormat, Util.InvariantCultureInfo);
 
 			ExportName = "";
 		}
@@ -136,15 +131,19 @@ namespace KSoft.Blam.Engine
 					kDateTimeFormat + " " +
 					kDateTimeOffsetFormat;
 
-				string date_time_str = string.Format("{0} {1}", mDateString, mTimeString);
-				try { DateTime.ParseExact(date_time_str, k_date_format_string, System.Globalization.CultureInfo.InvariantCulture); }
-				catch(FormatException ex)
+				string date_time_str = string.Format(Util.InvariantCultureInfo,
+					"{0} {1}", mDateString, mTimeString);
+				try
+				{ DateTime.ParseExact(date_time_str, k_date_format_string, System.Globalization.CultureInfo.InvariantCulture); }
+				catch (FormatException ex)
 				{ s.ThrowReadException(ex); }
 
 				if (ValidTargetPlatforms == EngineRegistry.NullValidTargetPlatforms)
-					throw new System.IO.InvalidDataException(string.Format(
+				{
+					throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 						"{0}/{1} or its repository parents didn't specify any ValidTargetPlatforms",
 						Branch.Name, BuildString));
+				}
 			}
 		}
 		#endregion

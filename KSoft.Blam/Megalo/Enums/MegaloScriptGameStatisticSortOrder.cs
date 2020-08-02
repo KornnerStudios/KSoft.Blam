@@ -7,8 +7,8 @@ namespace KSoft.Blam.Megalo
 		Ascending = -1,
 		Ignored,
 		Descending,
-		[System.Obsolete]
+		[System.Obsolete("Obsolete")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
 		_2,
 	};
 }
-

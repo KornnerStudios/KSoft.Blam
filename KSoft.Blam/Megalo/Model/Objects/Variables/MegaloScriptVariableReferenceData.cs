@@ -10,6 +10,9 @@ namespace KSoft.Blam.Megalo.Model
 	using MegaloScriptVariableReferenceTypeBitStreamer = IO.EnumBitStreamer<MegaloScriptVariableReferenceType>;
 
 	[System.Reflection.Obfuscation(Exclude=false)]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1067:Override Equals when implementing IEquatable")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct MegaloScriptVariableReferenceData
 		: IComparable<MegaloScriptVariableReferenceData>
 		, IEquatable<MegaloScriptVariableReferenceData>
@@ -21,6 +24,7 @@ namespace KSoft.Blam.Megalo.Model
 		{ mReferenceKind = MegaloScriptVariableReferenceType.Custom, Type = -1, DataType = -1, Data = -1 };
 		public static readonly MegaloScriptVariableReferenceData Player = new MegaloScriptVariableReferenceData
 		{ mReferenceKind = MegaloScriptVariableReferenceType.Player, Type = -1, DataType = -1, Data = -1 };
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		public static readonly MegaloScriptVariableReferenceData Object = new MegaloScriptVariableReferenceData
 		{ mReferenceKind = MegaloScriptVariableReferenceType.Object, Type = -1, DataType = -1, Data = -1 };
 		public static readonly MegaloScriptVariableReferenceData Team = new MegaloScriptVariableReferenceData
@@ -105,8 +109,11 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			s.Stream(ref Type, protoType.TypeBitLength);
 			if (Type < 0 || Type >= protoType.Members.Count)
-				throw new System.IO.InvalidDataException(string.Format("{0}/{1}: Encountered invalid {2} type data",
+			{
+				throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+					"{0}/{1}: Encountered invalid {2} type data",
 					s.StreamName, model.MegaloVariant.BaseVariant.Header.Title, mReferenceKind));
+			}
 
 			var member = protoType.Members[Type];
 

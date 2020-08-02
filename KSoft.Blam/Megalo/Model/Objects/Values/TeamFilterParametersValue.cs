@@ -68,6 +68,8 @@ namespace KSoft.Blam.Megalo.Model
 		public void ChangeValue(MegaloScriptModel model,
 			MegaloScriptVariableReferenceData playerData, MegaloScriptVariableReferenceData playerAddOrRemoveData)
 		{
+			Util.MarkUnusedVariable(ref model);
+
 			FilterType = MegaloScriptPlayerFilterType.PlayerMask;
 			Player = playerData;
 			PlayerAddOrRemove = playerAddOrRemoveData;
@@ -75,6 +77,8 @@ namespace KSoft.Blam.Megalo.Model
 		public void ChangeValue(MegaloScriptModel model, MegaloScriptPlayerFilterType filterType)
 		{
 			Contract.Requires(filterType != MegaloScriptPlayerFilterType.PlayerMask, "Wrong ChangeValue overload");
+
+			Util.MarkUnusedVariable(ref model);
 
 			FilterType = filterType;
 			Player = MegaloScriptVariableReferenceData.Player;

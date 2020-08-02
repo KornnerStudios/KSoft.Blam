@@ -21,6 +21,7 @@ namespace KSoft.Blam.RuntimeData
 		public string Name = "";
 		public bool IsOnlineId;
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
 		public bool Name_NeedsDevHack { get { return Name.Length == 1 && Name[0] == 0x3F; } }
 
 		#region IBitStreamSerializable Members

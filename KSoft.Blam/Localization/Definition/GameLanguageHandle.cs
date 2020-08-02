@@ -20,6 +20,8 @@ namespace KSoft.Blam.Localization
 	[System.Reflection.Obfuscation(Exclude=false)]
 	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
 	[System.Diagnostics.DebuggerDisplay("Game = {Game}, Lang = {Language}, Index = {GameIndex}, Supported = {IsSupported}")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct GameLanguageHandle
 		: IComparer<GameLanguageHandle>, System.Collections.IComparer
 		, IComparable<GameLanguageHandle>, IComparable
@@ -160,6 +162,13 @@ namespace KSoft.Blam.Localization
 
 			return LanguageName;
 		}
+		#endregion
+
+		#region Operators
+		[Contracts.Pure]
+		public static bool operator ==(GameLanguageHandle lhs, GameLanguageHandle rhs)	{ return lhs.mHandle == rhs.mHandle; }
+		[Contracts.Pure]
+		public static bool operator !=(GameLanguageHandle lhs, GameLanguageHandle rhs)	{ return lhs.mHandle != rhs.mHandle; }
 		#endregion
 
 		#region IComparer<GameLanguageHandle> Members

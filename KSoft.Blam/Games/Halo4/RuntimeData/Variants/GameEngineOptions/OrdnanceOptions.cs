@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 {
@@ -8,6 +9,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		>;
 
 	[System.Reflection.Obfuscation(Exclude=false)]
+	[SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct GameOptionsOrdnancePossibility
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
@@ -17,9 +19,8 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public string Name;
 		public float Weight;
 
-		public bool IsDefault { get {
-			return Name == "" && Weight == kDefaultWeight;
-		} }
+		public bool IsDefault =>
+			Name.IsNullOrEmpty() && Weight == kDefaultWeight;
 
 		public void RevertToDefault()
 		{
@@ -124,6 +125,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public string RandomDropSet, PersonalDropSet, OrdnanceSubstitutions;
 		public bool CustomizePersonalOrdnance; // 0x4 at runtime
 		// right, left, down (middle), up? (not exposed; unused?)
+		[SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
 		public GameOptionsOrdnancePersonalOrdnancePossibilities[] PersonalOrdnance { get; private set; }
 		float PointRequirement, PointIncreaseMultiplier;
 
@@ -143,8 +145,11 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		static readonly Predicate<string> IsNotDefaultString = s => s != kDefaultString;
 			//s.Length != 1 || s[0] != 0x3F;
 
+		[SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
 		public bool InitialDropSet_NeedsDefaultHack { get { return !IsNotDefaultString(InitialDropSet); } }
+		[SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
 		public bool RandomDropSet_NeedsDefaultHack { get { return !IsNotDefaultString(RandomDropSet); } }
+		[SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
 		public bool PersonalDropSet_NeedsDefaultHack { get { return !IsNotDefaultString(PersonalDropSet); } }
 		public bool OrdnanceSubstitutionsNeedsDefaultHack { get { return !IsNotDefaultString(OrdnanceSubstitutions); } }
 

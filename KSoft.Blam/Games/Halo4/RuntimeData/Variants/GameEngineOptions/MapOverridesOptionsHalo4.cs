@@ -78,6 +78,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	{
 		internal int EquipmentSet; // actually shorts at runtime
 		// damage boost, speed boost, overshield, custom
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
 		public GameOptionsPowerup[] Powerups { get; private set; }
 
 		protected override bool ObjectSetsAreNotDefault { get {

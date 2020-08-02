@@ -99,7 +99,7 @@ namespace KSoft.Blam.Megalo.Proto
 			string path = getPathFunc(forBuild, out actual_build);
 			if (path == null)
 			{
-				throw new InvalidOperationException(string.Format(
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 					"Tried to get the megalo {0} database for {1} when a build file wasn't defined for it",
 					dbTypeName,
 					forBuild.ToDisplayString()));
@@ -115,7 +115,7 @@ namespace KSoft.Blam.Megalo.Proto
 				lock (loadedDbs)
 					loadedDbs[path] = db;
 
-				await Task.Run(() => LoadDatabase(db, path));
+				await Task.Run(() => LoadDatabase(db, path)).ConfigureAwait(false);
 			}
 
 			return db;
@@ -165,7 +165,7 @@ namespace KSoft.Blam.Megalo.Proto
 				);
 		}
 
-		public void PrepareDatabasesForUse(MegaloStaticDatabase staticDb, MegaloScriptDatabase scriptDb)
+		public static void PrepareDatabasesForUse(MegaloStaticDatabase staticDb, MegaloScriptDatabase scriptDb)
 		{
 			if (staticDb == null)
 				throw new ArgumentNullException(nameof(staticDb));

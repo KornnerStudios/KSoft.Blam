@@ -64,6 +64,8 @@ namespace KSoft.Blam.Blob
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(version.IsNotNone());
 
+			Util.MarkUnusedVariable(ref binarySize);
+
 			group = null;
 			infoForVersion = null;
 
@@ -117,6 +119,7 @@ namespace KSoft.Blam.Blob
 				throw new KSoft.Debug.UnreachableException(blobGroup.GroupTag.Name);
 			}
 
+			Util.MarkUnusedVariable(ref binarySize);
 			bobject.Initialize(this, gameTarget, blobGroup, version);
 
 			return bobject;
@@ -146,7 +149,7 @@ namespace KSoft.Blam.Blob
 			BlobGroup known_blob_group;
 			if (!TryGetBlobGroup(knownBlob, out known_blob_group))
 			{
-				throw new InvalidOperationException(string.Format(
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 					"No blob groups marked to be known as {0} under {1}",
 					knownBlob,
 					this.Prototype.Engine));
@@ -156,7 +159,7 @@ namespace KSoft.Blam.Blob
 				known_blob_group.FindMostRelaventVersionInfo(gameTarget.Build);
 			if (known_blob_group_version_info == null)
 			{
-				throw new InvalidOperationException(string.Format(
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 					"No {0} blob group versions resolved possibly for {1} under {2}",
 					knownBlob,
 					gameTarget.Build,
@@ -185,7 +188,7 @@ namespace KSoft.Blam.Blob
 				groupTag = (GroupTagDatum)system.GroupTags.FindGroupByTag(tag_string);
 
 				if (groupTag == null)
-					s.ThrowReadException(new KeyNotFoundException(string.Format(
+					s.ThrowReadException(new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
 						"The tag '{0}' isn't defined in this system",
 						tag_string)));
 			}
@@ -208,7 +211,9 @@ namespace KSoft.Blam.Blob
 			BlobGroup blobGroup, int version,
 			Engine.EngineBuildHandle buildForBlobVersion, Engine.EngineBuildHandle actualBuild)
 		{
-			var msg = string.Format(
+			Util.MarkUnusedVariable(ref blobSystem);
+
+			var msg = string.Format(Util.InvariantCultureInfo,
 				"Build incompatibility for blob object {0} v{1} which uses build={2} " +
 				"but stream uses build={3}",
 				blobGroup.GroupTag.TagString, version, buildForBlobVersion.ToDisplayString(),
@@ -262,7 +267,8 @@ namespace KSoft.Blam.Blob
 				}
 				else
 				{
-					string msg = string.Format("{0}: No blob matching '{1}'/v{2} exists",
+					string msg = string.Format(Util.InvariantCultureInfo,
+						"{0}: No blob matching '{1}'/v{2} exists",
 						ctxt.GameTarget.ToDisplayString(), group_tag, version);
 					s.ThrowReadException(new System.IO.InvalidDataException(msg));
 				}

@@ -5,6 +5,7 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 	using GameOptionsLoadoutFlagsBitStreamer = IO.EnumBitStreamer<GameOptionsLoadoutFlagsHaloReach>;
 
 	[Flags]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1714:FlagsEnumsShouldHavePluralNames")] // It does...
 	public enum GameOptionsLoadoutFlagsHaloReach
 	{
 		SpartanLoadouts = 1<<0,

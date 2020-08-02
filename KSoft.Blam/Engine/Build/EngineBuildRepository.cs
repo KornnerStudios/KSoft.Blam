@@ -14,7 +14,7 @@ namespace KSoft.Blam.Engine
 		/// <summary>Engine this repository defines builds for</summary>
 		public BlamEngine Engine { get; private set; }
 		/// <summary>The underlying general engine's Guid</summary>
-		public Values.KGuid Guid { get; private set; }
+		public Values.KGuid RepositoryGuid { get; private set; }
 
 		#region ValidTargetPlatforms
 		Collections.BitSet mValidTargetPlatforms;
@@ -39,8 +39,11 @@ namespace KSoft.Blam.Engine
 				id = repo.Branches.FindIndex(x => x.Name == name);
 
 				if (id.IsNone())
-					throw new KeyNotFoundException(string.Format("Engine {0} doesn't define a branch named {1}",
+				{
+					throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
+						"Engine {0} doesn't define a branch named {1}",
 						repo.Engine.Name, name));
+				}
 			}
 
 			return id;
@@ -57,7 +60,7 @@ namespace KSoft.Blam.Engine
 
 		public EngineBuildRepository()
 		{
-			Guid = Values.KGuid.Empty;
+			RepositoryGuid = Values.KGuid.Empty;
 			Branches = new List<EngineBuildBranch>();
 		}
 
@@ -75,7 +78,7 @@ namespace KSoft.Blam.Engine
 			using (s.EnterCursorBookmark("Repository"))
 			using (s.EnterUserDataBookmark(this))
 			{
-				s.StreamElement("Guid", this, obj => obj.Guid);
+				s.StreamElement("Guid", this, obj => obj.RepositoryGuid);
 
 				EngineTargetPlatform.SerializeBitSet(s, ref mValidTargetPlatforms, "ValidTargetPlatforms");
 

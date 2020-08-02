@@ -27,6 +27,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
 		public float[] ParameterArray { get; private set; }
 		public bool ShowInScoreboard;
 

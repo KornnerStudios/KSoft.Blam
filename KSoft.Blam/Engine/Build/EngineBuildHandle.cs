@@ -14,6 +14,7 @@ namespace KSoft.Blam.Engine
 
 	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
 	[System.Diagnostics.DebuggerDisplay("Engine# = {EngineIndex}, Branch# = {BranchIndex}, Rev# = {RevisionIndex}")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
 	public struct EngineBuildHandle
 		: IComparer<EngineBuildHandle>, System.Collections.IComparer
 		, IComparable<EngineBuildHandle>, IComparable
@@ -179,7 +180,8 @@ namespace KSoft.Blam.Engine
 			Contract.Ensures(Contract.Result<string>() != null);
 
 			// #REVIEW_BLAM: This isn't great when viewing in a debugger, as the tabs seem to be ignored (so there's no whitespace)
-			return string.Format("[{0}\t{1}\t{2}]",
+			return string.Format(Util.InvariantCultureInfo,
+				"[{0}\t{1}\t{2}]",
 				Engine, Branch, Revision);
 		}
 		#endregion
@@ -210,13 +212,18 @@ namespace KSoft.Blam.Engine
 					var branch = engine.BuildRepository.Branches[branch_index];
 					// only include the branch display name if it isn't the same as the engine's
 					if (branch.ToString() != engine.ToString())
-						sb.AppendFormat(".{0}", branch);
+					{
+						sb.AppendFormat(Util.InvariantCultureInfo,
+							".{0}", branch);
+					}
 
 					#region Revision
 					if (revisn_index.IsNotNone())
 					{
 						var revisn = branch.Revisions[revisn_index];
-						sb.AppendFormat(".{0}", revisn.Version.ToString());
+						sb.AppendFormat(Util.InvariantCultureInfo,
+							".{0}",
+							revisn.Version.ToString(Util.InvariantCultureInfo));
 					}
 					#endregion
 				}
@@ -417,7 +424,7 @@ namespace KSoft.Blam.Engine
 		///
 		/// Will safely handle <see cref="IsNone"/> handles.
 		/// </remarks>
-		public bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic, EngineBuildHandle forBuild,
+		public static bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic, EngineBuildHandle forBuild,
 			ref T value, out EngineBuildHandle actualBuild)
 		{
 			actualBuild = forBuild;
@@ -446,7 +453,7 @@ namespace KSoft.Blam.Engine
 			actualBuild = EngineBuildHandle.None;
 			return false;
 		}
-		public bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic, EngineBuildHandle forBuild,
+		public static bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic, EngineBuildHandle forBuild,
 			ref T value)
 		{
 			EngineBuildHandle actual_build;
@@ -510,6 +517,8 @@ namespace KSoft.Blam.Engine
 			where TDoc : class
 			where TCursor : class
 		{
+			Util.MarkUnusedVariable(ref _unused);
+
 			Serialize(s, ref value);
 		}
 

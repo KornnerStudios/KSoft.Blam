@@ -137,6 +137,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 	{
 		public GameOptionsTeamOptionsModelOverride ModelOverride;
 		public byte DesignatorSwitchType = 2;
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
 		public abstract GameOptionsSingleTeamOptions[] Teams { get; }
 
 		public virtual bool IsDefault { get {

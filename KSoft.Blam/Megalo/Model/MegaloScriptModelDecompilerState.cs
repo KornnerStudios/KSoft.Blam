@@ -27,7 +27,7 @@ namespace KSoft.Blam.Megalo.Model
 				if (sref.JustEnglish && !string.IsNullOrWhiteSpace(sref.English))
 					sref.CodeName = sref.English;
 				else
-					sref.CodeName = "String" + x.ToString();
+					sref.CodeName = "String" + x.ToString(Util.InvariantCultureInfo);
 			}
 
 			if (Variant.BaseNameStringIndex.IsNotNone())
@@ -52,7 +52,7 @@ namespace KSoft.Blam.Megalo.Model
 					!string.IsNullOrWhiteSpace(string_table[obj.NameStringIndex].English))
 					obj.CodeName = string_table[obj.NameStringIndex].English;
 				else
-					obj.CodeName = "Option" + x.ToString();
+					obj.CodeName = "Option" + x.ToString(Util.InvariantCultureInfo);
 			}
 		}
 		public void DecompileVariant()
@@ -128,7 +128,7 @@ namespace KSoft.Blam.Megalo.Model
 				{
 					if (prefix_underscore)
 						sb.Append('_');
-					sb.Append(filter.Numeric.ToString());
+					sb.Append(filter.Numeric.ToString(Util.InvariantCultureInfo));
 					prefix_underscore = true;
 				}
 			}
@@ -160,7 +160,7 @@ namespace KSoft.Blam.Megalo.Model
 				if (obj.LabelStringIndex.IsNotNone())
 					obj.CodeName = string_table[obj.LabelStringIndex].English;
 				else
-					obj.CodeName = "GameObjectFilter" + x.ToString();
+					obj.CodeName = "GameObjectFilter" + x.ToString(Util.InvariantCultureInfo);
 			}
 		}
 
@@ -214,17 +214,20 @@ namespace KSoft.Blam.Megalo.Model
 			for (int x = 0; x < set.Teams.Count; x++, sb.Clear())
 			{
 				var variable = set.Teams[x];
-				variable.CodeName = string.Format("{0}{1}{2}", prefix, "Team", x.ToString());
+				variable.CodeName = string.Format(Util.InvariantCultureInfo,
+					"{0}{1}{2}", prefix, "Team", x.ToString(Util.InvariantCultureInfo));
 			}
 			for (int x = 0; x < set.Players.Count; x++, sb.Clear())
 			{
 				var variable = set.Players[x];
-				variable.CodeName = string.Format("{0}{1}{2}", prefix, "Player", x.ToString());
+				variable.CodeName = string.Format(Util.InvariantCultureInfo,
+					"{0}{1}{2}", prefix, "Player", x.ToString(Util.InvariantCultureInfo));
 			}
 			for (int x = 0; x < set.Objects.Count; x++, sb.Clear())
 			{
 				var variable = set.Objects[x];
-				variable.CodeName = string.Format("{0}{1}{2}", prefix, "Object", x.ToString());
+				variable.CodeName = string.Format(Util.InvariantCultureInfo,
+					"{0}{1}{2}", prefix, "Object", x.ToString(Util.InvariantCultureInfo));
 			}
 		}
 		public void DecompileVariables()

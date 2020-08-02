@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
 #else
@@ -692,9 +693,13 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public WeaponTuningWeaponModifierData[] DualBarrelWeaponModifiers = new WeaponTuningWeaponModifierData[6];
 
 		#region IsUnchanged
+		[SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
 		public bool DualBarrelModifiers_IsUnchanged { get { return Array.TrueForAll(DualBarrelModifiers, unk => unk.IsUnchanged); } }
+		[SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
 		public bool SingleBarrelModifiers_IsUnchanged { get { return Array.TrueForAll(SingleBarrelModifiers, unk => unk.IsUnchanged); } }
+		[SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
 		public bool SingleBarrelWeaponModifiers_IsUnchanged { get { return Array.TrueForAll(SingleBarrelWeaponModifiers, unk => unk.IsUnchanged); } }
+		[SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
 		public bool DualBarrelWeaponModifiers_IsUnchanged { get { return Array.TrueForAll(DualBarrelWeaponModifiers, unk => unk.IsUnchanged); } }
 		public bool IsUnchanged { get {
 			return DualBarrelModifiers_IsUnchanged

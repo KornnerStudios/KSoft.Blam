@@ -22,7 +22,7 @@ namespace KSoft.Blam.Localization.StringTables
 			bs.Read(out uncompressed_size, mOwner.kInfo.BufferSizeBitLength); int size = uncompressed_size;
 			if (uncompressed_size > mOwner.kInfo.BufferMaxSize)
 				throw new System.IO.InvalidDataException("Input string table buffer size too large by (bytes): " +
-					(uncompressed_size - mOwner.kInfo.BufferMaxSize).ToString());
+					(uncompressed_size - mOwner.kInfo.BufferMaxSize).ToString(Util.InvariantCultureInfo));
 
 			bs.Read(out is_compressed);
 			if (is_compressed)

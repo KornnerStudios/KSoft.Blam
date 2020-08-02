@@ -1,7 +1,9 @@
-﻿
+﻿using System.Diagnostics.CodeAnalysis;
+
 namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants.PlayerTraitModifiers
 {
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
+	[SuppressMessage("Microsoft.Naming", "CA1717:OnlyFlagsEnumsShouldHavePluralNames")]
 	public enum DamageModifiers
 	{
 		DamageResistance,
@@ -22,6 +24,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants.PlayerTraitModifiers
 	};
 
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
+	[SuppressMessage("Microsoft.Naming", "CA1717:OnlyFlagsEnumsShouldHavePluralNames")]
 	public enum WeaponModifiers
 	{
 		DamageMultiplier,
@@ -51,6 +54,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants.PlayerTraitModifiers
 	};
 
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
+	[SuppressMessage("Microsoft.Naming", "CA1717:OnlyFlagsEnumsShouldHavePluralNames")]
 	public enum MovementModifiers
 	{
 		Speed,
@@ -62,6 +66,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants.PlayerTraitModifiers
 	};
 
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
+	[SuppressMessage("Microsoft.Naming", "CA1717:OnlyFlagsEnumsShouldHavePluralNames")]
 	public enum AppearanceModifiers
 	{
 		PlayerScale,
@@ -70,6 +75,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants.PlayerTraitModifiers
 	};
 
 	[System.Reflection.Obfuscation(Exclude=false, ApplyToMembers=false)]
+	[SuppressMessage("Microsoft.Naming", "CA1717:OnlyFlagsEnumsShouldHavePluralNames")]
 	public enum SensorsModifiers
 	{
 		MotionTrackerRange,

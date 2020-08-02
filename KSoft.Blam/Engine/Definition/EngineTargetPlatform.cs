@@ -15,13 +15,8 @@ namespace KSoft.Blam.Engine
 		#region Constants
 		internal const int kMaxCount = 8 - 1; // 3 bits. per registry
 		internal static readonly int kIndexBitCount;
-		private static readonly uint kIndexBitMask;
-
-		static EngineTargetPlatform()
-		{
-			kIndexBitMask = Bits.GetNoneableEncodingTraits(kMaxCount,
-				out kIndexBitCount);
-		}
+		private static readonly uint kIndexBitMask = Bits.GetNoneableEncodingTraits(kMaxCount,
+			out kIndexBitCount);
 		#endregion
 
 		/// <summary>Index this object appears in the global registry</summary>
@@ -108,12 +103,16 @@ namespace KSoft.Blam.Engine
 				id = EngineRegistry.TargetPlatforms.FindIndex(x => x.Name == name);
 
 				if (id.IsNone())
-					throw new KeyNotFoundException(string.Format("No target platform is registered with the name '{0}'",
+				{
+					throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
+						"No target platform is registered with the name '{0}'",
 						name));
+				}
 			}
 
 			return id;
 		}
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
 		static readonly Func<object, string, int> TargetPlatformIdResolverSansKeyNotFoundException =
 			(_null, name) => !string.IsNullOrEmpty(name)
 				? EngineRegistry.TargetPlatforms.FindIndex(x => x.Name == name)

@@ -19,6 +19,7 @@ namespace KSoft.Collections
 		{
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]
 		public static ActiveListDesc<T> CreateForNullData(int capacity, bool fixedLength = true)
 		{
 			Contract.Requires(capacity >= 0);

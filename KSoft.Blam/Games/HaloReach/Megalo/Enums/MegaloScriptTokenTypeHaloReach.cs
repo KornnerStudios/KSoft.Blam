@@ -8,6 +8,7 @@ namespace KSoft.Blam.Games.HaloReach.Megalo
 
 		AbsolutePlayerIndex, // player's name
 		TeamDesignator, // 'team_none' or team designator string
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
 		Object, // 'none' or 'unknown'
 		Numeric, // %i
 		TimerSeconds, // %i:%02i:%02i or %i:%02i or 0:%02i

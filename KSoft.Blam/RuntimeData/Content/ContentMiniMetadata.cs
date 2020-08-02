@@ -22,6 +22,7 @@ namespace KSoft.Blam.RuntimeData
 
 		const int kBitStreamSizeInBytes = 0x80;
 		const int kEncodedPortionLength = 0x2A; // characters
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
 		const int kContainerNameLength = 1 + kEncodedPortionLength;
 		const int kAuthorStorageLength = 13; // 16 at runtime
 

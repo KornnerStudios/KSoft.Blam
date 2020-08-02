@@ -142,10 +142,18 @@ namespace KSoft.Blam.Blob.Transport
 		#region IDisposable Members
 		public void Dispose()
 		{
-			if (UnderlyingStream != null)
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
 			{
-				UnderlyingStream.Dispose();
-				UnderlyingStream = null;
+				if (UnderlyingStream != null)
+				{
+					UnderlyingStream.Dispose();
+					UnderlyingStream = null;
+				}
 			}
 		}
 		#endregion
@@ -255,6 +263,8 @@ namespace KSoft.Blam.Blob.Transport
 			Contract.Requires<ArgumentOutOfRangeException>(findStartPosition.IsNone() ||
 				findStartPosition < AssumedBlobSize);
 
+			Util.MarkUnusedVariable(ref signature);
+
 			bool blob_found = false;
 			long orig_pos = TypeExtensions.kNone;
 
@@ -349,6 +359,8 @@ namespace KSoft.Blam.Blob.Transport
 
 		static long GetEnumerateStreamResultDataPosition(BlobTransportStream @this, BlobChunkHeader header)
 		{
+			Util.MarkUnusedVariable(ref header);
+
 			return @this.BaseStream.Position; // position at this point will be right after [header]
 		}
 		static byte[] GetEnumerateStreamResultBytes(BlobTransportStream @this, BlobChunkHeader header)
@@ -387,7 +399,9 @@ namespace KSoft.Blam.Blob.Transport
 			BlobChunkHeader header, BlobGroup blobGroup,
 			Engine.EngineBuildHandle buildForBlobVersion, Engine.EngineBuildHandle actualBuild)
 		{
-			throw new InvalidOperationException(string.Format(
+			Util.MarkUnusedVariable(ref blobSystem);
+
+			throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 				"Build incompatibility for chunk {0} v{1} sizeof({2}) which uses build={3} " +
 				"but we're using build={4} for {5}",
 				blobGroup.GroupTag.TagString, header.Version, header.DataSize, buildForBlobVersion.ToDisplayString(),
@@ -398,11 +412,16 @@ namespace KSoft.Blam.Blob.Transport
 		{
 			const string kUnhandledChunkMessageFormat = " chunk {0} v{1} sizeof({2}) for target={3}";
 
+			Util.MarkUnusedVariable(ref blobSystem);
+
 			string tag_string = new string(Values.GroupTagData32.FromUInt(header.Signature));
 
 			if (throwOnUnhandledChunk)
-				throw new InvalidDataException(string.Format("Unhandled" + kUnhandledChunkMessageFormat,
+			{
+				throw new InvalidDataException(string.Format(Util.InvariantCultureInfo,
+					"Unhandled" + kUnhandledChunkMessageFormat,
 					tag_string, header.Version, header.DataSize, GameTarget.ToDisplayString()));
+			}
 
 			Debug.Trace.Blob.TraceInformation("Ignoring" + kUnhandledChunkMessageFormat,
 				tag_string, header.Version, header.DataSize, GameTarget.ToDisplayString());
@@ -431,7 +450,9 @@ namespace KSoft.Blam.Blob.Transport
 					task_list.Add(task);
 				}
 				else
+				{
 					EnumerateChunksReadObjectFoundUnknownChunk(blobSystem, header, throwOnUnhandledChunk);
+				}
 			}
 
 			return task_list.ToArray();
@@ -458,7 +479,9 @@ namespace KSoft.Blam.Blob.Transport
 					results.Add(obj);
 				}
 				else
+				{
 					EnumerateChunksReadObjectFoundUnknownChunk(blobSystem, header, throwOnUnhandledChunk);
+				}
 			}
 
 			return results;
@@ -487,7 +510,7 @@ namespace KSoft.Blam.Blob.Transport
 			if (result_info.IsValid)
 			{
 				var tasks = EnumerateChunksReadObjectsAsync(blobSystem, throwOnUnhandledChunk, chunks);
-				await Task.WhenAll(tasks);
+				await Task.WhenAll(tasks).ConfigureAwait(true);
 				objects = from task in tasks
 						  select task.Result;
 			}
@@ -615,7 +638,7 @@ namespace KSoft.Blam.Blob.Transport
 			var result_info = BlobChunkVerificationResultInfo.ValidResult;
 
 			var tasks = WriteChunksProcessObjectsAsync(objects);
-			await Task.WhenAll(tasks);
+			await Task.WhenAll(tasks).ConfigureAwait(true);
 			var chunks= from task in tasks
 						select task.Result;
 
@@ -637,7 +660,7 @@ namespace KSoft.Blam.Blob.Transport
 			return result_info;
 		}
 
-		BlobObject[] WriteChunksGetObjectsArray(IEnumerable<BlobObject> objects)
+		static BlobObject[] WriteChunksGetObjectsArray(IEnumerable<BlobObject> objects)
 		{
 			var array = objects is BlobObject[]
 				? (BlobObject[])objects
@@ -646,7 +669,7 @@ namespace KSoft.Blam.Blob.Transport
 			if (array.Length < 1)
 				throw new InvalidOperationException("Need at least one blob object");
 			else if (!Array.TrueForAll(array, Predicates.IsNotNull))
-				throw new ArgumentNullException("Blob object in enumeration was null");
+				throw new ArgumentNullException(nameof(objects), "Blob object in enumeration was null");
 
 			return array;
 		}
@@ -661,7 +684,7 @@ namespace KSoft.Blam.Blob.Transport
 			if (result_info.IsValid)
 			{
 				var array = WriteChunksGetObjectsArray(objects);
-				result_info = await WriteChunksForObjectsAsync(array);
+				result_info = await WriteChunksForObjectsAsync(array).ConfigureAwait(true);
 			}
 
 			if (result_info.IsValid)
@@ -696,7 +719,7 @@ namespace KSoft.Blam.Blob.Transport
 			Contract.Requires(objects != null && objects.Length > 0);
 			Contract.Requires<ArgumentNullException>(Array.TrueForAll(objects, Predicates.IsNotNull));
 
-			return await WriteChunksAsync(objects, BlobTransportStreamAuthentication.None);
+			return await WriteChunksAsync(objects, BlobTransportStreamAuthentication.None).ConfigureAwait(true);
 		}
 		public BlobChunkVerificationResultInfo WriteChunksSansAuthentication(params BlobObject[] objects)
 		{
@@ -716,7 +739,7 @@ namespace KSoft.Blam.Blob.Transport
 			Contract.Requires(objects != null && objects.Length > 0);
 			Contract.Requires<ArgumentNullException>(Array.TrueForAll(objects, Predicates.IsNotNull));
 
-			return await WriteChunksAsync(objects, authentication);
+			return await WriteChunksAsync(objects, authentication).ConfigureAwait(true);
 		}
 		public BlobChunkVerificationResultInfo WriteChunksWithAuthentication(BlobTransportStreamAuthentication authentication,
 			params BlobObject[] objects)

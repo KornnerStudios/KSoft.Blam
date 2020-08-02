@@ -41,8 +41,9 @@ namespace KSoft.Blam.Engine
 
 				if (SystemMetadata == null)
 				{
-					string msg = string.Format("No system is registered with the GUID {0}",
-						system_guid.ToString(Values.KGuid.kFormatHyphenated));
+					string msg = string.Format(Util.InvariantCultureInfo,
+						"No system is registered with the GUID {0}",
+						system_guid.ToString(Values.KGuid.kFormatHyphenated, Util.InvariantCultureInfo));
 
 					s.ThrowReadException(new System.IO.InvalidDataException(msg));
 				}
