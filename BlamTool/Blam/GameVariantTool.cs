@@ -191,7 +191,7 @@ namespace KSoft.Tool.Blam
 					, all_dbs_tasks.Item2
 					);
 
-				megalo_proto_system.PrepareDatabasesForUse(all_dbs_tasks.Item1.Result, all_dbs_tasks.Item2.Result);
+				MegaloProto.MegaloProtoSystem/*megalo_proto_system*/.PrepareDatabasesForUse(all_dbs_tasks.Item1.Result, all_dbs_tasks.Item2.Result);
 			}
 			catch (Exception e)
 			{
