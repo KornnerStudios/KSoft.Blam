@@ -39,11 +39,15 @@ namespace KSoft.Blam.Games.Halo4.Test
 		/// <param name="actualFloat"></param>
 		void AssertCompareFloats(float expectedFloat, float actualFloat)
 		{
-#if DEBUG
+			// After updating to VS2022, things started coming out exactly equal, go figure
+#if true//DEBUG
 			Assert.AreEqual(expectedFloat, actualFloat);
 #else
-			float abs = System.Math.Abs(expectedFloat - actualFloat);
-			Assert.IsTrue(abs > float.Epsilon);
+			if (expectedFloat != actualFloat)
+			{
+				float abs = System.Math.Abs(expectedFloat - actualFloat);
+				Assert.IsTrue(abs > float.Epsilon, $"expected: {expectedFloat}, actual: {actualFloat}, absolute diff: {abs}");
+			}
 #endif
 		}
 
