@@ -45,7 +45,7 @@ namespace KSoft.Blam
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Cryptography", "CA5350:Do Not Use Weak Cryptographic Algorithms")]
 		public static System.Security.Cryptography.SHA1 GetGen3RuntimeDataHasher()
 		{
-			var sha1 = new System.Security.Cryptography.SHA1CryptoServiceProvider();
+			var sha1 = System.Security.Cryptography.SHA1.Create();
 
 			sha1.TransformBlock(kSha1Salt, 0, kSha1Salt.Length, null, 0);
 			return sha1;

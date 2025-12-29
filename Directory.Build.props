@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<VitaRootDir Condition=" '$(VitaRootDir)' == '' ">$([System.IO.Path]::GetFullPath( '$(MSBuildThisFileDirectory)../../' ))</VitaRootDir>
+
+		<VitaSolutionFamily Condition=" '$(VitaSolutionFamily)' == '' ">Blam</VitaSolutionFamily>
+		<VitaUseSolutionFamilyDirs>true</VitaUseSolutionFamilyDirs>
+	</PropertyGroup>
+
+	<!--By default, msbuild stops searching after the first Directory.Build.props, import the root Vita one to merge with-->
+	<Import
+		Condition=" $([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../../')) != '' "
+		Project=  " $([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../../'))" />
+</Project>
