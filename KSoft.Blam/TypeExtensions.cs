@@ -7,6 +7,9 @@ using Contract = System.Diagnostics.ContractsShim.Contract;
 using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 #endif
 
+using MegaloScriptTokenTypeHaloReach = KSoft.Blam.Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach;
+using MegaloScriptTokenTypeHalo4 = KSoft.Blam.Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4;
+
 namespace KSoft.Blam
 {
 	using MegaloModel = Blam.Megalo.Model;
@@ -15,71 +18,66 @@ namespace KSoft.Blam
 	public static partial class TypeExtensionsBlam
 	{
 		internal const int kTagStringLength = 31;
-		internal static readonly Memory.Strings.StringStorage kTagStringStorage = new Memory.Strings.StringStorage(
+		internal static readonly Memory.Strings.StringStorage kTagStringStorage = new(
 			Memory.Strings.StringStorageWidthType.Ascii, Memory.Strings.StringStorageType.CharArray, kTagStringLength+1);
-		internal static readonly Text.StringStorageEncoding kTagStringEncoding = new Text.StringStorageEncoding(
-			kTagStringStorage);
+		internal static readonly Text.StringStorageEncoding kTagStringEncoding = new(kTagStringStorage);
 
 		#region Enum Bit Encoders
 		public static class BitEncoders
 		{
 			// KSoft.Blam.Engine
 			public static readonly EnumBitEncoder32<Engine.EngineGeneration>
-				EngineGeneration = new EnumBitEncoder32<Engine.EngineGeneration>();
+				EngineGeneration = new();
 			public static readonly EnumBitEncoder32<Engine.EngineProductionStage>
-				EngineProductionStage = new EnumBitEncoder32<Engine.EngineProductionStage>();
+				EngineProductionStage = new();
 
 			internal static readonly EnumBitEncoder32<Megalo.MegaloScriptVariableType>
-				MegaloScriptVariableType = new EnumBitEncoder32<Megalo.MegaloScriptVariableType>();
+				MegaloScriptVariableType = new();
 			internal static readonly EnumBitEncoder32<Megalo.MegaloScriptVariableSet>
-				MegaloScriptVariableSet = new EnumBitEncoder32<Megalo.MegaloScriptVariableSet>();
+				MegaloScriptVariableSet = new();
 
 			#region KSoft.Blam.Megalo.Model
 			internal static readonly EnumBitEncoder32<MegaloModel.MegaloScriptModelObjectType>
-				MegaloScriptModelObjectType = new EnumBitEncoder32<MegaloModel.MegaloScriptModelObjectType>();
+				MegaloScriptModelObjectType = new();
 			#endregion
 
 			#region KSoft.Blam.Megalo.Proto
 			internal static readonly EnumBitEncoder32<MegaloProto.MegaloScriptVarReferenceType>
-				MegaloScriptVarReferenceType = new EnumBitEncoder32<MegaloProto.MegaloScriptVarReferenceType>();
+				MegaloScriptVarReferenceType = new();
 
 			internal static readonly EnumBitEncoder32<MegaloProto.MegaloScriptValueIndexTarget>
-				MegaloScriptValueIndexTarget = new EnumBitEncoder32<MegaloProto.MegaloScriptValueIndexTarget>();
+				MegaloScriptValueIndexTarget = new();
 			internal static readonly EnumBitEncoder32<MegaloProto.MegaloScriptValueIndexTraits>
-				MegaloScriptValueIndexTraits = new EnumBitEncoder32<MegaloProto.MegaloScriptValueIndexTraits>();
+				MegaloScriptValueIndexTraits = new();
 
 			internal static readonly EnumBitEncoder32<MegaloProto.MegaloScriptValueBaseType>
-				MegaloScriptValueBaseType = new EnumBitEncoder32<MegaloProto.MegaloScriptValueBaseType>();
+				MegaloScriptValueBaseType = new();
 
 			internal static readonly EnumBitEncoder32<MegaloProto.MegaloScriptValueEnumTraits>
-				MegaloScriptValueEnumTraits = new EnumBitEncoder32<MegaloProto.MegaloScriptValueEnumTraits>();
+				MegaloScriptValueEnumTraits = new();
 			#endregion
 		};
 
-		public static IEnumBitEncoder<uint> GetBitEncoder(this Engine.EngineGeneration value)
-		{ return BitEncoders.EngineGeneration; }
-		public static IEnumBitEncoder<uint> GetBitEncoder(this Engine.EngineProductionStage value)
-		{ return BitEncoders.EngineProductionStage; }
+		public static IEnumBitEncoder<uint> GetBitEncoder(this Engine.EngineGeneration _)
+			=> BitEncoders.EngineGeneration;
+		public static IEnumBitEncoder<uint> GetBitEncoder(this Engine.EngineProductionStage _)
+			=> BitEncoders.EngineProductionStage;
 		#endregion
 
 		#region Blob
 		public static int GetDataSize(this Blob.Transport.BlobTransportStreamAuthentication type)
 		{
-			switch (type)
+			return type switch
 			{
-				case Blob.Transport.BlobTransportStreamAuthentication.None:
-					return 0;
-
-				case Blob.Transport.BlobTransportStreamAuthentication.Crc:
-					return sizeof(uint);
-
-				case Blob.Transport.BlobTransportStreamAuthentication.Hash:
-				case Blob.Transport.BlobTransportStreamAuthentication.Rsa:
-					return 0x100;
-
-				default:
-					throw new KSoft.Debug.UnreachableException(type.ToString());
-			}
+				Blob.Transport.BlobTransportStreamAuthentication.None
+				=> 0,
+				Blob.Transport.BlobTransportStreamAuthentication.Crc
+				=> sizeof(uint),
+				Blob.Transport.BlobTransportStreamAuthentication.Hash or
+				Blob.Transport.BlobTransportStreamAuthentication.Rsa
+				=> 0x100,
+				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
+			};
 		}
 		#endregion
 
@@ -91,13 +89,21 @@ namespace KSoft.Blam
 			Contract.Requires(property != null);
 
 			for (int x = 0; x < list.Count; x++)
+			{
 				if (property(list[x]).Equals(value))
+				{
 					return x;
+				}
+			}
 
 			if (generateNotFoundMessage == null)
+			{
 				return IndexOfByPropertyNotFoundResult;
+			}
 			else
+			{
 				throw new KeyNotFoundException(generateNotFoundMessage(value));
+			}
 		}
 
 		#region IO.BitStream
@@ -108,15 +114,21 @@ namespace KSoft.Blam
 		{
 			int r10 = 1 << bitCount;
 			if (isSigned)
+			{
 				r10 -= 1;
+			}
 
 			float fp1;
 			if (unknown)
 			{
 				if (rawBits == 0)
+				{
 					fp1 = min;
+				}
 				else if (rawBits == (r10 - 1))
+				{
 					fp1 = max;
+				}
 				else
 				{
 					uint r6 = rawBits - 1;
@@ -164,15 +176,21 @@ namespace KSoft.Blam
 		{
 			uint r11 = 1U << bitCount;
 			if (isSigned)
+			{
 				r11 -= 1;
+			}
 
 			uint r10;
 			if (unknown)
 			{
 				if (real == min)
+				{
 					r11 = 0;
+				}
 				else if (real == max)
+				{
 					r11 -= 1;
+				}
 				else
 				{
 					r11 -= 2;
@@ -184,10 +202,14 @@ namespace KSoft.Blam
 					r10 = (uint)fp8;
 					r10 += 1;
 					if (r10 < 1)
+					{
 						r10 = 1;
+					}
 
 					if (r10 < r11)
+					{
 						r11 = r10;
+					}
 				}
 			}
 			else
@@ -207,7 +229,9 @@ namespace KSoft.Blam
 				r10 = r5 & r10;
 
 				if (r10 < r11)
+				{
 					r11 = r10;
+				}
 			}
 
 			return r11;
@@ -215,8 +239,7 @@ namespace KSoft.Blam
 
 		static uint Read(IO.BitStream s, out float real, float min, float max, int bitCount, bool isSigned, bool unknown)
 		{
-			uint raw_bits;
-			s.Read(out raw_bits, bitCount);
+			s.Read(out uint raw_bits, bitCount);
 
 			real = DecodeSingle(raw_bits, min, max, bitCount, isSigned, unknown);
 			return raw_bits;
@@ -231,8 +254,8 @@ namespace KSoft.Blam
 		{
 			Contract.Requires(bitCount <= Bits.kInt32BitCount);
 
-				 if (s.IsReading)	Read(s, out real, min, max, bitCount, isSigned, unknown);
-			else if (s.IsWriting)	Write(s, real, min, max, bitCount, isSigned, unknown);
+				 if (s.IsReading)	{ Read(s, out real, min, max, bitCount, isSigned, unknown); }
+			else if (s.IsWriting)	{ Write(s, real, min, max, bitCount, isSigned, unknown); }
 		}
 		#endregion
 
@@ -247,9 +270,13 @@ namespace KSoft.Blam
 				bool is_none = s.ReadBoolean();
 
 				if (!is_none)
+				{
 					s.Read(out value, bitCount);
+				}
 				else
+				{
 					value = TypeExtensions.kNone;
+				}
 			}
 			else if (s.IsWriting)
 			{
@@ -257,7 +284,9 @@ namespace KSoft.Blam
 				s.Write(is_none);
 
 				if (!is_none)
+				{
 					s.Write(value, bitCount);
+				}
 			}
 		}
 		/// <remarks>Used for indexes which *are not* typically NONE (-1)</remarks>
@@ -270,9 +299,13 @@ namespace KSoft.Blam
 				bool not_none = s.ReadBoolean();
 
 				if (not_none)
+				{
 					s.Read(out value, bitCount);
+				}
 				else
+				{
 					value = TypeExtensions.kNone;
+				}
 			}
 			else if (s.IsWriting)
 			{
@@ -280,7 +313,9 @@ namespace KSoft.Blam
 				s.Write(not_none);
 
 				if (not_none)
+				{
 					s.Write(value, bitCount);
+				}
 			}
 		}
 		#endregion
@@ -354,7 +389,9 @@ namespace KSoft.Blam
 			where TCursor : class
 		{
 			if (!s.StreamAttributeOpt(name, ref value, Predicates.IsNotNone) && s.IsReading)
+			{
 				value = KSoft.TypeExtensions.kNone;
+			}
 		}
 		#endregion
 
@@ -371,7 +408,9 @@ namespace KSoft.Blam
 			where TCursor : class
 		{
 			if (!s.StreamAttributeOpt(name, ref value, TypeExtensionsBlam.kNotDefaultOption32) && s.IsReading)
+			{
 				value = TypeExtensionsBlam.kDefaultOption;
+			}
 		}
 		#endregion
 
@@ -387,7 +426,9 @@ namespace KSoft.Blam
 			where TCursor : class
 		{
 			if (!s.StreamAttributeOpt(name, ref value, TypeExtensionsBlam.kNotUnchanged8) && s.IsReading)
+			{
 				value = TypeExtensionsBlam.kUnchanged;
+			}
 		}
 		public static void StreamAttributeOptUnchanged<TDoc, TCursor>(this IO.TagElementStream<TDoc, TCursor, string> s,
 			string name, ref int value)
@@ -395,7 +436,9 @@ namespace KSoft.Blam
 			where TCursor : class
 		{
 			if (!s.StreamAttributeOpt(name, ref value, TypeExtensionsBlam.kNotUnchanged32) && s.IsReading)
+			{
 				value = TypeExtensionsBlam.kUnchanged;
+			}
 		}
 
 		public static void StreamAttributeOptUnchangedZero<TDoc, TCursor>(this IO.TagElementStream<TDoc, TCursor, string> s,
@@ -404,7 +447,9 @@ namespace KSoft.Blam
 			where TCursor : class
 		{
 			if (!s.StreamAttributeOpt(name, ref value, Predicates.IsNotZero) && s.IsReading)
+			{
 				value = 0;
+			}
 		}
 		public static void StreamAttributeOptUnchangedZero<TDoc, TCursor>(this IO.TagElementStream<TDoc, TCursor, string> s,
 			string name, ref int value)
@@ -412,7 +457,9 @@ namespace KSoft.Blam
 			where TCursor : class
 		{
 			if (!s.StreamAttributeOpt(name, ref value, Predicates.IsNotZero) && s.IsReading)
+			{
 				value = 0;
+			}
 		}
 		#endregion
 
@@ -421,35 +468,28 @@ namespace KSoft.Blam
 		internal static Megalo.MegaloScriptVariableType ToVariableType(
 			this Megalo.MegaloScriptVariableReferenceType type)
 		{
-			switch (type)
+			return type switch
 			{
-				case Megalo.MegaloScriptVariableReferenceType.	Custom:
-					return Megalo.MegaloScriptVariableType.		Numeric;
-				case Megalo.MegaloScriptVariableReferenceType.	Player:
-					return Megalo.MegaloScriptVariableType.		Player;
-				case Megalo.MegaloScriptVariableReferenceType.	Object:
-					return Megalo.MegaloScriptVariableType.		Object;
-				case Megalo.MegaloScriptVariableReferenceType.	Team:
-					return Megalo.MegaloScriptVariableType.		Team;
-				case Megalo.MegaloScriptVariableReferenceType.	Timer:
-					return Megalo.MegaloScriptVariableType.		Timer;
-
-				default: throw new KSoft.Debug.UnreachableException(type.ToString());
-			}
+				Megalo.MegaloScriptVariableReferenceType.Custom => Megalo.MegaloScriptVariableType.Numeric,
+				Megalo.MegaloScriptVariableReferenceType.Player => Megalo.MegaloScriptVariableType.Player,
+				Megalo.MegaloScriptVariableReferenceType.Object => Megalo.MegaloScriptVariableType.Object,
+				Megalo.MegaloScriptVariableReferenceType.Team => Megalo.MegaloScriptVariableType.Team,
+				Megalo.MegaloScriptVariableReferenceType.Timer => Megalo.MegaloScriptVariableType.Timer,
+				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
+			};
 		}
 
 		[Contracts.Pure]
 		internal static bool RequiresBitLength(this MegaloProto.MegaloScriptValueBaseType type)
 		{
-			switch (type)
+			return type switch
 			{
-				case MegaloProto.MegaloScriptValueBaseType.Int:
-				case MegaloProto.MegaloScriptValueBaseType.UInt:
-				case MegaloProto.MegaloScriptValueBaseType.Enum:
-					return true;
-
-				default: return false;
-			}
+				MegaloProto.MegaloScriptValueBaseType.Int or
+				MegaloProto.MegaloScriptValueBaseType.UInt or
+				MegaloProto.MegaloScriptValueBaseType.Enum
+				=> true,
+				_ => false,
+			};
 		}
 
 		/// <summary>Is the target based in static (ie, tag) data?</summary>
@@ -458,20 +498,19 @@ namespace KSoft.Blam
 		[Contracts.Pure]
 		public static bool IsStaticData(this MegaloProto.MegaloScriptValueIndexTarget target)
 		{
-			switch (target)
+			return target switch
 			{
-				case MegaloProto.MegaloScriptValueIndexTarget.ObjectType:
-				case MegaloProto.MegaloScriptValueIndexTarget.Name:
-				case MegaloProto.MegaloScriptValueIndexTarget.Sound:
-				case MegaloProto.MegaloScriptValueIndexTarget.Incident:
-				case MegaloProto.MegaloScriptValueIndexTarget.HudWidgetIcon:
-				case MegaloProto.MegaloScriptValueIndexTarget.GameEngineIcon:
-				case MegaloProto.MegaloScriptValueIndexTarget.Medal:
-				case MegaloProto.MegaloScriptValueIndexTarget.Ordnance:
-					return true;
-
-				default: return false;
-			}
+				MegaloProto.MegaloScriptValueIndexTarget.ObjectType or
+				MegaloProto.MegaloScriptValueIndexTarget.Name or
+				MegaloProto.MegaloScriptValueIndexTarget.Sound or
+				MegaloProto.MegaloScriptValueIndexTarget.Incident or
+				MegaloProto.MegaloScriptValueIndexTarget.HudWidgetIcon or
+				MegaloProto.MegaloScriptValueIndexTarget.GameEngineIcon or
+				MegaloProto.MegaloScriptValueIndexTarget.Medal or
+				MegaloProto.MegaloScriptValueIndexTarget.Ordnance
+				=> true,
+				_ => false,
+			};
 		}
 		/// <summary>Is the target based in variant data?</summary>
 		/// <param name="target"></param>
@@ -479,20 +518,19 @@ namespace KSoft.Blam
 		[Contracts.Pure]
 		public static bool IsVariantData(this MegaloProto.MegaloScriptValueIndexTarget target)
 		{
-			switch (target)
+			return target switch
 			{
-				case MegaloProto.MegaloScriptValueIndexTarget.LoadoutPalette:
-				case MegaloProto.MegaloScriptValueIndexTarget.Option:
-				case MegaloProto.MegaloScriptValueIndexTarget.String:
-				case MegaloProto.MegaloScriptValueIndexTarget.PlayerTraits:
-				case MegaloProto.MegaloScriptValueIndexTarget.Statistic:
-				case MegaloProto.MegaloScriptValueIndexTarget.Widget:
-				case MegaloProto.MegaloScriptValueIndexTarget.ObjectFilter:
-				case MegaloProto.MegaloScriptValueIndexTarget.GameObjectFilter:
-					return true;
-
-				default: return false;
-			}
+				MegaloProto.MegaloScriptValueIndexTarget.LoadoutPalette or
+				MegaloProto.MegaloScriptValueIndexTarget.Option or
+				MegaloProto.MegaloScriptValueIndexTarget.String or
+				MegaloProto.MegaloScriptValueIndexTarget.PlayerTraits or
+				MegaloProto.MegaloScriptValueIndexTarget.Statistic or
+				MegaloProto.MegaloScriptValueIndexTarget.Widget or
+				MegaloProto.MegaloScriptValueIndexTarget.ObjectFilter or
+				MegaloProto.MegaloScriptValueIndexTarget.GameObjectFilter
+				=> true,
+				_ => false,
+			};
 		}
 		/// <summary>Does the target have a human-friendly name?</summary>
 		/// <param name="target"></param>
@@ -500,28 +538,27 @@ namespace KSoft.Blam
 		[Contracts.Pure]
 		public static bool HasIndexName(this MegaloProto.MegaloScriptValueIndexTarget target)
 		{
-			switch (target)
+			return target switch
 			{
-				case MegaloProto.MegaloScriptValueIndexTarget.ObjectType:
-				case MegaloProto.MegaloScriptValueIndexTarget.Name:
-				case MegaloProto.MegaloScriptValueIndexTarget.Sound:
-				case MegaloProto.MegaloScriptValueIndexTarget.Incident:
-				case MegaloProto.MegaloScriptValueIndexTarget.HudWidgetIcon:
-				case MegaloProto.MegaloScriptValueIndexTarget.GameEngineIcon:
-				case MegaloProto.MegaloScriptValueIndexTarget.Medal:
-				case MegaloProto.MegaloScriptValueIndexTarget.Ordnance:
+				MegaloProto.MegaloScriptValueIndexTarget.ObjectType or
+				MegaloProto.MegaloScriptValueIndexTarget.Name or
+				MegaloProto.MegaloScriptValueIndexTarget.Sound or
+				MegaloProto.MegaloScriptValueIndexTarget.Incident or
+				MegaloProto.MegaloScriptValueIndexTarget.HudWidgetIcon or
+				MegaloProto.MegaloScriptValueIndexTarget.GameEngineIcon or
+				MegaloProto.MegaloScriptValueIndexTarget.Medal or
+				MegaloProto.MegaloScriptValueIndexTarget.Ordnance or
 
-				case MegaloProto.MegaloScriptValueIndexTarget.Option:
-				case MegaloProto.MegaloScriptValueIndexTarget.String:
-				case MegaloProto.MegaloScriptValueIndexTarget.PlayerTraits:
-				case MegaloProto.MegaloScriptValueIndexTarget.Statistic:
-				case MegaloProto.MegaloScriptValueIndexTarget.Widget:
-				case MegaloProto.MegaloScriptValueIndexTarget.ObjectFilter:
-				case MegaloProto.MegaloScriptValueIndexTarget.GameObjectFilter:
-					return true;
-
-				default: return false;
-			}
+				MegaloProto.MegaloScriptValueIndexTarget.Option or
+				MegaloProto.MegaloScriptValueIndexTarget.String or
+				MegaloProto.MegaloScriptValueIndexTarget.PlayerTraits or
+				MegaloProto.MegaloScriptValueIndexTarget.Statistic or
+				MegaloProto.MegaloScriptValueIndexTarget.Widget or
+				MegaloProto.MegaloScriptValueIndexTarget.ObjectFilter or
+				MegaloProto.MegaloScriptValueIndexTarget.GameObjectFilter
+				=> true,
+				_ => false,
+			};
 		}
 
 		internal static bool UseConditionTypeNames(this MegaloModel.MegaloScriptModelTagElementStreamFlags flags)
@@ -564,99 +601,69 @@ namespace KSoft.Blam
 		}
 
 		[Contracts.Pure]
-		internal static Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach ToHaloReach(
+		internal static MegaloScriptTokenTypeHaloReach ToHaloReach(
 			this Megalo.MegaloScriptTokenAbstractType type)
 		{
-			switch (type)
+			return type switch
 			{
-				case Megalo.MegaloScriptTokenAbstractType.None:
-					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.None;
-				case Megalo.MegaloScriptTokenAbstractType.Player:
-					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.AbsolutePlayerIndex;
-				case Megalo.MegaloScriptTokenAbstractType.Team:
-					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.TeamDesignator;
-				case Megalo.MegaloScriptTokenAbstractType.Object:
-					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.Object;
-				case Megalo.MegaloScriptTokenAbstractType.Numeric:
-					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.Numeric;
-				case Megalo.MegaloScriptTokenAbstractType.SignedNumeric:
-					throw new NotSupportedException(type.ToString());
-				case Megalo.MegaloScriptTokenAbstractType.Timer:
-					return Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.TimerSeconds;
-
-				default: throw new KSoft.Debug.UnreachableException(type.ToString());
-			}
+				Megalo.MegaloScriptTokenAbstractType.None => MegaloScriptTokenTypeHaloReach.None,
+				Megalo.MegaloScriptTokenAbstractType.Player => MegaloScriptTokenTypeHaloReach.AbsolutePlayerIndex,
+				Megalo.MegaloScriptTokenAbstractType.Team => MegaloScriptTokenTypeHaloReach.TeamDesignator,
+				Megalo.MegaloScriptTokenAbstractType.Object => MegaloScriptTokenTypeHaloReach.Object,
+				Megalo.MegaloScriptTokenAbstractType.Numeric => MegaloScriptTokenTypeHaloReach.Numeric,
+				Megalo.MegaloScriptTokenAbstractType.SignedNumeric
+				=> throw new NotSupportedException(type.ToString()),
+				Megalo.MegaloScriptTokenAbstractType.Timer => MegaloScriptTokenTypeHaloReach.TimerSeconds,
+				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
+			};
 		}
 		[Contracts.Pure]
 		internal static Megalo.MegaloScriptTokenAbstractType ToAbstract(
-			this Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach type)
+			this MegaloScriptTokenTypeHaloReach type)
 		{
-			switch (type)
+			return type switch
 			{
-				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.None:
-					return Megalo.MegaloScriptTokenAbstractType.None;
-				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.AbsolutePlayerIndex:
-					return Megalo.MegaloScriptTokenAbstractType.Player;
-				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.TeamDesignator:
-					return Megalo.MegaloScriptTokenAbstractType.Team;
-				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.Object:
-					return Megalo.MegaloScriptTokenAbstractType.Object;
-				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.Numeric:
-					return Megalo.MegaloScriptTokenAbstractType.Numeric;
-				case Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach.TimerSeconds:
-					return Megalo.MegaloScriptTokenAbstractType.Timer;
-
-				default: throw new KSoft.Debug.UnreachableException(type.ToString());
-			}
+				MegaloScriptTokenTypeHaloReach.None => Megalo.MegaloScriptTokenAbstractType.None,
+				MegaloScriptTokenTypeHaloReach.AbsolutePlayerIndex => Megalo.MegaloScriptTokenAbstractType.Player,
+				MegaloScriptTokenTypeHaloReach.TeamDesignator => Megalo.MegaloScriptTokenAbstractType.Team,
+				MegaloScriptTokenTypeHaloReach.Object => Megalo.MegaloScriptTokenAbstractType.Object,
+				MegaloScriptTokenTypeHaloReach.Numeric => Megalo.MegaloScriptTokenAbstractType.Numeric,
+				MegaloScriptTokenTypeHaloReach.TimerSeconds => Megalo.MegaloScriptTokenAbstractType.Timer,
+				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
+			};
 		}
 
 		[Contracts.Pure]
-		internal static Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4 ToHalo4(
+		internal static MegaloScriptTokenTypeHalo4 ToHalo4(
 			this Megalo.MegaloScriptTokenAbstractType type)
 		{
-			switch (type)
+			return type switch
 			{
-				case Megalo.MegaloScriptTokenAbstractType.None:
-					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.None;
-				case Megalo.MegaloScriptTokenAbstractType.Player:
-					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.AbsolutePlayerIndex;
-				case Megalo.MegaloScriptTokenAbstractType.Team:
-					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.TeamDesignator;
-				case Megalo.MegaloScriptTokenAbstractType.Object:
-					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.Object;
-				case Megalo.MegaloScriptTokenAbstractType.Numeric:
-					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.Numeric;
-				case Megalo.MegaloScriptTokenAbstractType.SignedNumeric:
-					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.SignedNumeric;
-				case Megalo.MegaloScriptTokenAbstractType.Timer:
-					return Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.TimerSeconds;
-
-				default: throw new KSoft.Debug.UnreachableException(type.ToString());
-			}
+				Megalo.MegaloScriptTokenAbstractType.None => MegaloScriptTokenTypeHalo4.None,
+				Megalo.MegaloScriptTokenAbstractType.Player => MegaloScriptTokenTypeHalo4.AbsolutePlayerIndex,
+				Megalo.MegaloScriptTokenAbstractType.Team => MegaloScriptTokenTypeHalo4.TeamDesignator,
+				Megalo.MegaloScriptTokenAbstractType.Object => MegaloScriptTokenTypeHalo4.Object,
+				Megalo.MegaloScriptTokenAbstractType.Numeric => MegaloScriptTokenTypeHalo4.Numeric,
+				Megalo.MegaloScriptTokenAbstractType.SignedNumeric => MegaloScriptTokenTypeHalo4.SignedNumeric,
+				Megalo.MegaloScriptTokenAbstractType.Timer => MegaloScriptTokenTypeHalo4.TimerSeconds,
+				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
+			};
 		}
 		[Contracts.Pure]
 		internal static Megalo.MegaloScriptTokenAbstractType ToAbstract(
-			this Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4 type)
+			this MegaloScriptTokenTypeHalo4 type)
 		{
-			switch (type)
+			return type switch
 			{
-				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.None:
-					return Megalo.MegaloScriptTokenAbstractType.None;
-				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.AbsolutePlayerIndex:
-					return Megalo.MegaloScriptTokenAbstractType.Player;
-				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.TeamDesignator:
-					return Megalo.MegaloScriptTokenAbstractType.Team;
-				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.Object:
-					return Megalo.MegaloScriptTokenAbstractType.Object;
-				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.Numeric:
-					return Megalo.MegaloScriptTokenAbstractType.Numeric;
-				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.SignedNumeric:
-					return Megalo.MegaloScriptTokenAbstractType.SignedNumeric;
-				case Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4.TimerSeconds:
-					return Megalo.MegaloScriptTokenAbstractType.Timer;
-
-				default: throw new KSoft.Debug.UnreachableException(type.ToString());
-			}
+				MegaloScriptTokenTypeHalo4.None => Megalo.MegaloScriptTokenAbstractType.None,
+				MegaloScriptTokenTypeHalo4.AbsolutePlayerIndex => Megalo.MegaloScriptTokenAbstractType.Player,
+				MegaloScriptTokenTypeHalo4.TeamDesignator => Megalo.MegaloScriptTokenAbstractType.Team,
+				MegaloScriptTokenTypeHalo4.Object => Megalo.MegaloScriptTokenAbstractType.Object,
+				MegaloScriptTokenTypeHalo4.Numeric => Megalo.MegaloScriptTokenAbstractType.Numeric,
+				MegaloScriptTokenTypeHalo4.SignedNumeric => Megalo.MegaloScriptTokenAbstractType.SignedNumeric,
+				MegaloScriptTokenTypeHalo4.TimerSeconds => Megalo.MegaloScriptTokenAbstractType.Timer,
+				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
+			};
 		}
 		#endregion
 
