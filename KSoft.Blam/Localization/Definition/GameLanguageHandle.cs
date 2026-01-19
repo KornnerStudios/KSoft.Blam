@@ -225,6 +225,8 @@ namespace KSoft.Blam.Localization
 		#region Util
 		static int StaticCompare(GameLanguageHandle lhs, GameLanguageHandle rhs)
 		{
+			// #TODO figure out a a utility to do this generically for bit-encoded handles that can run
+			// in the internal Constants class.
 			Contract.Assert(GameLanguageHandle.BitCount < Bits.kInt32BitCount,
 				"Handle bits needs to be <= 31 (ie, sans sign bit) in order for this implementation of CompareTo to reasonably work");
 
