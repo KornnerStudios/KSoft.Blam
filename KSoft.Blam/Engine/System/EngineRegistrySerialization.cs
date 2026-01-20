@@ -51,10 +51,12 @@ namespace KSoft.Blam.Engine
 			engine_stream_path += ".xml";
 
 			if (!File.Exists(engine_stream_path))
+			{
 				throw new FileNotFoundException(string.Format(Util.InvariantCultureInfo,
 					"Can't initialize the {0} engine, need the following file: {1}",
 					engine.Name,
 					engine_stream_path));
+			}
 
 			var stream = IO.TagElementStreamFactory.Open(engine_stream_path);
 			stream.StreamMode = streamMode;
@@ -91,9 +93,14 @@ namespace KSoft.Blam.Engine
 			string series = kSeriesName;
 			s.StreamAttribute("series", ref series);
 
-			using (var bm = s.EnterCursorBookmarkOpt("Engines", gEngines, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamElements("Engine", gEngines, (object)null,
-					BlamEngine.SerializePrototype);
+			using (var bm = s.EnterCursorBookmarkOpt("Engines", gEngines, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamElements("Engine", gEngines, (object)null,
+						BlamEngine.SerializePrototype);
+				}
+			}
 		}
 		static void SerializeTargets<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
@@ -101,11 +108,21 @@ namespace KSoft.Blam.Engine
 		{
 			using (s.EnterCursorBookmark("Targets"))
 			{
-				using (var bm = s.EnterCursorBookmarkOpt("Platforms", gTargetPlatforms, Predicates.HasItems)) if (bm.IsNotNull)
-					s.StreamableElements("Platform", gTargetPlatforms);
+				using (var bm = s.EnterCursorBookmarkOpt("Platforms", gTargetPlatforms, Predicates.HasItems))
+				{
+					if (bm.IsNotNull)
+					{
+						s.StreamableElements("Platform", gTargetPlatforms);
+					}
+				}
 
-				using (var bm = s.EnterCursorBookmarkOpt("ResourceModels", gResourceModels, Predicates.HasItems)) if (bm.IsNotNull)
-					s.StreamElements("Model", gResourceModels);
+				using (var bm = s.EnterCursorBookmarkOpt("ResourceModels", gResourceModels, Predicates.HasItems))
+				{
+					if (bm.IsNotNull)
+					{
+						s.StreamElements("Model", gResourceModels);
+					}
+				}
 			}
 		}
 
@@ -122,7 +139,9 @@ namespace KSoft.Blam.Engine
 					ResourceModelIdResolver, ResourceModelNameResolver, Predicates.IsNotNullOrEmpty);
 
 				if (!streamed && s.IsReading)
+				{
 					resourceModelId = TypeExtensions.kNone;
+				}
 			}
 			else
 			{

@@ -31,13 +31,17 @@ namespace KSoft.Blam.Blob
 
 		public override int CalculateFixedBinarySize(Engine.BlamEngineTargetHandle gameTarget)
 		{
-			var game_build = gameTarget.Build;
+			Engine.EngineBuildHandle game_build = gameTarget.Build;
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+			{
 				return kSizeOfHaloReach;
+			}
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+			{
 				return kSizeOfHalo4;
+			}
 
 			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
 		}
@@ -76,17 +80,21 @@ namespace KSoft.Blam.Blob
 		#region IEndianStreamSerializable Members
 		int GetBitStreamSize()
 		{
-			var game_build = GameTarget.Build;
+			Engine.EngineBuildHandle game_build = GameTarget.Build;
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+			{
 				return kSizeOfBitStreamHaloReach;
+			}
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+			{
 				return kSizeOfBitStreamHalo4;
+			}
 
 			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
 		}
-		static int ReadBitStreamSize(IO.EndianReader s, System.Security.Cryptography.ICryptoTransform hasher,
+		static int ReadBitStreamSize(IO.EndianReader s, System.Security.Cryptography./*ICryptoTransform*/SHA1 hasher,
 			int maxBitStreamSize, bool isProbablyFromMcc)
 		{
 			byte[] bitstream_size_bytes = new byte[sizeof(int)];
@@ -94,7 +102,9 @@ namespace KSoft.Blam.Blob
 			hasher.TransformBlock(bitstream_size_bytes, 0, bitstream_size_bytes.Length, null, 0);
 
 			if (!s.ByteOrder.IsSameAsRuntime())
+			{
 				Bitwise.ByteSwap.SwapData(Bitwise.ByteSwap.kInt32Definition, bitstream_size_bytes);
+			}
 			int assumed_size = BitConverter.ToInt32(bitstream_size_bytes, 0);
 			int size = assumed_size;
 
@@ -175,7 +185,9 @@ namespace KSoft.Blam.Blob
 			{
 				byte[] bs_length_bytes = BitConverter.GetBytes(bs_length);
 				if (!s.ByteOrder.IsSameAsRuntime())
+				{
 					Bitwise.ByteSwap.SwapData(Bitwise.ByteSwap.kInt32Definition, bs_length_bytes);
+				}
 
 				hasher.TransformBlock(bs_length_bytes, 0, bs_length_bytes.Length, null, 0);
 				hasher.TransformFinalBlock(bs_bytes, 0, bs_length);
@@ -201,8 +213,8 @@ namespace KSoft.Blam.Blob
 			s.Stream(hash_buffer);
 			s.Pad32();
 
-				 if (s.IsReading)	ReadBitStream(s.Reader, hash_buffer);
-			else if (s.IsWriting)	WriteBitStream(s.Writer, hash_position);
+				 if (s.IsReading)	{ ReadBitStream(s.Reader, hash_buffer); }
+			else if (s.IsWriting)	{ WriteBitStream(s.Writer, hash_position); }
 		}
 		#endregion
 
@@ -221,13 +233,17 @@ namespace KSoft.Blam.Blob
 
 		public static long GetBlfFileLength(Engine.BlamEngineTargetHandle gameTarget)
 		{
-			var game_build = gameTarget.Build;
+			Engine.EngineBuildHandle game_build = gameTarget.Build;
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+			{
 				return kSizeOfBitStreamHaloReach + 0x329;
+			}
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+			{
 				return kSizeOfBitStreamHalo4 + 0x329;
+			}
 
 			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
 		}

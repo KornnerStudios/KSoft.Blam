@@ -16,23 +16,27 @@ namespace KSoft.Blam.Localization.StringTables
 		#region IBitStreamSerializable Members
 		void Read(IO.BitStream bs)
 		{
-			int uncompressed_size;
-			bool is_compressed;
-
-			bs.Read(out uncompressed_size, mOwner.kInfo.BufferSizeBitLength); int size = uncompressed_size;
+			bs.Read(out int uncompressed_size, mOwner.kInfo.BufferSizeBitLength);
+			int size = uncompressed_size;
 			if (uncompressed_size > mOwner.kInfo.BufferMaxSize)
+			{
 				throw new System.IO.InvalidDataException("Input string table buffer size too large by (bytes): " +
 					(uncompressed_size - mOwner.kInfo.BufferMaxSize).ToString(Util.InvariantCultureInfo));
+			}
 
-			bs.Read(out is_compressed);
+			bs.Read(out bool is_compressed);
 			if (is_compressed)
+			{
 				bs.Read(out size, mOwner.kInfo.BufferSizeBitLength);
+			}
 
 			Buffer = new byte[size];
 			bs.Read(Buffer);
 
 			if (is_compressed)
+			{
 				Buffer = IO.Compression.ZLib.LowLevelDecompress(Buffer, uncompressed_size);
+			}
 		}
 		void Write(IO.BitStream bs)
 		{
@@ -51,8 +55,8 @@ namespace KSoft.Blam.Localization.StringTables
 		}
 		public void Serialize(IO.BitStream s)
 		{
-				 if (s.IsReading) Read(s);
-			else if (s.IsWriting) Write(s);
+				 if (s.IsReading) { Read(s); }
+			else if (s.IsWriting) { Write(s); }
 		}
 		#endregion
 	};

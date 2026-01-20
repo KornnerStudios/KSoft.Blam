@@ -35,7 +35,7 @@ namespace KSoft.Collections
 			}
 
 			[System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.RootHidden)]
-			public IList<T> Items { get { return mList.mSlots; } }
+			public IList<T> Items => mList.mSlots;
 		};
 
 		const bool kSlotStateInvalid = false;
@@ -45,7 +45,7 @@ namespace KSoft.Collections
 		readonly List<T> mSlots;
 		readonly BitSet mSlotStates;
 
-		internal ActiveListDesc<T> Description { get { return mDesc; } }
+		internal ActiveListDesc<T> Description => mDesc;
 
 		#region Ctor
 		public ActiveList(ActiveListDesc<T> description)
@@ -57,7 +57,9 @@ namespace KSoft.Collections
 			mSlotStates = new BitSet(description.Capacity, fixedLength: description.IsFixedLength);
 
 			for (int x = 0; x < description.Capacity; x++)
+			{
 				mSlots.Add(description.InvalidData);
+			}
 
 			IsReadOnly = true;
 		}
@@ -78,7 +80,7 @@ namespace KSoft.Collections
 			mSlotStates[index] = mDesc.IsInvalid(item) == false;
 		}
 		// Can't support this, our preconditions differ from vanilla List
-		void IList<T>.Insert(int index, T item) { throw new NotImplementedException(); }
+		void IList<T>.Insert(int index, T item) => throw new NotImplementedException();
 
 		public void RemoveAt(int index)
 		{
@@ -86,7 +88,7 @@ namespace KSoft.Collections
 			mSlotStates[index] = kSlotStateInvalid;
 		}
 		// Can't support this, our preconditions differ from vanilla List
-		void IList<T>.RemoveAt(int index) { throw new NotImplementedException(); }
+		void IList<T>.RemoveAt(int index) => throw new NotImplementedException();
 
 		public T this[int index]
 		{
@@ -96,28 +98,31 @@ namespace KSoft.Collections
 		#endregion
 
 		#region ICollection<T> Members
-		void ICollection<T>.Add(T item)							{ throw new NotImplementedException(); }
-		bool ICollection<T>.Contains(T item)					{ return mSlots.Contains(item); }
+		void ICollection<T>.Add(T item)							=> throw new NotImplementedException();
+		bool ICollection<T>.Contains(T item)					=> mSlots.Contains(item);
 		// #TODO_BLAM: only copy active elements
-		void ICollection<T>.CopyTo(T[] array, int arrayIndex)	{ mSlots.CopyTo(array, arrayIndex); }
+		void ICollection<T>.CopyTo(T[] array, int arrayIndex)	=> mSlots.CopyTo(array, arrayIndex);
 		/// <summary>Number of active items in the list</summary>
-		public int Count			{ get { return mSlotStates.Cardinality; } }
+		public int Count			=> mSlotStates.Cardinality;
 		/// <summary>Number of inactive items in the list</summary>
-		public int InactiveCount	{ get { return mSlotStates.CardinalityZeros; } }
+		public int InactiveCount	=> mSlotStates.CardinalityZeros;
 		/// <summary>Total number of items in the list, active or inactive</summary>
-		public int Length			{ get { return mSlots.Count; } }
+		public int Length			=> mSlots.Count;
 		// #REVIEW_BLAM: decide if we want to use this
 		public bool IsReadOnly		{ get; private set; }
 
 		public void Clear()
 		{
-			for (int x = 0; x < mSlots.Count; x++) mSlots[x] = mDesc.InvalidData;
+			for (int x = 0; x < mSlots.Count; x++) { mSlots[x] = mDesc.InvalidData; }
 			mSlotStates.SetAll(kSlotStateInvalid);
 		}
 
 		public bool Remove(T item)
 		{
-			if (mDesc.IsInvalid(item)) return false;
+			if (mDesc.IsInvalid(item))
+			{
+				return false;
+			}
 
 			int index = mSlots.IndexOf(item);
 			if (index >= 0)
@@ -139,9 +144,9 @@ namespace KSoft.Collections
 		#endregion
 
 		/// <summary>Get the index of the first inactive item slot</summary>
-		public int FirstInactiveIndex					{ get { return mSlotStates.NextClearBitIndex(0); } }
+		public int FirstInactiveIndex => mSlotStates.NextClearBitIndex(0);
 		/// <summary>Get an inactive-only slot items enumerator</summary>
-		public BitStateFilterEnumeratorWrapper InactiveIndices	{ get { return mSlotStates.ClearBitIndices; } }
+		public BitStateFilterEnumeratorWrapper InactiveIndices => mSlotStates.ClearBitIndices;
 
 		[Contracts.Pure]
 		public bool SlotIsFree(int index)
@@ -170,9 +175,14 @@ namespace KSoft.Collections
 		{
 			index = FirstInactiveIndex;
 			if (index.IsNotNone())
+			{
 				Insert(index, item);
+			}
 			else
+			{
+				// #REVIEW_BLAM: use a different exception type
 				throw new OutOfMemoryException("Ran out of free slots!");
+			}
 		}
 
 		/// <summary>Insert an item at an assumed free slot</summary>
@@ -197,7 +207,9 @@ namespace KSoft.Collections
 				return;
 			}
 			else
+			{
 				idRemappings = new Dictionary<int, int>(Count);
+			}
 
 			// #TODO_BLAM: do me?
 		}

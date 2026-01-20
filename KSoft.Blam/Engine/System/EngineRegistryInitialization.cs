@@ -42,7 +42,9 @@ namespace KSoft.Blam.Engine
 			foreach (var e in gEngines)
 			{
 				using (var s = OpenEngineTagElementStream(e))
+				{
 					e.Serialize(s);
+				}
 			}
 
 			BlamEngine.InitializeEngineRepositoryBuildHandles();

@@ -22,9 +22,13 @@ namespace KSoft.Blam.Engine
 				string invalid_guid_msg = null;
 
 				if (systemGuid == Values.KGuid.Empty)
+				{
 					invalid_guid_msg = "Invalid system guid: ";
+				}
 				else if (EngineRegistry.TryGetRegisteredSystem(systemGuid) == null)
+				{
 					invalid_guid_msg = "Unknown system guid: ";
+				}
 
 				if (invalid_guid_msg != null)
 				{
@@ -54,9 +58,14 @@ namespace KSoft.Blam.Engine
 			{
 				BuildRepository.Serialize(s);
 
-				using (var bm = s.EnterCursorBookmarkOpt("Systems", mSystemPrototypes, Predicates.HasItems)) if (bm.IsNotNull)
-					s.StreamableElements("System",
+				using (var bm = s.EnterCursorBookmarkOpt("Systems", mSystemPrototypes, Predicates.HasItems))
+				{
+					if (bm.IsNotNull)
+					{
+						s.StreamableElements("System",
 						mSystemPrototypes, this, StreamSystemPrototypeKey);
+					}
+				}
 			}
 
 /*			using (var bm = s.EnterCursorBookmarkOpt("Systems", mDeclaredSystems, Predicates.HasItems)) if (bm.IsNotNull)
@@ -67,7 +76,9 @@ namespace KSoft.Blam.Engine
 			if (s.IsReading)
 			{
 				if (mSystemPrototypes.Count > 0)
+				{
 					mActiveSystems = new Dictionary<Values.KGuid, EngineSystemBase>(mSystemPrototypes.Count);
+				}
 			}
 		}
 
@@ -76,6 +87,8 @@ namespace KSoft.Blam.Engine
 			where TDoc : class
 			where TCursor : class
 		{
+			Util.MarkUnusedVariable(ref _context);
+
 			s.StreamAttributeEnum("generation", engine, obj => obj.Generation);
 			s.StreamAttribute("name", engine, obj => obj.Name);
 		}
@@ -94,7 +107,9 @@ namespace KSoft.Blam.Engine
 					EngineIdResolver, EngineNameResolver, Predicates.IsNotNullOrEmpty);
 
 				if (!streamed && s.IsReading)
+				{
 					engineId = TypeExtensions.kNone;
+				}
 			}
 			else
 			{

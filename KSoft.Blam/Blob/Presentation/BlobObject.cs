@@ -25,8 +25,8 @@ namespace KSoft.Blam.Blob
 			GameTarget = gameTarget;
 			Version = version;
 
-			BlobGroupVersionAndBuildInfo info_for_version;
-			if (SystemGroup.VersionAndBuildMap.TryGetValue(Version, out info_for_version))
+			if (SystemGroup.VersionAndBuildMap.TryGetValue(Version,
+					out BlobGroupVersionAndBuildInfo info_for_version))
 			{
 				SystemGroupVersionInfo = info_for_version;
 			}

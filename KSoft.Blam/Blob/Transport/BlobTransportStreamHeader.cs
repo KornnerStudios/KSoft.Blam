@@ -11,10 +11,10 @@ namespace KSoft.Blam.Blob.Transport
 			internal const int kSizeOfData = sizeof(short) + (TypeExtensionsBlam.kTagStringLength+1) +
 				sizeof(short); // padding
 
-			internal static readonly Values.GroupTagData32 kSignature =
-				new Values.GroupTagData32("_blf", "blob_header");
+			internal static readonly Values.GroupTagData32 kSignature = new(
+				"_blf", "blob_header");
 			static readonly BlobChunkHeader kChunkSignature =
-				new BlobChunkHeader(kSignature, kVersion, kSizeOfData, kFlags);
+				new(kSignature, kVersion, kSizeOfData, kFlags);
 			const short kEndianSignature = -2;
 
 			BlobChunkHeader Header;
@@ -29,7 +29,7 @@ namespace KSoft.Blam.Blob.Transport
 			}
 
 			#region Verify
-			BlobChunkVerificationResultInfo VerifyEndian(out bool requiresByteswap)
+			readonly BlobChunkVerificationResultInfo VerifyEndian(out bool requiresByteswap)
 			{
 				requiresByteswap = false;
 				var result = BlobChunkVerificationResultInfo.ValidResult;
@@ -39,13 +39,15 @@ namespace KSoft.Blam.Blob.Transport
 					requiresByteswap = Bitwise.ByteSwap.SwapInt16(EndianSignature) == kEndianSignature;
 
 					if (!requiresByteswap) // the signature didn't match, even after byte swapping it
+					{
 						result = new BlobChunkVerificationResultInfo(BlobChunkVerificationResult.InvalidEndian,
 							BlobChunkVerificationResultContext.Header, EndianSignature);
+					}
 				}
 
 				return result;
 			}
-			public BlobChunkVerificationResultInfo Verify(out bool requiresByteswap)
+			public readonly BlobChunkVerificationResultInfo Verify(out bool requiresByteswap)
 			{
 				var result = VerifyEndian(out requiresByteswap);
 

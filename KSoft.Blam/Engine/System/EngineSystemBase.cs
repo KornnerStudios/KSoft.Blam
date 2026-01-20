@@ -46,7 +46,9 @@ namespace KSoft.Blam.Engine
 
 			// ReSharper disable once InconsistentlySynchronizedField - method is construction, don't need a lock
 			if (Prototype.SystemRequiresReferenceTracking)
-				mReferencesByBuildCounts = new Dictionary<EngineBuildHandle, int>();
+			{
+				mReferencesByBuildCounts = new();
+			}
 		}
 
 		#region IDisposable Members
@@ -60,8 +62,8 @@ namespace KSoft.Blam.Engine
 		}
 		#endregion
 
-		public BlamEngine Engine { get { return Prototype.Engine; } }
-		public EngineBuildHandle RootBuildHandle { get { return mRootBuildHandleBaseline; } }
+		public BlamEngine Engine => Prototype.Engine;
+		public EngineBuildHandle RootBuildHandle => mRootBuildHandleBaseline;
 
 		#region Reference counting
 		enum UpdateReferenceSideEffect
@@ -79,17 +81,22 @@ namespace KSoft.Blam.Engine
 			{
 				if (!handle.IsNone)
 				{
-					int ref_count;
-					if (!mReferencesByBuildCounts.TryGetValue(handle, out ref_count))
+					if (!mReferencesByBuildCounts.TryGetValue(handle, out int ref_count))
+					{
 						mReferencesByBuildCounts[handle] = 0;
+					}
 
 					int ref_count_update = ref_count + amount;
 					if (sideEffect == UpdateReferenceSideEffect.None)
 					{
-						if (ref_count_update == 0)	// the update closed all existing references...
+						if (ref_count_update == 0)  // the update closed all existing references...
+						{
 							sideEffect = UpdateReferenceSideEffect.OldBuildUnreferenced;
-						else if (ref_count == 0)	// existing count is 0, this is the first reference
+						}
+						else if (ref_count == 0)    // existing count is 0, this is the first reference
+						{
 							sideEffect = UpdateReferenceSideEffect.NewBuildReferenced;
+						}
 					}
 
 					return mReferencesByBuildCounts[handle] = ref_count_update;
@@ -101,10 +108,14 @@ namespace KSoft.Blam.Engine
 				int ref_count_update = Interlocked.Add(ref mNonBuildSpecificReferences, amount);
 				if (sideEffect == UpdateReferenceSideEffect.None)
 				{
-					if (ref_count_update == 0)	// the update closed all existing references...
+					if (ref_count_update == 0)  // the update closed all existing references...
+					{
 						sideEffect = UpdateReferenceSideEffect.OldBuildUnreferenced;
-					else if (ref_count == 0)	// existing count is 0, this is the first reference
+					}
+					else if (ref_count == 0)    // existing count is 0, this is the first reference
+					{
 						sideEffect = UpdateReferenceSideEffect.NewBuildReferenced;
+					}
 				}
 
 				return ref_count_update;
@@ -118,8 +129,7 @@ namespace KSoft.Blam.Engine
 
 			if (Prototype.SystemRequiresReferenceTracking)
 			{
-				EngineBuildHandle engine, branch;
-				buildHandle.ExtractHandles(out engine, out branch);
+				buildHandle.ExtractHandles(out EngineBuildHandle engine, out EngineBuildHandle branch);
 
 				int revisn_count, branch_count, engine_count;
 				lock (mReferencesByBuildCounts)
@@ -195,7 +205,9 @@ namespace KSoft.Blam.Engine
 
 			// #REVIEW_BLAM: also don't do this if Prototype.SystemRequiresReferenceTracking==false?
 			if (update_refs_side_effect == UpdateReferenceSideEffect.NewBuildReferenced)
+			{
 				InitializeForNewBuildReference(buildHandle);
+			}
 		}
 		internal async Task RemoveReferenceAsync(EngineBuildHandle buildHandle)
 		{
@@ -251,19 +263,19 @@ namespace KSoft.Blam.Engine
 			// #REVIEW_BLAM: also don't do this if Prototype.SystemRequiresReferenceTracking==false?
 			// reminder: we're calling this AFTER externs are unloaded...be sure your dispose code handles this
 			if (update_refs_side_effect == UpdateReferenceSideEffect.OldBuildUnreferenced)
+			{
 				DisposeFromOldBuildReference(buildHandle);
+			}
 		}
 
 		/// <summary>Create a new reference to this system using an existing build handle</summary>
 		/// <param name="buildHandle">The engine build which is in need of this system</param>
 		/// <returns></returns>
-		public EngineSystemReference NewReference(EngineBuildHandle buildHandle) =>
-			new EngineSystemReference(this, buildHandle);
+		public EngineSystemReference NewReference(EngineBuildHandle buildHandle) => new(this, buildHandle);
 
 		/// <summary>Create a new reference to this system using its <see cref="RootBuildHandle"/> (which may more specific than <see cref="Engine"/>'s root build handle)</summary>
 		/// <returns></returns>
-		public EngineSystemReference NewReference() =>
-			new EngineSystemReference(this, this.RootBuildHandle);
+		public EngineSystemReference NewReference() => new(this, this.RootBuildHandle);
 		#endregion
 
 		/// <summary>Handle a specific build being referenced for the first time</summary>
@@ -290,7 +302,9 @@ namespace KSoft.Blam.Engine
 			{
 				success = mExternIOTask.Wait(kWaitForExternIOTimeout);
 				if (success)
+				{
 					mExternIOTask = null;
+				}
 			}
 
 			return success;

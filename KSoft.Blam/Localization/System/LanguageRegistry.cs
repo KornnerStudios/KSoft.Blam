@@ -43,9 +43,7 @@ namespace KSoft.Blam.Localization
 		[Contracts.Pure]
 		[System.Diagnostics.DebuggerStepThrough]
 		public static bool IsValidLanguageIndex(int languageIndex)
-		{
-			return languageIndex.IsNoneOrPositive() && languageIndex < NumberOfLanguages;
-		}
+			=> languageIndex.IsNoneOrPositive() && languageIndex < NumberOfLanguages;
 
 		static int LanguageIdResolver(object _null, string name)
 		{
@@ -157,7 +155,7 @@ namespace KSoft.Blam.Localization
 		}
 		internal static int BitDecodeLanguageIndex(uint handle, int bitIndex)
 		{
-			var index = Bits.BitDecodeNoneable(handle, bitIndex, kLanguageIndexBitMask);
+			int index = Bits.BitDecodeNoneable(handle, bitIndex, kLanguageIndexBitMask);
 
 			Contract.Assert(IsValidLanguageIndex(index));
 			return index;
@@ -181,7 +179,9 @@ namespace KSoft.Blam.Localization
 			where TCursor : class
 		{
 			using (s.EnterCursorBookmark("Languages"))
+			{
 				s.StreamElements("Language", gLanguageNames);
+			}
 		}
 
 		internal static bool SerializeLanguageId<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
@@ -197,7 +197,9 @@ namespace KSoft.Blam.Localization
 					LanguageIdResolver, LanguageNameResolver, Predicates.IsNotNullOrEmpty);
 
 				if (!streamed && s.IsReading)
+				{
 					languageId = TypeExtensions.kNone;
+				}
 			}
 			else
 			{

@@ -16,10 +16,9 @@ namespace KSoft.Blam.Blob
 		short mBuildMinor = TypeExtensions.kNone;
 		public RuntimeData.ContentHeader Data { get; private set; }
 
-		public bool IsFromMcc { get {
-			return (mBuildMajor == 0 || ((int)mBuildMajor).IsNone())
+		public bool IsFromMcc
+			=> (mBuildMajor == 0 || ((int)mBuildMajor).IsNone())
 				&& ((int)mBuildMinor).IsNone();
-		} }
 
 		internal ContentHeaderBlob()
 		{
@@ -27,9 +26,7 @@ namespace KSoft.Blam.Blob
 		}
 
 		public override int CalculateFixedBinarySize(Engine.BlamEngineTargetHandle gameTarget)
-		{
-			return kSizeOf;
-		}
+			=> kSizeOf;
 
 		protected override void InitializeExplicitlyForGame(Engine.BlamEngineTargetHandle gameTarget)
 		{
@@ -45,9 +42,13 @@ namespace KSoft.Blam.Blob
 			Contract.Requires<ArgumentException>(newData.GameBuild == Data.GameBuild);
 
 			if (buildMajor != 0)
+			{
 				mBuildMajor = (short)buildMajor;
+			}
 			if (buildMinor.IsNotNone())
+			{
 				mBuildMinor = (short)buildMinor;
+			}
 			Data = newData;
 		}
 

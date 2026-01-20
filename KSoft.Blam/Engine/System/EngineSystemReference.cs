@@ -11,17 +11,16 @@ namespace KSoft.Blam.Engine
 {
 	/// <summary>Represents a lightweight reference to a <see cref="EngineSystemBase"/></summary>
 	/// <remarks>Should be declared in a using() statement, or as an object member that implements IDisposable (and disposes this)</remarks>
-	[SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct EngineSystemReference
 		: IDisposable
 	{
-		public static readonly EngineSystemReference None = new EngineSystemReference(true);
+		public static readonly EngineSystemReference None = new(true);
 
 		EngineSystemBase mSystem;
 		readonly EngineBuildHandle mBuildHandle;
 
 		/// <summary>The system that is referenced</summary>
-		public EngineSystemBase System { get {
+		public readonly EngineSystemBase System { get {
 			if (IsValid)
 			{
 				bool didntTimeout = mSystem.WaitForExternsIO();
@@ -55,10 +54,8 @@ namespace KSoft.Blam.Engine
 
 		/// <summary>Has this reference not yet been disposed of?</summary>
 		[Contracts.Pure]
-		public bool IsValid { get {
-			return mSystem != null;
-		} }
-		public bool IsNotValid { get { return !IsValid; } }
+		public readonly bool IsValid => mSystem != null;
+		public readonly bool IsNotValid => !IsValid;
 
 		#region IDisposable Members
 		public void Dispose()
@@ -75,7 +72,7 @@ namespace KSoft.Blam.Engine
 
 		/// <summary>Access the reference's underlying <see cref="System"/>. Only use in temporary copies and calls!</summary>
 		/// <returns></returns>
-		public EngineSystemBase ToSystem() => this.System;
+		public readonly EngineSystemBase ToSystem() => this.System;
 		/// <summary>Access the reference's underlying <see cref="System"/>. Only use in temporary copies and calls!</summary>
 		/// <param name="reference"></param>
 		/// <returns></returns>
@@ -86,18 +83,17 @@ namespace KSoft.Blam.Engine
 
 	/// <summary>Represents a lightweight reference to a specific <see cref="EngineSystemBase"/> implementation</summary>
 	/// <remarks>Should be declared in a using() statement, or as an object member that implements IDisposable (and disposes this)</remarks>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct EngineSystemReference<T>
 		: IDisposable
 		where T : EngineSystemBase
 	{
-		public static readonly EngineSystemReference<T> None = new EngineSystemReference<T>(true);
+		public static readonly EngineSystemReference<T> None = new(true);
 
 		T mSystem;
 		readonly EngineBuildHandle mBuildHandle;
 
 		/// <summary>The system that is referenced</summary>
-		public T System { get {
+		public readonly T System { get {
 			if (IsValid)
 			{
 				bool didntTimeout = mSystem.WaitForExternsIO();
@@ -131,8 +127,8 @@ namespace KSoft.Blam.Engine
 
 		/// <summary>Has this reference not yet been disposed of?</summary>
 		[Contracts.Pure]
-		public bool IsValid => mSystem != null;
-		public bool IsNotValid => !IsValid;
+		public readonly bool IsValid => mSystem != null;
+		public readonly bool IsNotValid => !IsValid;
 
 		#region IDisposable Members
 		public void Dispose()
@@ -149,7 +145,7 @@ namespace KSoft.Blam.Engine
 
 		/// <summary>Access the reference's underlying <see cref="System"/>. Only use in temporary copies and calls!</summary>
 		/// <returns></returns>
-		public T ToSystem() => this.System;
+		public readonly T ToSystem() => this.System;
 		/// <summary>Access the reference's underlying <see cref="System"/>. Only use in temporary copies and calls!</summary>
 		/// <param name="reference"></param>
 		/// <returns></returns>

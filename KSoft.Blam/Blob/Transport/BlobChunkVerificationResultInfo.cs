@@ -9,29 +9,29 @@ namespace KSoft.Blam.Blob.Transport
 	public struct BlobChunkVerificationResultInfo
 	{
 		public static readonly BlobChunkVerificationResultInfo ValidResult =
-			new BlobChunkVerificationResultInfo(BlobChunkVerificationResult.Valid, BlobChunkVerificationResultContext.Undefined);
+			new(BlobChunkVerificationResult.Valid, BlobChunkVerificationResultContext.Undefined);
 
-		BlobChunkVerificationResult mResult;
+		readonly BlobChunkVerificationResult mResult;
 		BlobChunkVerificationResultContext mContext;
-		uint mData;
+		readonly uint mData;
 
-		public BlobChunkVerificationResult Result { get { return mResult; } }
+		public readonly BlobChunkVerificationResult Result => mResult;
 		public BlobChunkVerificationResultContext Context
 		{
-			get { return mContext; }
+			readonly get { return mContext; }
 			internal set { mContext = value; }
 		}
 		#region Data-As util
-		public uint Data			{ get { return mData; } }
-		public uint DataAsSignature	{ get { return mData; } }
-		public int DataAsSize		{ get { return (int)mData; } }
-		public int DataAsVersion	{ get { return (int)mData; } }
-		public uint DataAsLength	{ get { return mData; } }
-		public BlobTransportStreamAuthentication DataAsAuthentication { get { return (BlobTransportStreamAuthentication)mData; } }
+		public readonly uint Data => mData;
+		public readonly uint DataAsSignature => mData;
+		public readonly int DataAsSize => (int)mData;
+		public readonly int DataAsVersion => (int)mData;
+		public readonly uint DataAsLength => mData;
+		public readonly BlobTransportStreamAuthentication DataAsAuthentication => (BlobTransportStreamAuthentication)mData;
 		#endregion
 
-		public bool IsValid		{ get { return Result == BlobChunkVerificationResult.Valid; } }
-		public bool IsInvalid	{ get { return Result != BlobChunkVerificationResult.Valid; } }
+		public readonly bool IsValid =>		Result == BlobChunkVerificationResult.Valid;
+		public readonly bool IsInvalid =>	Result != BlobChunkVerificationResult.Valid;
 
 		#region Ctor
 		internal BlobChunkVerificationResultInfo(BlobChunkVerificationResult result, BlobChunkVerificationResultContext context,
@@ -66,29 +66,35 @@ namespace KSoft.Blam.Blob.Transport
 
 		#region Logical 'And' util
 		[Contracts.Pure]
-		public BlobChunkVerificationResultInfo And<T>(T contextObj,
+		public readonly BlobChunkVerificationResultInfo And<T>(T contextObj,
 			Func<T, BlobChunkVerificationResultInfo> lhs)
 		{
 			if (IsValid)
+			{
 				return lhs(contextObj);
+			}
 
 			return this;
 		}
 		[Contracts.Pure]
-		public BlobChunkVerificationResultInfo And<T, TParam>(T contextObj, TParam param,
+		public readonly BlobChunkVerificationResultInfo And<T, TParam>(T contextObj, TParam param,
 			Func<T, TParam, BlobChunkVerificationResultInfo> lhs)
 		{
 			if (IsValid)
+			{
 				return lhs(contextObj, param);
+			}
 
 			return this;
 		}
 		#endregion
 
-		public string BuildErrorMessage()
+		public readonly string BuildErrorMessage()
 		{
 			if (IsValid)
+			{
 				return "No error";
+			}
 
 			var sb = new System.Text.StringBuilder();
 
@@ -157,7 +163,7 @@ namespace KSoft.Blam.Blob.Transport
 				#region Footer
 				case BlobChunkVerificationResult.InvalidBlobSize:
 					sb.AppendFormat(Util.InvariantCultureInfo,
-						"Footer's blob size didn't match actual blob stream length", DataAsLength);
+						"Footer's blob size '{0}' didn't match actual blob stream length", DataAsLength);
 					break;
 				case BlobChunkVerificationResult.InvalidAuthentication:
 					sb.AppendFormat(Util.InvariantCultureInfo,

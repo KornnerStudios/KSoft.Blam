@@ -20,10 +20,8 @@ namespace KSoft.Blam.Localization
 	[System.Reflection.Obfuscation(Exclude=false)]
 	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
 	[System.Diagnostics.DebuggerDisplay("Game = {Game}, Lang = {Language}, Index = {GameIndex}, Supported = {IsSupported}")]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
-	public struct GameLanguageHandle
-		: IComparer<GameLanguageHandle>, System.Collections.IComparer
+	public readonly struct GameLanguageHandle
+		: IComparer<GameLanguageHandle>, System.Collections.IComparer // #REMOVE_BLAM
 		, IComparable<GameLanguageHandle>, IComparable
 		, IEquatable<GameLanguageHandle>
 	{
@@ -36,13 +34,13 @@ namespace KSoft.Blam.Localization
 			// After all, this is suppose to map one to the other...
 
 			public static readonly BitFieldTraits kGameIndexBitField =
-				new BitFieldTraits(LanguageRegistry.kLanguageIndexBitCount);
+				new(LanguageRegistry.kLanguageIndexBitCount);
 			public static readonly BitFieldTraits kIsSupportedBitField =
-				new BitFieldTraits(Bits.kBooleanBitCount, kGameIndexBitField);
+				new(Bits.kBooleanBitCount, kGameIndexBitField);
 			public static readonly BitFieldTraits kLanguageIndexBitField =
-				new BitFieldTraits(LanguageRegistry.kLanguageIndexBitCount, kIsSupportedBitField);
+				new(LanguageRegistry.kLanguageIndexBitCount, kIsSupportedBitField);
 			public static readonly BitFieldTraits kBuildBitField =
-				new BitFieldTraits(Engine.EngineBuildHandle.BitCount, kLanguageIndexBitField);
+				new(Engine.EngineBuildHandle.BitCount, kLanguageIndexBitField);
 
 			public static readonly BitFieldTraits kLastBitField =
 				kBuildBitField;
@@ -50,13 +48,13 @@ namespace KSoft.Blam.Localization
 
 		/// <summary>Number of bits required to represent a bit-encoded representation of this value type</summary>
 		/// <remarks>22 bits at last count</remarks>
-		public static int BitCount { get { return Constants.kLastBitField.FieldsBitCount; } }
-		public static uint Bitmask { get { return Constants.kLastBitField.FieldsBitmask.u32; } }
+		public static int BitCount => Constants.kLastBitField.FieldsBitCount;
+		public static uint Bitmask => Constants.kLastBitField.FieldsBitmask.u32;
 
-		public static readonly GameLanguageHandle None = new GameLanguageHandle();
+		public static readonly GameLanguageHandle None = new();
 
 		[Contracts.Pure]
-		public static bool IsValidGameIndex(int index) { return LanguageRegistry.IsValidLanguageIndex(index); }
+		public static bool IsValidGameIndex(int index) => LanguageRegistry.IsValidLanguageIndex(index);
 		#endregion
 
 		#region Internal Value
@@ -94,29 +92,19 @@ namespace KSoft.Blam.Localization
 		#region Value properties
 		/// <summary>The handle to the game build this info specifically associates with</summary>
 		[Contracts.Pure]
-		public Engine.EngineBuildHandle Build { get {
-			return new Engine.EngineBuildHandle(mHandle, Constants.kBuildBitField);
-		} }
+		public Engine.EngineBuildHandle Build => new(mHandle, Constants.kBuildBitField);
 		/// <summary>Index of a language registered in the <see cref="LanguageRegistry"/></summary>
 		[Contracts.Pure]
-		public int LanguageIndex { get {
-			return LanguageRegistry.BitDecodeLanguageIndex(mHandle, Constants.kLanguageIndexBitField.BitIndex);
-		} }
+		public int LanguageIndex => LanguageRegistry.BitDecodeLanguageIndex(mHandle, Constants.kLanguageIndexBitField.BitIndex);
 		/// <summary>Is the language supported by <see cref="Build"/>?</summary>
 		[Contracts.Pure]
-		public bool IsSupported { get {
-			return 1 == Bits.BitDecode(mHandle, Constants.kIsSupportedBitField);
-		} }
+		public bool IsSupported => 1 == Bits.BitDecode(mHandle, Constants.kIsSupportedBitField);
 		/// <summary>Is the language unsupported by <see cref="Build"/>?</summary>
 		[Contracts.Pure]
-		public bool IsUnsupported { get {
-			return 0 == Bits.BitDecode(mHandle, Constants.kIsSupportedBitField);
-		} }
+		public bool IsUnsupported => 0 == Bits.BitDecode(mHandle, Constants.kIsSupportedBitField);
 		/// <summary>The index <see cref="LanguageIndex"/> maps to in <see cref="Build"/></summary>
 		[Contracts.Pure]
-		public int GameIndex { get {
-			return Bits.BitDecodeNoneable(mHandle, Constants.kGameIndexBitField);
-		} }
+		public int GameIndex => Bits.BitDecodeNoneable(mHandle, Constants.kGameIndexBitField);
 
 		[Contracts.Pure]
 		public string LanguageName { get {
@@ -131,10 +119,9 @@ namespace KSoft.Blam.Localization
 		#endregion
 
 		[Contracts.Pure]
-		public bool IsNone { get {
+		public bool IsNone =>
 			// this only works because ALL bitfields are NONE encoded, meaning -1 values are encoded as 0
-			return mHandle == 0;
-		} }
+			mHandle == 0;
 
 		#region Overrides
 		/// <summary>See <see cref="Object.Equals"/></summary>
@@ -142,8 +129,10 @@ namespace KSoft.Blam.Localization
 		/// <returns></returns>
 		public override bool Equals(object obj)
 		{
-			if (obj is GameLanguageHandle)
-				return this.mHandle == ((GameLanguageHandle)obj).mHandle;
+			if (obj is GameLanguageHandle objHandle)
+			{
+				return this.mHandle == objHandle.mHandle;
+			}
 
 			return false;
 		}
@@ -166,9 +155,9 @@ namespace KSoft.Blam.Localization
 
 		#region Operators
 		[Contracts.Pure]
-		public static bool operator ==(GameLanguageHandle lhs, GameLanguageHandle rhs)	{ return lhs.mHandle == rhs.mHandle; }
+		public static bool operator==(GameLanguageHandle lhs, GameLanguageHandle rhs) => lhs.mHandle == rhs.mHandle;
 		[Contracts.Pure]
-		public static bool operator !=(GameLanguageHandle lhs, GameLanguageHandle rhs)	{ return lhs.mHandle != rhs.mHandle; }
+		public static bool operator!=(GameLanguageHandle lhs, GameLanguageHandle rhs) => lhs.mHandle != rhs.mHandle;
 		#endregion
 
 		#region IComparer<GameLanguageHandle> Members
@@ -186,8 +175,8 @@ namespace KSoft.Blam.Localization
 		/// <returns></returns>
 		int System.Collections.IComparer.Compare(object x, object y)
 		{
-			GameLanguageHandle _x; KSoft.Debug.TypeCheck.CastValue(x, out _x);
-			GameLanguageHandle _y; KSoft.Debug.TypeCheck.CastValue(y, out _y);
+			KSoft.Debug.TypeCheck.CastValue(x, out GameLanguageHandle _x);
+			KSoft.Debug.TypeCheck.CastValue(y, out GameLanguageHandle _y);
 
 			return GameLanguageHandle.StaticCompare(_x, _y);
 		}
@@ -206,7 +195,7 @@ namespace KSoft.Blam.Localization
 		/// <returns></returns>
 		int IComparable.CompareTo(object obj)
 		{
-			GameLanguageHandle _obj; KSoft.Debug.TypeCheck.CastValue(obj, out _obj);
+			KSoft.Debug.TypeCheck.CastValue(obj, out GameLanguageHandle _obj);
 
 			return GameLanguageHandle.StaticCompare(this, _obj);
 		}
@@ -216,10 +205,7 @@ namespace KSoft.Blam.Localization
 		/// <summary>See <see cref="IEquatable{T}.Equals"/></summary>
 		/// <param name="other"></param>
 		/// <returns></returns>
-		public bool Equals(GameLanguageHandle other)
-		{
-			return this.mHandle == other.mHandle;
-		}
+		public bool Equals(GameLanguageHandle other) => this.mHandle == other.mHandle;
 		#endregion
 
 		#region Util

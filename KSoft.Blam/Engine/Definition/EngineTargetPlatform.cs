@@ -20,18 +20,12 @@ namespace KSoft.Blam.Engine
 		#endregion
 
 		/// <summary>Index this object appears in the global registry</summary>
-		public int TargetPlatformIndex { get; internal set; }
+		public int TargetPlatformIndex { get; internal set; } = TypeExtensions.kNone;
 
-		public string Name { get; private set; }
+		public string Name { get; private set; } = string.Empty;
 
-		Shell.Platform mPlatform;
-		public Shell.Platform Platform { get { return mPlatform; } }
-
-		public EngineTargetPlatform()
-		{
-			Name = "";
-			mPlatform = Shell.Platform.Undefined;
-		}
+		Shell.Platform mPlatform = Shell.Platform.Undefined;
+		public Shell.Platform Platform => mPlatform;
 
 		#region Overrides
 		/// <summary>See <see cref="Object.Equals"/></summary>
@@ -39,18 +33,17 @@ namespace KSoft.Blam.Engine
 		/// <returns></returns>
 		public override bool Equals(object obj)
 		{
-			if (obj is EngineTargetPlatform)
-				return this.Name == ((EngineTargetPlatform)obj).Name;
+			if (obj is EngineTargetPlatform objPlatform)
+			{
+				return this.Name == objPlatform.Name;
+			}
 
 			return false;
 		}
 		/// <summary>Returns a unique 32-bit identifier for this object based on its exposed properties</summary>
 		/// <returns></returns>
 		/// <see cref="Object.GetHashCode"/>
-		public override int GetHashCode()
-		{
-			return Name.GetHashCode();
-		}
+		public override int GetHashCode() => Name.GetHashCode();
 		/// <summary>Returns a string representation of this object</summary>
 		/// <returns><see cref="Name"/></returns>
 		public override string ToString()
@@ -80,7 +73,7 @@ namespace KSoft.Blam.Engine
 		}
 		internal static int BitDecodeIndex(uint handle, int bitIndex)
 		{
-			var index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
+			int index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
 
 			Contract.Assert(IsValidIndex(index));
 			return index;
@@ -90,9 +83,7 @@ namespace KSoft.Blam.Engine
 		#region Index/Id interfaces
 		[Contracts.Pure]
 		public static bool IsValidIndex(int targetPlatformIndex)
-		{
-			return targetPlatformIndex.IsNoneOrPositive() && targetPlatformIndex < EngineRegistry.TargetPlatforms.Count;
-		}
+			=> targetPlatformIndex.IsNoneOrPositive() && targetPlatformIndex < EngineRegistry.TargetPlatforms.Count;
 
 		static int TargetPlatformIdResolver(object _null, string name)
 		{
@@ -135,7 +126,9 @@ namespace KSoft.Blam.Engine
 					TargetPlatformIdResolver, TargetPlatformNameResolver, Predicates.IsNotNullOrEmpty);
 
 				if (!streamed && s.IsReading)
+				{
 					targetPlatformId = TypeExtensions.kNone;
+				}
 			}
 			else
 			{
@@ -170,12 +163,17 @@ namespace KSoft.Blam.Engine
 			where TDoc : class
 			where TCursor : class
 		{
-			using (var bm = s.EnterCursorBookmarkOpt(setElementName, bitset, Predicates.HasBits)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt(setElementName, bitset, Predicates.HasBits))
 			{
-				if (s.IsReading)
-					bitset = new Collections.BitSet(EngineRegistry.TargetPlatforms.Count);
+				if (bm.IsNotNull)
+				{
+					if (s.IsReading)
+					{
+						bitset = new Collections.BitSet(EngineRegistry.TargetPlatforms.Count);
+					}
 
-				bitset.Serialize(s, bitElementName, (object)null, SerializeBitIndex);
+					bitset.Serialize(s, bitElementName, (object)null, SerializeBitIndex);
+				}
 			}
 		}
 		#endregion

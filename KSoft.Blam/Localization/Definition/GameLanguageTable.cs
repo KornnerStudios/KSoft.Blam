@@ -20,20 +20,13 @@ namespace KSoft.Blam.Localization
 		const string kErrorMessageNotInitialized =
 			"GameLanguageTable not yet initialized";
 
-		Engine.EngineBuildHandle mBuildHandle;
-		Collections.BitVector32 mOptionalEngineLanguageFlags;
-		Collections.BitVector32 mOptionalGameLanguageFlags;
+		Engine.EngineBuildHandle mBuildHandle = Engine.EngineBuildHandle.None;
+		Collections.BitVector32 mOptionalEngineLanguageFlags = new();
+		Collections.BitVector32 mOptionalGameLanguageFlags = new();
 		// An array of all registered languages and how they map to the build
 		GameLanguageHandle[] mEngineLanguageTable;
 		// All the IsSupported elements in mEngineLanguageTable, allowing us to index by game index
 		GameLanguageHandle[] mGameLanguageTable;
-
-		public GameLanguageTable()
-		{
-			mBuildHandle = Engine.EngineBuildHandle.None;
-			mOptionalEngineLanguageFlags = new Collections.BitVector32();
-			mOptionalGameLanguageFlags = new Collections.BitVector32();
-		}
 
 		/// <summary>The handle for the build of the engine this table is associated with</summary>
 		public Engine.EngineBuildHandle BuildHandle { get {
@@ -76,7 +69,9 @@ namespace KSoft.Blam.Localization
 		public bool IsEngineLanguageOptional(int langIndex)
 		{
 			if (!LanguageRegistry.IsValidLanguageIndex(langIndex))
+			{
 				throw new ArgumentOutOfRangeException(nameof(langIndex), langIndex, "Out of bounds");
+			}
 			Contract.Assert(mEngineLanguageTable != null, kErrorMessageNotInitialized);
 
 			return mOptionalEngineLanguageFlags[langIndex];
@@ -85,7 +80,9 @@ namespace KSoft.Blam.Localization
 		public bool IsGameLanguageOptional(int gameIndex)
 		{
 			if (!IsValidGameIndex(gameIndex))
+			{
 				throw new ArgumentOutOfRangeException(nameof(gameIndex), gameIndex, "Out of bounds");
+			}
 			Contract.Assert(mEngineLanguageTable != null, kErrorMessageNotInitialized);
 
 			return mOptionalGameLanguageFlags[gameIndex];
@@ -95,9 +92,7 @@ namespace KSoft.Blam.Localization
 		[Contracts.Pure]
 		[System.Diagnostics.DebuggerStepThrough]
 		public bool IsValidGameIndex(int gameIndex)
-		{
-			return gameIndex.IsNoneOrPositive() && gameIndex < GameLanguageCount;
-		}
+			=> gameIndex.IsNoneOrPositive() && gameIndex < GameLanguageCount;
 
 		[Contracts.Pure]
 		public int LanguageIndexToGameIndex(int langIndex)
@@ -122,18 +117,17 @@ namespace KSoft.Blam.Localization
 		/// <returns></returns>
 		public override bool Equals(object obj)
 		{
-			if (obj is GameLanguageTable)
-				return ((GameLanguageTable)obj).Equals(this);
+			if (obj is GameLanguageTable objTable)
+			{
+				return objTable.Equals(this);
+			}
 
 			return false;
 		}
 		/// <summary>Returns a unique 32-bit identifier for this object based on its exposed properties</summary>
 		/// <returns></returns>
 		/// <see cref="Object.GetHashCode"/>
-		public override int GetHashCode()
-		{
-			return mBuildHandle.GetHashCode();
-		}
+		public override int GetHashCode() => mBuildHandle.GetHashCode();
 		/// <summary><see cref="Engine.EngineBuildHandle.ToString()"/></summary>
 		/// <returns></returns>
 		public override string ToString()
@@ -148,10 +142,7 @@ namespace KSoft.Blam.Localization
 		/// <summary>See <see cref="IEquatable{T}.Equals"/></summary>
 		/// <param name="other"></param>
 		/// <returns></returns>
-		public bool Equals(GameLanguageTable other)
-		{
-			return this.mBuildHandle.Equals(other.mBuildHandle);
-		}
+		public bool Equals(GameLanguageTable other) => this.mBuildHandle.Equals(other.mBuildHandle);
 		#endregion
 
 		#region Initialization
@@ -177,7 +168,9 @@ namespace KSoft.Blam.Localization
 			foreach (var lang in mEngineLanguageTable)
 			{
 				if (lang.IsUnsupported)
+				{
 					continue;
+				}
 
 				int game_index = lang.GameIndex;
 				if (game_index >= gameLangCount)
@@ -195,9 +188,7 @@ namespace KSoft.Blam.Localization
 
 		#region ITagElementStreamable<string> Members
 		static bool IsInvalidGameIndexFromStream(int index)
-		{
-			return index < 0 || !GameLanguageHandle.IsValidGameIndex(index);
-		}
+			=> index < 0 || !GameLanguageHandle.IsValidGameIndex(index);
 		void ReadEngineLanguageTable<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
@@ -211,29 +202,31 @@ namespace KSoft.Blam.Localization
 			int lang_count = 0;
 
 			foreach (var e in s.ElementsByName(kElementNameEntry))
-			using (s.EnterCursorBookmark(e))
 			{
-				int game_index = TypeExtensions.kNone;
-				int lang_index = TypeExtensions.kNone;
-				bool is_optional = false;
-
-				s.ReadAttribute(kAttributeNameGameIndex, ref game_index, NumeralBase.Decimal);
-				LanguageRegistry.SerializeLanguageId(s, kAttributeNameLangIndex, ref lang_index);
-				s.ReadAttributeOpt(kAttributeNameOptional, ref is_optional);
-
-				if (IsInvalidGameIndexFromStream(game_index) || lang_index.IsNone())
+				using (s.EnterCursorBookmark(e))
 				{
-					s.ThrowReadException(new System.IO.InvalidDataException("Invalid table entry data"));
-				}
+					int game_index = TypeExtensions.kNone;
+					int lang_index = TypeExtensions.kNone;
+					bool is_optional = false;
 
-				mEngineLanguageTable[lang_index] = new GameLanguageHandle(mBuildHandle, lang_index, game_index);
-				if (is_optional)
-				{
-					mOptionalEngineLanguageFlags[lang_index] = true;
-					mOptionalGameLanguageFlags[game_index] = true;
-				}
+					s.ReadAttribute(kAttributeNameGameIndex, ref game_index, NumeralBase.Decimal);
+					LanguageRegistry.SerializeLanguageId(s, kAttributeNameLangIndex, ref lang_index);
+					s.ReadAttributeOpt(kAttributeNameOptional, ref is_optional);
 
-				lang_count++;
+					if (IsInvalidGameIndexFromStream(game_index) || lang_index.IsNone())
+					{
+						s.ThrowReadException(new System.IO.InvalidDataException("Invalid table entry data"));
+					}
+
+					mEngineLanguageTable[lang_index] = new GameLanguageHandle(mBuildHandle, lang_index, game_index);
+					if (is_optional)
+					{
+						mOptionalEngineLanguageFlags[lang_index] = true;
+						mOptionalGameLanguageFlags[game_index] = true;
+					}
+
+					lang_count++;
+				}
 			}
 
 			if (lang_count == 0)
@@ -277,11 +270,7 @@ namespace KSoft.Blam.Localization
 		}
 		#endregion
 
-		public EnumeratorWrapper<GameLanguageHandle> EngineLanguageHandles { get {
-			return new EnumeratorWrapper<GameLanguageHandle>(mEngineLanguageTable);
-		} }
-		public EnumeratorWrapper<GameLanguageHandle> SupportedLanguageHandles { get {
-			return new EnumeratorWrapper<GameLanguageHandle>(mGameLanguageTable);
-		} }
+		public EnumeratorWrapper<GameLanguageHandle> EngineLanguageHandles => new(mEngineLanguageTable);
+		public EnumeratorWrapper<GameLanguageHandle> SupportedLanguageHandles => new(mGameLanguageTable);
 	};
 }

@@ -14,21 +14,23 @@ namespace KSoft.Blam.Engine
 		/// <summary>Engine this repository defines builds for</summary>
 		public BlamEngine Engine { get; private set; }
 		/// <summary>The underlying general engine's Guid</summary>
-		public Values.KGuid RepositoryGuid { get; private set; }
+		public Values.KGuid RepositoryGuid { get; private set; } = Values.KGuid.Empty;
 
 		#region ValidTargetPlatforms
 		Collections.BitSet mValidTargetPlatforms;
 		/// <summary>Platforms which all builds in this repository can target</summary>
 		public Collections.IReadOnlyBitSet ValidTargetPlatforms { get {
 			if (mValidTargetPlatforms == null)
+			{
 				return EngineRegistry.NullValidTargetPlatforms;
+			}
 
 			return mValidTargetPlatforms;
 		} }
 		#endregion
 
 		#region Branches
-		public List<EngineBuildBranch> Branches { get; private set; }
+		public List<EngineBuildBranch> Branches { get; private set; } = new();
 
 		static int BranchIdResolver(EngineBuildRepository repo, string name)
 		{
@@ -58,12 +60,6 @@ namespace KSoft.Blam.Engine
 				: null;
 		#endregion
 
-		public EngineBuildRepository()
-		{
-			RepositoryGuid = Values.KGuid.Empty;
-			Branches = new List<EngineBuildBranch>();
-		}
-
 		#region ITagElementStreamable<string> Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
@@ -71,9 +67,13 @@ namespace KSoft.Blam.Engine
 		{
 			var engine = KSoft.Debug.TypeCheck.CastReference<BlamEngine>(s.Owner);
 			if (s.IsReading)
+			{
 				Engine = engine;
+			}
 			else
+			{
 				Contract.Assert(engine == Engine);
+			}
 
 			using (s.EnterCursorBookmark("Repository"))
 			using (s.EnterUserDataBookmark(this))
@@ -82,8 +82,13 @@ namespace KSoft.Blam.Engine
 
 				EngineTargetPlatform.SerializeBitSet(s, ref mValidTargetPlatforms, "ValidTargetPlatforms");
 
-				using (var bm = s.EnterCursorBookmarkOpt("Branches", Branches, Predicates.HasItems)) if (bm.IsNotNull)
-					s.StreamableElements("Branch", Branches);
+				using (var bm = s.EnterCursorBookmarkOpt("Branches", Branches, Predicates.HasItems))
+				{
+					if (bm.IsNotNull)
+					{
+						s.StreamableElements("Branch", Branches);
+					}
+				}
 			}
 
 			if (s.IsReading)
@@ -108,7 +113,9 @@ namespace KSoft.Blam.Engine
 					BranchIdResolver, BranchNameResolver, Predicates.IsNotNullOrEmpty);
 
 				if (!streamed && s.IsReading)
+				{
 					branchId = TypeExtensions.kNone;
+				}
 			}
 			else
 			{

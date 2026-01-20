@@ -90,8 +90,8 @@ namespace KSoft.Blam.Engine
 		public override int GetHashCode() => SystemGuid.GetHashCode();
 
 		public override bool Equals(object obj) =>
-			obj is EngineSystemAttribute
-			&& ((EngineSystemAttribute)obj).SystemGuid == SystemGuid;
+			obj is EngineSystemAttribute objAttribute
+			&& objAttribute.SystemGuid == SystemGuid;
 
 		public override string ToString() => GetSystemGuidString();
 		#endregion
@@ -108,7 +108,7 @@ namespace KSoft.Blam.Engine
 			Contract.Requires(prototype != null);
 			Contract.Assert(mFactoryMethod != null, "Rerun engine unit tests");
 
-			var system = mFactoryMethod();
+			EngineSystemBase system = mFactoryMethod();
 			Contract.Assert(system != null);
 
 			system.InitializeForNewInstance(prototype);

@@ -20,24 +20,26 @@ namespace KSoft.Blam.Engine
 
 		public EngineBuildRepository Repository { get; private set; }
 
-		public EngineBuildHandle BranchHandle { get; private set; }
+		public EngineBuildHandle BranchHandle { get; private set; } = EngineBuildHandle.None;
 
-		public string Name { get; private set; }
-		public string ProjectName { get; private set; }
+		public string Name { get; private set; } = string.Empty;
+		public string ProjectName { get; private set; } = string.Empty;
 
 		#region ValidTargetPlatforms
 		Collections.BitSet mValidTargetPlatforms;
 		/// <summary>Platforms which all builds in this branch can target</summary>
 		public Collections.IReadOnlyBitSet ValidTargetPlatforms { get {
 			if (mValidTargetPlatforms == null)
+			{
 				return Repository.ValidTargetPlatforms;
+			}
 
 			return mValidTargetPlatforms;
 		} }
 		#endregion
 
 		#region Revisions
-		public List<EngineBuildRevision> Revisions { get; private set; }
+		public List<EngineBuildRevision> Revisions { get; private set; } = new();
 
 		static int RevisionIdResolver(EngineBuildBranch branch, int version)
 		{
@@ -67,16 +69,6 @@ namespace KSoft.Blam.Engine
 				? branch.Revisions[id].Version
 				: TypeExtensions.kNone;
 		#endregion
-
-		public EngineBuildBranch()
-		{
-			BranchHandle = EngineBuildHandle.None;
-
-			Name = ProjectName =
-				"";
-
-			Revisions = new List<EngineBuildRevision>();
-		}
 
 		#region Overrides
 		/// <summary>See <see cref="Object.Equals"/></summary>
@@ -111,9 +103,13 @@ namespace KSoft.Blam.Engine
 		{
 			var repo = KSoft.Debug.TypeCheck.CastReference<EngineBuildRepository>(s.UserData);
 			if (s.IsReading)
+			{
 				Repository = repo;
+			}
 			else
+			{
 				Contract.Assert(repo == Repository);
+			}
 
 			using (s.EnterUserDataBookmark(this))
 			{
@@ -122,8 +118,13 @@ namespace KSoft.Blam.Engine
 
 				EngineTargetPlatform.SerializeBitSet(s, ref mValidTargetPlatforms, "ValidTargetPlatforms");
 
-				using (var bm = s.EnterCursorBookmarkOpt("Revisions", Revisions, Predicates.HasItems)) if (bm.IsNotNull)
-					s.StreamableElements("Rev", Revisions);
+				using (var bm = s.EnterCursorBookmarkOpt("Revisions", Revisions, Predicates.HasItems))
+				{
+					if (bm.IsNotNull)
+					{
+						s.StreamableElements("Rev", Revisions);
+					}
+				}
 			}
 
 			if (s.IsReading)
@@ -148,7 +149,9 @@ namespace KSoft.Blam.Engine
 					RevisionIdResolver, RevisionNameResolver, Predicates.IsNotNone);
 
 				if (!streamed && s.IsReading)
+				{
 					revisionId = TypeExtensions.kNone;
+				}
 			}
 			else
 			{
@@ -169,7 +172,7 @@ namespace KSoft.Blam.Engine
 		}
 		internal static int BitDecodeIndex(uint handle, int bitIndex)
 		{
-			var index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
+			int index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
 
 			Contract.Assert(index.IsNoneOrPositive());
 			return index;
@@ -183,11 +186,11 @@ namespace KSoft.Blam.Engine
 		internal void InitializeBuildHandles(int engineIndex, int branchIndex)
 		{
 			BranchHandle = EngineBuildHandle.Create(engineIndex, branchIndex);
-			foreach (var revisn in Revisions)
+			foreach (EngineBuildRevision revision in Revisions)
 			{
-				int revisn_index = RevisionIdResolver(this, revisn.Version);
+				int revisn_index = RevisionIdResolver(this, revision.Version);
 				var handle = EngineBuildHandle.Create(engineIndex, branchIndex, revisn_index);
-				revisn.InitializeBuildHandle(handle);
+				revision.InitializeBuildHandle(handle);
 			}
 		}
 		#endregion

@@ -22,8 +22,8 @@ namespace KSoft.Blam.Blob.Transport
 			const int kVersion = 1;
 			internal const int kSizeOfDataSansAuthData = sizeof(uint) + sizeof(byte);
 
-			internal static readonly Values.GroupTagData32 kSignature =
-				new Values.GroupTagData32("_eof", "blob_footer");
+			internal static readonly Values.GroupTagData32 kSignature = new(
+				"_eof", "blob_footer");
 
 			BlobChunkHeader Header;
 			/// <summary>The size of the blob from the header up UNTIL the footer (so, exclusive)</summary>
@@ -35,7 +35,9 @@ namespace KSoft.Blam.Blob.Transport
 			{
 				var data_size = Authentication.GetDataSize();
 				if (data_size > 0)
+				{
 					AuthenticationData = new byte[data_size];
+				}
 
 				return data_size;
 			}
@@ -49,11 +51,11 @@ namespace KSoft.Blam.Blob.Transport
 				InitializeData();
 			}
 
-			int CalculateAssumedAuthenticationDataSize()
+			readonly int CalculateAssumedAuthenticationDataSize()
 			{
 				return Header.DataSize - kSizeOfDataSansAuthData;
 			}
-			public BlobChunkVerificationResultInfo Verify(BlobTransportStreamAuthentication expectedAuthentication,
+			public readonly BlobChunkVerificationResultInfo Verify(BlobTransportStreamAuthentication expectedAuthentication,
 				long blobSize)
 			{
 				var result = BlobChunkVerificationResultInfo.ValidResult;
@@ -98,10 +100,14 @@ namespace KSoft.Blam.Blob.Transport
 			public void SerializeAuthenticationData(IO.EndianStream s)
 			{
 				if (s.IsReading)
+				{
 					InitializeData();
+				}
 
 				if (Authentication != BlobTransportStreamAuthentication.None)
+				{
 					s.Stream(AuthenticationData);
+				}
 			}
 			#endregion
 		};

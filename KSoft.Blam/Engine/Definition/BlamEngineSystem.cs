@@ -17,7 +17,7 @@ namespace KSoft.Blam.Engine
 		/// <summary>Name of the file with the system's external definitions</summary>
 		public string ExternsFile { get; private set; }
 
-		internal bool SystemRequiresReferenceTracking { get { return SystemMetadata.KeepExternsLoaded; } }
+		internal bool SystemRequiresReferenceTracking => SystemMetadata.KeepExternsLoaded;
 
 		#region ITagElementStreamable<string> Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -28,9 +28,13 @@ namespace KSoft.Blam.Engine
 
 			var engine = KSoft.Debug.TypeCheck.CastReference<BlamEngine>(s.UserData);
 			if (reading)
+			{
 				Engine = engine;
+			}
 			else
+			{
 				Contract.Assert(engine == Engine);
+			}
 
 			if (reading)
 			{
@@ -49,7 +53,9 @@ namespace KSoft.Blam.Engine
 				}
 			}
 			else
+			{
 				Contract.Assert(false, "Writing not supported");
+			}
 
 			s.StreamAttribute("externs", this, o => o.ExternsFile);
 		}

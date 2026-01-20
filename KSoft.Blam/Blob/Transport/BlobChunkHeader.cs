@@ -13,7 +13,7 @@ namespace KSoft.Blam.Blob.Transport
 
 		public const int kSizeOf = 0xC;
 
-		internal static readonly BlobChunkHeader Null = new BlobChunkHeader()
+		internal static readonly BlobChunkHeader Null = new()
 		{
 			Signature = 0,
 			Size = kSizeOf,
@@ -35,7 +35,7 @@ namespace KSoft.Blam.Blob.Transport
 		/// <summary>Size of the chunk's data (ie, exluding the header)</summary>
 		public int DataSize
 		{
-			get { return Size - kSizeOf; }
+			readonly get { return Size - kSizeOf; }
 			set { Size = value + kSizeOf; }
 		}
 
@@ -45,7 +45,9 @@ namespace KSoft.Blam.Blob.Transport
 			Signature = signature.ID;
 			Size = kSizeOf;
 			if (dataSize.IsNotNone())
+			{
 				Size += dataSize;
+			}
 			Version = (short)version;
 			Flags = (short)flags;
 		}
@@ -54,47 +56,55 @@ namespace KSoft.Blam.Blob.Transport
 		/// <summary>Checks that there's enough chunk to store both this header and the <paramref name="expectedDataSize"/></summary>
 		/// <param name="expectedDataSize">The minimum amount of bytes needed for the data (exlusive of header data)</param>
 		/// <returns></returns>
-		internal BlobChunkVerificationResultInfo VerifyDataSize(int expectedDataSize)
+		internal readonly BlobChunkVerificationResultInfo VerifyDataSize(int expectedDataSize)
 		{
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
 			if (Size < (expectedDataSize + kSizeOf))
+			{
 				result = new BlobChunkVerificationResultInfo(BlobChunkVerificationResult.InvalidSize,
 					BlobChunkVerificationResultContext.Chunk, Size);
+			}
 
 			return result;
 		}
-		internal BlobChunkVerificationResultInfo VerifySignature(uint expectedSignature)
+		internal readonly BlobChunkVerificationResultInfo VerifySignature(uint expectedSignature)
 		{
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
 			if (Signature != expectedSignature)
+			{
 				result = new BlobChunkVerificationResultInfo(BlobChunkVerificationResult.InvalidSignature,
 					BlobChunkVerificationResultContext.Chunk, Signature);
+			}
 
 			return result;
 		}
-		internal BlobChunkVerificationResultInfo VerifyVersion(int expectedVersion)
+		internal readonly BlobChunkVerificationResultInfo VerifyVersion(int expectedVersion)
 		{
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
 			if (Version != expectedVersion)
+			{
 				result = new BlobChunkVerificationResultInfo(BlobChunkVerificationResult.InvalidVersion,
 					BlobChunkVerificationResultContext.Chunk, Version);
+			}
 
 			return result;
 		}
-		internal BlobChunkVerificationResultInfo VerifyVersionIsPositive()
+		internal readonly BlobChunkVerificationResultInfo VerifyVersionIsPositive()
 		{
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
 			if (Version < 0)
+			{
 				result = new BlobChunkVerificationResultInfo(BlobChunkVerificationResult.InvalidVersion,
 					BlobChunkVerificationResultContext.Chunk, Version);
+			}
 
 			return result;
 		}
-		internal BlobChunkVerificationResultInfo VerifyAnyVersion(params int[] expectedVersions)
+		internal readonly BlobChunkVerificationResultInfo VerifyAnyVersion(params int[] expectedVersions)
 		{
 			var result = new BlobChunkVerificationResultInfo(BlobChunkVerificationResult.InvalidVersion,
 					BlobChunkVerificationResultContext.Chunk, Version);
@@ -102,7 +112,9 @@ namespace KSoft.Blam.Blob.Transport
 			foreach (var expected_version in expectedVersions)
 			{
 				if (Version != expected_version)
+				{
 					continue;
+				}
 
 				result = BlobChunkVerificationResultInfo.ValidResult;
 				break;
@@ -111,17 +123,19 @@ namespace KSoft.Blam.Blob.Transport
 			return result;
 		}
 		// Neither the header or footer even check touch the flags value
-		internal BlobChunkVerificationResultInfo VerifyFlagsIsPostive()
+		internal readonly BlobChunkVerificationResultInfo VerifyFlagsIsPostive()
 		{
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
 			if ((int)Flags < 0)
+			{
 				result = new BlobChunkVerificationResultInfo(BlobChunkVerificationResult.Invalid,
 					BlobChunkVerificationResultContext.Chunk, (uint)Flags);
+			}
 
 			return result;
 		}
-		internal BlobChunkVerificationResultInfo Verify(uint expectedSignature, int expectedSize, int expectedVersion)
+		internal readonly BlobChunkVerificationResultInfo Verify(uint expectedSignature, int expectedSize, int expectedVersion)
 		{
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
@@ -141,7 +155,7 @@ namespace KSoft.Blam.Blob.Transport
 		}
 
 		#region IEndianStreamSerializable Members
-		internal void StreamSkipData(System.IO.Stream stream)
+		internal readonly void StreamSkipData(System.IO.Stream stream)
 		{
 			stream.Seek(DataSize, System.IO.SeekOrigin.Current);
 		}

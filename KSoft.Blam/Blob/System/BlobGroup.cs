@@ -8,14 +8,14 @@ namespace KSoft.Blam.Blob
 		: IO.ITagElementStringNameStreamable
 	{
 		int mMajorVersion;
-		public int MajorVersion { get { return mMajorVersion; } }
+		public int MajorVersion => mMajorVersion;
 
 		Engine.EngineBuildHandle mBuildHandle;
-		public Engine.EngineBuildHandle BuildHandle { get { return mBuildHandle; } }
+		public Engine.EngineBuildHandle BuildHandle => mBuildHandle;
 
 		bool mForceLittleEndian;
 		// Some people seem to have a certain affinity for breaking conventions
-		public bool ForceLittleEndian { get { return mForceLittleEndian; } }
+		public bool ForceLittleEndian => mForceLittleEndian;
 
 		#region ITagElementStreamable<string> Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -43,25 +43,26 @@ namespace KSoft.Blam.Blob
 		public BlobSystem ParentSystem { get; private set; }
 
 		GroupTagDatum mGroupTag;
-		public GroupTagDatum GroupTag { get { return mGroupTag; } }
+		public GroupTagDatum GroupTag => mGroupTag;
 
 		WellKnownBlob mKnownAs;
-		public WellKnownBlob KnownAs { get { return mKnownAs; } }
+		public WellKnownBlob KnownAs => mKnownAs;
 
-		readonly Dictionary<int, BlobGroupVersionAndBuildInfo> mVersionAndBuildMap;
-		public IReadOnlyDictionary<int, BlobGroupVersionAndBuildInfo> VersionAndBuildMap { get { return mVersionAndBuildMap; } }
+		readonly Dictionary<int, BlobGroupVersionAndBuildInfo> mVersionAndBuildMap = new();
+		public IReadOnlyDictionary<int, BlobGroupVersionAndBuildInfo> VersionAndBuildMap => mVersionAndBuildMap;
 
 		public BlobGroup()
 		{
 			mGroupTag = GroupTagDatum.Null;
 			mKnownAs = WellKnownBlob.NotWellKnown;
-			mVersionAndBuildMap = new Dictionary<int, BlobGroupVersionAndBuildInfo>();
 		}
 
 		public BlobGroupVersionAndBuildInfo FindMostRelaventVersionInfo(Engine.EngineBuildHandle forBuild)
 		{
 			if (forBuild.IsNone)
+			{
 				throw new ArgumentNoneException(nameof(forBuild));
+			}
 
 			BlobGroupVersionAndBuildInfo exact_match = null;
 			BlobGroupVersionAndBuildInfo most_relevant = null;
@@ -69,7 +70,7 @@ namespace KSoft.Blam.Blob
 
 			foreach (var kvp in VersionAndBuildMap)
 			{
-				var possible_info = kvp.Value;
+				BlobGroupVersionAndBuildInfo possible_info = kvp.Value;
 
 				// Solves for versions tied to a specific revision, if any
 				if (exact_match == null &&

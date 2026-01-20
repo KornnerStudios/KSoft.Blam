@@ -15,7 +15,9 @@ namespace KSoft.Blam.Localization
 		{
 			gLanguageChangedEventArgs = new PropertyChangedEventArgs[NumberOfLanguages];
 			for (int x = 0; x < NumberOfLanguages; x++)
+			{
 				gLanguageChangedEventArgs[x] = new PropertyChangedEventArgs(LanguageNames[x]);
+			}
 		}
 
 		internal static PropertyChangedEventArgs GetLanguageChangedEventArgs(int langIndex)
@@ -23,7 +25,9 @@ namespace KSoft.Blam.Localization
 			Contract.Requires(langIndex >= 0 && langIndex < NumberOfLanguages);
 
 			if (gLanguageChangedEventArgs == null)
+			{
 				InitializeLanguageChangedEventArgs();
+			}
 
 			Contract.Assume(gLanguageChangedEventArgs != null);
 			return gLanguageChangedEventArgs[langIndex];

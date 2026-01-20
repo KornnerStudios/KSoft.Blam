@@ -60,7 +60,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData
 				s.Pad24();
 				s.Stream(ref unk2A4);
 			}
-			else s.Pad64();
+			else { s.Pad64(); }
 
 			s.Pad64();
 		}
@@ -76,7 +76,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData
 			Contract.Assert(activity < GameActivity.kNumberOf);
 
 			if (s.IsReading)
+			{
 				value = (sbyte)activity;
+			}
 		}
 		protected override void SerializeGameSpecificData<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{

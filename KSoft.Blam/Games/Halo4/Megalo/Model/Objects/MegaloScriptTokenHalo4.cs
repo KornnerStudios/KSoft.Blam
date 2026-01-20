@@ -22,7 +22,9 @@ namespace KSoft.Blam.Games.Halo4.Megalo.Model
 			int type = (int)abstractType.ToHalo4();
 			s.StreamNoneable(ref type, 3);
 			if (s.IsReading)
+			{
 				abstractType = ((MegaloScriptTokenTypeHalo4)type).ToAbstract();
+			}
 		}
 		#endregion
 	};

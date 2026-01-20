@@ -15,8 +15,8 @@ namespace KSoft.Blam.Engine
 	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
 	[System.Diagnostics.DebuggerDisplay("Engine# = {EngineIndex}, Branch# = {BranchIndex}, Rev# = {RevisionIndex}")]
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
-	public struct EngineBuildHandle
-		: IComparer<EngineBuildHandle>, System.Collections.IComparer
+	public readonly struct EngineBuildHandle
+		: IComparer<EngineBuildHandle>, System.Collections.IComparer // #REMOVE_BLAM
 		, IComparable<EngineBuildHandle>, IComparable
 		, IEquatable<EngineBuildHandle>
 	{
@@ -26,11 +26,11 @@ namespace KSoft.Blam.Engine
 		static class Constants
 		{
 			public static readonly BitFieldTraits kRevisionBitField =
-				new BitFieldTraits(EngineBuildRevision.kIndexBitCount);
+				new(EngineBuildRevision.kIndexBitCount);
 			public static readonly BitFieldTraits kBranchBitField =
-				new BitFieldTraits(EngineBuildBranch.kIndexBitCount, kRevisionBitField);
+				new(EngineBuildBranch.kIndexBitCount, kRevisionBitField);
 			public static readonly BitFieldTraits kEngineBitField =
-				new BitFieldTraits(BlamEngine.kIndexBitCount, kBranchBitField);
+				new(BlamEngine.kIndexBitCount, kBranchBitField);
 
 			public static readonly BitFieldTraits kLastBitField =
 				kEngineBitField;
@@ -38,16 +38,16 @@ namespace KSoft.Blam.Engine
 
 		/// <summary>Number of bits required to represent a bit-encoded representation of this value type</summary>
 		/// <remarks>11 bits at last count</remarks>
-		public static int BitCount { get { return Constants.kLastBitField.FieldsBitCount; } }
-		public static uint Bitmask { get { return Constants.kLastBitField.FieldsBitmask.u32; } }
+		public static int BitCount => Constants.kLastBitField.FieldsBitCount;
+		public static uint Bitmask => Constants.kLastBitField.FieldsBitmask.u32;
 
-		public static readonly EngineBuildHandle None = new EngineBuildHandle();
+		public static readonly EngineBuildHandle None = new();
 		#endregion
 
 		#region Internal Value
 		[Interop.FieldOffset(0)] readonly uint mHandle;
 
-		internal uint Handle { get { return mHandle; } }
+		internal readonly uint Handle => mHandle;
 
 		static void InitializeHandle(out uint handle,
 			int engineIndex, int branchIndex, int revisionIndex)
@@ -89,21 +89,15 @@ namespace KSoft.Blam.Engine
 
 		#region Value properties
 		[Contracts.Pure]
-		public int EngineIndex { get {
-			return BlamEngine.BitDecodeIndex(mHandle, Constants.kEngineBitField.BitIndex);
-		} }
+		public readonly int EngineIndex => BlamEngine.BitDecodeIndex(mHandle, Constants.kEngineBitField.BitIndex);
 		[Contracts.Pure]
-		public int BranchIndex { get {
-			return EngineBuildBranch.BitDecodeIndex(mHandle, Constants.kBranchBitField.BitIndex);
-		} }
+		public readonly int BranchIndex => EngineBuildBranch.BitDecodeIndex(mHandle, Constants.kBranchBitField.BitIndex);
 		[Contracts.Pure]
-		public int RevisionIndex { get {
-			return EngineBuildRevision.BitDecodeIndex(mHandle, Constants.kRevisionBitField.BitIndex);
-		} }
+		public readonly int RevisionIndex => EngineBuildRevision.BitDecodeIndex(mHandle, Constants.kRevisionBitField.BitIndex);
 
 		[Contracts.Pure]
-		public BlamEngine Engine { get {
-			var index = EngineIndex;
+		public readonly BlamEngine Engine { get {
+			int index = EngineIndex;
 
 			return index.IsNotNone()
 				? EngineRegistry.Engines[index]
@@ -111,8 +105,8 @@ namespace KSoft.Blam.Engine
 		} }
 
 		[Contracts.Pure]
-		public EngineBuildBranch Branch { get {
-			var index = BranchIndex;
+		public readonly EngineBuildBranch Branch { get {
+			int index = BranchIndex;
 
 			if (index.IsNotNone())
 			{
@@ -124,8 +118,8 @@ namespace KSoft.Blam.Engine
 		} }
 
 		[Contracts.Pure]
-		public EngineBuildRevision Revision { get {
-			var index = RevisionIndex;
+		public readonly EngineBuildRevision Revision { get {
+			int index = RevisionIndex;
 
 			if (index.IsNotNone())
 			{
@@ -139,40 +133,36 @@ namespace KSoft.Blam.Engine
 		#endregion
 
 		[Contracts.Pure]
-		public bool IsNone { get {
+		public readonly bool IsNone =>
 			// this only works because ALL bitfields are NONE encoded, meaning -1 values are encoded as 0
-			return mHandle == 0;
-		} }
+			mHandle == 0;
 		[Contracts.Pure]
-		public bool IsNotNone { get { return !IsNone; } }
+		public readonly bool IsNotNone => !IsNone;
 		/// <summary>This handle refers to a fully formed build, down to the revision)</summary>
 		[Contracts.Pure]
-		public bool IsFullyFormed { get {
-			return IsNotNone
+		public readonly bool IsFullyFormed => IsNotNone
 				&& EngineIndex.IsNotNone()
 				&& BranchIndex.IsNotNone()
 				&& RevisionIndex.IsNotNone()
 				;
-		} }
 
 		#region Overrides
 		/// <summary>See <see cref="Object.Equals"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public override bool Equals(object obj)
+		public override readonly bool Equals(object obj)
 		{
-			if (obj is EngineBuildHandle)
-				return this.mHandle == ((EngineBuildHandle)obj).mHandle;
+			if (obj is EngineBuildHandle handle)
+			{
+				return this.mHandle == handle.mHandle;
+			}
 
 			return false;
 		}
 		/// <summary>Returns a unique 32-bit identifier for this object based on its exposed properties</summary>
 		/// <returns></returns>
 		/// <see cref="Object.GetHashCode"/>
-		public override int GetHashCode()
-		{
-			return (int)mHandle;
-		}
+		public override int GetHashCode() => (int)mHandle;
 		/// <summary>Returns a string representation of this object</summary>
 		/// <returns>"[Engine\tBranch\tRevision]"</returns>
 		public override string ToString()
@@ -189,12 +179,14 @@ namespace KSoft.Blam.Engine
 		/// <summary>Creates a string of the build component name ids separated by periods</summary>
 		/// <returns></returns>
 		/// <remarks>If the <see cref="Branch"/>'s display name is the same as <see cref="Engine"/>, the former isn't included in the output</remarks>
-		public string ToDisplayString()
+		public readonly string ToDisplayString()
 		{
 			Contract.Ensures(Contract.Result<string>() != null);
 
 			if (IsNone)
+			{
 				return TypeExtensions.kNoneDisplayString;
+			}
 
 			var sb = new System.Text.StringBuilder();
 			int engine_index = EngineIndex;
@@ -203,13 +195,13 @@ namespace KSoft.Blam.Engine
 
 			if (engine_index.IsNotNone())
 			{
-				var engine = EngineRegistry.Engines[engine_index];
+				BlamEngine engine = EngineRegistry.Engines[engine_index];
 				sb.Append(engine);
 
 				#region Branch
 				if (branch_index.IsNotNone())
 				{
-					var branch = engine.BuildRepository.Branches[branch_index];
+					EngineBuildBranch branch = engine.BuildRepository.Branches[branch_index];
 					// only include the branch display name if it isn't the same as the engine's
 					if (branch.ToString() != engine.ToString())
 					{
@@ -220,10 +212,10 @@ namespace KSoft.Blam.Engine
 					#region Revision
 					if (revisn_index.IsNotNone())
 					{
-						var revisn = branch.Revisions[revisn_index];
+						EngineBuildRevision revision = branch.Revisions[revisn_index];
 						sb.AppendFormat(Util.InvariantCultureInfo,
 							".{0}",
-							revisn.Version.ToString(Util.InvariantCultureInfo));
+							revision.Version.ToString(Util.InvariantCultureInfo));
 					}
 					#endregion
 				}
@@ -238,13 +230,17 @@ namespace KSoft.Blam.Engine
 		/// <param name="otherHandle">The other handle to compare with. Revision data is ignored</param>
 		/// <returns></returns>
 		/// <remarks>If either handle in this equation <see cref="IsNone"/>, this will return false</remarks>
-		public bool IsWithinSameBranch(EngineBuildHandle otherHandle)
+		public readonly bool IsWithinSameBranch(EngineBuildHandle otherHandle)
 		{
 			if (this.IsNone || otherHandle.IsNone)
+			{
 				return false;
+			}
 
 			if (EngineIndex != otherHandle.EngineIndex)
+			{
 				return false;
+			}
 
 			return BranchIndex == otherHandle.BranchIndex;
 		}
@@ -252,7 +248,7 @@ namespace KSoft.Blam.Engine
 		/// <param name="branch">The branch to compare with</param>
 		/// <returns></returns>
 		/// <remarks>If either handle in this equation <see cref="IsNone"/>, this will return false</remarks>
-		public bool IsWithinSameBranch(EngineBuildBranch branch)
+		public readonly bool IsWithinSameBranch(EngineBuildBranch branch)
 		{
 			Contract.Requires(branch != null);
 
@@ -267,14 +263,18 @@ namespace KSoft.Blam.Engine
 		/// 1) It's of the same engine
 		/// 2) It's of the same branch, if the parent's branch data isn't NONE
 		/// </remarks>
-		public bool IsChildOf(EngineBuildHandle parentHandle) // IsSupersetOf (this includes all of other)
+		public readonly bool IsChildOf(EngineBuildHandle parentHandle) // IsSupersetOf (this includes all of other)
 		{
 			if (EngineIndex != parentHandle.EngineIndex)
+			{
 				return false;
+			}
 
 			int parent_branch_index = parentHandle.BranchIndex;
 			if (parent_branch_index.IsNotNone() && BranchIndex != parent_branch_index)
+			{
 				return false;
+			}
 
 			return true;
 		}
@@ -285,7 +285,7 @@ namespace KSoft.Blam.Engine
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <returns></returns>
-		public int Compare(EngineBuildHandle x, EngineBuildHandle y)
+		public readonly int Compare(EngineBuildHandle x, EngineBuildHandle y)
 		{
 			return EngineBuildHandle.StaticCompare(x, y);
 		}
@@ -293,10 +293,10 @@ namespace KSoft.Blam.Engine
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <returns></returns>
-		int System.Collections.IComparer.Compare(object x, object y)
+		readonly int System.Collections.IComparer.Compare(object x, object y)
 		{
-			EngineBuildHandle _x; KSoft.Debug.TypeCheck.CastValue(x, out _x);
-			EngineBuildHandle _y; KSoft.Debug.TypeCheck.CastValue(y, out _y);
+			KSoft.Debug.TypeCheck.CastValue(x, out EngineBuildHandle _x);
+			KSoft.Debug.TypeCheck.CastValue(y, out EngineBuildHandle _y);
 
 			return EngineBuildHandle.StaticCompare(_x, _y);
 		}
@@ -306,16 +306,13 @@ namespace KSoft.Blam.Engine
 		/// <summary>See <see cref="IComparable{T}.CompareTo"/></summary>
 		/// <param name="other"></param>
 		/// <returns></returns>
-		public int CompareTo(EngineBuildHandle other)
-		{
-			return EngineBuildHandle.StaticCompare(this, other);
-		}
+		public readonly int CompareTo(EngineBuildHandle other) => EngineBuildHandle.StaticCompare(this, other);
 		/// <summary>See <see cref="IComparable{T}.CompareTo"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		int IComparable.CompareTo(object obj)
+		readonly int IComparable.CompareTo(object obj)
 		{
-			EngineBuildHandle _obj; KSoft.Debug.TypeCheck.CastValue(obj, out _obj);
+			KSoft.Debug.TypeCheck.CastValue(obj, out EngineBuildHandle _obj);
 
 			return EngineBuildHandle.StaticCompare(this, _obj);
 		}
@@ -325,7 +322,7 @@ namespace KSoft.Blam.Engine
 		/// <summary>See <see cref="IEquatable{T}.Equals"/></summary>
 		/// <param name="other"></param>
 		/// <returns></returns>
-		public bool Equals(EngineBuildHandle other)
+		public readonly bool Equals(EngineBuildHandle other)
 		{
 			return this.mHandle == other.mHandle;
 		}
@@ -333,9 +330,9 @@ namespace KSoft.Blam.Engine
 
 		#region Operators
 		[Contracts.Pure]
-		public static bool operator ==(EngineBuildHandle lhs, EngineBuildHandle rhs)	{ return lhs.Handle == rhs.Handle; }
+		public static bool operator==(EngineBuildHandle lhs, EngineBuildHandle rhs) => lhs.Handle == rhs.Handle;
 		[Contracts.Pure]
-		public static bool operator !=(EngineBuildHandle lhs, EngineBuildHandle rhs)	{ return lhs.Handle != rhs.Handle; }
+		public static bool operator!=(EngineBuildHandle lhs, EngineBuildHandle rhs) => lhs.Handle != rhs.Handle;
 		#endregion
 
 
@@ -363,7 +360,9 @@ namespace KSoft.Blam.Engine
 		public EngineBuildHandle ToEngineOnlyHandle()
 		{
 			if (IsNone) // avoid any bit operations if we're already 'none'
+			{
 				return this;
+			}
 
 			return new EngineBuildHandle(EngineIndex, TypeExtensions.kNone, TypeExtensions.kNone);
 		}
@@ -376,7 +375,9 @@ namespace KSoft.Blam.Engine
 		public EngineBuildHandle ToEngineBranchHandle()
 		{
 			if (IsNone) // avoid any bit operations if we're already 'none'
+			{
 				return this;
+			}
 
 			return new EngineBuildHandle(EngineIndex, BranchIndex, TypeExtensions.kNone);
 		}
@@ -432,13 +433,16 @@ namespace KSoft.Blam.Engine
 			actualBuild = forBuild;
 
 			if (forBuild.IsNone)
+			{
 				return false;
+			}
 
 			if (dic.TryGetValue(forBuild, out value))
+			{
 				return true;
+			}
 
-			EngineBuildHandle engine, branch;
-			forBuild.ExtractHandles(out engine, out branch);
+			forBuild.ExtractHandles(out EngineBuildHandle engine, out EngineBuildHandle branch);
 
 			if (dic.TryGetValue(branch, out value))
 			{
@@ -458,8 +462,7 @@ namespace KSoft.Blam.Engine
 		public static bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic, EngineBuildHandle forBuild,
 			ref T value)
 		{
-			EngineBuildHandle actual_build;
-			return TryGetValue(dic, forBuild, ref value, out actual_build);
+			return TryGetValue(dic, forBuild, ref value, out EngineBuildHandle /*actual_build*/_);
 		}
 
 		public bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic,
@@ -486,13 +489,13 @@ namespace KSoft.Blam.Engine
 		{
 			bool reading = s.IsReading;
 
-			var engine_index = reading
+			int engine_index = reading
 				? TypeExtensions.kNone
 				: value.EngineIndex;
-			var branch_index = reading
+			int branch_index = reading
 				? TypeExtensions.kNone
 				: value.BranchIndex;
-			var revisn_index = reading
+			int revisn_index = reading
 				? TypeExtensions.kNone
 				: value.RevisionIndex;
 
@@ -586,26 +589,36 @@ namespace KSoft.Blam.Engine
 			// reading: baseline EngineIndex is valid, or index is serialized
 			// writing: value EngineIndex mismatches baseline
 			if (engine_index.IsNotNone() || BlamEngine.SerializeId(s, kAttributeNameEngine, ref engine_index, true))
+			{
 				repo = EngineRegistry.Engines[engine_index].BuildRepository;
+			}
 
 			// precondition: someone's EngineIndex was valid
 			// reading: baseline BranchIndex is valid, or index is serialized
 			// writing: value BranchIndex mismatches baseline
 			if (repo != null && (branch_index.IsNotNone() || repo.SerializeBranchId(s, kAttributeNameBranch, ref branch_index, true)))
+			{
 				branch = repo.Branches[branch_index];
+			}
 
 			// precondition: someone's BranchIndex was valid
 			// reading: baseline RevisionIndex is valid
 			// writing: value RevisionIndex mismatches baseline
 			if (branch != null && (revisn_index.IsNotNone() || s.IsReading))
+			{
 				branch.SerializeRevisionId(s, kAttributeNameRevisn, ref revisn_index, true);
+			}
 
 			if (s.IsReading)
 			{
 				if (engine_index.IsNotNone())
+				{
 					value = new EngineBuildHandle(engine_index, branch_index, revisn_index);
+				}
 				else // engine_index is NONE, don't even bother trying to encode a new handle that should be all NONE anyway
+				{
 					value = EngineBuildHandle.None;
+				}
 			}
 		}
 		#endregion

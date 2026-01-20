@@ -24,25 +24,16 @@ namespace KSoft.Blam.Engine
 		/// <summary>A handle with just the engine index populated, that tracks back to this engine instance</summary>
 		public EngineBuildHandle RootBuildHandle { get; private set; }
 
-		public string Name { get; private set; }
+		public string Name { get; private set; } = string.Empty;
 
 		/// <summary>The community-determined generation this engine was introduced</summary>
 		// ReSharper disable once UnusedAutoPropertyAccessor.Local - written to via reflection in SerializePrototype
 		public EngineGeneration Generation { get; private set; }
 
 		/// <summary>The data store which has all the know builds based on this general engine</summary>
-		public EngineBuildRepository BuildRepository { get; private set; }
+		public EngineBuildRepository BuildRepository { get; private set; } = new();
 
-		readonly Dictionary<Values.KGuid, BlamEngineSystem> mSystemPrototypes;
-
-		public BlamEngine()
-		{
-			Name =
-				"";
-
-			BuildRepository = new EngineBuildRepository();
-			mSystemPrototypes = new Dictionary<Values.KGuid, BlamEngineSystem>();
-		}
+		readonly Dictionary<Values.KGuid, BlamEngineSystem> mSystemPrototypes = new();
 
 		public override string ToString() => Name;
 
@@ -53,8 +44,7 @@ namespace KSoft.Blam.Engine
 		{
 			Contract.Requires<ArgumentNullException>(systemGuid != Values.KGuid.Empty);
 
-			BlamEngineSystem proto_system;
-			return mSystemPrototypes.TryGetValue(systemGuid, out proto_system);
+			return mSystemPrototypes.TryGetValue(systemGuid, out BlamEngineSystem /*proto_system*/_);
 		}
 
 		/// <summary>Only call me if you are <see cref="EngineSystemBase.RemoveReferenceAsync"/></summary>
@@ -79,10 +69,13 @@ namespace KSoft.Blam.Engine
 			var proto_system = mSystemPrototypes[systemMetadata.SystemGuid];
 
 			EngineSystemBase system;
-			lock (mActiveSystems) if (!mActiveSystems.TryGetValue(systemMetadata.SystemGuid, out system))
+			lock (mActiveSystems)
 			{
-				system = systemMetadata.NewInstance(proto_system);
-				mActiveSystems.Add(systemMetadata.SystemGuid, system);
+				if (!mActiveSystems.TryGetValue(systemMetadata.SystemGuid, out system))
+				{
+					system = systemMetadata.NewInstance(proto_system);
+					mActiveSystems.Add(systemMetadata.SystemGuid, system);
+				}
 			}
 
 			return system;
@@ -108,9 +101,11 @@ namespace KSoft.Blam.Engine
 		EngineSystemBase TryGetSystem(Values.KGuid systemGuid)
 		{
 			if (!SupportsSystem(systemGuid))
+			{
 				return null;
+			}
 
-			var system_metadata = EngineRegistry.TryGetRegisteredSystem(systemGuid);
+			EngineSystemAttribute system_metadata = EngineRegistry.TryGetRegisteredSystem(systemGuid);
 			Contract.Assume(system_metadata != null);
 
 			return GetNewOrExistingSystem(system_metadata);
@@ -122,7 +117,7 @@ namespace KSoft.Blam.Engine
 			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
 			Contract.Requires(forBuild.EngineIndex == RootBuildHandle.EngineIndex);
 
-			var system_guid = EngineSystemAttribute.GetSystemGuid<T>();
+			Values.KGuid system_guid = EngineSystemAttribute.GetSystemGuid<T>();
 			var system = (T)GetSystem(system_guid, forBuild);
 
 			return new EngineSystemReference<T>(system, forBuild);
@@ -139,7 +134,7 @@ namespace KSoft.Blam.Engine
 			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
 			Contract.Requires(forBuild.EngineIndex == RootBuildHandle.EngineIndex);
 
-			var system_guid = EngineSystemAttribute.GetSystemGuid<T>();
+			Values.KGuid system_guid = EngineSystemAttribute.GetSystemGuid<T>();
 			var system = (T)TryGetSystem(system_guid);
 
 			return system == null
@@ -163,7 +158,7 @@ namespace KSoft.Blam.Engine
 		}
 		internal static int BitDecodeIndex(uint handle, int bitIndex)
 		{
-			var index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
+			int index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
 
 			Contract.Assert(index.IsNoneOrPositive() && index < EngineRegistry.Engines.Count);
 			return index;
@@ -174,14 +169,18 @@ namespace KSoft.Blam.Engine
 		/// <summary>Initialize the <see cref="RootBuildHandle"/> for all <see cref="EngineRegistry.Engines"/></summary>
 		internal static void InitializeEngineBuildHandles()
 		{
-			foreach (var engine in EngineRegistry.Engines)
+			foreach (BlamEngine engine in EngineRegistry.Engines)
+			{
 				engine.RootBuildHandle = EngineBuildHandle.Create(EngineIdResolver(null, engine.Name));
+			}
 		}
 		/// <summary>Initialize the <see cref="BuildRepository"/> handles all <see cref="EngineRegistry.Engines"/></summary>
 		internal static void InitializeEngineRepositoryBuildHandles()
 		{
-			foreach (var engine in EngineRegistry.Engines)
+			foreach (BlamEngine engine in EngineRegistry.Engines)
+			{
 				engine.BuildRepository.InitializeBuildHandles();
+			}
 		}
 		internal static EngineBuildBranch ResolveWellKnownEngineBranch(string engineName, string branchName)
 		{

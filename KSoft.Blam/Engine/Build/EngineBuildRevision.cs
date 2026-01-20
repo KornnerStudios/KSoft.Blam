@@ -22,26 +22,30 @@ namespace KSoft.Blam.Engine
 		#endregion
 
 		public EngineBuildBranch Branch { get; private set; }
-		public EngineBuildHandle BuildHandle { get; private set; }
+		public EngineBuildHandle BuildHandle { get; private set; } = EngineBuildHandle.None;
 
 		public string BuildString { get; private set; }
+			= "00000.00.00.00.0000";
 		public EngineBuildStringType BuildStringType { get; private set; }
-		public int Version { get; private set; }
-		public int ChangeList { get; private set; }
+			= EngineBuildStringType.Build_DateTime;
+		public int Version { get; private set; } = TypeExtensions.kNone;
+		public int ChangeList { get; private set; } = TypeExtensions.kNone;
 		public EngineProductionStage ProductionStage { get; private set; }
 
 		string mDateString;
 		string mTimeString;
 		public DateTime Date { get; private set; }
 
-		public string ExportName { get; private set; }
+		public string ExportName { get; private set; } = string.Empty;
 
 		#region ValidTargetPlatforms
 		Collections.BitSet mValidTargetPlatforms;
 		/// <summary>Platforms which this revision can target</summary>
 		public Collections.IReadOnlyBitSet ValidTargetPlatforms { get {
 			if (mValidTargetPlatforms == null)
+			{
 				return Branch.ValidTargetPlatforms;
+			}
 
 			return mValidTargetPlatforms;
 		} }
@@ -49,20 +53,9 @@ namespace KSoft.Blam.Engine
 
 		public EngineBuildRevision()
 		{
-			BuildHandle = EngineBuildHandle.None;
-
-			BuildString =
-				"00000.00.00.00.0000";
-			BuildStringType = EngineBuildStringType.Build_DateTime;
-
-			Version = ChangeList =
-				TypeExtensions.kNone;
-
 			Date = DateTime.MinValue;
 			mDateString = Date.ToString(kDateFormat, Util.InvariantCultureInfo);
 			mTimeString = Date.ToString(kDateTimeFormat + " " + kDateTimeOffsetFormat, Util.InvariantCultureInfo);
-
-			ExportName = "";
 		}
 
 		#region Overrides
@@ -100,31 +93,43 @@ namespace KSoft.Blam.Engine
 		{
 			var branch = KSoft.Debug.TypeCheck.CastReference<EngineBuildBranch>(s.UserData);
 			if (s.IsReading)
+			{
 				Branch = branch;
+			}
 			else
+			{
 				Contract.Assert(branch == Branch);
+			}
 
 			s.StreamAttribute("versionId", this, obj => obj.Version);
 			s.StreamAttribute("build", this, obj => obj.BuildString);
 
 			if (!s.StreamAttributeOpt("changeListId", this, obj => obj.ChangeList, Predicates.IsNotNone))
+			{
 				ChangeList = TypeExtensions.kNoneInt32;
+			}
 
 			if (!s.StreamAttributeEnumOpt("productionStage", this, obj => obj.ProductionStage))
+			{
 				ProductionStage = EngineProductionStage.Undefined;
+			}
 
 			if (!s.StreamAttributeEnumOpt("buildStringType", this, obj => obj.BuildStringType))
+			{
 				BuildStringType = EngineBuildStringType.Build_DateTime;
+			}
 
 			s.StreamElement("Date", ref mDateString);
 			s.StreamElement("Time", ref mTimeString);
 
 			if (!s.StreamAttributeOpt("exportName", this, obj => obj.ExportName, Predicates.IsNotNullOrEmpty))
+			{
 				ExportName = "";
+			}
 
 			EngineTargetPlatform.SerializeBitSet(s, ref mValidTargetPlatforms, "ValidTargetPlatforms");
 
-			if(s.IsReading)
+			if (s.IsReading)
 			{
 				const string k_date_format_string =
 					kDateFormat + " " +
@@ -157,7 +162,7 @@ namespace KSoft.Blam.Engine
 		}
 		internal static int BitDecodeIndex(uint handle, int bitIndex)
 		{
-			var index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
+			int index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
 
 			Contract.Assert(index.IsNoneOrPositive());
 			return index;

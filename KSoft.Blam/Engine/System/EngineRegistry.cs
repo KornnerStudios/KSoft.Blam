@@ -154,8 +154,7 @@ namespace KSoft.Blam.Engine
 		#endregion
 
 		#region Systems
-		static Dictionary<Values.KGuid, EngineSystemAttribute> gSystems =
-			new Dictionary<Values.KGuid, EngineSystemAttribute>();
+		static Dictionary<Values.KGuid, EngineSystemAttribute> gSystems = new();
 		internal static IReadOnlyDictionary<Values.KGuid, EngineSystemAttribute> Systems => gSystems;
 
 		/// <summary>Don't call me unless your name is <see cref="EngineSystemAttribute"/>!</summary>
@@ -176,8 +175,7 @@ namespace KSoft.Blam.Engine
 		{
 			Contract.Requires<ArgumentNullException>(systemGuid.IsNotEmpty);
 
-			EngineSystemAttribute metadata;
-			Systems.TryGetValue(systemGuid, out metadata);
+			Systems.TryGetValue(systemGuid, out EngineSystemAttribute metadata);
 
 			return metadata;
 		}
@@ -191,7 +189,9 @@ namespace KSoft.Blam.Engine
 
 			EngineSystemAttribute system_attribute = null;
 			if (systemGuid.IsNotEmpty)
+			{
 				system_attribute = TryGetRegisteredSystem(systemGuid);
+			}
 
 			string display_string = string.Format(Util.InvariantCultureInfo,
 				"{{{0}}}={1}",
@@ -212,7 +212,7 @@ namespace KSoft.Blam.Engine
 		{
 			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
 
-			var engine = Engines[forBuild.EngineIndex];
+			BlamEngine engine = Engines[forBuild.EngineIndex];
 
 			return engine.GetSystem<T>(forBuild);
 		}
@@ -225,7 +225,7 @@ namespace KSoft.Blam.Engine
 		{
 			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
 
-			var engine = Engines[forBuild.EngineIndex];
+			BlamEngine engine = Engines[forBuild.EngineIndex];
 
 			return engine.TryGetSystem<T>(forBuild);
 		}
@@ -240,7 +240,7 @@ namespace KSoft.Blam.Engine
 		}
 		internal static int BitDecodeResourceModelIndex(uint handle, int bitIndex)
 		{
-			var index = Bits.BitDecodeNoneable(handle, bitIndex, kResourceModelBitMask);
+			int index = Bits.BitDecodeNoneable(handle, bitIndex, kResourceModelBitMask);
 
 			Contract.Assert(IsValidResourceModelIndex(index));
 			return index;

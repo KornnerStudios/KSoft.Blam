@@ -16,18 +16,17 @@ namespace KSoft.Blam.Blob
 	public sealed class BlobSystem
 		: Engine.EngineSystemBase
 	{
-		public static Values.KGuid SystemGuid { get; } = new Values.KGuid("EA5FFB03-9991-4B81-B952-022EDC371F27");
+		public static Values.KGuid SystemGuid { get; } = new("EA5FFB03-9991-4B81-B952-022EDC371F27");
 
 		GroupTagDatumCollection mGroupTags;
-		public GroupTagDatumCollection GroupTags { get { return mGroupTags; } }
+		public GroupTagDatumCollection GroupTags => mGroupTags;
 
-		readonly Dictionary<GroupTagDatum, BlobGroup> mGroups;
-		public IReadOnlyDictionary<GroupTagDatum, BlobGroup> Groups { get { return mGroups; } }
+		readonly Dictionary<GroupTagDatum, BlobGroup> mGroups = new();
+		public IReadOnlyDictionary<GroupTagDatum, BlobGroup> Groups => mGroups;
 
 		internal BlobSystem()
 		{
 			mGroupTags = GroupTagDatumCollection.Empty;
-			mGroups = new Dictionary<GroupTagDatum, BlobGroup>();
 		}
 
 		#region TryGetBlobGroup
@@ -77,8 +76,9 @@ namespace KSoft.Blam.Blob
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(version.IsNotNone());
 
-			BlobGroupVersionAndBuildInfo infoForVersion;
-			return TryGetBlobGroup(signature, binarySize, version, out group, out infoForVersion);
+			return TryGetBlobGroup(signature, binarySize, version,
+				out group,
+				out BlobGroupVersionAndBuildInfo /*infoForVersion*/_);
 		}
 
 		public bool TryGetBlobGroup(WellKnownBlob kind,
@@ -104,22 +104,15 @@ namespace KSoft.Blam.Blob
 			BlobGroup blobGroup,
 			int version, int binarySize)
 		{
-			BlobObject bobject;
-			switch(blobGroup.KnownAs)
-			{
-			case WellKnownBlob.ContentHeader:
-				bobject = new ContentHeaderBlob();
-				break;
-
-			case WellKnownBlob.GameVariant:
-				bobject = new GameEngineVariantBlob();
-				break;
-
-			default:
-				throw new KSoft.Debug.UnreachableException(blobGroup.GroupTag.Name);
-			}
-
 			Util.MarkUnusedVariable(ref binarySize);
+
+			BlobObject bobject = blobGroup.KnownAs switch
+			{
+				WellKnownBlob.ContentHeader => new ContentHeaderBlob(),
+				WellKnownBlob.GameVariant => new GameEngineVariantBlob(),
+				_ => throw new KSoft.Debug.UnreachableException(blobGroup.GroupTag.Name),
+			};
+
 			bobject.Initialize(this, gameTarget, blobGroup, version);
 
 			return bobject;
@@ -140,14 +133,19 @@ namespace KSoft.Blam.Blob
 			WellKnownBlob knownBlob)
 		{
 			if (gameTarget.IsNone)
+			{
 				throw new ArgumentNoneException(nameof(gameTarget));
+			}
 			if (!gameTarget.Build.IsFullyFormed)
+			{
 				throw new ArgumentException("Target build needs to be fully formed", nameof(gameTarget));
+			}
 			if (knownBlob == WellKnownBlob.NotWellKnown)
+			{
 				throw new ArgumentException(nameof(WellKnownBlob.NotWellKnown), nameof(knownBlob));
+			}
 
-			BlobGroup known_blob_group;
-			if (!TryGetBlobGroup(knownBlob, out known_blob_group))
+			if (!TryGetBlobGroup(knownBlob, out BlobGroup known_blob_group))
 			{
 				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
 					"No blob groups marked to be known as {0} under {1}",
@@ -157,6 +155,7 @@ namespace KSoft.Blam.Blob
 
 			BlobGroupVersionAndBuildInfo known_blob_group_version_info =
 				known_blob_group.FindMostRelaventVersionInfo(gameTarget.Build);
+#pragma warning disable IDE0270 // Use coalesce expression
 			if (known_blob_group_version_info == null)
 			{
 				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
@@ -165,6 +164,7 @@ namespace KSoft.Blam.Blob
 					gameTarget.Build,
 					this.Prototype.Engine));
 			}
+#pragma warning restore IDE0270 // Use coalesce expression
 
 			return CreateObject(gameTarget, known_blob_group, known_blob_group_version_info.MajorVersion);
 		}
@@ -188,9 +188,11 @@ namespace KSoft.Blam.Blob
 				groupTag = (GroupTagDatum)system.GroupTags.FindGroupByTag(tag_string);
 
 				if (groupTag == null)
+				{
 					s.ThrowReadException(new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
 						"The tag '{0}' isn't defined in this system",
 						tag_string)));
+				}
 			}
 		}
 
@@ -207,7 +209,7 @@ namespace KSoft.Blam.Blob
 		#endregion
 
 		#region StreamObjects
-		static Exception SerializeObjectFoundBuildIncompatibility(BlobSystem blobSystem,
+		static System.IO.InvalidDataException SerializeObjectFoundBuildIncompatibility(BlobSystem blobSystem,
 			BlobGroup blobGroup, int version,
 			Engine.EngineBuildHandle buildForBlobVersion, Engine.EngineBuildHandle actualBuild)
 		{
@@ -222,7 +224,7 @@ namespace KSoft.Blam.Blob
 			return new System.IO.InvalidDataException(msg);
 		}
 
-		struct SerializeObjectContext
+		readonly struct SerializeObjectContext
 		{
 			public readonly BlobSystem System;
 			public readonly Engine.BlamEngineTargetHandle GameTarget;
@@ -251,9 +253,9 @@ namespace KSoft.Blam.Blob
 				int version = TypeExtensions.kNone;
 				s.ReadAttribute(kAttributeNameVersion, ref version);
 
-				BlobGroup blob_group;
-				BlobGroupVersionAndBuildInfo info_for_version;
-				if (ctxt.System.TryGetBlobGroup(group_tag, version, out blob_group, out info_for_version))
+				if (ctxt.System.TryGetBlobGroup(group_tag, version,
+						out BlobGroup blob_group,
+						out BlobGroupVersionAndBuildInfo info_for_version))
 				{
 					var target_build = ctxt.GameTarget.Build;
 
@@ -291,7 +293,9 @@ namespace KSoft.Blam.Blob
 			Contract.Requires<ArgumentNullException>(!gameTarget.IsNone);
 
 			if (s.IsReading)
+			{
 				results = new List<BlobObject>();
+			}
 
 			var ctxt = new SerializeObjectContext(this, gameTarget);
 			s.StreamElements("BlobObject", results, ctxt, SerializeObject,

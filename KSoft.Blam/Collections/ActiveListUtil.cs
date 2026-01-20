@@ -35,9 +35,13 @@ namespace KSoft.Collections
 			}
 			else if (s.IsWriting)
 			{
-				if(writeOrder == null)
+				if (writeOrder == null)
+				{
 					foreach (var obj in list)
+					{
 						obj.Serialize(s);
+					}
+				}
 				else
 				{
 					// #REVIEW_BLAM: well, shall we warn?
@@ -76,18 +80,24 @@ namespace KSoft.Collections
 					: getReadMode(ctxt);
 
 				foreach (var node in elements)
+				{
 					using (s.EnterCursorBookmark(node))
 					{
 						var value = ctor(s, ctxt);
 						if (read_mode == TagElementStreamReadMode.PostConstructor)
+						{
 							value.Serialize(s);
+						}
 
 						int index = list.Description.ObjectToIndex(value);
 						list.AddExplicit(value, index);
 
 						if (read_mode == TagElementStreamReadMode.PostAdd)
+						{
 							value.Serialize(s);
+						}
 					}
+				}
 			}
 			public static void ReadElements(IO.TagElementStream<TDoc, TCursor, string> s, string elementName,
 				ActiveList<T> list,
@@ -99,9 +109,16 @@ namespace KSoft.Collections
 			public static void WriteElements(IO.TagElementStream<TDoc, TCursor, string> s, string elementName,
 				ActiveList<T> list, Predicate<T> writeShouldSkip)
 			{
-				foreach (var value in list) if (!writeShouldSkip(value))
-					using (s.EnterCursorBookmark(elementName))
-						value.Serialize(s);
+				foreach (var value in list)
+				{
+					if (!writeShouldSkip(value))
+					{
+						using (s.EnterCursorBookmark(elementName))
+						{
+							value.Serialize(s);
+						}
+					}
+				}
 			}
 		};
 		/// <remarks>
@@ -129,10 +146,12 @@ namespace KSoft.Collections
 			Contract.Requires(ctor != null);
 
 			if (writeShouldSkip == null)
+			{
 				writeShouldSkip = Predicates.False;
+			}
 
-				 if (s.IsReading) TagElementTextStreamUtils<TDoc,TCursor,T,TContext>.ReadElements(s, elementName, list, ctxt, ctor, getReadMode);
-			else if (s.IsWriting) TagElementTextStreamUtils<TDoc,TCursor,T,TContext>.WriteElements(s, elementName, list, writeShouldSkip);
+				 if (s.IsReading) { TagElementTextStreamUtils<TDoc,TCursor,T,TContext>.ReadElements(s, elementName, list, ctxt, ctor, getReadMode); }
+			else if (s.IsWriting) { TagElementTextStreamUtils<TDoc,TCursor,T,TContext>.WriteElements(s, elementName, list, writeShouldSkip); }
 		}
 		#endregion
 	};

@@ -14,9 +14,8 @@ namespace KSoft.Blam.Engine
 
 	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
 	[System.Diagnostics.DebuggerDisplay("Engine# = {Build.EngineIndex}, TargetPlatform# = {TargetPlatformIndex}, ResourceModel# = {ResourceModelIndex}")]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
-	public struct BlamEngineTargetHandle
-		: IComparer<BlamEngineTargetHandle>, System.Collections.IComparer
+	public readonly struct BlamEngineTargetHandle
+		: IComparer<BlamEngineTargetHandle>, System.Collections.IComparer // #REMOVE_BLAM
 		, IComparable<BlamEngineTargetHandle>, IComparable
 		, IEquatable<BlamEngineTargetHandle>
 	{
@@ -26,11 +25,11 @@ namespace KSoft.Blam.Engine
 		static class Constants
 		{
 			public static readonly BitFieldTraits kResourceModelBitField =
-				new BitFieldTraits(EngineRegistry.kResourceModelBitCount);
+				new(EngineRegistry.kResourceModelBitCount);
 			public static readonly BitFieldTraits kTargetPlatformBitField =
-				new BitFieldTraits(EngineTargetPlatform.kIndexBitCount, kResourceModelBitField);
+				new(EngineTargetPlatform.kIndexBitCount, kResourceModelBitField);
 			public static readonly BitFieldTraits kBuildBitField =
-				new BitFieldTraits(EngineBuildHandle.BitCount, kTargetPlatformBitField);
+				new(EngineBuildHandle.BitCount, kTargetPlatformBitField);
 
 			public static readonly BitFieldTraits kLastBitField =
 				kBuildBitField;
@@ -38,10 +37,10 @@ namespace KSoft.Blam.Engine
 
 		/// <summary>Number of bits required to represent a bit-encoded representation of this value type</summary>
 		/// <remarks>16 bits at last count</remarks>
-		public static int BitCount { get { return Constants.kLastBitField.FieldsBitCount; } }
-		public static uint Bitmask { get { return Constants.kLastBitField.FieldsBitmask.u32; } }
+		public static int BitCount => Constants.kLastBitField.FieldsBitCount;
+		public static uint Bitmask => Constants.kLastBitField.FieldsBitmask.u32;
 
-		public static readonly BlamEngineTargetHandle None = new BlamEngineTargetHandle();
+		public static readonly BlamEngineTargetHandle None = new();
 		#endregion
 
 		#region Internal Value
@@ -53,7 +52,9 @@ namespace KSoft.Blam.Engine
 			EngineBuildHandle buildHandle, int platformIndex, int resourceModelIndex)
 		{
 			if (platformIndex.IsNone() && resourceModelIndex.IsNone())
+			{
 				resourceModelIndex = 0;
+			}
 
 			var encoder = new Bitwise.HandleBitEncoder();
 			EngineRegistry.BitEncodeResourceModelIndex(ref encoder, resourceModelIndex);
@@ -99,21 +100,15 @@ namespace KSoft.Blam.Engine
 
 		#region Value properties
 		[Contracts.Pure]
-		public EngineBuildHandle Build { get {
-			return new EngineBuildHandle(mHandle, Constants.kBuildBitField);
-		} }
+		public EngineBuildHandle Build => new(mHandle, Constants.kBuildBitField);
 		[Contracts.Pure]
-		public int TargetPlatformIndex { get {
-			return EngineTargetPlatform.BitDecodeIndex(mHandle, Constants.kTargetPlatformBitField.BitIndex);
-		} }
+		public int TargetPlatformIndex => EngineTargetPlatform.BitDecodeIndex(mHandle, Constants.kTargetPlatformBitField.BitIndex);
 		[Contracts.Pure]
-		public int ResourceModelIndex { get {
-			return EngineRegistry.BitDecodeResourceModelIndex(mHandle, Constants.kResourceModelBitField.BitIndex);
-		} }
+		public int ResourceModelIndex => EngineRegistry.BitDecodeResourceModelIndex(mHandle, Constants.kResourceModelBitField.BitIndex);
 
 		[Contracts.Pure]
 		public EngineTargetPlatform TargetPlatform { get {
-			var index = TargetPlatformIndex;
+			int index = TargetPlatformIndex;
 
 			return index.IsNotNone()
 				? EngineRegistry.TargetPlatforms[index]
@@ -122,10 +117,9 @@ namespace KSoft.Blam.Engine
 		#endregion
 
 		[Contracts.Pure]
-		public bool IsNone { get {
+		public bool IsNone =>
 			// this only works because ALL bitfields are NONE encoded, meaning -1 values are encoded as 0
-			return mHandle == 0;
-		} }
+			mHandle == 0;
 
 		#region Overrides
 		/// <summary>See <see cref="Object.Equals"/></summary>
@@ -133,8 +127,10 @@ namespace KSoft.Blam.Engine
 		/// <returns></returns>
 		public override bool Equals(object obj)
 		{
-			if (obj is BlamEngineTargetHandle)
-				return this.mHandle == ((BlamEngineTargetHandle)obj).mHandle;
+			if (obj is BlamEngineTargetHandle objHandle)
+			{
+				return this.mHandle == objHandle.mHandle;
+			}
 
 			return false;
 		}
@@ -168,7 +164,9 @@ namespace KSoft.Blam.Engine
 			Contract.Ensures(Contract.Result<string>() != null);
 
 			if (IsNone)
+			{
 				return TypeExtensions.kNoneDisplayString;
+			}
 
 			var sb = new System.Text.StringBuilder(Build.ToDisplayString());
 			int platform_index = TargetPlatformIndex;
@@ -208,8 +206,8 @@ namespace KSoft.Blam.Engine
 		/// <returns></returns>
 		int System.Collections.IComparer.Compare(object x, object y)
 		{
-			BlamEngineTargetHandle _x; KSoft.Debug.TypeCheck.CastValue(x, out _x);
-			BlamEngineTargetHandle _y; KSoft.Debug.TypeCheck.CastValue(y, out _y);
+			KSoft.Debug.TypeCheck.CastValue(x, out BlamEngineTargetHandle _x);
+			KSoft.Debug.TypeCheck.CastValue(y, out BlamEngineTargetHandle _y);
 
 			return BlamEngineTargetHandle.StaticCompare(_x, _y);
 		}
@@ -228,7 +226,7 @@ namespace KSoft.Blam.Engine
 		/// <returns></returns>
 		int IComparable.CompareTo(object obj)
 		{
-			BlamEngineTargetHandle _obj; KSoft.Debug.TypeCheck.CastValue(obj, out _obj);
+			KSoft.Debug.TypeCheck.CastValue(obj, out BlamEngineTargetHandle _obj);
 
 			return BlamEngineTargetHandle.StaticCompare(this, _obj);
 		}
@@ -238,17 +236,14 @@ namespace KSoft.Blam.Engine
 		/// <summary>See <see cref="IEquatable{T}.Equals"/></summary>
 		/// <param name="other"></param>
 		/// <returns></returns>
-		public bool Equals(BlamEngineTargetHandle other)
-		{
-			return this.mHandle == other.mHandle;
-		}
+		public bool Equals(BlamEngineTargetHandle other) => this.mHandle == other.mHandle;
 		#endregion
 
 		#region Operators
 		[Contracts.Pure]
-		public static bool operator ==(BlamEngineTargetHandle lhs, BlamEngineTargetHandle rhs)	{ return lhs.mHandle == rhs.mHandle; }
+		public static bool operator==(BlamEngineTargetHandle lhs, BlamEngineTargetHandle rhs) => lhs.mHandle == rhs.mHandle;
 		[Contracts.Pure]
-		public static bool operator !=(BlamEngineTargetHandle lhs, BlamEngineTargetHandle rhs)	{ return lhs.mHandle != rhs.mHandle; }
+		public static bool operator!=(BlamEngineTargetHandle lhs, BlamEngineTargetHandle rhs) => lhs.mHandle != rhs.mHandle;
 		#endregion
 
 
@@ -279,10 +274,10 @@ namespace KSoft.Blam.Engine
 			var build = reading
 				? EngineBuildHandle.None
 				: value.Build;
-			var platform_index = reading
+			int platform_index = reading
 				? TypeExtensions.kNone
 				: value.TargetPlatformIndex;
-			var rsrc_model_index = reading
+			int rsrc_model_index = reading
 				? TypeExtensions.kNone
 				: value.ResourceModelIndex;
 
