@@ -53,7 +53,9 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 			mTeams = new GameOptionsSingleTeamOptionsHaloReach[8];
 
 			for (int x = 0; x < Teams.Length; x++)
+			{
 				mTeams[x] = new GameOptionsSingleTeamOptionsHaloReach(reachBuild);
+			}
 		}
 
 		public override void RevertToDefault()
@@ -70,7 +72,10 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 
 			SerializeModelOverride(s);
 			s.Stream(ref DesignatorSwitchType, 2);
-			foreach (var opt in mTeams) s.StreamObject(opt);
+			foreach (var opt in mTeams)
+			{
+				s.StreamObject(opt);
+			}
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -80,8 +85,12 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 				mReachBuild, _reachBuild => new GameOptionsSingleTeamOptionsHaloReach(_reachBuild));
 
 			if (s.IsReading)
+			{
 				for (; streamed_count < Teams.Length; streamed_count++)
+				{
 					Teams[streamed_count].RevertToDefault();
+				}
+			}
 		}
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{

@@ -4,7 +4,6 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	using LocaleStringTableInfo = Localization.StringTables.LocaleStringTableInfo;
 
 	[System.Reflection.Obfuscation(Exclude=false)]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct GameOptionsSingleTeamEmblemInfo
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
@@ -12,7 +11,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public byte ForegroundIndex, BackgroundIndex, Flags,
 				PrimaryColor, SecondaryColor, BackgroundColor;
 
-		public bool IsDefault { get {
+		public readonly bool IsDefault { get {
 			return ForegroundIndex == 0 && BackgroundIndex == 0 && Flags == 0 &&
 				PrimaryColor == 1 && SecondaryColor == 1 && BackgroundColor == 1;
 		} }
@@ -53,7 +52,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	public sealed class GameOptionsSingleTeamOptionsHalo4
 		: Blam.RuntimeData.Variants.GameOptionsSingleTeamOptions
 	{
-		public static readonly LocaleStringTableInfo kNameStringTableInfo = new LocaleStringTableInfo(1, 0x220);
+		public static readonly LocaleStringTableInfo kNameStringTableInfo = new(1, 0x220);
 
 		public uint InterfaceColorOverride;
 
@@ -108,10 +107,17 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		{
 			base.SerializeImpl(s);
 
-			using (var bm = s.EnterCursorBookmarkOpt("Emblem", EmblemInfo, obj=>!obj.IsDefault)) if (bm.IsNotNull)
-				s.StreamValue(ref EmblemInfo);
-			else if (s.IsReading)
-				EmblemInfo.RevertToDefault();
+			using (var bm = s.EnterCursorBookmarkOpt("Emblem", EmblemInfo, obj=>!obj.IsDefault))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamValue(ref EmblemInfo);
+				}
+				else if (s.IsReading)
+				{
+					EmblemInfo.RevertToDefault();
+				}
+			}
 		}
 		#endregion
 	};
@@ -123,7 +129,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		readonly Engine.EngineBuildHandle mHalo4Build;
 
 		readonly GameOptionsSingleTeamOptionsHalo4[] mTeams;
-		public override Blam.RuntimeData.Variants.GameOptionsSingleTeamOptions[] Teams { get { return mTeams; } }
+		public override Blam.RuntimeData.Variants.GameOptionsSingleTeamOptions[] Teams => mTeams;
 
 		public GameOptionsTeamOptionsHalo4(Engine.EngineBuildHandle h4Build)
 		{
@@ -131,7 +137,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			mTeams = new GameOptionsSingleTeamOptionsHalo4[8];
 
 			for (int x = 0; x < Teams.Length; x++)
+			{
 				Teams[x] = new GameOptionsSingleTeamOptionsHalo4(h4Build);
+			}
 		}
 
 		#region IBitStreamSerializable Members
@@ -139,7 +147,10 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		{
 			SerializeModelOverride(s);
 			s.Stream(ref DesignatorSwitchType, 2);
-			foreach (var opt in mTeams) s.StreamObject(opt);	// 0xD04
+			foreach (var opt in mTeams)
+			{
+				s.StreamObject(opt);   // 0xD04
+			}
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -149,8 +160,12 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 				mHalo4Build, _h4Build => new GameOptionsSingleTeamOptionsHalo4(_h4Build));
 
 			if (s.IsReading)
+			{
 				for (; streamed_count < Teams.Length; streamed_count++)
+				{
 					Teams[streamed_count].RevertToDefault();
+				}
+			}
 		}
 		#endregion
 	};

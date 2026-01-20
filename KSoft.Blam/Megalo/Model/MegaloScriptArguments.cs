@@ -16,7 +16,9 @@ namespace KSoft.Blam.Megalo.Model
 			{
 				var value = Values[value_id];
 				if (value.IsGlobal)
+				{
 					continue;
+				}
 
 				Values[value_id] = null;
 			}
@@ -42,10 +44,16 @@ namespace KSoft.Blam.Megalo.Model
 			ProtoData = protoObj;
 			this.mValueIds = new int[protoObj.ParameterList.Count];
 			if (valueIds.Length == 0)
+			{
 				for (int x = 0; x < this.mValueIds.Length; x++)
+				{
 					this.mValueIds[x] = TypeExtensions.kNone;
+				}
+			}
 			else
+			{
 				Array.Copy(valueIds, this.mValueIds, valueIds.Length);
+			}
 		}
 
 		#region Initialize values
@@ -54,7 +62,7 @@ namespace KSoft.Blam.Megalo.Model
 			int change_count = 0;
 			for (int x = 0; x < mValueIds.Length; x++)
 			{
-				if (mValueIds[x].IsNotNone()) continue;
+				if (mValueIds[x].IsNotNone()) { continue; }
 				change_count++;
 
 				var value = model.CreateValue(ProtoData.ParameterList[x].Type);
@@ -62,7 +70,9 @@ namespace KSoft.Blam.Megalo.Model
 			}
 
 			if (change_count > 0)
+			{
 				NotifyItemsInitialized();
+			}
 		}
 		public void InitializeValues(params MegaloScriptValueBase[] values)
 		{
@@ -116,7 +126,11 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			foreach (var value_id in mValueIds)
 			{
-				if (s.IsWriting) Contract.Assert(value_id.IsNotNone());
+				if (s.IsWriting)
+				{
+					Contract.Assert(value_id.IsNotNone());
+				}
+
 				var value = model.Values[value_id];
 				value.Serialize(model, s);
 			}
@@ -130,17 +144,24 @@ namespace KSoft.Blam.Megalo.Model
 			where TCursor : class
 		{
 			int param_index = 0;
-			foreach (var node in s.ElementsByName("Param")) using (s.EnterCursorBookmark(node))
+			foreach (var node in s.ElementsByName("Param"))
 			{
-				if (embedValues)
-					MegaloScriptValueBase.SerializeValueForEmbed(model, s, ref mValueIds[param_index]);
-				else
-					s.StreamCursor(ref mValueIds[param_index]);
+				using (s.EnterCursorBookmark(node))
+				{
+					if (embedValues)
+					{
+						MegaloScriptValueBase.SerializeValueForEmbed(model, s, ref mValueIds[param_index]);
+					}
+					else
+					{
+						s.StreamCursor(ref mValueIds[param_index]);
+					}
 
-				Contract.Assert(mValueIds[param_index].IsNotNone());
-				param_index++;
+					Contract.Assert(mValueIds[param_index].IsNotNone());
+					param_index++;
 
-				if (param_index == mValueIds.Length) break;
+					if (param_index == mValueIds.Length) { break; }
+				}
 			}
 		}
 		void Write<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s,
@@ -151,16 +172,25 @@ namespace KSoft.Blam.Megalo.Model
 			bool multiple_params = mValueIds.Length > 1;
 			bool write_extra_info = s.IsWriting && model.TagElementStreamSerializeFlags.HasParamFlags();
 
-			for (int x = 0; x < mValueIds.Length; x++) using (s.EnterCursorBookmark("Param"))
+			for (int x = 0; x < mValueIds.Length; x++)
 			{
-				if (write_extra_info)
-					ProtoData.ParameterList[x].WriteExtraModelInfo(model.Database, s, multiple_params, model.TagElementStreamSerializeFlags);
+				using (s.EnterCursorBookmark("Param"))
+				{
+					if (write_extra_info)
+					{
+						ProtoData.ParameterList[x].WriteExtraModelInfo(model.Database, s, multiple_params, model.TagElementStreamSerializeFlags);
+					}
 
-				Contract.Assert(mValueIds[x].IsNotNone());
-				if (embedValues)
-					MegaloScriptValueBase.SerializeValueForEmbed(model, s, ref mValueIds[x]);
-				else
-					s.StreamCursor(ref mValueIds[x]);
+					Contract.Assert(mValueIds[x].IsNotNone());
+					if (embedValues)
+					{
+						MegaloScriptValueBase.SerializeValueForEmbed(model, s, ref mValueIds[x]);
+					}
+					else
+					{
+						s.StreamCursor(ref mValueIds[x]);
+					}
+				}
 			}
 		}
 		public void Serialize<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)
@@ -169,8 +199,8 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			bool embed_values = model.TagElementStreamSerializeFlags.EmbedObjects();
 
-			if (s.IsReading)Read (model, s, embed_values);
-			else			Write(model, s, embed_values);
+			if (s.IsReading){ Read (model, s, embed_values); }
+			else			{ Write(model, s, embed_values); }
 		}
 		#endregion
 

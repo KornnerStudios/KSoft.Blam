@@ -86,9 +86,20 @@ namespace KSoft.Blam.Megalo.Model
 
 			model.MegaloVariant.StreamStringTableIndexPointer(s, ref mLabelStringIndex);
 			s.Stream(ref mValidParameters, 3, MegaloScriptObjectFilterValidParametersBitStreamer.Instance);
-			if (HasObjectTypeIndex)	model.Database.StreamObjectTypeIndex(s, ref mObjectTypeIndex);
-			if (HasTeam)			Model.MegaloScriptEnumValue.SerializeValue(model, s, model.Database.TeamDesignatorValueType, ref mTeam);
-			if (HasNumeric)			s.Stream(ref mNumeric, 16);
+			if (HasObjectTypeIndex)
+			{
+				model.Database.StreamObjectTypeIndex(s, ref mObjectTypeIndex);
+			}
+
+			if (HasTeam)
+			{
+				Model.MegaloScriptEnumValue.SerializeValue(model, s, model.Database.TeamDesignatorValueType, ref mTeam);
+			}
+
+			if (HasNumeric)
+			{
+				s.Stream(ref mNumeric, 16);
+			}
 
 			s.Stream(ref mMinimum, 7);
 		}
@@ -116,7 +127,9 @@ namespace KSoft.Blam.Megalo.Model
 					ref mTeam, IO.TagElementNodeType.Element, "Team");
 			}
 			if (HasNumeric)
+			{
 				s.StreamElement("Numeric", ref mNumeric);
+			}
 		}
 		#endregion
 	};

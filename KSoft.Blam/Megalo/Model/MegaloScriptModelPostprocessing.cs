@@ -13,7 +13,9 @@ namespace KSoft.Blam.Megalo.Model
 			mCompilerState.CompileTriggers();
 
 			if (CompilePostprocess != null)
+			{
 				CompilePostprocess(this);
+			}
 		}
 		protected virtual void Decompile()
 		{
@@ -62,7 +64,9 @@ namespace KSoft.Blam.Megalo.Model
 		internal void DecompilePostprocess()
 		{
 			if (mConditions.Count > 1)
+			{
 				mConditions.Reverse();
+			}
 		}
 	};
 }

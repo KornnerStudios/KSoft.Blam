@@ -24,7 +24,9 @@ namespace KSoft.Blam.Megalo.Model
 				theObject.Id = id;
 			}
 			else
+			{
 				list.AddExplicit(theObject, id);
+			}
 
 			return theObject;
 		}
@@ -32,21 +34,19 @@ namespace KSoft.Blam.Megalo.Model
 		public MegaloScriptModelObject GetModelObjectFromHandle(MegaloScriptModelObjectHandle handle)
 		{
 			int id = handle.Id;
-			switch (handle.Type)
+			return handle.Type switch
 			{
-				case MegaloScriptModelObjectType.None:			return null;
-				case MegaloScriptModelObjectType.Value:			return Values[id];
-				case MegaloScriptModelObjectType.UnionGroup:	return UnionGroups[id];
-				case MegaloScriptModelObjectType.Condition:		return Conditions[id];
-				case MegaloScriptModelObjectType.Action:		return Actions[id];
-				case MegaloScriptModelObjectType.Trigger:		return Triggers[id];
-				case MegaloScriptModelObjectType.VirtualTrigger:return VirtualTriggers[id];
-
-				default: throw new KSoft.Debug.UnreachableException(handle.Type.ToString());
-			}
+				MegaloScriptModelObjectType.None =>				null,
+				MegaloScriptModelObjectType.Value =>			Values[id],
+				MegaloScriptModelObjectType.UnionGroup =>		UnionGroups[id],
+				MegaloScriptModelObjectType.Condition =>		Conditions[id],
+				MegaloScriptModelObjectType.Action =>			Actions[id],
+				MegaloScriptModelObjectType.Trigger =>			Triggers[id],
+				MegaloScriptModelObjectType.VirtualTrigger =>	VirtualTriggers[id],
+				_ => throw new KSoft.Debug.UnreachableException(handle.Type.ToString()),
+			};
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1043:UseIntegralOrStringArgumentForIndexers")]
 		public MegaloScriptModelObject this[MegaloScriptModelObjectHandle handle] => GetModelObjectFromHandle(handle);
 	};
 
@@ -109,10 +109,14 @@ namespace KSoft.Blam.Megalo.Model
 			where TCursor : class
 		{
 			if (!model.TagElementStreamSerializeFlags.EmbedObjectsWriteSansIds())
+			{
 				s.StreamAttribute(kIdAttributeName, ref mId);
+			}
 			else if (s.IsReading)
+			{
 				Contract.Assert(Id.IsNotNone(), // ID should have been set prior to serialize (eg, in the object's Create method in the Model)
 					"Tried to read an embedded object (sans ID) which wasn't given an ID already");
+			}
 		}
 		#endregion
 

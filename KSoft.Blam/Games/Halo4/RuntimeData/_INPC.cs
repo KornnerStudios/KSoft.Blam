@@ -17,7 +17,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		static readonly PropertyChangedEventArgs kIsUnchangedChanged =
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.IsUnchanged);
 
-		static readonly PropertyChangedEventArgs[] kValueChanged = {
+		static readonly PropertyChangedEventArgs[] kValueChanged = [
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value0),
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value1),
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value2),
@@ -45,7 +45,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value24),
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value25),
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value26),
-		};
+		];
 	};
 
 	partial class WeaponTuningWeaponModifierData
@@ -63,7 +63,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		static readonly PropertyChangedEventArgs kIsUnchangedChanged =
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningWeaponModifierData x) => x.IsUnchanged);
 
-		static readonly PropertyChangedEventArgs[] kValueChanged = {
+		static readonly PropertyChangedEventArgs[] kValueChanged = [
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value0),
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value1),
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value2),
@@ -78,6 +78,6 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value11),
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value12),
 			ObjectModel.Util.CreatePropertyChangedEventArgs((WeaponTuningBarrelModifierData x) => x.Value13),
-		};
+		];
 	};
 }

@@ -47,7 +47,9 @@ namespace KSoft.Blam.Megalo.Model
 					{
 						var action = Model.Actions[handle.Id];
 						if (action.CommentOut)
+						{
 							break;
+						}
 
 						action_count++;
 						ActionWriteOrder.Add(handle.Id);
@@ -62,17 +64,21 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		void Decompile(MegaloScriptConditionActionReferences refs)
 		{
-			short first_cond, cond_count;
-			short first_action, action_count;
-			refs.Get(out first_cond, out cond_count, out first_action, out action_count);
+			refs.Get(
+				out short first_cond, out short cond_count,
+				out short first_action, out short action_count);
 
 			// predict the amount we're adding to avoid realloc'ing
 			if (cond_count > 0 || action_count > 0)
+			{
 				refs.SetCapacity(cond_count + action_count);
+			}
 
 			// first, just add the actions
 			for (int x = 0, id = first_action; x < action_count; x++, id++)
+			{
 				refs.Add(Model.Actions[id].Handle);
+			}
 
 			// We do conditions second as to keep the execute-before-action handling
 			// simple. Although, insert operations aren't computationally simple...
@@ -113,7 +119,9 @@ namespace KSoft.Blam.Megalo.Model
 				var rhs_cond = Conditions[rhs.Id];
 
 				if (lhs_cond.UnionGroup == rhs_cond.UnionGroup)
+				{
 					UnionGroupSwapLogicUnits(lhs_cond.UnionGroup, lhs, rhs);
+				}
 			}
 		}
 	};
@@ -182,17 +190,25 @@ namespace KSoft.Blam.Megalo.Model
 			where TCursor : class
 		{
 			if ((model.TagElementStreamSerializeFlags & MegaloScriptModelTagElementStreamFlags.EmbedObjects) != 0)
+			{
 				s.StreamElements("E", mElements, model, MegaloScriptModelObjectHandle.SerializeForEmbed);
+			}
 			else
+			{
 				s.StreamElements("E", mElements, model, MegaloScriptModelObjectHandle.Serialize);
+			}
 
 			if (s.IsReading)
 			{
 				// auto-create union groups if needed
 				if (model.TagElementStreamSerializeFlags.EmbedObjectsWriteSansIds())
+				{
 					MegaloScriptUnionGroup.PostprocessConditionsForEmbedObjectsWriteSansIds(model, s, mElements);
+				}
 				else
+				{
 					MegaloScriptUnionGroup.ReadPostprocessConditions(model, s, mElements);
+				}
 			}
 		}
 		#endregion
@@ -207,7 +223,9 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			int index = mElements.IndexOf(item);
 			if (index >= 0)
+			{
 				RemoveAt(index);
+			}
 
 			return index >= 0;
 		}

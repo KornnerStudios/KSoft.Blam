@@ -52,12 +52,16 @@ namespace KSoft.Blam.Megalo.Model
 			where TCursor : class
 		{
 			if (HasNetworkState)
+			{
 				s.StreamAttributeEnumOpt("networkState", ref mNetworkState, e => e != MegaloScriptVariableNetworkState.Local);
+			}
 
 			SerializeCodeName(s);
 
 			if (SupportsUnknown)
+			{
 				s.StreamAttributeOpt("unknown", ref mUnknown, Predicates.IsTrue);
+			}
 		}
 
 		void IO.ITagElementStreamable<string>.Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)

@@ -137,12 +137,16 @@ namespace KSoft.Blam.Megalo.Model
 			var gameBuild = variantManager.GameBuild;
 
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+			{
 				return new Games.HaloReach.Megalo.Model.MegaloScriptModelHaloReach(variantManager,
 					variant as Games.HaloReach.RuntimeData.Variants.GameEngineMegaloVariantHaloReach);
+			}
 
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+			{
 				return new Games.Halo4.Megalo.Model.MegaloScriptModelHalo4(variantManager,
 					variant as Games.Halo4.RuntimeData.Variants.GameEngineMegaloVariantHalo4);
+			}
 
 			throw new KSoft.Debug.UnreachableException(gameBuild.ToDisplayString());
 		}
@@ -157,7 +161,9 @@ namespace KSoft.Blam.Megalo.Model
 			var etraits = enumType.EnumTraits;
 
 			if (etraits == Proto.MegaloScriptValueEnumTraits.HasNoneMember)
+			{
 				index += 1;
+			}
 
 			return index >= 0 && index < e.Members.Count;
 		}
@@ -171,7 +177,9 @@ namespace KSoft.Blam.Megalo.Model
 			int index)
 		{
 			if (traits == Proto.MegaloScriptValueIndexTraits.Reference && index < 0)
+			{
 				return false;
+			}
 
 			var sdb = Database.StaticDatabase;
 			switch (target)
@@ -216,7 +224,9 @@ namespace KSoft.Blam.Megalo.Model
 		internal int FromIndexName(Proto.MegaloScriptValueIndexTarget target, string name)
 		{
 			if (name == kIndexNameNone)
+			{
 				return TypeExtensions.kNone;
+			}
 
 			int id = TypeExtensionsBlam.IndexOfByPropertyNotFoundResult;
 			switch (target)
@@ -246,7 +256,9 @@ namespace KSoft.Blam.Megalo.Model
 		internal string ToIndexName(Proto.MegaloScriptValueIndexTarget target, int index)
 		{
 			if (index.IsNone())
+			{
 				return kIndexNameNone;
+			}
 
 			switch (target)
 			{
@@ -285,7 +297,9 @@ namespace KSoft.Blam.Megalo.Model
 			var id_resolving_ctxt = new IndexNameResolvingContext(this, target);
 			int result = IndexNameResolvingContext.IdResolver(id_resolving_ctxt, indexName);
 			if (!result.IsNoneOrPositive())
+			{
 				throw new ArgumentException(indexName);
+			}
 
 			return result;
 		}
@@ -322,9 +336,13 @@ namespace KSoft.Blam.Megalo.Model
 			int bit_length = Database.Limits.Conditions.IndexBitLength;
 
 			if (s.IsReading)
+			{
 				s.Stream(ref unionGroupIndex, bit_length);
+			}
 			else
+			{
 				s.Write(mCompilerState.UnionGroupRemappings[unionGroupIndex], bit_length);
+			}
 		}
 
 		protected virtual void SerializeGameObjectFilters(IO.BitStream s)
@@ -356,18 +374,26 @@ namespace KSoft.Blam.Megalo.Model
 			ObjectTypeReferences.SerializeWords(s, Shell.EndianFormat.Little);
 			s.StreamElements(ObjectFilters, Database.Limits.ObjectFilters.CountBitLength);
 			if (Database.Limits.SupportsGameObjectFilters)
+			{
 				SerializeGameObjectFilters(s);
+			}
 		}
 		public void Serialize(IO.BitStream s)
 		{
 			if (s.IsWriting)
+			{
 				BeginCompile();
+			}
 
 			using (s.EnterOwnerBookmark(this))
+			{
 				SerializeImpl(s);
+			}
 
 			if (s.IsWriting)
+			{
 				EndCompile();
+			}
 			else
 			{
 				BeginDecompile();
@@ -386,12 +412,16 @@ namespace KSoft.Blam.Megalo.Model
 		internal void ObjectTypeReferenceAdd(int typeIndex)
 		{
 			if (typeIndex.IsNotNone())
+			{
 				ObjectTypeReferences[typeIndex] = true;
+			}
 		}
 		internal void ObjectTypeReferenceRemove(int typeIndex)
 		{
 			if (typeIndex.IsNotNone())
+			{
 				ObjectTypeReferences[typeIndex] = false;
+			}
 		}
 
 		public int ObjectTypeReferenceAdd(string typeName)

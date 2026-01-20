@@ -46,20 +46,20 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public const int kSizeOfTU5 = 0x1C724;
 		public const int kEncodingVersionStock = 0x103;
 
-		public static readonly LocaleStringTableInfo kStringTableInfo = new LocaleStringTableInfo(148, 0xA000);
-		public static readonly LocaleStringTableInfo kNameStringTableInfo = new LocaleStringTableInfo(1, 0x440); // 32 chars per?
-		public static readonly LocaleStringTableInfo kDescriptionStringTableInfo = new LocaleStringTableInfo(1, 0x1100); // 256 chars per?
+		public static readonly LocaleStringTableInfo kStringTableInfo = new(148, 0xA000);
+		public static readonly LocaleStringTableInfo kNameStringTableInfo = new(1, 0x440); // 32 chars per?
+		public static readonly LocaleStringTableInfo kDescriptionStringTableInfo = new(1, 0x1100); // 256 chars per?
 		public static readonly LocaleStringTableInfo kCategoryStringTableInfo = GameOptionsSingleTeamOptionsHalo4.kNameStringTableInfo;
 		#endregion
 
 		readonly GameEngineBaseVariantHalo4 mBaseVariant;
-		public override Blam.RuntimeData.Variants.GameEngineBaseVariant BaseVariant { get { return mBaseVariant; } }
+		public override Blam.RuntimeData.Variants.GameEngineBaseVariant BaseVariant => mBaseVariant;
 
 		public LocaleStringTable IntroDescriptionString { get; private set; }
 
 		bool unk1ACF2, unk1ACF3, unk1ACF4;
 		public List<MegaloVariantLoadout> Loadouts { get; private set; }
-		public WeaponTuningData WeaponTuning;
+		public WeaponTuningData WeaponTuning = new();
 
 		public bool HasWeaponTuning => mBaseVariant.OptionsPrototype.Mode == 1;
 
@@ -74,8 +74,6 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			IntroDescriptionString = new LocaleStringTable(kDescriptionStringTableInfo, h4_build);
 
 			Loadouts = new List<MegaloVariantLoadout>(MegaloDatabase.Limits.Loadouts.MaxCount);
-
-			WeaponTuning = new WeaponTuningData();
 		}
 
 		public override void ClearWeaponTunings()
@@ -140,15 +138,25 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		{
 			base.SerializeLocaleStrings(s);
 
-			using (var bm = s.EnterCursorBookmarkOpt("IntroString", IntroDescriptionString, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamObject(IntroDescriptionString);
+			using (var bm = s.EnterCursorBookmarkOpt("IntroString", IntroDescriptionString, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(IntroDescriptionString);
+				}
+			}
 		}
 		protected override void SerializeImpl<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
 			base.SerializeImpl(s);
 
-			using (var bm = s.EnterCursorBookmarkOpt("Loadouts", Loadouts, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamableElements("entry", Loadouts);
+			using (var bm = s.EnterCursorBookmarkOpt("Loadouts", Loadouts, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamableElements("entry", Loadouts);
+				}
+			}
 
 			s.StreamAttribute("unk1ACF2", ref unk1ACF2);
 			s.StreamAttribute("unk1ACF3", ref unk1ACF3);
@@ -156,8 +164,13 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 
 			if (HasWeaponTuning)
 			{
-				using (var bm = s.EnterCursorBookmarkOpt("WeaponTuning", WeaponTuning, obj=>!obj.IsUnchanged)) if(bm.IsNotNull)
-					WeaponTuning.Serialize(s);
+				using (var bm = s.EnterCursorBookmarkOpt("WeaponTuning", WeaponTuning, obj=>!obj.IsUnchanged))
+				{
+					if (bm.IsNotNull)
+					{
+						WeaponTuning.Serialize(s);
+					}
+				}
 			}
 		}
 		#endregion

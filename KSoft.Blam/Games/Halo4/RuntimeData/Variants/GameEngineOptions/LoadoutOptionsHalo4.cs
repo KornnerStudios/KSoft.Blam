@@ -5,7 +5,6 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	using GameOptionsLoadoutFlagsBitStreamer = IO.EnumBitStreamer<GameOptionsLoadoutFlagsHalo4>;
 
 	[Flags]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1714:FlagsEnumsShouldHavePluralNames")] // It does...
 	public enum GameOptionsLoadoutFlagsHalo4
 	{
 		CustomLoadouts = 1<<0,
@@ -72,10 +71,13 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		{
 			base.Serialize(s);
 
-			using (var bm = s.EnterCursorBookmarkOpt("WeaponSkins", this, obj=>!obj.WeaponSkinsAreUnchanged)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("WeaponSkins", this, obj=>!obj.WeaponSkinsAreUnchanged))
 			{
-				s.StreamAttributeOpt("primary", ref PrimaryWeaponSkin, Predicates.IsNotZero);
-				s.StreamAttributeOpt("secondary", ref SecondaryWeaponSkin, Predicates.IsNotZero);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttributeOpt("primary", ref PrimaryWeaponSkin, Predicates.IsNotZero);
+					s.StreamAttributeOpt("secondary", ref SecondaryWeaponSkin, Predicates.IsNotZero);
+				}
 			}
 		}
 		#endregion
@@ -93,7 +95,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			mLoadouts = new GameOptionsLoadoutHalo4[5];
 
 			for (int x = 0; x < Loadouts.Length; x++)
+			{
 				Loadouts[x] = new GameOptionsLoadoutHalo4();
+			}
 		}
 
 		#region ITagElementStringNameStreamable Members
@@ -102,8 +106,12 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			int streamed_count = !isUsed ? 0 : s.StreamableFixedArray("entry", mLoadouts);
 
 			if (s.IsReading)
+			{
 				for (; streamed_count < Loadouts.Length; streamed_count++)
+				{
 					Loadouts[streamed_count].RevertToDefault();
+				}
+			}
 		}
 		#endregion
 	};
@@ -123,7 +131,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			Palettes = new GameOptionsLoadoutPaletteHalo4[6];
 
 			for (int x = 0; x < Palettes.Length; x++)
+			{
 				Palettes[x] = new GameOptionsLoadoutPaletteHalo4();
+			}
 		}
 
 		public override bool IsDefault { get {

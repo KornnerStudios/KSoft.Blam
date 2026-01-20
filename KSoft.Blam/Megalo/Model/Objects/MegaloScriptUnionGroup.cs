@@ -71,7 +71,9 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			cond.AssociateWith(this);
 			if (evaluateBefore.IsNone)
+			{
 				mConditions.Add(cond.Handle);
+			}
 			else
 			{
 				int insert_index = mConditions.IndexOf(evaluateBefore);
@@ -98,7 +100,9 @@ namespace KSoft.Blam.Megalo.Model
 				RemoveAt(index);
 
 				if (mConditions.Count == 0)
+				{
 					model.HandleRemoval(this);
+				}
 			}
 
 			return index >= 0;
@@ -128,7 +132,11 @@ namespace KSoft.Blam.Megalo.Model
 			MegaloScriptUnionGroup prev_union_group = null;
 			foreach (var obj in elements)
 			{
-				if (obj.Type != MegaloScriptModelObjectType.Condition) continue;
+				if (obj.Type != MegaloScriptModelObjectType.Condition)
+				{
+					continue;
+				}
+
 				var cond = model.Conditions[obj.Id];
 
 				if (cond.UnionGroup >= 0) // id is already valid
@@ -162,7 +170,11 @@ namespace KSoft.Blam.Megalo.Model
 
 			foreach (var obj in elements)
 			{
-				if (obj.Type != MegaloScriptModelObjectType.Condition) continue;
+				if (obj.Type != MegaloScriptModelObjectType.Condition)
+				{
+					continue;
+				}
+
 				var cond = model.Conditions[obj.Id];
 
 				var union_group = model.UnionGroups[cond.UnionGroup];

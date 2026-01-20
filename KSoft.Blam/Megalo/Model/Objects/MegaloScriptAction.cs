@@ -87,10 +87,14 @@ namespace KSoft.Blam.Megalo.Model
 			if (type != 0 && s.IsWriting)
 			{
 				if ((model.TagElementStreamSerializeFlags & MegaloScriptModelTagElementStreamFlags.TryToPort) != 0)
+				{
 					ProtoData.WriteForTryToPort(s, model.Database);
+				}
 
 				if ((model.TagElementStreamSerializeFlags & MegaloScriptModelTagElementStreamFlags.WriteActionTypeNames) != 0)
+				{
 					s.WriteAttribute("name", ProtoData.Name);
+				}
 			}
 			return type;
 		}
@@ -101,7 +105,9 @@ namespace KSoft.Blam.Megalo.Model
 			SerializeCommentOut(s);
 
 			if (s.IsReading)
+			{
 				InitializeForType(model, type);
+			}
 
 			Arguments.Serialize(model, s);
 		}

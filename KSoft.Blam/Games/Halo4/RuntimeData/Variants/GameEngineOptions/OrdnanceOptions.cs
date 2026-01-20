@@ -19,7 +19,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public string Name;
 		public float Weight;
 
-		public bool IsDefault =>
+		public readonly bool IsDefault =>
 			Name.IsNullOrEmpty() && Weight == kDefaultWeight;
 
 		public void RevertToDefault()
@@ -42,7 +42,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		{
 			s.StreamAttributeOpt("weight", ref Weight, Predicates.IsNotZero);
 			if (!s.StreamAttributeOpt("name", ref Name, Predicates.IsNotNullOrEmpty))
+			{
 				Name = "";
+			}
 		}
 		#endregion
 	};
@@ -56,8 +58,12 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 
 		public bool IsDefault { get {
 			foreach (var poss in Possibilities)
+			{
 				if (!poss.IsDefault)
+				{
 					return false;
+				}
+			}
 
 			return true;
 		} }
@@ -71,14 +77,18 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public void RevertToDefault()
 		{
 			for (int x = 0; x < Possibilities.Length; x++)
+			{
 				Possibilities[x].RevertToDefault();
+			}
 		}
 
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
 		{
 			for (int x = 0; x < Possibilities.Length; x++)
+			{
 				s.StreamValue(ref Possibilities[x]);
+			}
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -165,7 +175,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			PersonalOrdnance = new GameOptionsOrdnancePersonalOrdnancePossibilities[4];
 
 			for (int x = 0; x < PersonalOrdnance.Length; x++)
+			{
 				PersonalOrdnance[x] = new GameOptionsOrdnancePersonalOrdnancePossibilities();
+			}
 
 			RevertToDefault();
 		}
@@ -183,7 +195,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			CustomizePersonalOrdnance = false;
 
 			for (int x = 0; x < PersonalOrdnance.Length; x++)
+			{
 				PersonalOrdnance[x].RevertToDefault();
+			}
 
 			PointRequirement = kDefaultPointRequirement;
 			PointIncreaseMultiplier = kDefaultPointIncreaseMultiplier;
@@ -204,22 +218,50 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			s.Stream(ref ResupplyTimeMin, Bits.kInt16BitCount, signExtend:true);
 			s.Stream(ref ResupplyTimeMax, Bits.kInt16BitCount, signExtend:true);
 			s.Stream(ref unk12, Bits.kInt16BitCount, signExtend:true);
-			if (writing && InitialDropSet_NeedsDefaultHack)			WriteDefaultHack(s);
+			if (writing && InitialDropSet_NeedsDefaultHack)
+			{
+				WriteDefaultHack(s);
+			}
 			else
+			{
 				s.Stream(ref InitialDropSet, Memory.Strings.StringStorage.CStringAscii, TypeExtensionsBlam.kTagStringLength);
+			}
+
 			s.Stream(ref unk36, Bits.kInt16BitCount, signExtend:true);
 			s.Stream(ref InitialDropDelay, Bits.kInt16BitCount, signExtend:true);
-			if (writing && RandomDropSet_NeedsDefaultHack)			WriteDefaultHack(s);
+			if (writing && RandomDropSet_NeedsDefaultHack)
+			{
+				WriteDefaultHack(s);
+			}
 			else
+			{
 				s.Stream(ref RandomDropSet, Memory.Strings.StringStorage.CStringAscii, TypeExtensionsBlam.kTagStringLength);
-			if (writing && PersonalDropSet_NeedsDefaultHack)		WriteDefaultHack(s);
+			}
+
+			if (writing && PersonalDropSet_NeedsDefaultHack)
+			{
+				WriteDefaultHack(s);
+			}
 			else
+			{
 				s.Stream(ref PersonalDropSet, Memory.Strings.StringStorage.CStringAscii, TypeExtensionsBlam.kTagStringLength);
-			if (writing && OrdnanceSubstitutionsNeedsDefaultHack)	WriteDefaultHack(s);
+			}
+
+			if (writing && OrdnanceSubstitutionsNeedsDefaultHack)
+			{
+				WriteDefaultHack(s);
+			}
 			else
+			{
 				s.Stream(ref OrdnanceSubstitutions, Memory.Strings.StringStorage.CStringAscii, TypeExtensionsBlam.kTagStringLength);
+			}
+
 			s.Stream(ref CustomizePersonalOrdnance);
-			foreach (var po in PersonalOrdnance) s.StreamObject(po);
+			foreach (var po in PersonalOrdnance)
+			{
+				s.StreamObject(po);
+			}
+
 			s.Stream(ref PointRequirement, 0.0f, 10000.0f, 30, false, true);
 			s.Stream(ref PointIncreaseMultiplier, 0.0f, 10000.0f, 30, false, true);
 		}
@@ -239,44 +281,89 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 
 			s.StreamAttributeOpt("customizePersonalOrdnance", ref CustomizePersonalOrdnance, Predicates.IsTrue);
 
-			using (var bm = s.EnterCursorBookmarkOpt("DropSets", this, obj=>!obj.DropSetNames_AreDefault)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("DropSets", this, obj=>!obj.DropSetNames_AreDefault))
 			{
-				if (!s.StreamAttributeOpt("initial", ref InitialDropSet, IsNotDefaultString))
-					InitialDropSet = kDefaultString;
-				if (!s.StreamAttributeOpt("random", ref RandomDropSet, IsNotDefaultString))
-					RandomDropSet = kDefaultString;
-				if (!s.StreamAttributeOpt("personal", ref PersonalDropSet, IsNotDefaultString))
-					PersonalDropSet = kDefaultString;
-				if (!s.StreamAttributeOpt("ordnanceSubstitutions", ref OrdnanceSubstitutions, Predicates.IsNotNullOrEmpty))
-					OrdnanceSubstitutions = "";
+				if (bm.IsNotNull)
+				{
+					if (!s.StreamAttributeOpt("initial", ref InitialDropSet, IsNotDefaultString))
+					{
+						InitialDropSet = kDefaultString;
+					}
+
+					if (!s.StreamAttributeOpt("random", ref RandomDropSet, IsNotDefaultString))
+					{
+						RandomDropSet = kDefaultString;
+					}
+
+					if (!s.StreamAttributeOpt("personal", ref PersonalDropSet, IsNotDefaultString))
+					{
+						PersonalDropSet = kDefaultString;
+					}
+
+					if (!s.StreamAttributeOpt("ordnanceSubstitutions", ref OrdnanceSubstitutions, Predicates.IsNotNullOrEmpty))
+					{
+						OrdnanceSubstitutions = "";
+					}
+				}
 			}
-			using (var bm = s.EnterCursorBookmarkOpt("InfinityResupplyTime", this, obj=>!obj.InfinityResupplyTime_IsUnchanged)) if (bm.IsNotNull)
+
+			using (var bm = s.EnterCursorBookmarkOpt("InfinityResupplyTime", this, obj=>!obj.InfinityResupplyTime_IsUnchanged))
 			{
-				s.StreamAttributeOptDefaultOption("min", ref ResupplyTimeMin);
-				s.StreamAttributeOptDefaultOption("max", ref ResupplyTimeMax);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttributeOptDefaultOption("min", ref ResupplyTimeMin);
+					s.StreamAttributeOptDefaultOption("max", ref ResupplyTimeMax);
+				}
 			}
-			using (var bm = s.EnterCursorBookmarkOpt("Points", this, obj=>!obj.Points_AreUnchanged)) if (bm.IsNotNull)
+
+			using (var bm = s.EnterCursorBookmarkOpt("Points", this, obj=>!obj.Points_AreUnchanged))
 			{
-				s.StreamAttribute("requirement", ref PointRequirement);
-				s.StreamAttribute("increaseMultiplier", ref PointIncreaseMultiplier);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttribute("requirement", ref PointRequirement);
+					s.StreamAttribute("increaseMultiplier", ref PointIncreaseMultiplier);
+				}
 			}
 
 			#region PersonalOrdnance
 			GameOptionsOrdnancePersonalOrdnancePossibilities possibilities;
-			Predicate<GameOptionsOrdnancePersonalOrdnancePossibilities> possibilities_are_changed = p => !p.IsDefault;
+			static bool possibilities_are_changed(GameOptionsOrdnancePersonalOrdnancePossibilities p) => !p.IsDefault;
 
 			possibilities = PersonalOrdnance[0];
-			using (var bm = s.EnterCursorBookmarkOpt("Right", possibilities, possibilities_are_changed)) if (bm.IsNotNull)
-				s.StreamObject(possibilities);
+			using (var bm = s.EnterCursorBookmarkOpt("Right", possibilities, possibilities_are_changed))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(possibilities);
+				}
+			}
+
 			possibilities = PersonalOrdnance[1];
-			using (var bm = s.EnterCursorBookmarkOpt("Left", possibilities, possibilities_are_changed)) if (bm.IsNotNull)
-				s.StreamObject(possibilities);
+			using (var bm = s.EnterCursorBookmarkOpt("Left", possibilities, possibilities_are_changed))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(possibilities);
+				}
+			}
+
 			possibilities = PersonalOrdnance[2];
-			using (var bm = s.EnterCursorBookmarkOpt("Down", possibilities, possibilities_are_changed)) if (bm.IsNotNull)
-				s.StreamObject(possibilities);
+			using (var bm = s.EnterCursorBookmarkOpt("Down", possibilities, possibilities_are_changed))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(possibilities);
+				}
+			}
+
 			possibilities = PersonalOrdnance[3];
-			using (var bm = s.EnterCursorBookmarkOpt("Unused", possibilities, possibilities_are_changed)) if (bm.IsNotNull)
-				s.StreamObject(possibilities);
+			using (var bm = s.EnterCursorBookmarkOpt("Unused", possibilities, possibilities_are_changed))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(possibilities);
+				}
+			}
 			#endregion
 		}
 		#endregion

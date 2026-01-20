@@ -31,8 +31,11 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			bool preprocessed = PreProcessTrigger(root, parent, current);
 
-			if(preprocessed) foreach (var handle in current.References)
-				if (handle.Type == MegaloScriptModelObjectType.Action)
+			if(preprocessed)
+			{
+				foreach (var handle in current.References)
+				{
+					if (handle.Type == MegaloScriptModelObjectType.Action)
 				{
 					var action = Model.Actions[handle.Id];
 
@@ -50,13 +53,17 @@ namespace KSoft.Blam.Megalo.Model
 						ProcessTriggerRecursive(root, parent, Model.VirtualTriggers[trigger_index]);
 					}
 				}
+				}
+			}
 
 			PostProcessTrigger(root, parent, current);
 		}
 		public void Process()
 		{
 			foreach (var trigger in TriggersToProcess)
+			{
 				ProcessTriggerRecursive(trigger, trigger, trigger);
+			}
 		}
 	};
 }

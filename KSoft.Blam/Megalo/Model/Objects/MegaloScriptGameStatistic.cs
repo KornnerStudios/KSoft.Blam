@@ -90,8 +90,15 @@ namespace KSoft.Blam.Megalo.Model
 			s.Stream(ref mFormat, 2, StatFormatBitStreamer.Instance);
 			s.Stream(ref mSortOrder, 2, StatSortOrderBitStreamer.Instance);
 			s.Stream(ref mGrouping, 1, StatGroupingBitStreamer.Instance);
-			if (SupportsUnk5) s.Stream(ref mUnk5);
-			if (SupportsIsScoreToWin) s.Stream(ref mIsScoreToWin);
+			if (SupportsUnk5)
+			{
+				s.Stream(ref mUnk5);
+			}
+
+			if (SupportsIsScoreToWin)
+			{
+				s.Stream(ref mIsScoreToWin);
+			}
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -108,8 +115,15 @@ namespace KSoft.Blam.Megalo.Model
 
 			SerializeCodeName(s);
 
-			if (SupportsUnk5) s.StreamAttributeOpt("unk5", ref mUnk5, Predicates.IsTrue);
-			if (SupportsIsScoreToWin) s.StreamAttributeOpt("isScoreToWin", ref mIsScoreToWin, Predicates.IsTrue);
+			if (SupportsUnk5)
+			{
+				s.StreamAttributeOpt("unk5", ref mUnk5, Predicates.IsTrue);
+			}
+
+			if (SupportsIsScoreToWin)
+			{
+				s.StreamAttributeOpt("isScoreToWin", ref mIsScoreToWin, Predicates.IsTrue);
+			}
 		}
 		#endregion
 	};

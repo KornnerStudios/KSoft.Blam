@@ -129,25 +129,31 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 
 			s.StreamAttributeOptUnchangedZero("infAmmo", ref InfAmmo);
 			#region Equipment
-			using (var bm = s.EnterCursorBookmarkOpt("Equipment", this, obj=>!obj.EquipmentIsUnchanged)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("Equipment", this, obj=>!obj.EquipmentIsUnchanged))
 			{
-				s.StreamAttributeOptUnchangedZero("drop", ref EquipmentDrop);
-				s.StreamAttributeOptUnchangedZero("infinite", ref InfEquipment);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttributeOptUnchangedZero("drop", ref EquipmentDrop);
+					s.StreamAttributeOptUnchangedZero("infinite", ref InfEquipment);
 
-				s.StreamAttributeOptUnchangedZero("usage", ref EquipmentUsage);
+					s.StreamAttributeOptUnchangedZero("usage", ref EquipmentUsage);
 
-				s.StreamAttributeOptUnchangedZero("rechargingGrenades", ref RechargingGrenades);
+					s.StreamAttributeOptUnchangedZero("rechargingGrenades", ref RechargingGrenades);
+				}
 			}
 			#endregion
 			#region Loadout
-			using (var bm = s.EnterCursorBookmarkOpt("InitLoadout", this, obj=>!obj.LoadoutIsUnchanged)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("InitLoadout", this, obj=>!obj.LoadoutIsUnchanged))
 			{
-				s.StreamAttributeOptUnchanged("primaryWeapon", ref InitialPrimaryWeapon);
-				s.StreamAttributeOptUnchanged("secondaryWeapon", ref InitialSecondaryWeapon);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttributeOptUnchanged("primaryWeapon", ref InitialPrimaryWeapon);
+					s.StreamAttributeOptUnchanged("secondaryWeapon", ref InitialSecondaryWeapon);
 
-				s.StreamAttributeOptUnchangedZero("grenadeCount", ref InitialGrenadeCount);
+					s.StreamAttributeOptUnchangedZero("grenadeCount", ref InitialGrenadeCount);
 
-				s.StreamAttributeOptUnchanged("equipment", ref InitialEquipment);
+					s.StreamAttributeOptUnchanged("equipment", ref InitialEquipment);
+				}
 			}
 			#endregion
 		}
@@ -198,9 +204,12 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 
 			s.StreamAttributeOptUnchangedZero("doubleJump", ref DoubleJump);
 
-			using (var bm = s.EnterCursorBookmarkOpt("Usage", this, obj=>!obj.UsageIsUnchanged)) if(bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("Usage", this, obj=>!obj.UsageIsUnchanged))
 			{
-				s.StreamAttributeOptUnchangedZero("vehicles", ref VehicleUsage);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttributeOptUnchangedZero("vehicles", ref VehicleUsage);
+				}
 			}
 		}
 		#endregion
@@ -281,9 +290,12 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 
 			s.StreamAttributeOptUnchangedZero("directionalDamageIndicator", ref DirectionalDamageIndicator);
 
-			using (var bm = s.EnterCursorBookmarkOpt("MotionTracker", this, obj=>!obj.MotionTrackerIsUnchanged)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("MotionTracker", this, obj=>!obj.MotionTrackerIsUnchanged))
 			{
-				s.StreamAttributeOptUnchangedZero("usage", ref MotionTracker);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttributeOptUnchangedZero("usage", ref MotionTracker);
+				}
 			}
 		}
 		#endregion

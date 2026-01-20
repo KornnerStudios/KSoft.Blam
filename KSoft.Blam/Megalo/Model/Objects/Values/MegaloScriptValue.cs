@@ -87,19 +87,29 @@ namespace KSoft.Blam.Megalo.Model
 			if (s.IsReading)
 			{
 				if (s.ReadAttributeOpt(kIsGlobalAttributeName, ref is_global) && is_global)
+				{
 					s.ReadCursor(ref valueId);
+				}
 				else
 				{
 					bool streamed_sans_ids = model.TagElementStreamSerializeFlags.EmbedObjectsWriteSansIds();
 					var value_type = ReadType(s, model.Database);
 
-					if (streamed_sans_ids)	valueId = TypeExtensions.kNone; // set to NONE to automatically add
-					else					SerializeId(s, ref valueId);
+					if (streamed_sans_ids)
+					{
+						valueId = TypeExtensions.kNone; // set to NONE to automatically add
+					}
+					else
+					{
+						SerializeId(s, ref valueId);
+					}
 
 					value = model.Recreate(value_type, valueId);
 
 					if (streamed_sans_ids) // since the stream didn't have the id, we need to explicit set it via value
+					{
 						valueId = value.Id;
+					}
 				}
 			}
 			else
@@ -130,7 +140,9 @@ namespace KSoft.Blam.Megalo.Model
 			// non-globals, but still to the same attribute. 1st write happens in MegaloScriptProtoParam.WriteExtraModelInfo
 			// then of course here. Not a problem but we could avoid the second write here
 			if (s.IsWriting)
+			{
 				s.WriteAttribute(kTypeAttributeName, model.Database.ValueTypeNames[ValueType.NameIndex]);
+			}
 
 			SerializeNameOpt(s);
 

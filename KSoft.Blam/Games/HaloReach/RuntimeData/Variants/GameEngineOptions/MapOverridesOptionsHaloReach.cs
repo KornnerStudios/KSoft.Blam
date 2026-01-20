@@ -6,16 +6,13 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 	public sealed class GameOptionsMapOverridesHaloReach
 		: Blam.RuntimeData.Variants.GameOptionsMapOverrides
 	{
-		public PlayerTraits Red { get; private set; }
-		public PlayerTraits Blue { get; private set; }
-		public PlayerTraits Yellow { get; private set; }
+		public PlayerTraits Red { get; private set; } = new();
+		public PlayerTraits Blue { get; private set; } = new();
+		public PlayerTraits Yellow { get; private set; } = new();
 		public byte RedDuration, BlueDuration, YellowDuration;
 
 		internal GameOptionsMapOverridesHaloReach(GameEngineBaseVariantHaloReach variant) : base(variant)
 		{
-			Red = new PlayerTraits();
-			Blue = new PlayerTraits();
-			Yellow = new PlayerTraits();
 		}
 
 		#region IBitStreamSerializable Members
@@ -40,19 +37,30 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 
 			using (s.EnterCursorBookmark("Powerups"))
 			{
-				Predicate<PlayerTraits> traits_are_changed = obj => !obj.IsUnchanged;
+				static bool traits_are_changed(PlayerTraits obj) => !obj.IsUnchanged;
 
-				using (var bm = s.EnterCursorBookmarkOpt("Red", Red, traits_are_changed)) if (bm.IsNotNull)
-				{	s.StreamAttribute("duration", ref RedDuration);
-					s.StreamObject(Red);
+				using (var bm = s.EnterCursorBookmarkOpt("Red", Red, traits_are_changed))
+				{
+					if (bm.IsNotNull)
+					{	s.StreamAttribute("duration", ref RedDuration);
+						s.StreamObject(Red);
+					}
 				}
-				using (var bm = s.EnterCursorBookmarkOpt("Blue", Blue, traits_are_changed)) if (bm.IsNotNull)
-				{	s.StreamAttribute("duration", ref BlueDuration);
-					s.StreamObject(Blue);
+
+				using (var bm = s.EnterCursorBookmarkOpt("Blue", Blue, traits_are_changed))
+				{
+					if (bm.IsNotNull)
+					{	s.StreamAttribute("duration", ref BlueDuration);
+						s.StreamObject(Blue);
+					}
 				}
-				using (var bm = s.EnterCursorBookmarkOpt("Yellow", Yellow, traits_are_changed)) if (bm.IsNotNull)
-				{	s.StreamAttribute("duration", ref YellowDuration);
-					s.StreamObject(Yellow);
+
+				using (var bm = s.EnterCursorBookmarkOpt("Yellow", Yellow, traits_are_changed))
+				{
+					if (bm.IsNotNull)
+					{	s.StreamAttribute("duration", ref YellowDuration);
+						s.StreamObject(Yellow);
+					}
 				}
 			}
 		}

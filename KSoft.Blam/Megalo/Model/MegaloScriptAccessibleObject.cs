@@ -45,7 +45,7 @@ namespace KSoft.Blam.Megalo.Model
 		: IMegaloScriptAccessibleObject
 	{
 		#region CodeName
-		string mCodeName;
+		string mCodeName = string.Empty;
 		public string CodeName {
 			get { return mCodeName; }
 			set { mCodeName = value;
@@ -55,18 +55,15 @@ namespace KSoft.Blam.Megalo.Model
 
 		// #TODO_IMPLEMENT: DefaultCodeNameStringIndex
 
-		protected MegaloScriptAccessibleObjectBase()
-		{
-			mCodeName = "";
-		}
-
 		#region ITagElementStringNameStreamable Members
 		protected void SerializeCodeName<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
 		{
 			if (!s.StreamAttributeOpt("name", ref mCodeName, Predicates.IsNotNullOrEmpty))
+			{
 				mCodeName = "";
+			}
 		}
 		#endregion
 	};

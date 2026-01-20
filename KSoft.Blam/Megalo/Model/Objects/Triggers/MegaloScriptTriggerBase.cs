@@ -13,7 +13,9 @@ namespace KSoft.Blam.Megalo.Model
 		protected virtual MegaloScriptVirtualTrigger NewVirtualTrigger()
 		{
 			if (!Database.Limits.SupportsVirtualTriggers)
+			{
 				throw new InvalidOperationException("Tried to create a virtual trigger in an Engine which doesn't support them");
+			}
 
 			return new MegaloScriptVirtualTrigger();
 		}
@@ -99,18 +101,28 @@ namespace KSoft.Blam.Megalo.Model
 			{
 				int local_trigger_index = triggerIndex;
 				if (s.IsWriting)
+				{
 					mCompilerState.RemapTriggerPointer(ref local_trigger_index);
+				}
 
 				if (!Database.Limits.StreamEntryPointIndexAsPointer)
+				{
 					s.StreamIndex(ref local_trigger_index, Database.Limits.Triggers.IndexBitLength); // pointer-has-value
+				}
 				else
+				{
 					s.StreamNoneable(ref local_trigger_index, Database.Limits.Triggers.CountBitLength); // pointer
+				}
 
 				if (s.IsReading)
+				{
 					triggerIndex = local_trigger_index;
+				}
 			}
 			else
+			{
 				triggerIndex = -1;
+			}
 		}
 		protected void SerializeTriggerEntryPoints(IO.BitStream s)
 		{

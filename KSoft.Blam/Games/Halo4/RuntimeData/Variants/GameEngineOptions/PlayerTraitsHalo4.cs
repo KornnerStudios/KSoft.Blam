@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 {
 	partial class GameEngineBaseVariantHalo4
@@ -22,27 +20,22 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	public sealed class PlayerTraitsDamage
 		: Blam.RuntimeData.Variants.PlayerTraitsDamageBase
 	{
-		static readonly Blam.RuntimeData.Variants.OptionalRealArrayInfo kModifiersInfo = new Blam.RuntimeData.Variants.OptionalRealArrayInfo((int)PlayerTraitModifiers.DamageModifiers.kNumberOf)
+		static readonly Blam.RuntimeData.Variants.OptionalRealArrayInfo kModifiersInfo = new((int)PlayerTraitModifiers.DamageModifiers.kNumberOf)
 		{ kValuesEnum = typeof(PlayerTraitModifiers.DamageModifiers) };
 
-		public Blam.RuntimeData.Variants.OptionalRealArray Modifiers { get; private set; }
+		public Blam.RuntimeData.Variants.OptionalRealArray Modifiers { get; private set; } = new(kModifiersInfo);
 		public byte HeadshotImmunity, AssassinationImmunity,
 			Deathless,
 			FastTrackArmor,
 			PowerupCancellation;
 
-		protected override bool ModifiersAreUnchanged { get { return Modifiers.AreUnchanged; } }
+		protected override bool ModifiersAreUnchanged => Modifiers.AreUnchanged;
 
 		public override bool IsUnchanged { get {
 			return HeadshotImmunity == 0 && AssassinationImmunity == 0 && Deathless == 0 &&
 				FastTrackArmor == 0 && PowerupCancellation == 0 &&
 				Modifiers.AreUnchanged;
 		} }
-
-		public PlayerTraitsDamage()
-		{
-			Modifiers = new Blam.RuntimeData.Variants.OptionalRealArray(kModifiersInfo);
-		}
 
 		#region IBitStreamSerializable Members
 		public override void Serialize(IO.BitStream s)
@@ -75,10 +68,10 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	public sealed class PlayerTraitsWeapons
 		: Blam.RuntimeData.Variants.PlayerTraitsWeaponsBase
 	{
-		static readonly Blam.RuntimeData.Variants.OptionalRealArrayInfo kModifiersInfo = new Blam.RuntimeData.Variants.OptionalRealArrayInfo((int)PlayerTraitModifiers.WeaponModifiers.kNumberOf)
+		static readonly Blam.RuntimeData.Variants.OptionalRealArrayInfo kModifiersInfo = new((int)PlayerTraitModifiers.WeaponModifiers.kNumberOf)
 		{ kValuesEnum = typeof(PlayerTraitModifiers.WeaponModifiers) };
 
-		public Blam.RuntimeData.Variants.OptionalRealArray Modifiers { get; private set; }
+		public Blam.RuntimeData.Variants.OptionalRealArray Modifiers { get; private set; } = new(kModifiersInfo);
 		public byte WeaponPickupAllowed,
 			InitialGrenadeCount,
 			InfAmmo, // 3=BottomlessClip
@@ -89,7 +82,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public sbyte InitialPrimaryWeapon, InitialSecondaryWeapon, InitialEquipment, InitialTacticalPackage, InitialSupportUpgrade;
 		public byte Ammopack, Grenadier, ExplodeOnDeathArmorMod;
 
-		protected override bool ModifiersAreUnchanged { get { return Modifiers.AreUnchanged; } }
+		protected override bool ModifiersAreUnchanged => Modifiers.AreUnchanged;
 
 		bool EquipmentIsUnchanged { get {
 			return EquipmentUsage == 0 && EquipmentUsageExceptingAutoTurret == 0 && EquipmentDrop == 0 && InfEquipment == 0;
@@ -114,7 +107,6 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public PlayerTraitsWeapons()
 		{
 			InitialPrimaryWeapon = InitialSecondaryWeapon = InitialEquipment = InitialTacticalPackage = InitialSupportUpgrade = TypeExtensionsBlam.kUnchanged;
-			Modifiers = new Blam.RuntimeData.Variants.OptionalRealArray(kModifiersInfo);
 		}
 
 		#region IBitStreamSerializable Members
@@ -158,7 +150,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 
 			s.StreamAttributeOptUnchangedZero("infAmmo", ref InfAmmo);
 			#region Equipment
-			using (var bm = s.EnterCursorBookmarkOpt("Equipment", this, obj=>!obj.EquipmentIsUnchanged)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("Equipment", this, obj=>!obj.EquipmentIsUnchanged))
+			{
+				if (bm.IsNotNull)
 			{
 				s.StreamAttributeOptUnchangedZero("drop", ref EquipmentDrop);
 				s.StreamAttributeOptUnchangedZero("infinite", ref InfEquipment);
@@ -166,18 +160,24 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 				s.StreamAttributeOptUnchangedZero("usage", ref EquipmentUsage);
 				s.StreamAttributeOptUnchangedZero("usageSansAutoTurret", ref EquipmentUsageExceptingAutoTurret);
 			}
+			}
 			#endregion
 			#region Ordnance
-			using (var bm = s.EnterCursorBookmarkOpt("Ordnance", this, obj=>!obj.OrdnanceIsUnchanged)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("Ordnance", this, obj=>!obj.OrdnanceIsUnchanged))
+			{
+				if (bm.IsNotNull)
 			{
 				s.StreamAttributeOptUnchangedZero("disabled", ref OrdnanceDisabled);
 
 				s.StreamAttributeOptUnchangedZero("markersVisability", ref OrdnanceMarkersVisable);
 				s.StreamAttributeOptUnchangedZero("allowReroll", ref OrdnanceRerollAvailable);
 			}
+			}
 			#endregion
 			#region Loadout
-			using (var bm = s.EnterCursorBookmarkOpt("InitLoadout", this, obj=>!obj.LoadoutIsUnchanged)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("InitLoadout", this, obj=>!obj.LoadoutIsUnchanged))
+			{
+				if (bm.IsNotNull)
 			{
 				s.StreamAttributeOptUnchanged("primaryWeapon", ref InitialPrimaryWeapon);
 				s.StreamAttributeOptUnchanged("secondaryWeapon", ref InitialSecondaryWeapon);
@@ -188,9 +188,12 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 				s.StreamAttributeOptUnchanged("tacticalPackage", ref InitialTacticalPackage);
 				s.StreamAttributeOptUnchanged("supportUpgrade", ref InitialSupportUpgrade);
 			}
+			}
 			#endregion
 			#region Apps
-			using (var bm = s.EnterCursorBookmarkOpt("Apps", this, obj=>!obj.AppsAreUnchanged)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("Apps", this, obj=>!obj.AppsAreUnchanged))
+			{
+				if (bm.IsNotNull)
 			{
 				s.StreamAttributeOptUnchangedZero("resourceful", ref Resourceful);
 				s.StreamAttributeOptUnchangedZero("wellEquipped", ref WellEquipped);
@@ -198,6 +201,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 				s.StreamAttributeOptUnchangedZero("ammopack", ref Ammopack);
 				s.StreamAttributeOptUnchangedZero("grenadier", ref Grenadier);
 				s.StreamAttributeOptUnchangedZero("explodeOnDeath", ref ExplodeOnDeathArmorMod);
+			}
 			}
 			#endregion
 		}
@@ -208,15 +212,15 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	public sealed class PlayerTraitsMovement
 		: Blam.RuntimeData.Variants.PlayerTraitsMovementBase
 	{
-		static readonly Blam.RuntimeData.Variants.OptionalRealArrayInfo kModifiersInfo = new Blam.RuntimeData.Variants.OptionalRealArrayInfo((int)PlayerTraitModifiers.MovementModifiers.kNumberOf)
+		static readonly Blam.RuntimeData.Variants.OptionalRealArrayInfo kModifiersInfo = new((int)PlayerTraitModifiers.MovementModifiers.kNumberOf)
 		{ kValuesEnum = typeof(PlayerTraitModifiers.MovementModifiers) };
 
-		public Blam.RuntimeData.Variants.OptionalRealArray Modifiers { get; private set; }
+		public Blam.RuntimeData.Variants.OptionalRealArray Modifiers { get; private set; } = new(kModifiersInfo);
 		public byte VehicleUsage,
 			DoubleJump, SprintUsage, AutomaticMomentumUsage,
 			VaultingEnabled, Stealthy;
 
-		protected override bool ModifiersAreUnchanged { get { return Modifiers.AreUnchanged; } }
+		protected override bool ModifiersAreUnchanged => Modifiers.AreUnchanged;
 
 		bool UsageIsUnchanged { get {
 			return VehicleUsage == 0 && SprintUsage == 0 && AutomaticMomentumUsage == 0;
@@ -226,11 +230,6 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 				DoubleJump == 0 && VaultingEnabled == 0 && Stealthy == 0 &&
 				Modifiers.AreUnchanged;
 		} }
-
-		public PlayerTraitsMovement()
-		{
-			Modifiers = new Blam.RuntimeData.Variants.OptionalRealArray(kModifiersInfo);
-		}
 
 		#region IBitStreamSerializable Members
 		public override void Serialize(IO.BitStream s)
@@ -255,12 +254,15 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			s.StreamAttributeOptUnchangedZero("vaulting", ref VaultingEnabled);
 			s.StreamAttributeOptUnchangedZero("stealthy", ref Stealthy);
 
-			using (var bm = s.EnterCursorBookmarkOpt("Usage", this, obj=>!obj.UsageIsUnchanged)) if(bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("Usage", this, obj=>!obj.UsageIsUnchanged))
+			{
+				if (bm.IsNotNull)
 			{
 				s.StreamAttributeOptUnchangedZero("vehicles", ref VehicleUsage);
 
 				s.StreamAttributeOptUnchangedZero("sprint", ref SprintUsage);
 				s.StreamAttributeOptUnchangedZero("autoMomentum", ref AutomaticMomentumUsage);
+			}
 			}
 		}
 		#endregion
@@ -352,9 +354,13 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			where TCursor : class
 		{
 			if (!s.StreamAttributeOpt("useDefault", ref UseDefault, Predicates.IsFalse))
+			{
 				NameIndex = -1;
+			}
 			else
+			{
 				s.StreamAttributeOpt("nameIndex", ref NameIndex);
+			}
 		}
 		#endregion
 	};
@@ -362,20 +368,20 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	public sealed class PlayerTraitsAppearance
 		: Blam.RuntimeData.Variants.PlayerTraitsAppearanceBase
 	{
-		static readonly Blam.RuntimeData.Variants.OptionalRealArrayInfo kModifiersInfo = new Blam.RuntimeData.Variants.OptionalRealArrayInfo((int)PlayerTraitModifiers.AppearanceModifiers.kNumberOf)
+		static readonly Blam.RuntimeData.Variants.OptionalRealArrayInfo kModifiersInfo = new((int)PlayerTraitModifiers.AppearanceModifiers.kNumberOf)
 		{ kValuesEnum = typeof(PlayerTraitModifiers.AppearanceModifiers) };
 
-		public Blam.RuntimeData.Variants.OptionalRealArray Modifiers { get; private set; }
+		public Blam.RuntimeData.Variants.OptionalRealArray Modifiers { get; private set; } = new(kModifiersInfo);
 		public byte ActiveCamo,
 			Waypoint, GamertagVisible,
 			Aura;
-		public PlayerTraitsAppearanceColor PrimaryColor = new PlayerTraitsAppearanceColor(),
-			SecondaryColor = new PlayerTraitsAppearanceColor();
-		public PlayerTraitsAppearanceModelVariant ModelVariant = new PlayerTraitsAppearanceModelVariant();
+		public PlayerTraitsAppearanceColor PrimaryColor = new(),
+			SecondaryColor = new();
+		public PlayerTraitsAppearanceModelVariant ModelVariant = new();
 		public int DeathEffect, LoopingEffect; // mgee; these are sbyte's at runtime
 		public byte ShieldHud;
 
-		protected override bool ModifiersAreUnchanged { get { return Modifiers.AreUnchanged; } }
+		protected override bool ModifiersAreUnchanged => Modifiers.AreUnchanged;
 
 		bool EffectsAreNotDefault { get {
 			return DeathEffect != TypeExtensionsBlam.kDefaultOption || LoopingEffect != TypeExtensionsBlam.kDefaultOption;
@@ -391,7 +397,6 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public PlayerTraitsAppearance()
 		{
 			DeathEffect = LoopingEffect = TypeExtensionsBlam.kDefaultOption;
-			Modifiers = new Blam.RuntimeData.Variants.OptionalRealArray(kModifiersInfo);
 		}
 
 		#region IBitStreamSerializable Members
@@ -424,17 +429,38 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 
 			s.StreamAttributeOptUnchangedZero("shieldHud", ref ShieldHud);
 
-			using (var bm = s.EnterCursorBookmarkOpt("Effects", this, obj=>obj.EffectsAreNotDefault)) if(bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("Effects", this, obj=>obj.EffectsAreNotDefault))
 			{
-				s.StreamAttributeOptDefaultOption("death", ref DeathEffect);
-				s.StreamAttributeOptDefaultOption("looping", ref LoopingEffect);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttributeOptDefaultOption("death", ref DeathEffect);
+					s.StreamAttributeOptDefaultOption("looping", ref LoopingEffect);
+				}
 			}
-			using (var bm = s.EnterCursorBookmarkOpt("PrimaryColor", PrimaryColor, obj=>!obj.IsDefault)) if (bm.IsNotNull)
-				s.StreamObject(PrimaryColor);
-			using (var bm = s.EnterCursorBookmarkOpt("SecondaryColor", SecondaryColor, obj=>!obj.IsDefault)) if (bm.IsNotNull)
-				s.StreamObject(SecondaryColor);
-			using (var bm = s.EnterCursorBookmarkOpt("Model", ModelVariant, obj=>!obj.IsDefault)) if (bm.IsNotNull)
-				s.StreamObject(ModelVariant);
+
+			using (var bm = s.EnterCursorBookmarkOpt("PrimaryColor", PrimaryColor, obj=>!obj.IsDefault))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(PrimaryColor);
+				}
+			}
+
+			using (var bm = s.EnterCursorBookmarkOpt("SecondaryColor", SecondaryColor, obj=>!obj.IsDefault))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(SecondaryColor);
+				}
+			}
+
+			using (var bm = s.EnterCursorBookmarkOpt("Model", ModelVariant, obj=>!obj.IsDefault))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(ModelVariant);
+				}
+			}
 		}
 		#endregion
 	};
@@ -443,16 +469,16 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	public sealed class PlayerTraitsSensors
 		: Blam.RuntimeData.Variants.PlayerTraitsSensorsBase
 	{
-		static readonly Blam.RuntimeData.Variants.OptionalRealArrayInfo kModifiersInfo = new Blam.RuntimeData.Variants.OptionalRealArrayInfo((int)PlayerTraitModifiers.SensorsModifiers.kNumberOf)
+		static readonly Blam.RuntimeData.Variants.OptionalRealArrayInfo kModifiersInfo = new((int)PlayerTraitModifiers.SensorsModifiers.kNumberOf)
 		{ kValuesEnum = typeof(PlayerTraitModifiers.SensorsModifiers) };
 
-		public Blam.RuntimeData.Variants.OptionalRealArray Modifiers { get; private set; }
+		public Blam.RuntimeData.Variants.OptionalRealArray Modifiers { get; private set; } = new(kModifiersInfo);
 		public byte MotionTracker, MotionTrackerWhileZoomed,
 			DirectionalDamageIndicator,
 			VisionMode, BattleAwareness, ThreatView, AuralEnhancement,
 			Nemesis;
 
-		protected override bool ModifiersAreUnchanged { get { return Modifiers.AreUnchanged; } }
+		protected override bool ModifiersAreUnchanged => Modifiers.AreUnchanged;
 
 		bool MotionTrackerIsUnchanged { get {
 			return MotionTracker == 0 && MotionTrackerWhileZoomed == 0;
@@ -463,11 +489,6 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 				VisionMode == 0 && BattleAwareness == 0 && ThreatView == 0 && AuralEnhancement == 0 && Nemesis == 0 &&
 				Modifiers.AreUnchanged;
 		} }
-
-		public PlayerTraitsSensors()
-		{
-			Modifiers = new Blam.RuntimeData.Variants.OptionalRealArray(kModifiersInfo);
-		}
 
 		#region IBitStreamSerializable Members
 		public override void Serialize(IO.BitStream s)
@@ -499,10 +520,13 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 
 			s.StreamAttributeOptUnchangedZero("nemesis", ref Nemesis);
 
-			using (var bm = s.EnterCursorBookmarkOpt("MotionTracker", this, obj=>!obj.MotionTrackerIsUnchanged)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("MotionTracker", this, obj=>!obj.MotionTrackerIsUnchanged))
 			{
-				s.StreamAttributeOptUnchangedZero("usage", ref MotionTracker);
-				s.StreamAttributeOptUnchangedZero("usageWhileZoomed", ref MotionTrackerWhileZoomed);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttributeOptUnchangedZero("usage", ref MotionTracker);
+					s.StreamAttributeOptUnchangedZero("usageWhileZoomed", ref MotionTrackerWhileZoomed);
+				}
 			}
 		}
 		#endregion

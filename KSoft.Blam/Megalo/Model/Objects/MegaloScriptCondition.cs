@@ -166,12 +166,18 @@ namespace KSoft.Blam.Megalo.Model
 			bool valid = true;
 
 			if (UnionGroup.IsNone())
+			{
 				valid = false;
+			}
 			else if (reading && model.TagElementStreamSerializeFlags.EmbedObjectsWriteSansIds() &&
 					 (UnionGroup == kUsePrevUnionGroupId || UnionGroup == kUseNewUnionGroupId))
+			{
 				valid = true;
+			}
 			else if (UnionGroup < 0 || model.UnionGroups.SlotIsFree(UnionGroup))
+			{
 				valid = false;
+			}
 
 			return valid;
 		}
@@ -185,7 +191,9 @@ namespace KSoft.Blam.Megalo.Model
 			int union_locality = union_group.IndexOf(this.Handle);
 			//s.WriteAttribute(kAttributeNameUnionGroup, union_locality > 0 ? kUsePrevUnionGroupId : kUseNewUnionGroupId);
 			if (union_locality > 0)
+			{
 				s.WriteAttribute(kAttributeNameUnionGroup, kUsePrevUnionGroupId);
+			}
 		}
 		protected virtual int SerializeImpl<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
@@ -197,21 +205,31 @@ namespace KSoft.Blam.Megalo.Model
 			if (type != 0)
 			{
 				if (s.IsWriting && (model.TagElementStreamSerializeFlags & MegaloScriptModelTagElementStreamFlags.TryToPort) != 0)
+				{
 					ProtoData.WriteForTryToPort(s, model.Database);
+				}
 
 				if (s.IsWriting && (model.TagElementStreamSerializeFlags & MegaloScriptModelTagElementStreamFlags.WriteConditionTypeNames) != 0)
+				{
 					s.WriteAttribute("name", ProtoData.Name);
+				}
 
 				#region UnionGroup
 				if (model.TagElementStreamSerializeFlags.EmbedObjectsWriteSansIds())
 				{
 					if (s.IsWriting)
+					{
 						WriteUnionGroupForSansIds(model, s);
+					}
 					else if (!s.ReadAttributeOpt(kAttributeNameUnionGroup, ref mUnionGroup))
+					{
 						mUnionGroup = kUseNewUnionGroupId;
+					}
 				}
 				else
+				{
 					s.StreamAttribute(kAttributeNameUnionGroup, ref mUnionGroup);
+				}
 				#endregion
 
 				s.StreamAttributeOpt("invert", ref mInverted, Predicates.IsTrue);
@@ -233,7 +251,9 @@ namespace KSoft.Blam.Megalo.Model
 			SerializeCommentOut(s);
 
 			if (s.IsReading)
+			{
 				InitializeForType(model, type);
+			}
 
 			Arguments.Serialize(model, s);
 		}

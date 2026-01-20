@@ -60,9 +60,13 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			Mode = mode;
 
 			if (Mode == (int)GameOptionsPrototypeMode.IsNewVersion)
+			{
 				PrometheanEnergyKill = PrometheanEnergyTime = PrometheanEnergyMedal = 3;
+			}
 			else
+			{
 				PrometheanEnergyKill = PrometheanEnergyTime = PrometheanEnergyMedal = 0;
+			}
 
 			PrometheanDuration = 0;
 			ClassColorOverride = false;
@@ -85,15 +89,20 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			where TCursor : class
 		{
 			s.StreamAttribute("mode", ref Mode);
-			using (var bm = s.EnterCursorBookmarkOpt("Promethean", this, o=>!o.IsDefaultPromethean)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("Promethean", this, o=>!o.IsDefaultPromethean))
 			{
-				s.StreamAttribute("energyKill", ref PrometheanEnergyKill);
-				s.StreamAttribute("energyTime", ref PrometheanEnergyTime);
-				s.StreamAttribute("energyMedal", ref PrometheanEnergyMedal);
-				s.StreamAttributeOpt("duration", ref PrometheanDuration, Predicates.IsNotZero);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttribute("energyKill", ref PrometheanEnergyKill);
+					s.StreamAttribute("energyTime", ref PrometheanEnergyTime);
+					s.StreamAttribute("energyMedal", ref PrometheanEnergyMedal);
+					s.StreamAttributeOpt("duration", ref PrometheanDuration, Predicates.IsNotZero);
+				}
+				else
+				{
+					RevertToDefault(Mode);
+				}
 			}
-			else
-				RevertToDefault(Mode);
 
 			s.StreamAttributeOpt("classColorOverride", ref ClassColorOverride, Predicates.IsTrue);
 		}
@@ -104,25 +113,21 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	public sealed partial class GameEngineBaseVariantHalo4
 		: Blam.RuntimeData.Variants.GameEngineBaseVariant
 	{
-		public GameOptionsPrototype OptionsPrototype { get; private set; }
+		public GameOptionsPrototype OptionsPrototype { get; private set; } = new();
 
-		RequisitionData OptionsRequisitions { get; /*private*/ set; }
-		public int InfinityMissionId;
+		RequisitionData OptionsRequisitions { get; /*private*/ set; } = new();
+		public int InfinityMissionId = TypeExtensions.kNone;
 
-		public GameOptionsOrdnanceOptions OrdnanceOptions { get; private set; }
+		public GameOptionsOrdnanceOptions OrdnanceOptions { get; private set; } = new();
 
 		public GameEngineBaseVariantHalo4(Blam.RuntimeData.Variants.GameEngineVariant variantManager) : base(variantManager)
 		{
 			OptionsMisc = new GameOptionsMiscHalo4();
-			OptionsPrototype = new GameOptionsPrototype();
 			OptionsRespawning = new GameOptionsRepawningHalo4(this);
 
 			OptionsMapOverrides = new GameOptionsMapOverridesHalo4(this);
-			OptionsRequisitions = new RequisitionData();
-			InfinityMissionId = TypeExtensions.kNone;
 			TeamOptions = new GameOptionsTeamOptionsHalo4(variantManager.GameBuild);
 			LoadoutOptions = new GameOptionsLoadoutsHalo4();
-			OrdnanceOptions = new GameOptionsOrdnanceOptions();
 		}
 
 		#region IBitStreamSerializable Members
@@ -149,25 +154,46 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags != 0, true);
 
 			if (!s.StreamAttributeOpt("infinityMissionId", ref InfinityMissionId, Predicates.IsNotNone))
+			{
 				InfinityMissionId = TypeExtensions.kNone;
+			}
 
 			SerializeContentHeader(s);
 			SerializeMiscOptions(s);
-			using (var bm = s.EnterCursorBookmarkOpt("Prototype", OptionsPrototype, obj=>!obj.IsEmpty)) if(bm.IsNotNull)
-				s.StreamObject(OptionsPrototype);
+			using (var bm = s.EnterCursorBookmarkOpt("Prototype", OptionsPrototype, obj=>!obj.IsEmpty))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(OptionsPrototype);
+				}
+			}
+
 			SerializRespawnOptions(s);
 
 			SerializeSocialOptions(s);
 			SerializMapOverrides(s);
-			using (var bm = s.EnterCursorBookmarkOpt("Requisitions", OptionsRequisitions, obj=>!obj.IsDefault)) if (bm.IsNotNull)
-				s.StreamObject(OptionsRequisitions);
+			using (var bm = s.EnterCursorBookmarkOpt("Requisitions", OptionsRequisitions, obj=>!obj.IsDefault))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(OptionsRequisitions);
+				}
+			}
+
 			SerializeTeams(s);
 
 			SerializeLoadoutOptions(s);
-			using (var bm = s.EnterCursorBookmarkOpt("Ordnance", OrdnanceOptions, obj => !obj.IsDefault)) if (bm.IsNotNull)
-				s.StreamObject(OrdnanceOptions);
-			else if(s.IsReading)
-				OrdnanceOptions.RevertToDefault();
+			using (var bm = s.EnterCursorBookmarkOpt("Ordnance", OrdnanceOptions, obj => !obj.IsDefault))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(OrdnanceOptions);
+				}
+				else if (s.IsReading)
+				{
+					OrdnanceOptions.RevertToDefault();
+				}
+			}
 		}
 		#endregion
 	};
@@ -226,16 +252,10 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	{
 		public float PlayerRequisitionFrequencySeconds;
 		public int InitialGameCurrency;
-		public List<RequisitionItem> RequisitionItems { get; /*private*/ set; }
+		public List<RequisitionItem> RequisitionItems { get; /*private*/ set; } = new();
 
-		public bool IsDefault { get {
-			return PlayerRequisitionFrequencySeconds == 0.0f && InitialGameCurrency == 0 && RequisitionItems.Count == 0;
-		} }
-
-		public RequisitionData()
-		{
-			RequisitionItems = new List<RequisitionItem>();
-		}
+		public bool IsDefault
+			=> PlayerRequisitionFrequencySeconds == 0.0f && InitialGameCurrency == 0 && RequisitionItems.Count == 0;
 
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
@@ -254,8 +274,13 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			s.StreamAttributeOpt("playerRequisitionFrequencySeconds", ref PlayerRequisitionFrequencySeconds, Predicates.IsNotZero);
 			s.StreamAttributeOpt("initialGameCurrency", ref InitialGameCurrency, Predicates.IsNotZero);
 
-			using(var bm = s.EnterCursorBookmarkOpt("Items", RequisitionItems, Predicates.HasItems)) if(bm.IsNotNull)
-				s.StreamableElements("entry", RequisitionItems);
+			using (var bm = s.EnterCursorBookmarkOpt("Items", RequisitionItems, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamableElements("entry", RequisitionItems);
+				}
+			}
 		}
 		#endregion
 	};

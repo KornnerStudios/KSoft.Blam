@@ -27,7 +27,9 @@ namespace KSoft.Blam.Megalo.Model
 			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Enum);
 
 			if (valueType.EnumTraits == Proto.MegaloScriptValueEnumTraits.HasNoneMember)
+			{
 				mValue = -1;
+			}
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -58,9 +60,13 @@ namespace KSoft.Blam.Megalo.Model
 			MegaloScriptValueType valueType, ref int value)
 		{
 			if (valueType.EnumTraits == Proto.MegaloScriptValueEnumTraits.HasNoneMember)
+			{
 				s.StreamNoneable(ref value, valueType.BitLength);
+			}
 			else
+			{
 				s.Stream(ref value, valueType.BitLength);
+			}
 
 			if (s.IsReading && !model.EnumIndexIsValid(valueType, value))
 			{

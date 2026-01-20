@@ -22,7 +22,9 @@ namespace KSoft.Blam.Games.HaloReach.Megalo.Model
 			int type = (int)abstractType.ToHaloReach();
 			s.StreamNoneable(ref type, 3);
 			if (s.IsReading)
+			{
 				abstractType = ((MegaloScriptTokenTypeHaloReach)type).ToAbstract();
+			}
 		}
 		#endregion
 	};

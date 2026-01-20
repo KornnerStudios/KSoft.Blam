@@ -7,15 +7,10 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
-		public PlayerTraits Traits { get; private set; }
+		public PlayerTraits Traits { get; private set; } = new();
 		public byte Duration;
 
-		public bool IsUnchanged { get { return Duration == 0 && Traits.IsUnchanged; } }
-
-		public GameOptionsPowerupTraits()
-		{
-			Traits = new PlayerTraits();
-		}
+		public bool IsUnchanged => Duration == 0 && Traits.IsUnchanged;
 
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
@@ -40,17 +35,11 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
-		public GameOptionsPowerupTraits BaseTraits { get; private set; }
-		public GameOptionsPowerupTraits RuntimeTraits { get; private set; }
+		public GameOptionsPowerupTraits BaseTraits { get; private set; } = new();
+		public GameOptionsPowerupTraits RuntimeTraits { get; private set; } = new();
 
 		public bool IsUsed { get { return BaseTraits.Duration > 0 || RuntimeTraits.Duration > 0; } }
 		public bool IsUnchanged { get { return BaseTraits.IsUnchanged && RuntimeTraits.IsUnchanged; } }
-
-		public GameOptionsPowerup()
-		{
-			BaseTraits = new GameOptionsPowerupTraits();
-			RuntimeTraits = new GameOptionsPowerupTraits();
-		}
 
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
@@ -64,10 +53,21 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			using (var bm = s.EnterCursorBookmarkOpt("Base", BaseTraits, obj=>!obj.IsUnchanged)) if (bm.IsNotNull)
-				s.StreamObject(BaseTraits);
-			using (var bm = s.EnterCursorBookmarkOpt("Runtime", RuntimeTraits, obj=>!obj.IsUnchanged)) if (bm.IsNotNull)
-				s.StreamObject(RuntimeTraits);
+			using (var bm = s.EnterCursorBookmarkOpt("Base", BaseTraits, obj=>!obj.IsUnchanged))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(BaseTraits);
+				}
+			}
+
+			using (var bm = s.EnterCursorBookmarkOpt("Runtime", RuntimeTraits, obj=>!obj.IsUnchanged))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(RuntimeTraits);
+				}
+			}
 		}
 		#endregion
 	};
@@ -90,7 +90,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			EquipmentSet = TypeExtensionsBlam.kDefaultOption;
 			Powerups = new GameOptionsPowerup[4];
 			for (int x = 0; x < Powerups.Length; x++)
+			{
 				Powerups[x] = new GameOptionsPowerup();
+			}
 		}
 
 		#region IBitStreamSerializable Members
@@ -101,7 +103,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			s.Stream(ref WeaponSet, 8, signExtend:true);
 			s.Stream(ref VehicleSet, 8, signExtend:true);
 			s.Stream(ref EquipmentSet, 8, signExtend:true);
-			foreach (var pu in Powerups) s.StreamObject(pu);	// 0x4E0
+			foreach (var pu in Powerups) { s.StreamObject(pu); }	// 0x4E0
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -116,20 +118,43 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			using (s.EnterCursorBookmark("Powerups"))
 			{
 				GameOptionsPowerup pu;
-				Predicate<GameOptionsPowerup> pu_is_not_default = obj => !obj.IsUnchanged;
+				static bool pu_is_not_default(GameOptionsPowerup obj) => !obj.IsUnchanged;
 
 				pu = Powerups[0];
-				using (var bm = s.EnterCursorBookmarkOpt("DamageBoost", pu, pu_is_not_default)) if (bm.IsNotNull)
-					s.StreamObject(pu);
+				using (var bm = s.EnterCursorBookmarkOpt("DamageBoost", pu, pu_is_not_default))
+				{
+					if (bm.IsNotNull)
+					{
+						s.StreamObject(pu);
+					}
+				}
+
 				pu = Powerups[1];
-				using (var bm = s.EnterCursorBookmarkOpt("SpeedBoost", pu, pu_is_not_default)) if (bm.IsNotNull)
-					s.StreamObject(pu);
+				using (var bm = s.EnterCursorBookmarkOpt("SpeedBoost", pu, pu_is_not_default))
+				{
+					if (bm.IsNotNull)
+					{
+						s.StreamObject(pu);
+					}
+				}
+
 				pu = Powerups[2];
-				using (var bm = s.EnterCursorBookmarkOpt("Overshield", pu, pu_is_not_default)) if (bm.IsNotNull)
-					s.StreamObject(pu);
+				using (var bm = s.EnterCursorBookmarkOpt("Overshield", pu, pu_is_not_default))
+				{
+					if (bm.IsNotNull)
+					{
+						s.StreamObject(pu);
+					}
+				}
+
 				pu = Powerups[3];
-				using (var bm = s.EnterCursorBookmarkOpt("Custom", pu, pu_is_not_default)) if (bm.IsNotNull)
-					s.StreamObject(pu);
+				using (var bm = s.EnterCursorBookmarkOpt("Custom", pu, pu_is_not_default))
+				{
+					if (bm.IsNotNull)
+					{
+						s.StreamObject(pu);
+					}
+				}
 			}
 		}
 		#endregion

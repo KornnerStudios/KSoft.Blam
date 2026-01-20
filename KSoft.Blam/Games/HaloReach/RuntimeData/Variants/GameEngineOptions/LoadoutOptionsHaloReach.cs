@@ -43,7 +43,9 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 			mLoadouts = new GameOptionsLoadoutHaloReach[5];
 
 			for (int x = 0; x < Loadouts.Length; x++)
+			{
 				mLoadouts[x] = new GameOptionsLoadoutHaloReach();
+			}
 		}
 
 		#region ITagElementStringNameStreamable Members
@@ -52,8 +54,12 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 			int streamed_count = !isUsed ? 0 : s.StreamableFixedArray("entry", mLoadouts);
 
 			if (s.IsReading)
+			{
 				for (; streamed_count < Loadouts.Length; streamed_count++)
+				{
 					Loadouts[streamed_count].RevertToDefault();
+				}
+			}
 		}
 		#endregion
 	};
@@ -69,7 +75,9 @@ namespace KSoft.Blam.Games.HaloReach.RuntimeData.Variants
 			Palettes = new GameOptionsLoadoutPaletteHaloReach[6];
 
 			for (int x = 0; x < Palettes.Length; x++)
+			{
 				Palettes[x] = new GameOptionsLoadoutPaletteHaloReach();
+			}
 		}
 
 		public override bool IsDefault { get {

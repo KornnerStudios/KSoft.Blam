@@ -115,7 +115,10 @@ Disable the ability to block Sword attacks using melee with anything other than 
 			s.StreamAttributeOpt("PrecisionWeaponReticuleBloom", ref PrecisionWeaponBloom, f=>f!=1.0f);
 
 			if (s.StreamElementOpt("ArmorLockDamageToEnergyTransfer", ref ArmorLockDamageToEnergyTransfer, f => f != 0.0f))
+			{
 				s.WriteComment("Damage received while in Armor Lock is transferred to remaining Armor Ability energy");
+			}
+
 			s.StreamElementOpt("ArmorLockDamageToEnergyCap", ref ArmorLockDamageToEnergyCap, f => f != 0.0f);
 
 			s.StreamElementOpt("ActiveCamoOverrideEnergyCurveMin", ref ActiveCamoOverrideEnergyCurveMin, f => f != 0.02f);
@@ -136,9 +139,9 @@ Disable the ability to block Sword attacks using melee with anything other than 
 		public const int kEncodingVersionStock = 0x6A;
 		public const int kEncodingVersionTU1 = 0x6B;
 
-		public static readonly LocaleStringTableInfo kStringTableInfo = new LocaleStringTableInfo(112, 0x4C00);
-		public static readonly LocaleStringTableInfo kNameStringTableInfo = new LocaleStringTableInfo(1, 0x180); // 32 chars per?
-		public static readonly LocaleStringTableInfo kDescriptionStringTableInfo = new LocaleStringTableInfo(1, 0xC00); // 256 chars per?
+		public static readonly LocaleStringTableInfo kStringTableInfo = new(112, 0x4C00);
+		public static readonly LocaleStringTableInfo kNameStringTableInfo = new(1, 0x180); // 32 chars per?
+		public static readonly LocaleStringTableInfo kDescriptionStringTableInfo = new(1, 0xC00); // 256 chars per?
 		public static readonly LocaleStringTableInfo kCategoryStringTableInfo = kNameStringTableInfo;
 		#endregion
 
@@ -147,15 +150,13 @@ Disable the ability to block Sword attacks using melee with anything other than 
 
 		public bool FireTeamsEnabled, SymmetricGametype;
 
-		public MegaloVariantTU1 TU1 { get; private set; }
+		public MegaloVariantTU1 TU1 { get; private set; } = new();
 
 		public GameEngineMegaloVariantHaloReach(Blam.RuntimeData.Variants.GameEngineVariant variantManager) : base(variantManager,
 			kStringTableInfo,
 			kNameStringTableInfo, kDescriptionStringTableInfo, kCategoryStringTableInfo)
 		{
 			mBaseVariant = new GameEngineBaseVariantHaloReach(variantManager);
-
-			TU1 = new MegaloVariantTU1();
 		}
 
 		public override void ClearTitleUpdateData()
@@ -200,7 +201,9 @@ Disable the ability to block Sword attacks using melee with anything other than 
 			s.StreamObject(EngineDefinition);			// 0x63A8
 
 			if (mEncodingVersion >= kEncodingVersionTU1)
+			{
 				s.StreamObject(TU1);
+			}
 		}
 		#endregion
 
@@ -214,8 +217,13 @@ Disable the ability to block Sword attacks using melee with anything other than 
 
 			if (mEncodingVersion >= kEncodingVersionTU1)
 			{
-				using (var bm = s.EnterCursorBookmarkOpt("TU1", TU1, obj=>!obj.IsUnchanged)) if (bm.IsNotNull)
-					s.StreamObject(TU1);
+				using (var bm = s.EnterCursorBookmarkOpt("TU1", TU1, obj=>!obj.IsUnchanged))
+				{
+					if (bm.IsNotNull)
+					{
+						s.StreamObject(TU1);
+					}
+				}
 			}
 		}
 		#endregion

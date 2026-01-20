@@ -48,7 +48,9 @@ namespace KSoft.Blam.Megalo.Model
 			Contract.Requires(triggerIndex.IsNoneOrPositive());
 
 			if (triggerIndex.IsNotNone())
+			{
 				RemapTriggerIndex(ref triggerIndex);
+			}
 		}
 		#endregion
 
@@ -56,7 +58,9 @@ namespace KSoft.Blam.Megalo.Model
 		void PopulateObjectTypeReferencesFromParams(MegaloScriptModelObjectWithParameters obj)
 		{
 			if (!obj.Arguments.ProtoData.ContainsObjectTypeParameter)
+			{
 				return;
+			}
 
 			foreach (var value_id in obj.Arguments)
 			{
@@ -75,10 +79,14 @@ namespace KSoft.Blam.Megalo.Model
 			Model.ObjectTypeReferencesClear();
 
 			foreach (var cond_id in ConditionWriteOrder)
+			{
 				PopulateObjectTypeReferencesFromParams(Model.Conditions[cond_id]);
+			}
 
 			foreach (var action_id in ActionWriteOrder)
+			{
 				PopulateObjectTypeReferencesFromParams(Model.Actions[action_id]);
+			}
 		}
 		#endregion
 	};
