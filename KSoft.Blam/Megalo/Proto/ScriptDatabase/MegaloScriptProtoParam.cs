@@ -79,7 +79,7 @@ namespace KSoft.Blam.Megalo.Proto
 		{
 			int key = pair.Key; string value = pair.Value;
 			s.StreamAttribute(kSigIdAttributeName, ref key);
-			s.StreamAttribute(kNameAttirbuteName, ref key);
+			s.StreamAttribute(kNameAttirbuteName, ref value);
 		}
 		#endregion
 	};
