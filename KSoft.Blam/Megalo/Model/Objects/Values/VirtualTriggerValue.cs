@@ -41,7 +41,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptVirtualTriggerValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptVirtualTriggerValue>(other);
 
 			return VirtualTriggerHandle.Equals(obj.VirtualTriggerHandle);
 		}
@@ -56,7 +56,9 @@ namespace KSoft.Blam.Megalo.Model
 				mVirtualTriggerHandle = trigger.Handle;
 			}
 			else
+			{
 				trigger = model.VirtualTriggers[VirtualTriggerHandle.Id];
+			}
 
 			trigger.Serialize(model, s);
 		}
@@ -65,8 +67,12 @@ namespace KSoft.Blam.Megalo.Model
 		protected override void SerializeValue<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)
 		{
 			if ((model.TagElementStreamSerializeFlags & MegaloScriptModelTagElementStreamFlags.EmbedObjects) != 0)
+			{
 				using (s.EnterCursorBookmark("VT")) // have to nest or MegaloScriptModelObjectHandle will overwrite our Param ID with the VT's
+				{
 					MegaloScriptModelObjectHandle.SerializeForEmbed(s, model, ref mVirtualTriggerHandle);
+				}
+			}
 			else
 			{
 				if (s.IsReading)
@@ -74,14 +80,16 @@ namespace KSoft.Blam.Megalo.Model
 					int id = TypeExtensions.kNone; s.ReadCursor(ref id);
 					if (id < 0)
 					{
-						throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
-							"VirtualTrigger value #{0} has an invalid value {1}", Id, id));
+						s.ThrowReadException(new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+							"VirtualTrigger value #{0} has an invalid value {1}", Id, id)));
 					}
 
 					mVirtualTriggerHandle = model.VirtualTriggers[id].Handle;
 				}
 				else
+				{
 					s.WriteCursor(VirtualTriggerHandle.Id);
+				}
 			}
 		}
 		#endregion

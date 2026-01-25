@@ -13,7 +13,7 @@ namespace KSoft.Blam.Megalo.Model
 		sealed class TriggerCompiler
 			: MegaloScriptTriggerProcessor
 		{
-			MegaloScriptModelCompilerState mOwnerState;
+			readonly MegaloScriptModelCompilerState mOwnerState;
 			int mNextRemapIndex;
 			bool mCompileReferences;
 
@@ -34,8 +34,7 @@ namespace KSoft.Blam.Megalo.Model
 			{
 				mCompileReferences = true;
 
-				var trigger = current as MegaloScriptTrigger;
-				if (trigger != null)
+				if (current is MegaloScriptTrigger trigger)
 				{
 					if (!trigger.CommentOut)
 					{
@@ -44,7 +43,9 @@ namespace KSoft.Blam.Megalo.Model
 						mNextRemapIndex++;
 					}
 					else
+					{
 						mCompileReferences = false;
+					}
 				}
 
 				return mCompileReferences;
@@ -52,7 +53,9 @@ namespace KSoft.Blam.Megalo.Model
 			protected override void PostProcessTrigger(MegaloScriptTrigger root, MegaloScriptTrigger parent, MegaloScriptTriggerBase current)
 			{
 				if (mCompileReferences)
+				{
 					mOwnerState.Compile(current.References);
+				}
 			}
 		};
 
@@ -60,8 +63,7 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			if (TriggerRemappings.Count > 0)
 			{
-				int remapped_index;
-				bool remapped = TriggerRemappings.TryGetValue(triggerIndex, out remapped_index);
+				bool remapped = TriggerRemappings.TryGetValue(triggerIndex, out int remapped_index);
 				Contract.Assert(remapped, "Failed to remap a trigger index");
 				triggerIndex = remapped_index;
 			}
@@ -104,7 +106,9 @@ namespace KSoft.Blam.Megalo.Model
 					obj.Name = prefix + "Trigger";
 					// if the trigger isn't an entry point
 					if (obj.TriggerType == MegaloScriptTriggerType.Normal)
+					{
 						obj.Name += obj.Id.ToString(Util.InvariantCultureInfo);
+					}
 
 					root_triggers.Add(obj);
 				}
@@ -124,7 +128,9 @@ namespace KSoft.Blam.Megalo.Model
 		void DecompileVirtualTriggers()
 		{
 			foreach (var obj in Model.VirtualTriggers)
+			{
 				Decompile(obj.References);
+			}
 		}
 	};
 }

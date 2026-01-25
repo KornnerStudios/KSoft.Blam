@@ -29,9 +29,9 @@ namespace KSoft.Blam.Megalo.Model
 		static class Constants
 		{
 			public static readonly BitFieldTraits kIdBitField =
-				new BitFieldTraits(kBitCountId);
+				new(kBitCountId);
 			public static readonly BitFieldTraits kTypeBitField =
-				new BitFieldTraits(BitEncoders.MegaloScriptModelObjectType.BitCountTrait, kIdBitField);
+				new(BitEncoders.MegaloScriptModelObjectType.BitCountTrait, kIdBitField);
 
 			public static readonly BitFieldTraits kLastBitField =
 				kTypeBitField;
@@ -41,16 +41,14 @@ namespace KSoft.Blam.Megalo.Model
 
 		/// <summary>Number of bits required to represent a bit-encoded representation of this value type</summary>
 		/// <remarks>19 bits at last count</remarks>
-		public static int BitCount { get { return Constants.kLastBitField.FieldsBitCount; } }
-		public static uint Bitmask { get { return Constants.kLastBitField.FieldsBitmask.u32; } }
+		public static int BitCount => Constants.kLastBitField.FieldsBitCount;
+		public static uint Bitmask => Constants.kLastBitField.FieldsBitmask.u32;
 
 		/// <remarks>ONLY PUBLIC FOR USE IN CODE CONTRACTS</remarks>
-		[Contracts.Pure] public static bool ValidateId(int id)	{ return id.IsNoneOrPositive() && id < Constants.kMaxId; }
+		[Contracts.Pure] public static bool ValidateId(int id) => id.IsNoneOrPositive() && id < Constants.kMaxId;
 
-		public static readonly MegaloScriptModelObjectHandle Null = new MegaloScriptModelObjectHandle(
-			MegaloScriptModelObjectType.None);
-		public static readonly MegaloScriptModelObjectHandle NullCondition = new MegaloScriptModelObjectHandle(
-			MegaloScriptModelObjectType.Condition);
+		public static readonly MegaloScriptModelObjectHandle Null = new(MegaloScriptModelObjectType.None);
+		public static readonly MegaloScriptModelObjectHandle NullCondition = new(MegaloScriptModelObjectType.Condition);
 		#endregion
 
 		#region Internal Value
@@ -80,21 +78,21 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region Value properties
-		public int Id							{ get { return Bits.BitDecodeNoneable(mHandle, Constants.kIdBitField); } }
-		public MegaloScriptModelObjectType Type	{ get { return BitEncoders.MegaloScriptModelObjectType.BitDecode(mHandle, Constants.kTypeBitField.BitIndex); } }
+		public readonly int Id =>							Bits.BitDecodeNoneable(mHandle, Constants.kIdBitField);
+		public readonly MegaloScriptModelObjectType Type =>	BitEncoders.MegaloScriptModelObjectType.BitDecode(mHandle, Constants.kTypeBitField.BitIndex);
 
-		public bool IsNone						{ get { return Id.IsNone(); } }
-		public bool IsNotNone					{ get { return Id.IsNotNone(); } }
-		public bool IsNoneOrPositive			{ get { return Id.IsNoneOrPositive(); } }
+		public readonly bool IsNone =>						Id.IsNone();
+		public readonly bool IsNotNone =>					Id.IsNotNone();
+		public readonly bool IsNoneOrPositive =>			Id.IsNoneOrPositive();
 		#endregion
 
 		#region IComparer<MegaloScriptModelObjectHandle> Members
-		int System.Collections.IComparer.Compare(object x, object y)
+		readonly int System.Collections.IComparer.Compare(object x, object y)
 		{
 			return Compare((MegaloScriptModelObjectHandle)x, (MegaloScriptModelObjectHandle)y);
 		}
 
-		public int Compare(MegaloScriptModelObjectHandle x, MegaloScriptModelObjectHandle y)
+		public readonly int Compare(MegaloScriptModelObjectHandle x, MegaloScriptModelObjectHandle y)
 		{
 			return (int)(x.mHandle - y.mHandle);
 		}
@@ -131,18 +129,20 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region Overrides
-		public override bool Equals(object obj)
+		public override readonly bool Equals(object obj)
 		{
-			if (obj is MegaloScriptModelObjectHandle)
-				return this.mHandle == ((MegaloScriptModelObjectHandle)obj).mHandle;
+			if (obj is MegaloScriptModelObjectHandle objHandle)
+			{
+				return this.mHandle == objHandle.mHandle;
+			}
 
 			return false;
 		}
-		public override int GetHashCode()	{ return (int)mHandle; }
+		public override readonly int GetHashCode() => (int)mHandle;
 		#endregion
 
 		#region Equality Members
-		public bool Equals(MegaloScriptModelObjectHandle other) { return mHandle == other.mHandle; }
+		public readonly bool Equals(MegaloScriptModelObjectHandle other) => mHandle == other.mHandle;
 		#endregion
 
 		#region ITagElementStringNameStreamable Members
@@ -154,39 +154,39 @@ namespace KSoft.Blam.Megalo.Model
 		static MegaloScriptModelObject Recreate(MegaloScriptModel model, MegaloScriptModelObjectHandle handle)
 		{
 			int id = handle.Id;
-			switch (handle.Type)
+			return handle.Type switch
 			{
-				case MegaloScriptModelObjectType.Condition:		return model.CreateCondition(id);
-				case MegaloScriptModelObjectType.Action:		return model.CreateAction(id);
-				case MegaloScriptModelObjectType.Trigger:		return model.CreateTrigger(id);
-				case MegaloScriptModelObjectType.VirtualTrigger:return model.CreateVirtualTrigger(id);
+				MegaloScriptModelObjectType.Condition =>		model.CreateCondition(id),
+				MegaloScriptModelObjectType.Action =>			model.CreateAction(id),
+				MegaloScriptModelObjectType.Trigger =>			model.CreateTrigger(id),
+				MegaloScriptModelObjectType.VirtualTrigger =>	model.CreateVirtualTrigger(id),
 
-				default: throw new KSoft.Debug.UnreachableException(handle.Type.ToString());
-			}
+				_ => throw new KSoft.Debug.UnreachableException(handle.Type.ToString()),
+			};
 		}
 		static MegaloScriptModelObject CreateForWriteSansId(MegaloScriptModel model, MegaloScriptModelObjectType type)
 		{
-			switch (type)
+			return type switch
 			{
-				case MegaloScriptModelObjectType.Condition:		return model.CreateCondition();
-				case MegaloScriptModelObjectType.Action:		return model.CreateAction();
-				case MegaloScriptModelObjectType.Trigger:		return model.CreateTrigger();
-				case MegaloScriptModelObjectType.VirtualTrigger:return model.CreateVirtualTrigger();
+				MegaloScriptModelObjectType.Condition =>		model.CreateCondition(),
+				MegaloScriptModelObjectType.Action =>			model.CreateAction(),
+				MegaloScriptModelObjectType.Trigger =>			model.CreateTrigger(),
+				MegaloScriptModelObjectType.VirtualTrigger =>	model.CreateVirtualTrigger(),
 
-				default: throw new KSoft.Debug.UnreachableException(type.ToString());
-			}
+				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
+			};
 		}
 		static bool CanEmbed(MegaloScriptModelObjectType type)
 		{
-			switch (type)
+			return type switch
 			{
-				case MegaloScriptModelObjectType.Condition:
-				case MegaloScriptModelObjectType.Action:
-				case MegaloScriptModelObjectType.Trigger:
-				case MegaloScriptModelObjectType.VirtualTrigger:
-					return true;
-				default: return false;
-			}
+				MegaloScriptModelObjectType.Condition or
+				MegaloScriptModelObjectType.Action or
+				MegaloScriptModelObjectType.Trigger or
+				MegaloScriptModelObjectType.VirtualTrigger
+				=> true,
+				_ => false,
+			};
 		}
 
 		internal static void SerializeForEmbed<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, MegaloScriptModel model,
@@ -207,7 +207,7 @@ namespace KSoft.Blam.Megalo.Model
 
 			// Only try to recreate when we're reading and the script wasn't streamed without IDs
 			// Else, Serialize would have already created
-			var obj = reading && !streamed_sans_id ?
+			MegaloScriptModelObject obj = reading && !streamed_sans_id ?
 				Recreate(model, handle)
 				: model[handle];
 			obj.Serialize(model, s);
@@ -228,13 +228,19 @@ namespace KSoft.Blam.Megalo.Model
 			s.StreamAttributeEnum("type", ref type);
 
 			if (!model.TagElementStreamSerializeFlags.EmbedObjectsWriteSansIds())
+			{
 				s.StreamAttribute(MegaloScriptModelObject.kIdAttributeName, ref id);
+			}
 			else if (reading)
+			{
 				handle = CreateForWriteSansId(model, type).Handle;
+			}
 
 			// handle will already be valid if the above case is hit
 			if (reading && handle.Type == MegaloScriptModelObjectType.None)
+			{
 				handle = new MegaloScriptModelObjectHandle(type, id);
+			}
 		}
 		#endregion
 
@@ -243,15 +249,13 @@ namespace KSoft.Blam.Megalo.Model
 		/// <param name="rhs">right-hand value for comparison expression</param>
 		/// <returns><paramref name="lhs"/> == <paramref name="rhs"/></returns>
 		[Contracts.Pure]
-		public static bool operator ==(MegaloScriptModelObjectHandle lhs, MegaloScriptModelObjectHandle rhs)
-		{ return lhs.mHandle == rhs.mHandle; }
+		public static bool operator ==(MegaloScriptModelObjectHandle lhs, MegaloScriptModelObjectHandle rhs) => lhs.mHandle == rhs.mHandle;
 		/// <summary>Compare two handles (inequality)</summary>
 		/// <param name="lhs">left-hand value for comparison expression</param>
 		/// <param name="rhs">right-hand value for comparison expression</param>
 		/// <returns><paramref name="lhs"/> != <paramref name="rhs"/></returns>
 		/// <remarks>Ignores address size</remarks>
 		[Contracts.Pure]
-		public static bool operator !=(MegaloScriptModelObjectHandle lhs, MegaloScriptModelObjectHandle rhs)
-		{ return lhs.mHandle != rhs.mHandle; }
+		public static bool operator !=(MegaloScriptModelObjectHandle lhs, MegaloScriptModelObjectHandle rhs) => lhs.mHandle != rhs.mHandle;
 	};
 }

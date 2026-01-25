@@ -51,7 +51,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptNavpointIconParametersValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptNavpointIconParametersValue>(other);
 
 			return mIconType == obj.mIconType && mNumeric.Equals(obj.mNumeric);
 		}
@@ -61,18 +61,26 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			s.Stream(ref mIconType, 5, NavpointIconTypeBitStreamer.Instance);
 			if (mIconType == MegaloScriptNavpointIconType.Territory)
+			{
 				mNumeric.SerializeCustom(model, s);
+			}
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
 		protected override void SerializeValue<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)
 		{
 			if (!s.StreamAttributeEnumOpt("iconType", ref mIconType, e => e != MegaloScriptNavpointIconType.None))
+			{
 				mIconType = MegaloScriptNavpointIconType.None;
+			}
 
 			if (mIconType == MegaloScriptNavpointIconType.Territory)
+			{
 				using (s.EnterCursorBookmark("TerritoryDesignator"))
+				{
 					mNumeric.SerializeCustom(model, s);
+				}
+			}
 		}
 		#endregion
 	};

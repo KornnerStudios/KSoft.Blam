@@ -13,14 +13,14 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		public MegaloScriptModelVariableSet GetModelVariableSet(MegaloScriptVariableSet set)
 		{
-			switch (set)
+			return set switch
 			{
-				case MegaloScriptVariableSet.Globals: return GlobalVariables;
-				case MegaloScriptVariableSet.Player: return PlayerVariables;
-				case MegaloScriptVariableSet.Object: return ObjectVariables;
-				case MegaloScriptVariableSet.Team: return TeamVariables;
-				default: throw new KSoft.Debug.UnreachableException(set.ToString());
-			}
+				MegaloScriptVariableSet.Globals => GlobalVariables,
+				MegaloScriptVariableSet.Player => PlayerVariables,
+				MegaloScriptVariableSet.Object => ObjectVariables,
+				MegaloScriptVariableSet.Team => TeamVariables,
+				_ => throw new KSoft.Debug.UnreachableException(set.ToString()),
+			};
 		}
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1043:UseIntegralOrStringArgumentForIndexers")]
 		public MegaloScriptModelVariableSet this[MegaloScriptVariableSet set] => GetModelVariableSet(set);
@@ -31,9 +31,7 @@ namespace KSoft.Blam.Megalo.Model
 		/// <param name="index">Index of the variable in the set</param>
 		/// <returns></returns>
 		public bool VarIndexIsValid(MegaloScriptVariableType type, MegaloScriptVariableSet set, int index)
-		{
-			return index >= 0 && this[set].VarIndexIsValid(type, index);
-		}
+			=> index >= 0 && this[set].VarIndexIsValid(type, index);
 	};
 
 	[System.Reflection.Obfuscation(Exclude=false)]
@@ -42,27 +40,20 @@ namespace KSoft.Blam.Megalo.Model
 		public MegaloScriptVariableSet SetType { get; private set; }
 		public Proto.MegaloScriptProtoVariableSet ProtoData { get; private set; }
 
-		public ObservableCollection<MegaloScriptCustomVariable> Numerics { get; private set; }
-		public ObservableCollection<MegaloScriptTimerVariable> Timers { get; private set; }
-		public ObservableCollection<MegaloScriptTeamVariable> Teams { get; private set; }
-		public ObservableCollection<MegaloScriptPlayerVariable> Players { get; private set; }
-		public ObservableCollection<MegaloScriptObjectVariable> Objects { get; private set; }
+		public ObservableCollection<MegaloScriptCustomVariable> Numerics { get; private set; } = new();
+		public ObservableCollection<MegaloScriptTimerVariable> Timers { get; private set; } = new();
+		public ObservableCollection<MegaloScriptTeamVariable> Teams { get; private set; } = new();
+		public ObservableCollection<MegaloScriptPlayerVariable> Players { get; private set; } = new();
+		public ObservableCollection<MegaloScriptObjectVariable> Objects { get; private set; } = new();
 
-		public bool IsNotEmpty { get {
-			return Numerics.Count > 0 || Timers.Count > 0 || Teams.Count > 0 ||
-				Players.Count > 0 || Objects.Count > 0;
-		} }
+		public bool IsNotEmpty =>
+			Numerics.Count > 0 || Timers.Count > 0 || Teams.Count > 0 ||
+			Players.Count > 0 || Objects.Count > 0;
 
 		public MegaloScriptModelVariableSet(Proto.MegaloScriptDatabase db, MegaloScriptVariableSet set)
 		{
 			SetType = set;
 			ProtoData = db.VariableSets[set];
-
-			Numerics = new ObservableCollection<MegaloScriptCustomVariable>();
-			Timers = new ObservableCollection<MegaloScriptTimerVariable>();
-			Teams = new ObservableCollection<MegaloScriptTeamVariable>();
-			Players = new ObservableCollection<MegaloScriptPlayerVariable>();
-			Objects = new ObservableCollection<MegaloScriptObjectVariable>();
 		}
 
 		internal void ValidateVariableListCounts(IO.ICanThrowReadExceptionsWithExtraDetails readExceptionThrower)
@@ -85,31 +76,35 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		internal bool VarIndexIsValid(MegaloScriptVariableType type, int index)
 		{
-			switch (type)
+			System.Collections.IList list = type switch
 			{
-				case MegaloScriptVariableType.Numeric: return index < Numerics.Count;
-				case MegaloScriptVariableType.Timer: return index < Timers.Count;
-				case MegaloScriptVariableType.Team: return index < Teams.Count;
-				case MegaloScriptVariableType.Player: return index < Players.Count;
-				case MegaloScriptVariableType.Object: return index < Objects.Count;
-				default: throw new KSoft.Debug.UnreachableException(type.ToString());
-			}
+				MegaloScriptVariableType.Numeric => Numerics,
+				MegaloScriptVariableType.Timer => Timers,
+				MegaloScriptVariableType.Team => Teams,
+				MegaloScriptVariableType.Player => Players,
+				MegaloScriptVariableType.Object => Objects,
+				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
+			};
+
+			return index < list.Count;
 		}
 
 		#region Variable Index Name resolving
 		int FromVariableIndexName(MegaloScriptVariableType type, string name)
 		{
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
 			int id = TypeExtensionsBlam.IndexOfByPropertyNotFoundResult;
-			switch (type)
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
+			id = type switch
 			{
-				case MegaloScriptVariableType.Numeric:	id = MegaloScriptModel.FindNameIndex(Numerics, name); break;
-				case MegaloScriptVariableType.Timer:	id = MegaloScriptModel.FindNameIndex(Timers, name); break;
-				case MegaloScriptVariableType.Team:		id = MegaloScriptModel.FindNameIndex(Teams, name); break;
-				case MegaloScriptVariableType.Player:	id = MegaloScriptModel.FindNameIndex(Players, name); break;
-				case MegaloScriptVariableType.Object:	id = MegaloScriptModel.FindNameIndex(Objects, name); break;
+				MegaloScriptVariableType.Numeric =>	MegaloScriptModel.FindNameIndex(Numerics, name),
+				MegaloScriptVariableType.Timer =>	MegaloScriptModel.FindNameIndex(Timers, name),
+				MegaloScriptVariableType.Team =>	MegaloScriptModel.FindNameIndex(Teams, name),
+				MegaloScriptVariableType.Player =>	MegaloScriptModel.FindNameIndex(Players, name),
+				MegaloScriptVariableType.Object =>	MegaloScriptModel.FindNameIndex(Objects, name),
 
-				default: throw new KSoft.Debug.UnreachableException(type.ToString());
-			}
+				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
+			};
 
 			if (id == TypeExtensionsBlam.IndexOfByPropertyNotFoundResult)
 			{
@@ -129,22 +124,23 @@ namespace KSoft.Blam.Megalo.Model
 					index.ToString(Util.InvariantCultureInfo), SetType.ToString(), type.ToString()));
 			}
 
-			switch (type)
+			return type switch
 			{
-				case MegaloScriptVariableType.Numeric: return Numerics[index].CodeName;
-				case MegaloScriptVariableType.Timer: return Timers[index].CodeName;
-				case MegaloScriptVariableType.Team: return Teams[index].CodeName;
-				case MegaloScriptVariableType.Player: return Players[index].CodeName;
-				case MegaloScriptVariableType.Object: return Objects[index].CodeName;
-
-				default: throw new KSoft.Debug.UnreachableException(type.ToString());
-			}
+				MegaloScriptVariableType.Numeric => Numerics[index].CodeName,
+				MegaloScriptVariableType.Timer => Timers[index].CodeName,
+				MegaloScriptVariableType.Team => Teams[index].CodeName,
+				MegaloScriptVariableType.Player => Players[index].CodeName,
+				MegaloScriptVariableType.Object => Objects[index].CodeName,
+				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
+			};
 		}
 
 		static int FromVariableIndexName(MegaloScriptModel model, MegaloScriptVariableSet varSet, MegaloScriptVariableType varType, string name, bool supportNone)
 		{
 			if (supportNone && name == MegaloScriptModel.kIndexNameNone)
+			{
 				return TypeExtensions.kNone;
+			}
 
 			return model[varSet].FromVariableIndexName(varType, name);
 		}
@@ -153,16 +149,20 @@ namespace KSoft.Blam.Megalo.Model
 			if (index.IsNone())
 			{
 				if (supportNone)
+				{
 					return MegaloScriptModel.kIndexNameNone;
+				}
 				else
+				{
 					throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 						"Encountered a {0}.{1} variable reference that was NONE, where NONE isn't supported",
 						varSet.ToString(), varType.ToString()));
+				}
 			}
 
 			return model[varSet].ToVariableIndexName(varType, index);
 		}
-		internal struct IndexNameResolvingContext
+		internal readonly struct IndexNameResolvingContext
 		{
 			readonly MegaloScriptModel Model;
 			readonly MegaloScriptVariableSet VarSet;
@@ -197,20 +197,45 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
-			using (var bm = s.EnterCursorBookmarkOpt("Numeric", Numerics, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamableElements("Var", Numerics, model, _model => _model.NewCustomVariable());
+			using (var bm = s.EnterCursorBookmarkOpt("Numeric", Numerics, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamableElements("Var", Numerics, model, _model => _model.NewCustomVariable());
+				}
+			}
 
-			using (var bm = s.EnterCursorBookmarkOpt("Timers", Timers, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamableElements("Var", Timers, model, _model => _model.NewTimerVariable());
+			using (var bm = s.EnterCursorBookmarkOpt("Timers", Timers, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamableElements("Var", Timers, model, _model => _model.NewTimerVariable());
+				}
+			}
 
-			using (var bm = s.EnterCursorBookmarkOpt("Teams", Teams, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamableElements("Var", Teams, model, _model => _model.NewTeamVariable());
+			using (var bm = s.EnterCursorBookmarkOpt("Teams", Teams, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamableElements("Var", Teams, model, _model => _model.NewTeamVariable());
+				}
+			}
 
-			using (var bm = s.EnterCursorBookmarkOpt("Players", Players, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamableElements("Var", Players, model, _model => _model.NewPlayerVariable());
+			using (var bm = s.EnterCursorBookmarkOpt("Players", Players, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamableElements("Var", Players, model, _model => _model.NewPlayerVariable());
+				}
+			}
 
-			using (var bm = s.EnterCursorBookmarkOpt("Objects", Objects, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamableElements("Var", Objects, model, _model => _model.NewObjectVariable());
+			using (var bm = s.EnterCursorBookmarkOpt("Objects", Objects, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamableElements("Var", Objects, model, _model => _model.NewObjectVariable());
+				}
+			}
 
 			if (s.IsReading)
 			{

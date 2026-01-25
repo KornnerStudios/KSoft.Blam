@@ -92,7 +92,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptShapeValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptShapeValue>(other);
 
 			bool equals = ShapeType == obj.ShapeType;
 
@@ -218,18 +218,18 @@ namespace KSoft.Blam.Megalo.Model
 			switch (ShapeType)
 			{
 				case MegaloScriptShapeType.Sphere:
-					using (s.EnterCursorBookmark(kVar0ElementName)) mRadius.SerializeCustom(model, s);
+					using (s.EnterCursorBookmark(kVar0ElementName)) { mRadius.SerializeCustom(model, s); }
 					break;
 				case MegaloScriptShapeType.Cylinder:
-					using (s.EnterCursorBookmark(kVar0ElementName)) mRadius.SerializeCustom(model, s);
-					using (s.EnterCursorBookmark(kVar2ElementName)) mTop.SerializeCustom(model, s);
-					using (s.EnterCursorBookmark(kVar3ElementName)) mBottom.SerializeCustom(model, s);
+					using (s.EnterCursorBookmark(kVar0ElementName)) { mRadius.SerializeCustom(model, s); }
+					using (s.EnterCursorBookmark(kVar2ElementName)) { mTop.SerializeCustom(model, s); }
+					using (s.EnterCursorBookmark(kVar3ElementName)) { mBottom.SerializeCustom(model, s); }
 					break;
 				case MegaloScriptShapeType.Box:
-					using (s.EnterCursorBookmark("Width"))			mRadius.SerializeCustom(model, s);
-					using (s.EnterCursorBookmark(kVar1ElementName)) mLength.SerializeCustom(model, s);
-					using (s.EnterCursorBookmark(kVar2ElementName)) mTop.SerializeCustom(model, s);
-					using (s.EnterCursorBookmark(kVar3ElementName)) mBottom.SerializeCustom(model, s);
+					using (s.EnterCursorBookmark("Width"))			{ mRadius.SerializeCustom(model, s); }
+					using (s.EnterCursorBookmark(kVar1ElementName)) { mLength.SerializeCustom(model, s); }
+					using (s.EnterCursorBookmark(kVar2ElementName)) { mTop.SerializeCustom(model, s); }
+					using (s.EnterCursorBookmark(kVar3ElementName)) { mBottom.SerializeCustom(model, s); }
 					break;
 				case MegaloScriptShapeType.None: break;
 

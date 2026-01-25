@@ -12,7 +12,7 @@ namespace KSoft.Blam.Megalo.Model
 	public sealed partial class MegaloScriptTokensValue
 		: MegaloScriptValueBase
 	{
-		public int MaxTokens { get { return ValueType.MaxTokens; } }
+		public int MaxTokens => ValueType.MaxTokens;
 
 		public MegaloScriptToken Token0 { get; private set; }
 		public MegaloScriptToken Token1 { get; private set; }
@@ -41,9 +41,9 @@ namespace KSoft.Blam.Megalo.Model
 			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Tokens);
 
 			int max_tokens = valueType.MaxTokens;
-			if (max_tokens >= 1) Token0 = model.NewToken();
-			if (max_tokens >= 2) Token1 = model.NewToken();
-			if (max_tokens >= 3) Token2 = model.NewToken();
+			if (max_tokens >= 1) { Token0 = model.NewToken(); }
+			if (max_tokens >= 2) { Token1 = model.NewToken(); }
+			if (max_tokens >= 3) { Token2 = model.NewToken(); }
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -51,9 +51,9 @@ namespace KSoft.Blam.Megalo.Model
 			var result = (MegaloScriptTokensValue)model.CreateValue(ValueType);
 			result.StringIndex = StringIndex;
 			result.TokenCount = TokenCount;
-			if (TokenCount >= 1) result.Token0.CopyFrom(Token0);
-			if (TokenCount >= 2) result.Token1.CopyFrom(Token1);
-			if (TokenCount >= 3) result.Token2.CopyFrom(Token2);
+			if (TokenCount >= 1) { result.Token0.CopyFrom(Token0); }
+			if (TokenCount >= 2) { result.Token1.CopyFrom(Token1); }
+			if (TokenCount >= 3) { result.Token2.CopyFrom(Token2); }
 
 			return result;
 		}
@@ -64,9 +64,9 @@ namespace KSoft.Blam.Megalo.Model
 
 			bool equals = StringIndex == obj.StringIndex && TokenCount == obj.TokenCount;
 
-			if (TokenCount >= 1) equals &= Token0.Equals(obj.Token0);
-			if (TokenCount >= 2) equals &= Token0.Equals(obj.Token1);
-			if (TokenCount >= 2) equals &= Token0.Equals(obj.Token2);
+			if (TokenCount >= 1) { equals &= Token0.Equals(obj.Token0); }
+			if (TokenCount >= 2) { equals &= Token1.Equals(obj.Token1); }
+			if (TokenCount >= 3) { equals &= Token2.Equals(obj.Token2); }
 
 			return equals;
 		}
@@ -92,14 +92,14 @@ namespace KSoft.Blam.Megalo.Model
 				ValidateTokenCount();
 
 				int max_tokens = MaxTokens;
-				if (max_tokens >= 1) Token0.Nullify();
-				if (max_tokens >= 2) Token1.Nullify();
-				if (max_tokens >= 3) Token2.Nullify();
+				if (max_tokens >= 1) { Token0.Nullify(); }
+				if (max_tokens >= 2) { Token1.Nullify(); }
+				if (max_tokens >= 3) { Token2.Nullify(); }
 			}
 
-			if (TokenCount >= 1) Token0.Serialize(model, s);
-			if (TokenCount >= 2) Token1.Serialize(model, s);
-			if (TokenCount >= 3) Token2.Serialize(model, s);
+			if (TokenCount >= 1) { Token0.Serialize(model, s); }
+			if (TokenCount >= 2) { Token1.Serialize(model, s); }
+			if (TokenCount >= 3) { Token2.Serialize(model, s); }
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -111,21 +111,23 @@ namespace KSoft.Blam.Megalo.Model
 
 			if (!s.StreamAttributeOpt("tokenCount", ref mTokenCount, Predicates.IsNotZero) &&
 				reading)
+			{
 				TokenCount = 0;
+			}
 
 			if (reading)
 			{
 				ValidateTokenCount();
 
 				int max_tokens = MaxTokens;
-				if (max_tokens >= 1) Token0.Nullify();
-				if (max_tokens >= 2) Token1.Nullify();
-				if (max_tokens >= 3) Token2.Nullify();
+				if (max_tokens >= 1) { Token0.Nullify(); }
+				if (max_tokens >= 2) { Token1.Nullify(); }
+				if (max_tokens >= 3) { Token2.Nullify(); }
 			}
 
-			if (TokenCount >= 1) using (s.EnterCursorBookmark("Token0")) Token0.Serialize(model, s);
-			if (TokenCount >= 2) using (s.EnterCursorBookmark("Token1")) Token1.Serialize(model, s);
-			if (TokenCount >= 3) using (s.EnterCursorBookmark("Token2")) Token2.Serialize(model, s);
+			if (TokenCount >= 1) { using (s.EnterCursorBookmark("Token0")) { Token0.Serialize(model, s); } }
+			if (TokenCount >= 2) { using (s.EnterCursorBookmark("Token1")) { Token1.Serialize(model, s); } }
+			if (TokenCount >= 3) { using (s.EnterCursorBookmark("Token2")) { Token2.Serialize(model, s); } }
 		}
 		#endregion
 	};

@@ -66,16 +66,20 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptWidgetMeterParametersValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptWidgetMeterParametersValue>(other);
 
 			bool result = Type == obj.Type;
 
 			if (result)
 			{
 				if (Type == MegaloScriptWidgetMeterType.Numeric)
+				{
 					result &= Numeric1.Equals(obj.Numeric1) && Numeric2.Equals(obj.Numeric2);
+				}
 				else if (Type == MegaloScriptWidgetMeterType.Timer)
+				{
 					result &= Timer.Equals(obj.Timer);
+				}
 			}
 
 			return result;
@@ -124,7 +128,9 @@ namespace KSoft.Blam.Megalo.Model
 				mNumeric2.SerializeCustom(model, s);
 			}
 			else if (Type == MegaloScriptWidgetMeterType.Timer)
+			{
 				mTimer.SerializeTimer(model, s);
+			}
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -134,12 +140,16 @@ namespace KSoft.Blam.Megalo.Model
 
 			if (Type == MegaloScriptWidgetMeterType.Numeric)
 			{
-				using (s.EnterCursorBookmark("Value")) mNumeric1.SerializeCustom(model, s);
-				using (s.EnterCursorBookmark("MaxValue")) mNumeric2.SerializeCustom(model, s);
+				using (s.EnterCursorBookmark("Value"))		{ mNumeric1.SerializeCustom(model, s); }
+				using (s.EnterCursorBookmark("MaxValue"))	{ mNumeric2.SerializeCustom(model, s); }
 			}
 			else if (Type == MegaloScriptWidgetMeterType.Timer)
+			{
 				using (s.EnterCursorBookmark("Timer"))
+				{
 					mTimer.SerializeTimer(model, s);
+				}
+			}
 		}
 		#endregion
 	};

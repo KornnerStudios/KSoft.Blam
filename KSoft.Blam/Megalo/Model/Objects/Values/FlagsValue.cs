@@ -37,7 +37,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptFlagsValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptFlagsValue>(other);
 
 			return Value == obj.Value;
 		}

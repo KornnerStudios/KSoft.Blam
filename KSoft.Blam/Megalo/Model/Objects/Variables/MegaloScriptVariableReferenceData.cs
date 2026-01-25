@@ -10,33 +10,29 @@ namespace KSoft.Blam.Megalo.Model
 	using MegaloScriptVariableReferenceTypeBitStreamer = IO.EnumBitStreamer<MegaloScriptVariableReferenceType>;
 
 	[System.Reflection.Obfuscation(Exclude=false)]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1067:Override Equals when implementing IEquatable")]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct MegaloScriptVariableReferenceData
 		: IComparable<MegaloScriptVariableReferenceData>
 		, IEquatable<MegaloScriptVariableReferenceData>
 	{
 		#region Defaults
-		public static readonly MegaloScriptVariableReferenceData Null = new MegaloScriptVariableReferenceData
+		public static readonly MegaloScriptVariableReferenceData Null = new()
 		{ mReferenceKind = MegaloScriptVariableReferenceType.Undefined, Type = -1, DataType = -1, Data = -1 };
-		public static readonly MegaloScriptVariableReferenceData Custom = new MegaloScriptVariableReferenceData
+		public static readonly MegaloScriptVariableReferenceData Custom = new()
 		{ mReferenceKind = MegaloScriptVariableReferenceType.Custom, Type = -1, DataType = -1, Data = -1 };
-		public static readonly MegaloScriptVariableReferenceData Player = new MegaloScriptVariableReferenceData
+		public static readonly MegaloScriptVariableReferenceData Player = new()
 		{ mReferenceKind = MegaloScriptVariableReferenceType.Player, Type = -1, DataType = -1, Data = -1 };
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
-		public static readonly MegaloScriptVariableReferenceData Object = new MegaloScriptVariableReferenceData
+		public static readonly MegaloScriptVariableReferenceData Object = new()
 		{ mReferenceKind = MegaloScriptVariableReferenceType.Object, Type = -1, DataType = -1, Data = -1 };
-		public static readonly MegaloScriptVariableReferenceData Team = new MegaloScriptVariableReferenceData
+		public static readonly MegaloScriptVariableReferenceData Team = new()
 		{ mReferenceKind = MegaloScriptVariableReferenceType.Team, Type = -1, DataType = -1, Data = -1 };
-		public static readonly MegaloScriptVariableReferenceData Timer = new MegaloScriptVariableReferenceData
+		public static readonly MegaloScriptVariableReferenceData Timer = new()
 		{ mReferenceKind = MegaloScriptVariableReferenceType.Timer, Type = -1, DataType = -1, Data = -1 };
 		#endregion
 
-		public bool IsNull { get { return Type == KSoft.TypeExtensions.kNoneInt8; } }
+		public readonly bool IsNull => Type == KSoft.TypeExtensions.kNoneInt8;
 
 		MegaloScriptVariableReferenceType mReferenceKind;
-		public MegaloScriptVariableReferenceType ReferenceKind { get { return mReferenceKind; } }
+		public readonly MegaloScriptVariableReferenceType ReferenceKind => mReferenceKind;
 
 		/// <summary>Reference kind's member index. IE, the actual 'reference type'</summary>
 		public sbyte Type;
@@ -59,7 +55,7 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			result.mReferenceKind = refKind;
 
-			var protoType = model.Database.VariableRefTypes[refKind];
+			Proto.MegaloScriptProtoVariableReference protoType = model.Database.VariableRefTypes[refKind];
 			result.Type = MegaloScriptVariableReferenceData.ToMemberIndex(protoType, refMemberName);
 
 			refTypeMember = protoType.Members[result.Type];
@@ -70,7 +66,9 @@ namespace KSoft.Blam.Megalo.Model
 				result.DataType = Proto.MegaloScriptEnum.EnumNameResolvingContext.IdResolver(id_resolving_ctxt, dataTypeName);
 			}
 			else
+			{
 				result.DataType = TypeExtensions.kNone;
+			}
 
 			result.Data = TypeExtensions.kNone;
 		}
@@ -83,7 +81,7 @@ namespace KSoft.Blam.Megalo.Model
 		#region IBitStreamSerializable Members
 		void SerializeData(MegaloScriptModel model, IO.BitStream s, Proto.MegaloScriptValueType valueType)
 		{
-			var base_type = valueType.BaseType;
+			Proto.MegaloScriptValueBaseType base_type = valueType.BaseType;
 			switch (base_type)
 			{
 				case Proto.MegaloScriptValueBaseType.Int:
@@ -115,17 +113,25 @@ namespace KSoft.Blam.Megalo.Model
 					s.StreamName, model.MegaloVariant.BaseVariant.Header.Title, mReferenceKind));
 			}
 
-			var member = protoType.Members[Type];
+			Proto.MegaloScriptProtoVariableReferenceMember member = protoType.Members[Type];
 
 			if (member.HasDataType)
+			{
 				MegaloScriptEnumValue.SerializeValue(model, s, member.EnumValueType, ref DataType);
+			}
 			else
+			{
 				DataType = TypeExtensions.kNone;
+			}
 
 			if (member.HasDataValue)
+			{
 				SerializeData(model, s, member.ValueType);
+			}
 			else
+			{
 				Data = TypeExtensions.kNone;
+			}
 		}
 		#region Serialize explicit-kind
 		internal void SerializeCustom(MegaloScriptModel model, IO.BitStream s)
@@ -184,7 +190,7 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
-			var base_type = valueType.BaseType;
+			Proto.MegaloScriptValueBaseType base_type = valueType.BaseType;
 			switch (base_type)
 			{
 				case Proto.MegaloScriptValueBaseType.Int:
@@ -201,7 +207,9 @@ namespace KSoft.Blam.Megalo.Model
 							MegaloScriptModelVariableSet.IndexNameResolvingContext.NameResolver);
 					}
 					else
+					{
 						s.StreamCursor(ref Data);
+					}
 					break;
 
 				case Proto.MegaloScriptValueBaseType.Enum:
@@ -228,20 +236,30 @@ namespace KSoft.Blam.Megalo.Model
 					protoType, ToMemberIndex, FromMemberIndex);
 			}
 			else
+			{
 				s.StreamAttribute(kTypeAttributeName, ref Type);
+			}
 
-			var member = protoType.Members[Type];
+			Proto.MegaloScriptProtoVariableReferenceMember member = protoType.Members[Type];
 
 			if (member.HasDataType)
+			{
 				MegaloScriptEnumValue.SerializeValue(model, s, member.EnumValueType, ref DataType,
 					IO.TagElementNodeType.Attribute, "dataType");
+			}
 			else
+			{
 				DataType = TypeExtensions.kNone;
+			}
 
 			if (member.HasDataValue)
+			{
 				SerializeData(model, s, member.ValueType);
+			}
 			else
+			{
 				Data = TypeExtensions.kNone;
+			}
 		}
 		#region Serialize explicit-kind
 		internal void SerializeCustom<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)
@@ -291,7 +309,9 @@ namespace KSoft.Blam.Megalo.Model
 			where TCursor : class
 		{
 			if (streamRefKind)
+			{
 				s.StreamAttributeEnum("varRefKind", ref mReferenceKind);
+			}
 
 			switch (mReferenceKind)
 			{
@@ -309,34 +329,59 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region IComparable<MegaloScriptVariableReferenceData> Members
-		public int CompareTo(MegaloScriptVariableReferenceData other)
+		public readonly int CompareTo(MegaloScriptVariableReferenceData other)
 		{
 			if (mReferenceKind == other.mReferenceKind)
 			{
 				if (Type == other.Type)
 				{
 					if (DataType == other.DataType)
+					{
 						return DataType - other.DataType;
+					}
 					else
+					{
 						return Data - other.Data;
+					}
 				}
 				else
+				{
 					return Type - other.Type;
+				}
 			}
 			else
+			{
 				return (int)mReferenceKind - (int)other.mReferenceKind;
+			}
 		}
+
+		public static bool operator <(MegaloScriptVariableReferenceData left, MegaloScriptVariableReferenceData right) => left.CompareTo(right) < 0;
+		public static bool operator <=(MegaloScriptVariableReferenceData left, MegaloScriptVariableReferenceData right) => left.CompareTo(right) <= 0;
+		public static bool operator >(MegaloScriptVariableReferenceData left, MegaloScriptVariableReferenceData right) => left.CompareTo(right) > 0;
+		public static bool operator >=(MegaloScriptVariableReferenceData left, MegaloScriptVariableReferenceData right) => left.CompareTo(right) >= 0;
 		#endregion
 
 		#region IEquatable<MegaloScriptVariableReferenceData> Members
-		public bool Equals(MegaloScriptVariableReferenceData other)
+		public override readonly bool Equals(object obj)
+		{
+			if (obj is MegaloScriptVariableReferenceData other)
+			{
+				return Equals(other);
+			}
+
+			return false;
+		}
+		public readonly bool Equals(MegaloScriptVariableReferenceData other)
 		{
 			return mReferenceKind == other.mReferenceKind &&
 				Type == other.Type && DataType == other.DataType && Data == other.Data;
 		}
+
+		public static bool operator ==(MegaloScriptVariableReferenceData left, MegaloScriptVariableReferenceData right) => left.Equals(right);
+		public static bool operator !=(MegaloScriptVariableReferenceData left, MegaloScriptVariableReferenceData right) => !(left == right);
 		#endregion
 
-		public override int GetHashCode()
+		public override readonly int GetHashCode()
 		{
 			uint hc = (uint)mReferenceKind << 28;
 			hc |= (uint)(Type & 0x7F) << 21;

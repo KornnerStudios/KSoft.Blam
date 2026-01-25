@@ -27,7 +27,9 @@ namespace KSoft.Blam.Megalo.Model
 			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Index);
 
 			if (valueType.IndexTraits != Proto.MegaloScriptValueIndexTraits.Reference)
+			{
 				mValue = -1;
+			}
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -40,7 +42,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptIndexValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptIndexValue>(other);
 
 			return Value == obj.Value;
 		}
@@ -66,7 +68,9 @@ namespace KSoft.Blam.Megalo.Model
 
 			int local_value = value;
 			if (s.IsWriting && valueType.IndexTarget == Proto.MegaloScriptValueIndexTarget.Trigger)
+			{
 				model.mCompilerState.RemapTriggerReference(ref local_value);
+			}
 
 			switch (traits)
 			{
@@ -85,8 +89,10 @@ namespace KSoft.Blam.Megalo.Model
 				default: throw new KSoft.Debug.UnreachableException(traits.ToString());
 			}
 
-			if(s.IsReading)
+			if (s.IsReading)
+			{
 				value = local_value;
+			}
 		}
 		public override void Serialize(MegaloScriptModel model, IO.BitStream s)
 		{
@@ -110,10 +116,14 @@ namespace KSoft.Blam.Megalo.Model
 				Contract.Assert(model.Triggers[handle.Id].TriggerType == MegaloScriptTriggerType.InnerLoop);
 			}
 			using (s.EnterCursorBookmark("T")) // have to nest or MegaloScriptModelObjectHandle will overwrite our Param ID with the Trigger's
+			{
 				MegaloScriptModelObjectHandle.SerializeForEmbed(s, model, ref handle);
+			}
 
 			if (s.IsReading)
+			{
 				value = handle.Id;
+			}
 		}
 		internal static void SerializeValue<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s,
 			MegaloScriptValueType valueType, ref int value,

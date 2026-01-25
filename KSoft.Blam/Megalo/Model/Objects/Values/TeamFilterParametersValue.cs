@@ -58,7 +58,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptTeamFilterParametersValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptTeamFilterParametersValue>(other);
 
 			return FilterType == obj.FilterType &&
 				Player.Equals(obj.Player) && PlayerAddOrRemove.Equals(obj.PlayerAddOrRemove);
@@ -151,10 +151,10 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			s.StreamAttributeEnum("filterType", ref mFilterType);
 
-			if(FilterType == MegaloScriptPlayerFilterType.PlayerMask)
+			if (FilterType == MegaloScriptPlayerFilterType.PlayerMask)
 			{
-				using (s.EnterCursorBookmark("Player"))		mPlayer.SerializePlayer(model, s);
-				using (s.EnterCursorBookmark("AddOrRemove"))mPlayerAddOrRemove.SerializeCustom(model, s);
+				using (s.EnterCursorBookmark("Player"))		{ mPlayer.SerializePlayer(model, s); }
+				using (s.EnterCursorBookmark("AddOrRemove")){ mPlayerAddOrRemove.SerializeCustom(model, s); }
 			}
 		}
 		#endregion

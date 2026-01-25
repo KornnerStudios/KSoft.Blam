@@ -182,33 +182,33 @@ namespace KSoft.Blam.Megalo.Model
 			}
 
 			var sdb = Database.StaticDatabase;
-			switch (target)
+			return target switch
 			{
-				case Proto.MegaloScriptValueIndexTarget.Undefined:		return true;
-				case Proto.MegaloScriptValueIndexTarget.Trigger:		return index < Triggers.Count;
+				Proto.MegaloScriptValueIndexTarget.Undefined =>		true,
+				Proto.MegaloScriptValueIndexTarget.Trigger =>		index < Triggers.Count,
 				#region Static
-				case Proto.MegaloScriptValueIndexTarget.ObjectType:		return index < sdb.ObjectTypeList.Types.Count;
-				case Proto.MegaloScriptValueIndexTarget.Name:			return index < sdb.Names.Count;
-				case Proto.MegaloScriptValueIndexTarget.Sound:			return index < sdb.Sounds.Count;
-				case Proto.MegaloScriptValueIndexTarget.Incident:		return index < sdb.Incidents.Count;
-				case Proto.MegaloScriptValueIndexTarget.HudWidgetIcon:	return index < sdb.HudWidgetIcons.Count;
-				case Proto.MegaloScriptValueIndexTarget.GameEngineIcon:	return index < sdb.GameEngineIcons.Count;
-				case Proto.MegaloScriptValueIndexTarget.Medal:			return index < sdb.Medals.Count;
-				case Proto.MegaloScriptValueIndexTarget.Ordnance:		return index < sdb.OrdnanceList.Types.Count;
+				Proto.MegaloScriptValueIndexTarget.ObjectType =>	index < sdb.ObjectTypeList.Types.Count,
+				Proto.MegaloScriptValueIndexTarget.Name =>			index < sdb.Names.Count,
+				Proto.MegaloScriptValueIndexTarget.Sound =>			index < sdb.Sounds.Count,
+				Proto.MegaloScriptValueIndexTarget.Incident =>		index < sdb.Incidents.Count,
+				Proto.MegaloScriptValueIndexTarget.HudWidgetIcon =>	index < sdb.HudWidgetIcons.Count,
+				Proto.MegaloScriptValueIndexTarget.GameEngineIcon =>index < sdb.GameEngineIcons.Count,
+				Proto.MegaloScriptValueIndexTarget.Medal =>			index < sdb.Medals.Count,
+				Proto.MegaloScriptValueIndexTarget.Ordnance =>		index < sdb.OrdnanceList.Types.Count,
 				#endregion
 				#region Variant
 				// #TODO_IMPLEMENT: log when we're indexing to an unused loadout palette
-				case Proto.MegaloScriptValueIndexTarget.LoadoutPalette: return index < MegaloVariant.BaseVariant.LoadoutOptions.Palettes.Length;
-				case Proto.MegaloScriptValueIndexTarget.Option:			return index < MegaloVariant.UserDefinedOptions.Count;
-				case Proto.MegaloScriptValueIndexTarget.String:			return index < MegaloVariant.StringTable.Count;
-				case Proto.MegaloScriptValueIndexTarget.PlayerTraits:	return index < MegaloVariant.PlayerTraits.Count;
-				case Proto.MegaloScriptValueIndexTarget.Statistic:		return index < GameStatistics.Count;
-				case Proto.MegaloScriptValueIndexTarget.Widget:			return index < HudWidgets.Count;
-				case Proto.MegaloScriptValueIndexTarget.ObjectFilter:	return index < ObjectFilters.Count;
+				Proto.MegaloScriptValueIndexTarget.LoadoutPalette =>index < MegaloVariant.BaseVariant.LoadoutOptions.Palettes.Length,
+				Proto.MegaloScriptValueIndexTarget.Option =>		index < MegaloVariant.UserDefinedOptions.Count,
+				Proto.MegaloScriptValueIndexTarget.String =>		index < MegaloVariant.StringTable.Count,
+				Proto.MegaloScriptValueIndexTarget.PlayerTraits =>	index < MegaloVariant.PlayerTraits.Count,
+				Proto.MegaloScriptValueIndexTarget.Statistic =>		index < GameStatistics.Count,
+				Proto.MegaloScriptValueIndexTarget.Widget =>		index < HudWidgets.Count,
+				Proto.MegaloScriptValueIndexTarget.ObjectFilter =>	index < ObjectFilters.Count,
 				#endregion
-			}
 
-			return false;
+				_ => false,
+			};
 		}
 		#endregion
 
@@ -228,22 +228,22 @@ namespace KSoft.Blam.Megalo.Model
 				return TypeExtensions.kNone;
 			}
 
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
 			int id = TypeExtensionsBlam.IndexOfByPropertyNotFoundResult;
-			switch (target)
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
+			id = target switch
 			{
-				case Proto.MegaloScriptValueIndexTarget.Trigger:			id = FindNameIndex(Triggers, name); break;
+				Proto.MegaloScriptValueIndexTarget.Trigger =>			FindNameIndex(Triggers, name),
 
-				case Proto.MegaloScriptValueIndexTarget.Option:				id = FindNameIndex(MegaloVariant.UserDefinedOptions, name); break;
-				case Proto.MegaloScriptValueIndexTarget.String:				id = MegaloVariant.StringTable.FindNameIndex(name);  break;
-				case Proto.MegaloScriptValueIndexTarget.PlayerTraits:		id = FindNameIndex(MegaloVariant.PlayerTraits, name); break;
-				case Proto.MegaloScriptValueIndexTarget.Statistic:			id = FindNameIndex(GameStatistics, name); break;
-				case Proto.MegaloScriptValueIndexTarget.Widget:				id = FindNameIndex(HudWidgets, name); break;
-				case Proto.MegaloScriptValueIndexTarget.ObjectFilter:		id = FindNameIndex(ObjectFilters, name);  break;
-				case Proto.MegaloScriptValueIndexTarget.GameObjectFilter:	id = FindNameIndex(CandySpawnerFilters, name); break;
-
-				default: id = Database.StaticDatabase.FromIndexName(target, name); break;
-			}
-
+				Proto.MegaloScriptValueIndexTarget.Option =>			FindNameIndex(MegaloVariant.UserDefinedOptions, name),
+				Proto.MegaloScriptValueIndexTarget.String =>			MegaloVariant.StringTable.FindNameIndex(name),
+				Proto.MegaloScriptValueIndexTarget.PlayerTraits =>		FindNameIndex(MegaloVariant.PlayerTraits, name),
+				Proto.MegaloScriptValueIndexTarget.Statistic =>			FindNameIndex(GameStatistics, name),
+				Proto.MegaloScriptValueIndexTarget.Widget =>			FindNameIndex(HudWidgets, name),
+				Proto.MegaloScriptValueIndexTarget.ObjectFilter =>		FindNameIndex(ObjectFilters, name),
+				Proto.MegaloScriptValueIndexTarget.GameObjectFilter =>	FindNameIndex(CandySpawnerFilters, name),
+				_ => Database.StaticDatabase.FromIndexName(target, name),
+			};
 			if (id == TypeExtensionsBlam.IndexOfByPropertyNotFoundResult)
 			{
 				throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
@@ -260,22 +260,22 @@ namespace KSoft.Blam.Megalo.Model
 				return kIndexNameNone;
 			}
 
-			switch (target)
+			return target switch
 			{
-				case Proto.MegaloScriptValueIndexTarget.Trigger:			return Triggers[index].Name;
+				Proto.MegaloScriptValueIndexTarget.Trigger =>			Triggers[index].Name,
 
-				case Proto.MegaloScriptValueIndexTarget.Option:				return MegaloVariant.UserDefinedOptions[index].CodeName;
-				case Proto.MegaloScriptValueIndexTarget.String:				return MegaloVariant.StringTable[index].CodeName;
-				case Proto.MegaloScriptValueIndexTarget.PlayerTraits:		return MegaloVariant.PlayerTraits[index].CodeName;
-				case Proto.MegaloScriptValueIndexTarget.Statistic:			return GameStatistics[index].CodeName;
-				case Proto.MegaloScriptValueIndexTarget.Widget:				return HudWidgets[index].CodeName;
-				case Proto.MegaloScriptValueIndexTarget.ObjectFilter:		return ObjectFilters[index].CodeName;
-				case Proto.MegaloScriptValueIndexTarget.GameObjectFilter:	return CandySpawnerFilters[index].CodeName;
+				Proto.MegaloScriptValueIndexTarget.Option =>			MegaloVariant.UserDefinedOptions[index].CodeName,
+				Proto.MegaloScriptValueIndexTarget.String =>			MegaloVariant.StringTable[index].CodeName,
+				Proto.MegaloScriptValueIndexTarget.PlayerTraits =>		MegaloVariant.PlayerTraits[index].CodeName,
+				Proto.MegaloScriptValueIndexTarget.Statistic =>			GameStatistics[index].CodeName,
+				Proto.MegaloScriptValueIndexTarget.Widget =>			HudWidgets[index].CodeName,
+				Proto.MegaloScriptValueIndexTarget.ObjectFilter =>		ObjectFilters[index].CodeName,
+				Proto.MegaloScriptValueIndexTarget.GameObjectFilter =>	CandySpawnerFilters[index].CodeName,
 
-				default: return Database.StaticDatabase.ToIndexName(target, index);
-			}
+				_ => Database.StaticDatabase.ToIndexName(target, index),
+			};
 		}
-		internal struct IndexNameResolvingContext
+		internal readonly struct IndexNameResolvingContext
 		{
 			readonly MegaloScriptModel Model;
 			readonly Proto.MegaloScriptValueIndexTarget IndexTarget;
@@ -304,7 +304,7 @@ namespace KSoft.Blam.Megalo.Model
 			return result;
 		}
 
-		struct TriggerIndexNameResolvingContext
+		readonly struct TriggerIndexNameResolvingContext
 		{
 			readonly MegaloScriptModel Model;
 
@@ -453,10 +453,13 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			Contract.Requires(!string.IsNullOrEmpty(refMemberName));
 
-			MegaloScriptVariableReferenceData result;
-			Proto.MegaloScriptProtoVariableReferenceMember member;
 			MegaloScriptVariableReferenceData.Initialize(this,
-				out result, refKind, out member, refMemberName, dataTypeName);
+				out MegaloScriptVariableReferenceData result,
+				refKind,
+				out Proto.MegaloScriptProtoVariableReferenceMember member,
+				refMemberName, dataTypeName);
+
+			Util.MarkUnusedVariable(ref member);
 
 			result.Data = dataValue;
 
@@ -475,10 +478,11 @@ namespace KSoft.Blam.Megalo.Model
 			Contract.Requires(!string.IsNullOrEmpty(refMemberName));
 			Contract.Requires(!string.IsNullOrEmpty(enumMemberName));
 
-			MegaloScriptVariableReferenceData result;
-			Proto.MegaloScriptProtoVariableReferenceMember member;
 			MegaloScriptVariableReferenceData.Initialize(this,
-				out result, refKind, out member, refMemberName, dataTypeName);
+				out MegaloScriptVariableReferenceData result,
+				refKind,
+				out Proto.MegaloScriptProtoVariableReferenceMember member,
+				refMemberName, dataTypeName);
 
 			Contract.Assert(member.HasDataValue, "Member has no data field, let alone enum data");
 
@@ -500,10 +504,11 @@ namespace KSoft.Blam.Megalo.Model
 			Contract.Requires(!string.IsNullOrEmpty(refMemberName));
 			Contract.Requires(indexName != null);
 
-			MegaloScriptVariableReferenceData result;
-			Proto.MegaloScriptProtoVariableReferenceMember member;
 			MegaloScriptVariableReferenceData.Initialize(this,
-				out result, refKind, out member, refMemberName, dataTypeName);
+				out MegaloScriptVariableReferenceData result,
+				refKind,
+				out Proto.MegaloScriptProtoVariableReferenceMember member,
+				refMemberName, dataTypeName);
 
 			Contract.Assert(member.HasDataValue, "Member has no data field, let alone index data");
 

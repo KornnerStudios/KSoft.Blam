@@ -111,7 +111,7 @@ namespace KSoft.Blam.Megalo.Model
 			CollectionChanged.SafeNotify(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,
 				oldValue, newValue, index));
 		}
-		void NotifyItemsSwapped(int lhsValueIndex, MegaloScriptModelObjectHandle lhsValue, 
+		void NotifyItemsSwapped(int lhsValueIndex, MegaloScriptModelObjectHandle lhsValue,
 			int rhsValueIndex, MegaloScriptModelObjectHandle rhsValue)
 		{
 			CollectionChanged.SafeNotify(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move,
@@ -442,11 +442,11 @@ namespace KSoft.Blam.Megalo.Model
 
 		static readonly PropertyChangedEventArgs kHasParametersChanged =
 			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.HasParameters);
-		static readonly PropertyChangedEventArgs[] kParameterChanged = new PropertyChangedEventArgs[] {
+		static readonly PropertyChangedEventArgs[] kParameterChanged = [
 			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.HasObjectTypeIndex),
 			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.HasNumeric),
 			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.HasNumeric),
-		};
+		];
 	};
 
 	partial class MegaloScriptGameObjectFilter

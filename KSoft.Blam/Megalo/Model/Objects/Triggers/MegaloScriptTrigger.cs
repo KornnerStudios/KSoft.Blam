@@ -17,7 +17,7 @@ namespace KSoft.Blam.Megalo.Model
 		: MegaloScriptTriggerBase
 		, IMegaloScriptAccessibleObject
 	{
-		public override MegaloScriptModelObjectType ObjectType { get { return MegaloScriptModelObjectType.Trigger; } }
+		public override MegaloScriptModelObjectType ObjectType => MegaloScriptModelObjectType.Trigger;
 
 		#region ExecutionMode
 		MegaloScriptTriggerExecutionMode mExecutionMode;
@@ -88,8 +88,10 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region IBitStreamSerializable Members
-		protected virtual int kExecutionModeBitLength { get { return 3; } }
-		protected virtual int kTypeBitLength { get { return 3; } }
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles")]
+		protected virtual int kExecutionModeBitLength => 3;
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles")]
+		protected virtual int kTypeBitLength => 3;
 
 		protected void SerializeFrameUpdate(MegaloScriptModel model, IO.BitStream s)
 		{
@@ -103,7 +105,9 @@ namespace KSoft.Blam.Megalo.Model
 			s.Stream(ref mExecutionMode, kExecutionModeBitLength, MegaloScriptTriggerExecutionModeBitStreamer.Instance);
 			s.Stream(ref mTriggerType, kTypeBitLength, MegaloScriptTriggerTypeBitStreamer.Instance);
 			if (ExecutionMode == MegaloScriptTriggerExecutionMode.OnObjectFilter)
+			{
 				model.Database.StreamObjectFilterIndex(s, ref mObjectFilterIndex);
+			}
 			else if (ExecutionMode == MegaloScriptTriggerExecutionMode.OnCandySpawnerFilter)
 			{
 				s.Stream(ref mGameObjectType, 1, MegaloScriptGameObjectTypeBitStreamer.Instance);
@@ -123,16 +127,19 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
-			using (var bm = s.EnterCursorBookmarkOpt("FrameUpdate", this, obj=>obj.HasFrameUpdate)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("FrameUpdate", this, obj=>obj.HasFrameUpdate))
 			{
-				s.StreamAttribute("frequency", ref mFrameUpdateFrequency);
-				s.StreamAttribute("offset", ref mFrameUpdateOffset);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttribute("frequency", ref mFrameUpdateFrequency);
+					s.StreamAttribute("offset", ref mFrameUpdateOffset);
+				}
 			}
 
 			if (s.IsReading)
 			{
-				if (mFrameUpdateFrequency < 0) mFrameUpdateFrequency = 0;
-				if (mFrameUpdateFrequency == 0)mFrameUpdateOffset = 0;
+				if (mFrameUpdateFrequency < 0)  { mFrameUpdateFrequency = 0; }
+				if (mFrameUpdateFrequency == 0) { mFrameUpdateOffset = 0; }
 			}
 		}
 		protected void SerializeReferences<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)
@@ -140,7 +147,9 @@ namespace KSoft.Blam.Megalo.Model
 			where TCursor : class
 		{
 			using (s.EnterCursorBookmark("Elements"))
+			{
 				References.Serialize(model, s);
+			}
 		}
 		// #NOTE_BLAM: up to concrete implementations to serialize References
 		public override void Serialize<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)
@@ -151,11 +160,15 @@ namespace KSoft.Blam.Megalo.Model
 			SerializeNameOpt(s);
 
 			if (ExecutionMode == MegaloScriptTriggerExecutionMode.OnObjectFilter)
+			{
 				s.StreamAttributeIdAsString("objectFilter", ref mObjectFilterIndex, model,
 					(_model , name) => model.FromIndexName(Proto.MegaloScriptValueIndexTarget.ObjectFilter, name),
 					(_model, id) => model.ToIndexName(Proto.MegaloScriptValueIndexTarget.ObjectFilter, id));
+			}
 			else
+			{
 				ObjectFilterIndex = -1;
+			}
 
 			if (ExecutionMode == MegaloScriptTriggerExecutionMode.OnCandySpawnerFilter)
 			{	using (s.EnterCursorBookmark("GameObject"))
@@ -168,10 +181,14 @@ namespace KSoft.Blam.Megalo.Model
 				}
 			}
 			else
+			{
 				GameObjectFilterIndex = -1;
+			}
 
-			if(TriggerType == MegaloScriptTriggerType.Normal)
+			if (TriggerType == MegaloScriptTriggerType.Normal)
+			{
 				s.StreamAttributeOpt("commentOut", ref mCommentOut, Predicates.IsTrue);
+			}
 		}
 		#endregion
 

@@ -13,37 +13,37 @@ namespace KSoft.Blam.Megalo.Model
 		internal MegaloScriptValueBase NewValue(Proto.MegaloScriptValueType valueType)
 		{
 			var base_type = valueType.BaseType;
-			switch (base_type)
+			return base_type switch
 			{
-				case MegaloScriptValueBaseType.Bool:			return new MegaloScriptBoolValue(valueType);
+				MegaloScriptValueBaseType.Bool =>			new MegaloScriptBoolValue(valueType),
 
-				case MegaloScriptValueBaseType.Int:				return new MegaloScriptIntValue(valueType);
-				case MegaloScriptValueBaseType.UInt:			return new MegaloScriptUIntValue(valueType);
-				case MegaloScriptValueBaseType.Single: 			return new MegaloScriptSingleValue(valueType);
-				case MegaloScriptValueBaseType.Point3d: 		return new MegaloScriptPoint3dValue(valueType);
+				MegaloScriptValueBaseType.Int =>			new MegaloScriptIntValue(valueType),
+				MegaloScriptValueBaseType.UInt =>			new MegaloScriptUIntValue(valueType),
+				MegaloScriptValueBaseType.Single =>			new MegaloScriptSingleValue(valueType),
+				MegaloScriptValueBaseType.Point3d =>		new MegaloScriptPoint3dValue(valueType),
 
-				case MegaloScriptValueBaseType.Flags:			return new MegaloScriptFlagsValue(valueType);
-				case MegaloScriptValueBaseType.Enum:			return new MegaloScriptEnumValue(valueType);
-				case MegaloScriptValueBaseType.Index:			return new MegaloScriptIndexValue(valueType);
+				MegaloScriptValueBaseType.Flags =>			new MegaloScriptFlagsValue(valueType),
+				MegaloScriptValueBaseType.Enum =>			new MegaloScriptEnumValue(valueType),
+				MegaloScriptValueBaseType.Index =>			new MegaloScriptIndexValue(valueType),
 
-				case MegaloScriptValueBaseType.Var:				return new MegaloScriptVarIndexValue(valueType);
-				case MegaloScriptValueBaseType.VarReference:	return new MegaloScriptVarReferenceValue(valueType);
-				case MegaloScriptValueBaseType.Tokens:			return new MegaloScriptTokensValue(this, valueType);
+				MegaloScriptValueBaseType.Var =>			new MegaloScriptVarIndexValue(valueType),
+				MegaloScriptValueBaseType.VarReference =>	new MegaloScriptVarReferenceValue(valueType),
+				MegaloScriptValueBaseType.Tokens =>			new MegaloScriptTokensValue(this, valueType),
 
-				case MegaloScriptValueBaseType.VirtualTrigger:	return new MegaloScriptVirtualTriggerValue(valueType);
-				case MegaloScriptValueBaseType.Shape:			return new MegaloScriptShapeValue(valueType);
-				case MegaloScriptValueBaseType.TargetVar:		return new MegaloScriptTargetVarValue(valueType);
-				case MegaloScriptValueBaseType.TeamFilterParameters:
-																return new MegaloScriptTeamFilterParametersValue(valueType);
-				case MegaloScriptValueBaseType.NavpointIconParameters:
-																return new MegaloScriptNavpointIconParametersValue(valueType);
-				case MegaloScriptValueBaseType.WidgetMeterParameters:
-																return new MegaloScriptWidgetMeterParametersValue(valueType);
-				case MegaloScriptValueBaseType.ObjectReferenceWithPlayerVarIndex:
-																return new MegaloScriptObjectReferenceWithPlayerVarIndexValue(valueType);
+				MegaloScriptValueBaseType.VirtualTrigger =>	new MegaloScriptVirtualTriggerValue(valueType),
+				MegaloScriptValueBaseType.Shape =>			new MegaloScriptShapeValue(valueType),
+				MegaloScriptValueBaseType.TargetVar =>		new MegaloScriptTargetVarValue(valueType),
+				MegaloScriptValueBaseType.TeamFilterParameters =>
+															new MegaloScriptTeamFilterParametersValue(valueType),
+				MegaloScriptValueBaseType.NavpointIconParameters =>
+															new MegaloScriptNavpointIconParametersValue(valueType),
+				MegaloScriptValueBaseType.WidgetMeterParameters =>
+															new MegaloScriptWidgetMeterParametersValue(valueType),
+				MegaloScriptValueBaseType.ObjectReferenceWithPlayerVarIndex =>
+															new MegaloScriptObjectReferenceWithPlayerVarIndexValue(valueType),
 
-				default: throw new KSoft.Debug.UnreachableException(base_type.ToString());
-			}
+				_ => throw new KSoft.Debug.UnreachableException(base_type.ToString()),
+			};
 		}
 	};
 
@@ -76,7 +76,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptBoolValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptBoolValue>(other);
 
 			return Value == obj.Value;
 		}
@@ -124,7 +124,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptIntValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptIntValue>(other);
 
 			return Value == obj.Value;
 		}
@@ -172,7 +172,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptUIntValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptUIntValue>(other);
 
 			return Value == obj.Value;
 		}
@@ -220,7 +220,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptSingleValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptSingleValue>(other);
 
 			return Value == obj.Value;
 		}
@@ -230,7 +230,9 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			int encoding_index = ValueType.EncodingIndex;
 			if (encoding_index.IsNone())
+			{
 				s.Stream(ref mValue);
+			}
 			else
 			{
 				var encoding = model.Database.SingleEncodings[encoding_index];
@@ -293,7 +295,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptPoint3dValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptPoint3dValue>(other);
 
 			return X == obj.X && Y == obj.Y && Z == obj.Z;
 		}
@@ -346,7 +348,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptVarIndexValue)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptVarIndexValue>(other);
 
 			return Value == obj.Value;
 		}
@@ -382,7 +384,9 @@ namespace KSoft.Blam.Megalo.Model
 					MegaloScriptModelVariableSet.IndexNameResolvingContext.NameResolver);
 			}
 			else
+			{
 				s.StreamCursor(ref mValue);
+			}
 
 			if (!ValidateValue(model))
 			{

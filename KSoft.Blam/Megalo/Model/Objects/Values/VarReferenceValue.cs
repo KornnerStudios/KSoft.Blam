@@ -34,7 +34,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
-			var obj = (MegaloScriptVarReferenceValueBase)other;
+			var obj = KSoft.Debug.TypeCheck.CastReference<MegaloScriptVarReferenceValueBase>(other);
 
 			return Var.Equals(obj.Var);
 		}
@@ -128,7 +128,7 @@ namespace KSoft.Blam.Megalo.Model
 		protected override bool ValueEquals(MegaloScriptValueBase other)
 		{
 			return base.ValueEquals(other) &&
-				PlayerVarIndex == ((MegaloScriptObjectReferenceWithPlayerVarIndexValue)other).PlayerVarIndex;
+				PlayerVarIndex == (KSoft.Debug.TypeCheck.CastReference<MegaloScriptObjectReferenceWithPlayerVarIndexValue>(other)).PlayerVarIndex;
 		}
 
 		#region IBitStreamSerializable Members
@@ -143,8 +143,10 @@ namespace KSoft.Blam.Megalo.Model
 		#region ITagElementStringNameStreamable Members
 		protected override void SerializeValue<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			using(s.EnterCursorBookmark("Object"))
+			using (s.EnterCursorBookmark("Object"))
+			{
 				base.SerializeValue(model, s);
+			}
 
 			model.Database.ObjectReferenceWithPlayerVarIndex.StreamPlayerVarIndex(s, ref mPlayerVarIndex,
 				Var.Type, model);
