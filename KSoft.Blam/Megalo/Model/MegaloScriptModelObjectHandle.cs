@@ -17,7 +17,8 @@ namespace KSoft.Blam.Megalo.Model
 	[System.Diagnostics.DebuggerDisplay("ID = {Id}, Type = {Type}")]
 	[Interop.StructLayout(Interop.LayoutKind.Explicit, Size = MegaloScriptModelObjectHandle.kSizeOf)]
 	public struct MegaloScriptModelObjectHandle
-		: System.Collections.IComparer, IComparer<MegaloScriptModelObjectHandle>
+		: System.Collections.IComparer, IComparer<MegaloScriptModelObjectHandle> // #REMOVE_BLAM
+		, IComparable<MegaloScriptModelObjectHandle>, IComparable
 		, IEquatable<MegaloScriptModelObjectHandle>
 	{
 		#region Constants
@@ -96,6 +97,36 @@ namespace KSoft.Blam.Megalo.Model
 		public int Compare(MegaloScriptModelObjectHandle x, MegaloScriptModelObjectHandle y)
 		{
 			return (int)(x.mHandle - y.mHandle);
+		}
+		#endregion
+
+		#region IComparable<MegaloScriptModelObjectHandle> Members
+		/// <summary>See <see cref="IComparable{T}.CompareTo"/></summary>
+		/// <param name="other"></param>
+		/// <returns></returns>
+		public readonly int CompareTo(MegaloScriptModelObjectHandle other) => MegaloScriptModelObjectHandle.StaticCompare(this, other);
+		/// <summary>See <see cref="IComparable{T}.CompareTo"/></summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		readonly int IComparable.CompareTo(object obj)
+		{
+			KSoft.Debug.TypeCheck.CastValue(obj, out MegaloScriptModelObjectHandle _obj);
+
+			return MegaloScriptModelObjectHandle.StaticCompare(this, _obj);
+		}
+
+		static int StaticCompare(MegaloScriptModelObjectHandle lhs, MegaloScriptModelObjectHandle rhs)
+		{
+			// #TODO figure out a a utility to do this generically for bit-encoded handles that can run
+			// in the internal Constants class.
+			Contract.Assert(MegaloScriptModelObjectHandle.BitCount < Bits.kInt32BitCount,
+				"Handle bits needs to be <= 31 (ie, sans sign bit) in order for this implementation of CompareTo to reasonably work");
+
+			int lhs_data = (int)lhs.mHandle;
+			int rhs_data = (int)rhs.mHandle;
+			int result = lhs_data - rhs_data;
+
+			return result;
 		}
 		#endregion
 
