@@ -33,7 +33,7 @@ namespace KSoft.Blam.Megalo.Proto
 			mErrorWriter = errorWriter;
 		}
 
-		void WriteError(string format, params object[] args)
+		readonly void WriteError(string format, params object[] args)
 		{
 			Debug.Trace.MegaloProto.TraceInformation(format, args);
 
@@ -44,15 +44,21 @@ namespace KSoft.Blam.Megalo.Proto
 			}
 		}
 
-		void ParamVisited(MegaloScriptProtoParam param)
+		readonly void ParamVisited(MegaloScriptProtoParam param)
 		{
 			int sig_id = param.SigId;
 			if (sig_id >= ParamsBySigId.Length)
+			{
 				WriteError("Param {0}-{1} has an invalid SigID", sig_id.ToString(Util.InvariantCultureInfo), param.Name);
+			}
 			else if (ParamsBySigId[sig_id] == null)
+			{
 				ParamsBySigId[sig_id] = param;
+			}
 			else
+			{
 				WriteError("SigID {0} already in use by {1}", sig_id.ToString(Util.InvariantCultureInfo), ParamsBySigId[sig_id].Name);
+			}
 		}
 
 		void PostprocessParameters(IEnumerable<MegaloScriptProtoParam> parameters,
@@ -63,15 +69,19 @@ namespace KSoft.Blam.Megalo.Proto
 
 			ParamSigIdsMatchIndex = true;
 			int idx = 0;
-			foreach (var param in parameters)
+			foreach (MegaloScriptProtoParam param in parameters)
 			{
 				ParamVisited(param);
 
 				if (param.Type.BaseType == MegaloScriptValueBaseType.VirtualTrigger)
+				{
 					containsVirtualTriggerParam = true;
+				}
 				else if (param.Type.BaseType == MegaloScriptValueBaseType.Index &&
 					param.Type.IndexTarget == MegaloScriptValueIndexTarget.ObjectType)
+				{
 					containsObjectTypeParam = true;
+				}
 
 				ParamSigIdsMatchIndex &= param.SigId == idx++;
 			}
@@ -83,22 +93,28 @@ namespace KSoft.Blam.Megalo.Proto
 			mErrorPrefix = string.Format(Util.InvariantCultureInfo,
 				"{2} {0}/{1} ", obj.DBID.ToString(Util.InvariantCultureInfo), obj.Name, typeName);
 
-			bool contains_object_type_param;
 			PostprocessParameters(obj.ParameterList, out containsVirtualTriggerParam,
-				out contains_object_type_param);
+				out bool contains_object_type_param);
 
 			for (int x = 0; x < ParamsBySigId.Length; x++)
+			{
 				if (ParamsBySigId[x] == null)
+				{
 					WriteError("SigID {0} is undefined", x.ToString(Util.InvariantCultureInfo));
+				}
+			}
 
 			if (contains_object_type_param)
+			{
 				obj.ContainsObjectTypeParameter = contains_object_type_param;
+			}
 
-			var obj_with_params = obj as MegaloScriptProtoObjectWithParams;
-			if (obj_with_params != null)
+			if (obj is MegaloScriptProtoObjectWithParams obj_with_params)
 			{
 				if (!ParamSigIdsMatchIndex)
+				{
 					obj_with_params.SetParamsBySigId(new List<MegaloScriptProtoParam>(ParamsBySigId));
+				}
 			}
 		}
 		public void Postprocess()
@@ -106,12 +122,20 @@ namespace KSoft.Blam.Megalo.Proto
 			bool contains_virtual_trigger_param;
 			if (mAction != null)
 			{
-				if (mAction is MegaloScriptProtoAction)
-					((MegaloScriptProtoAction)mAction).InitializeParameterList();
+				if (mAction is MegaloScriptProtoAction protoAction)
+				{
+					protoAction.InitializeParameterList();
+				}
+				else
+				{
+					protoAction = null;
+				}
 
 				PostprocessObjectWithParams(mAction, "Action", out contains_virtual_trigger_param);
-				if (contains_virtual_trigger_param && mAction is IMegaloScriptProtoAction)
-					((MegaloScriptProtoAction)mAction).ContainsVirtualTriggerParameter = contains_virtual_trigger_param;
+				if (contains_virtual_trigger_param && protoAction != null)
+				{
+					protoAction.ContainsVirtualTriggerParameter = contains_virtual_trigger_param;
+				}
 			}
 			else if (mCond != null)
 			{

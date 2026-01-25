@@ -59,10 +59,15 @@ namespace KSoft.Blam.Megalo.Proto
 			where TDoc : class
 			where TCursor : class
 		{
-			using (s.EnterCursorBookmark("types")) s.StreamableElements("entry", Types,
+			using (s.EnterCursorBookmark("types"))
+			{
+				s.StreamableElements("entry", Types,
 					GameGlobalsOrdnance.kAttributeKeyName, GameGlobalsOrdnance.SerializeTypeName);
+			}
 			using (s.EnterCursorBookmark("sets"))
+			{
 				s.StreamableElements("entry", Sets);
+			}
 
 			if (s.IsReading)
 			{
@@ -70,7 +75,10 @@ namespace KSoft.Blam.Megalo.Proto
 				LookupSet = new Dictionary<string, GameGlobalsOrdnanceSetEntry>(Sets.Count);
 
 				foreach (var kv in Types)
+				{
 					LookupType.Add(kv.Value.LookupName, kv.Value);
+				}
+
 				Sets.ForEach(set => LookupSet.Add(set.LookupName, set));
 			}
 		}

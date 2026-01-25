@@ -26,10 +26,9 @@ namespace KSoft.Blam.RuntimeData
 		, IO.ITagElementStringNameStreamable
 	{
 		const int kStringLength = 128;
-		static readonly Memory.Strings.StringStorage kStringStorage = new Memory.Strings.StringStorage(
+		static readonly Memory.Strings.StringStorage kStringStorage = new(
 			Memory.Strings.StringStorageWidthType.Unicode, Memory.Strings.StringStorageType.CString, Shell.EndianFormat.Big, kStringLength);
-		static readonly Text.StringStorageEncoding kStringEncoding = new Text.StringStorageEncoding(
-			kStringStorage);
+		static readonly Text.StringStorageEncoding kStringEncoding = new(kStringStorage);
 
 		public Engine.EngineBuildHandle GameBuild { get; private set; }
 
@@ -73,10 +72,14 @@ namespace KSoft.Blam.RuntimeData
 		internal static ContentHeader Create(Engine.EngineBuildHandle gameBuild)
 		{
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+			{
 				return new Games.HaloReach.RuntimeData.ContentHeaderHaloReach(gameBuild);
+			}
 
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+			{
 				return new Games.Halo4.RuntimeData.ContentHeaderHalo4(gameBuild);
+			}
 
 			throw new KSoft.Debug.UnreachableException(gameBuild.ToDisplayString());
 		}
@@ -104,12 +107,18 @@ namespace KSoft.Blam.RuntimeData
 			s.Stream(ref Description, Memory.Strings.StringStorage.CStringUnicodeBigEndian, maxLength: kStringLength-1);
 
 			if (Type == ContentType.Film || Type == ContentType.FilmClip)
+			{
 				s.Stream(ref unk280);
+			}
 			else if (Type == ContentType.GameVariant)
+			{
 				s.Stream(ref unk280, 8, signExtend:true);
+			}
 
 			if (Activity == 2)
+			{
 				s.Stream(ref HopperId);
+			}
 
 			SerializeGameSpecificData(s);
 		}
@@ -142,7 +151,9 @@ namespace KSoft.Blam.RuntimeData
 			s.Stream(ref Description, kStringEncoding);
 
 			if (Type == ContentType.Film || Type == ContentType.FilmClip)
+			{
 				s.Stream(ref unk280);
+			}
 			else if (Type == ContentType.GameVariant)
 			{
 				s.StreamMethods(this,
@@ -151,7 +162,10 @@ namespace KSoft.Blam.RuntimeData
 				s.Pad24();
 			}
 			else
+			{
 				s.Pad32();
+			}
+
 			s.Pad32(); s.Pad64();
 
 			s.Stream(ref HopperId); s.Pad16();
@@ -191,22 +205,36 @@ namespace KSoft.Blam.RuntimeData
 			}
 
 			using (s.EnterCursorBookmark("Creator"))
+			{
 				s.StreamObject(Creator);
+			}
+
 			using (s.EnterCursorBookmark("Modifier"))
+			{
 				s.StreamObject(Modifier);
+			}
 
 			s.StreamElement("Title", ref Title);
 			s.StreamElementOpt("Description", ref Description, Predicates.IsNotNullOrEmpty);
 
 			if (Type == ContentType.Film || Type == ContentType.FilmClip)
+			{
 				s.StreamElement("FilmLength_", ref unk280);
+			}
 			else if (Type == ContentType.GameVariant)
+			{
 				if (!s.StreamElementOpt("EngineIconIndex", ref unk280, Predicates.IsNotNone))
+				{
 					EngineIconIndex = TypeExtensions.kNone;
+				}
+			}
+
 			s.StreamAttributeOpt("EngineCategoryIndex", ref EngineCategoryIndex, Predicates.IsNotNone);
 
 			if (Activity == 2)
+			{
 				s.StreamElement("HopperID", ref HopperId);
+			}
 
 			SerializeGameSpecificData(s);
 		}

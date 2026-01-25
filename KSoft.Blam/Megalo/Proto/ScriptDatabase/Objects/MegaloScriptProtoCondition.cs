@@ -6,12 +6,7 @@ namespace KSoft.Blam.Megalo.Proto
 	public sealed class MegaloScriptProtoCondition
 		: MegaloScriptProtoObjectWithParams
 	{
-		public List<MegaloScriptProtoParam> Parameters { get; private set; }
-
-		public MegaloScriptProtoCondition()
-		{
-			Parameters = new List<MegaloScriptProtoParam>();
-		}
+		public List<MegaloScriptProtoParam> Parameters { get; private set; } = new();
 
 		#region ITagElementStringNameStreamable Members
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -20,15 +15,17 @@ namespace KSoft.Blam.Megalo.Proto
 
 			if (!s.StreamAttributeOpt("name", ref Name, Predicates.IsNotNullOrEmpty) &&
 				 s.IsReading)
+			{
 				Name = string.Format(Util.InvariantCultureInfo,
 					"Condition{0}", DBID.ToString(Util.InvariantCultureInfo));
+			}
 
 			s.StreamableElements("Param", Parameters);
 		}
 		#endregion
 
 		#region MegaloScriptProtoObjectWithParams Members
-		public override IReadOnlyList<MegaloScriptProtoParam> ParameterList { get { return Parameters; } }
+		public override IReadOnlyList<MegaloScriptProtoParam> ParameterList => Parameters;
 		#endregion
 
 		internal void WriteForTryToPort<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
@@ -41,8 +38,8 @@ namespace KSoft.Blam.Megalo.Proto
 				? MegaloScriptDatabase.Halo4
 				: MegaloScriptDatabase.HaloReach;
 
-			MegaloScriptProtoCondition other;
-			if (db.TryGetCondition(Name, out other) && !other.Name.StartsWith("Cond", System.StringComparison.Ordinal))
+			if (db.TryGetCondition(Name, out MegaloScriptProtoCondition other) &&
+				!other.Name.StartsWith("Cond", System.StringComparison.Ordinal))
 			{
 				s.WriteAttribute("DBID", other.DBID);
 				s.WriteAttribute("origDBID", DBID);

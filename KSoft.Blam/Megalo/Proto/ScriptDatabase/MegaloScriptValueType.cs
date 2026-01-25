@@ -16,12 +16,10 @@ namespace KSoft.Blam.Megalo.Proto
 	[System.Reflection.Obfuscation(Exclude=false)]
 	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
 	[System.Diagnostics.DebuggerDisplay("Name = {NameIndex}, Base = {BaseType}, BitLength = {BitLength}")]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct MegaloScriptValueType
 		: IComparable<MegaloScriptValueType>, IComparable
 		, IEquatable<MegaloScriptValueType>
-		, IEqualityComparer<MegaloScriptValueType>
+		, IEqualityComparer<MegaloScriptValueType> // #REMOVE_BLAM
 	{
 		#region Constants
 		static class EncoderTraitsChoice
@@ -64,15 +62,15 @@ namespace KSoft.Blam.Megalo.Proto
 		static class Constants
 		{
 			public static readonly BitFieldTraits kNameIndexBitField =
-				new BitFieldTraits(kBitCountNameIndex);
+				new(kBitCountNameIndex);
 			public static readonly BitFieldTraits kBaseTypeBitField =
-				new BitFieldTraits(BitEncoders.MegaloScriptValueBaseType.BitCountTrait, kNameIndexBitField);
+				new(BitEncoders.MegaloScriptValueBaseType.BitCountTrait, kNameIndexBitField);
 			public static readonly BitFieldTraits kBitLengthBitField =
-				new BitFieldTraits(kBitCountBitLength, kBaseTypeBitField);
+				new(kBitCountBitLength, kBaseTypeBitField);
 			public static readonly BitFieldTraits kTypeParamBitField =
-				new BitFieldTraits(EncoderTraitsChoice.TypeParam.BitCountTrait, kBitLengthBitField);
+				new(EncoderTraitsChoice.TypeParam.BitCountTrait, kBitLengthBitField);
 			public static readonly BitFieldTraits kTypeTraitsBitField =
-				new BitFieldTraits(EncoderTraitsChoice.TypeTraits.BitCountTrait, kTypeParamBitField);
+				new(EncoderTraitsChoice.TypeTraits.BitCountTrait, kTypeParamBitField);
 
 			public static readonly BitFieldTraits kLastBitField =
 				kTypeTraitsBitField;
@@ -80,13 +78,13 @@ namespace KSoft.Blam.Megalo.Proto
 
 		/// <summary>Number of bits required to represent a bit-encoded representation of this value type</summary>
 		/// <remarks>26 bits at last count</remarks>
-		public static int BitCount { get { return Constants.kLastBitField.FieldsBitCount; } }
-		public static uint Bitmask { get { return Constants.kLastBitField.FieldsBitmask.u32; } }
+		public static int BitCount => Constants.kLastBitField.FieldsBitCount;
+		public static uint Bitmask => Constants.kLastBitField.FieldsBitmask.u32;
 
 		/// <remarks>ONLY PUBLIC FOR USE IN CODE CONTRACTS</remarks>
-		[Contracts.Pure] public static bool ValidateNameIndex(int index)	{ return index >= 0 && index <= kMaxNameIndex; }
+		[Contracts.Pure] public static bool ValidateNameIndex(int index) => index >= 0 && index <= kMaxNameIndex;
 		/// <remarks>ONLY PUBLIC FOR USE IN CODE CONTRACTS</remarks>
-		[Contracts.Pure] public static bool ValidateBitLength(int length)	{ return length >= 0 && length <= kMaxBitLength; }
+		[Contracts.Pure] public static bool ValidateBitLength(int length) => length >= 0 && length <= kMaxBitLength;
 		#endregion
 
 		#region Internal Value
@@ -170,89 +168,91 @@ namespace KSoft.Blam.Megalo.Proto
 		#endregion
 
 		#region Value properties
-		public int NameIndex						{ get { return (int)Bits.BitDecode(mHandle, Constants.kNameIndexBitField); } }
-		public MegaloScriptValueBaseType BaseType	{ get { return BitEncoders.MegaloScriptValueBaseType.BitDecode(mHandle, Constants.kBaseTypeBitField.BitIndex); } }
-		public int BitLength						{ get { return (int)Bits.BitDecode(mHandle, Constants.kBitLengthBitField); } }
-		public uint TypeParam						{ get { return Bits.BitDecode(mHandle, Constants.kTypeParamBitField); } }
-		public uint TypeTraits						{ get { return Bits.BitDecode(mHandle, Constants.kTypeTraitsBitField); } }
+		public readonly int NameIndex =>		(int)Bits.BitDecode(mHandle, Constants.kNameIndexBitField);
+		public readonly MegaloScriptValueBaseType BaseType => BitEncoders.MegaloScriptValueBaseType.BitDecode(mHandle, Constants.kBaseTypeBitField.BitIndex);
+		public readonly int BitLength =>		(int)Bits.BitDecode(mHandle, Constants.kBitLengthBitField);
+		public readonly uint TypeParam =>		Bits.BitDecode(mHandle, Constants.kTypeParamBitField);
+		public readonly uint TypeTraits =>		Bits.BitDecode(mHandle, Constants.kTypeTraitsBitField);
 
 		#region Type Parameter/Traits interfaces
 		/// <summary><see cref="MegaloScriptValueBaseType.Single"/></summary>
-		public int EncodingIndex						{ get { return (int)TypeParam - 1; } }
+		public readonly int EncodingIndex =>	(int)TypeParam - 1;
 
 		/// <summary><see cref="MegaloScriptValueBaseType.Point3d"/></summary>
-		public bool PointIsSigned						{ get { return TypeTraits != 0; } }
+		public readonly bool PointIsSigned =>	TypeTraits != 0;
 
 		#region MegaloScriptValueBaseType.Enum and Flags
 		/// <summary><see cref="MegaloScriptValueBaseType.Enum"/> and <see cref="MegaloScriptValueBaseType.Flags"/></summary>
-		public int EnumIndex							{ get { return (int)TypeParam; } }
+		public readonly int EnumIndex =>							(int)TypeParam;
 		/// <summary><see cref="MegaloScriptValueBaseType.Enum"/> and <see cref="MegaloScriptValueBaseType.Flags"/></summary>
-		public MegaloScriptValueEnumTraits EnumTraits	{ get { return BitEncoders.MegaloScriptValueEnumTraits.BitDecode(mHandle, Constants.kTypeTraitsBitField.BitIndex); } }
+		public readonly MegaloScriptValueEnumTraits EnumTraits =>	BitEncoders.MegaloScriptValueEnumTraits.BitDecode(mHandle, Constants.kTypeTraitsBitField.BitIndex);
 		#endregion
 		#region MegaloScriptValueBaseType.Index
 		/// <summary><see cref="MegaloScriptValueBaseType.Index"/></summary>
-		public MegaloScriptValueIndexTarget IndexTarget { get { return BitEncoders.MegaloScriptValueIndexTarget.BitDecode(mHandle, Constants.kTypeParamBitField.BitIndex); } }
+		public readonly MegaloScriptValueIndexTarget IndexTarget => BitEncoders.MegaloScriptValueIndexTarget.BitDecode(mHandle, Constants.kTypeParamBitField.BitIndex);
 		/// <summary><see cref="MegaloScriptValueBaseType.Index"/></summary>
-		public MegaloScriptValueIndexTraits IndexTraits	{ get { return BitEncoders.MegaloScriptValueIndexTraits.BitDecode(mHandle, Constants.kTypeTraitsBitField.BitIndex); } }
+		public readonly MegaloScriptValueIndexTraits IndexTraits => BitEncoders.MegaloScriptValueIndexTraits.BitDecode(mHandle, Constants.kTypeTraitsBitField.BitIndex);
 		#endregion
 		#region MegaloScriptValueBaseType.Var
 		/// <summary><see cref="MegaloScriptValueBaseType.Var"/></summary>
-		public MegaloScriptVariableType VarType			{ get { return BitEncoders.MegaloScriptVariableType.BitDecode(mHandle, Constants.kTypeParamBitField.BitIndex); } }
+		public readonly MegaloScriptVariableType VarType =>	BitEncoders.MegaloScriptVariableType.BitDecode(mHandle, Constants.kTypeParamBitField.BitIndex);
 		/// <summary><see cref="MegaloScriptValueBaseType.Var"/></summary>
-		public MegaloScriptVariableSet VarSet			{ get { return BitEncoders.MegaloScriptVariableSet.BitDecode(mHandle, Constants.kTypeTraitsBitField.BitIndex); } }
+		public readonly MegaloScriptVariableSet VarSet =>	BitEncoders.MegaloScriptVariableSet.BitDecode(mHandle, Constants.kTypeTraitsBitField.BitIndex);
 		#endregion
 
 		/// <summary><see cref="MegaloScriptValueBaseType.VarReference"/></summary>
-		public MegaloScriptVarReferenceType VarReference{ get { return BitEncoders.MegaloScriptVarReferenceType.BitDecode(mHandle, Constants.kTypeParamBitField.BitIndex); } }
+		public readonly MegaloScriptVarReferenceType VarReference => BitEncoders.MegaloScriptVarReferenceType.BitDecode(mHandle, Constants.kTypeParamBitField.BitIndex);
 
 		/// <summary><see cref="MegaloScriptValueBaseType.Tokens"/></summary>
-		public int MaxTokens							{ get { return (int)TypeParam; } }
+		public readonly int MaxTokens =>		(int)TypeParam;
 		#endregion
 		#endregion
 
 		#region Overrides
-		public override bool Equals(object obj)
+		public override readonly bool Equals(object obj)
 		{
-			if (obj is MegaloScriptValueType)
-				return this.mHandle == ((MegaloScriptValueType)obj).mHandle;
+			if (obj is MegaloScriptValueType objValueType)
+			{
+				return this.mHandle == objValueType.mHandle;
+			}
 
 			return false;
 		}
-		public override int GetHashCode() { return (int)mHandle; }
+		public override readonly int GetHashCode() => (int)mHandle;
 		#endregion
 
 		#region Operators
 		[Contracts.Pure]
-		public static bool operator ==(MegaloScriptValueType lhs, MegaloScriptValueType rhs)	{ return lhs.mHandle == rhs.mHandle; }
+		public static bool operator ==(MegaloScriptValueType lhs, MegaloScriptValueType rhs) => lhs.mHandle == rhs.mHandle;
 		[Contracts.Pure]
-		public static bool operator !=(MegaloScriptValueType lhs, MegaloScriptValueType rhs)	{ return lhs.mHandle != rhs.mHandle; }
+		public static bool operator !=(MegaloScriptValueType lhs, MegaloScriptValueType rhs) => lhs.mHandle != rhs.mHandle;
 		#endregion
 
 		#region IComparable<MegaloScriptValueType> Members
 		/// <summary>See <see cref="IComparable{T}.CompareTo"/></summary>
 		/// <param name="other"></param>
 		/// <returns></returns>
-		public int CompareTo(MegaloScriptValueType other)
+		public readonly int CompareTo(MegaloScriptValueType other)
 		{
 			return MegaloScriptValueType.StaticCompare(this, other);
 		}
 		/// <summary>See <see cref="IComparable{T}.CompareTo"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		int IComparable.CompareTo(object obj)
+		readonly int IComparable.CompareTo(object obj)
 		{
-			MegaloScriptValueType _obj; KSoft.Debug.TypeCheck.CastValue(obj, out _obj);
+			KSoft.Debug.TypeCheck.CastValue(obj, out MegaloScriptValueType _obj);
 
 			return MegaloScriptValueType.StaticCompare(this, _obj);
 		}
 		#endregion
 
 		#region Equality Members
-		public bool Equals(MegaloScriptValueType x, MegaloScriptValueType y) { return x.mHandle == y.mHandle; }
+		public readonly bool Equals(MegaloScriptValueType x, MegaloScriptValueType y) => x.mHandle == y.mHandle;
 
-		public bool Equals(MegaloScriptValueType other) { return Equals(this, other); }
+		public readonly bool Equals(MegaloScriptValueType other) => Equals(this, other);
 
-		public int GetHashCode(MegaloScriptValueType obj) { return obj.GetHashCode(); }
+		public readonly int GetHashCode(MegaloScriptValueType obj) => obj.GetHashCode();
 		#endregion
 
 		#region Util

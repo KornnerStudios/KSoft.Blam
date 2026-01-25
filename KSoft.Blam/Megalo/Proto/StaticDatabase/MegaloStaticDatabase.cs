@@ -26,7 +26,7 @@ namespace KSoft.Blam.Megalo.Proto
 		public List<MegaloEngineSound> Sounds { get; private set; }
 		public List<MegaloEngineStringId> Names { get; private set; }
 
-		public bool MultiplayerEffectsAreAvailable { get { return MultiplayerEffects.Count > 0; } }
+		public bool MultiplayerEffectsAreAvailable => MultiplayerEffects.Count > 0;
 
 		internal MegaloStaticDatabase(Engine.EngineBuildHandle forBuild, EngineLimits limits)
 		{
@@ -49,44 +49,43 @@ namespace KSoft.Blam.Megalo.Proto
 		#region Index Name resolving
 		static int FindNameIndex<T>(IList<T> list, string name)
 			where T : IMegaloStaticDataNamedObject
-		{
-			return list.IndexOfByProperty(name,
+			=> list.IndexOfByProperty(name,
 				x => x.Name);
-		}
 		internal string ToIndexName(MegaloScriptValueIndexTarget target, int index)
 		{
-			switch (target)
+			return target switch
 			{
-				case MegaloScriptValueIndexTarget.ObjectType:		return ObjectTypeList.Types[index].Name;
-				case MegaloScriptValueIndexTarget.Name:				return Names[index].Name;
-				case MegaloScriptValueIndexTarget.Sound:			return Sounds[index].Name;
-				case MegaloScriptValueIndexTarget.Incident:			return Incidents[index].Name;
-				case MegaloScriptValueIndexTarget.HudWidgetIcon:	return HudWidgetIcons[index].Name;
-				case MegaloScriptValueIndexTarget.GameEngineIcon:	return GameEngineIcons[index].Name;
-				case MegaloScriptValueIndexTarget.Medal:			return Medals[index].Name;
-				case MegaloScriptValueIndexTarget.Ordnance:			return OrdnanceList.Sets[index].Name;
+				MegaloScriptValueIndexTarget.ObjectType =>		ObjectTypeList.Types[index].Name,
+				MegaloScriptValueIndexTarget.Name =>			Names[index].Name,
+				MegaloScriptValueIndexTarget.Sound =>			Sounds[index].Name,
+				MegaloScriptValueIndexTarget.Incident =>		Incidents[index].Name,
+				MegaloScriptValueIndexTarget.HudWidgetIcon =>	HudWidgetIcons[index].Name,
+				MegaloScriptValueIndexTarget.GameEngineIcon =>	GameEngineIcons[index].Name,
+				MegaloScriptValueIndexTarget.Medal =>			Medals[index].Name,
+				MegaloScriptValueIndexTarget.Ordnance =>		OrdnanceList.Sets[index].Name,
 
-				default: throw new KSoft.Debug.UnreachableException(target.ToString());
-			}
+				_ => throw new KSoft.Debug.UnreachableException(target.ToString()),
+			};
 		}
 		internal int FromIndexName(MegaloScriptValueIndexTarget target, string name)
 		{
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
 			int id = TypeExtensionsBlam.IndexOfByPropertyNotFoundResult;
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
 
-			switch (target)
+			id = target switch
 			{
-				case MegaloScriptValueIndexTarget.ObjectType:		id = FindNameIndex(ObjectTypeList.Types, name); break;
-				case MegaloScriptValueIndexTarget.Name:				id = FindNameIndex(Names, name); break;
-				case MegaloScriptValueIndexTarget.Sound:			id = FindNameIndex(Sounds, name); break;
-				case MegaloScriptValueIndexTarget.Incident:			id = FindNameIndex(Incidents, name); break;
-				case MegaloScriptValueIndexTarget.HudWidgetIcon:	id = FindNameIndex(HudWidgetIcons, name); break;
-				case MegaloScriptValueIndexTarget.GameEngineIcon:	id = FindNameIndex(GameEngineIcons, name); break;
-				case MegaloScriptValueIndexTarget.Medal:			id = FindNameIndex(Medals, name); break;
-				case MegaloScriptValueIndexTarget.Ordnance:			id = FindNameIndex(OrdnanceList.Sets, name); break;
+				MegaloScriptValueIndexTarget.ObjectType =>		FindNameIndex(ObjectTypeList.Types, name),
+				MegaloScriptValueIndexTarget.Name =>			FindNameIndex(Names, name),
+				MegaloScriptValueIndexTarget.Sound =>			FindNameIndex(Sounds, name),
+				MegaloScriptValueIndexTarget.Incident =>		FindNameIndex(Incidents, name),
+				MegaloScriptValueIndexTarget.HudWidgetIcon =>	FindNameIndex(HudWidgetIcons, name),
+				MegaloScriptValueIndexTarget.GameEngineIcon =>	FindNameIndex(GameEngineIcons, name),
+				MegaloScriptValueIndexTarget.Medal =>			FindNameIndex(Medals, name),
+				MegaloScriptValueIndexTarget.Ordnance =>		FindNameIndex(OrdnanceList.Sets, name),
 
-				default: throw new KSoft.Debug.UnreachableException(target.ToString());
-			}
-
+				_ => throw new KSoft.Debug.UnreachableException(target.ToString()),
+			};
 			if (id == TypeExtensionsBlam.IndexOfByPropertyNotFoundResult)
 			{
 				throw new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
@@ -114,36 +113,58 @@ namespace KSoft.Blam.Megalo.Proto
 			where TCursor : class
 		{
 			#region MultiplayerEffects (Halo4 only)
-			using (var bm = s.EnterCursorBookmarkOpt(kGroupTagMultiplayerEffects, MultiplayerEffects, Predicates.HasItems)) if (bm.IsNotNull)
-			using (			s.EnterCursorBookmark("effects"))
-				s.StreamableElements("entry", MultiplayerEffects);
+			using (var bm = s.EnterCursorBookmarkOpt(kGroupTagMultiplayerEffects, MultiplayerEffects, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					using (	s.EnterCursorBookmark("effects"))
+					{
+						s.StreamableElements("entry", MultiplayerEffects);
+					}
+				}
+			}
 			#endregion
 
 			#region multiplayer_object_type_list
 			using (s.EnterCursorBookmark(kGroupTagMultiplayerObjectTypeList))
+			{
 				ObjectTypeList.Serialize(s);
+			}
 
 			Contract.Assert(ObjectTypeList.Types.Count <= mLimits.MultiplayerObjectTypes.MaxCount);
 			#endregion
 
 			#region custom_app_globals (Halo4 only)
-			using (var bm = s.EnterCursorBookmarkOpt(kGroupTagCustomAppGlobals, CustomApps, Predicates.HasItems)) if (bm.IsNotNull)
-			using (			s.EnterCursorBookmark("apps"))
-				s.StreamableElements("entry", CustomApps);
+			using (var bm = s.EnterCursorBookmarkOpt(kGroupTagCustomAppGlobals, CustomApps, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					using (	s.EnterCursorBookmark("apps"))
+					{
+						s.StreamableElements("entry", CustomApps);
+					}
+				}
+			}
 			#endregion
 
 			#region game_globals_ordnance_list (Halo4 only)
-			using (var bm = s.EnterCursorBookmarkOpt(kGroupTagGameGlobalsOrdnanceList, OrdnanceList, obj=>!obj.IsAvailable)) if (bm.IsNotNull) {
-				OrdnanceList.Serialize(s);
+			using (var bm = s.EnterCursorBookmarkOpt(kGroupTagGameGlobalsOrdnanceList, OrdnanceList, obj=>!obj.IsAvailable))
+			{
+				if (bm.IsNotNull)
+				{
+					OrdnanceList.Serialize(s);
 
-				Contract.Assert(OrdnanceList.Types.Count <= mLimits.GameOrdnanceTypes.MaxCount);
+					Contract.Assert(OrdnanceList.Types.Count <= mLimits.GameOrdnanceTypes.MaxCount);
+				}
 			}
 			#endregion
 
 			#region game_medal_globals
 			using (s.EnterCursorBookmark(kGroupTagGameMedalGlobals))
 			using (s.EnterCursorBookmark("medals"))
+			{
 				s.StreamableElements("entry", Medals);
+			}
 
 			Contract.Assert(Medals.Count <= mLimits.GameMedals.MaxCount);
 			#endregion
@@ -151,7 +172,9 @@ namespace KSoft.Blam.Megalo.Proto
 			#region incident_globals_definition
 			using (s.EnterCursorBookmark(kGroupTagIncidentGlobalsDefinition))
 			using (s.EnterCursorBookmark("incidents"))
+			{
 				s.StreamableElements("entry", Incidents);
+			}
 
 			Contract.Assert(Incidents.Count <= mLimits.GameIncidentTypes.MaxCount);
 			#endregion
@@ -162,7 +185,9 @@ namespace KSoft.Blam.Megalo.Proto
 			#region megalogamengine_sounds
 			using (s.EnterCursorBookmark(kGroupTagMegaloGamEngineSounds))
 			using (s.EnterCursorBookmark("sounds"))
+			{
 				s.StreamableElements("entry", Sounds);
+			}
 
 			Contract.Assert(Sounds.Count == mLimits.MegaloEngineSounds.MaxCount);
 			#endregion
@@ -170,7 +195,9 @@ namespace KSoft.Blam.Megalo.Proto
 			#region megalo_string_id_table
 			using (s.EnterCursorBookmark(kGroupTagMegaloStringIdTable))
 			using (s.EnterCursorBookmark("names"))
+			{
 				s.StreamableElements("entry", Names);
+			}
 
 			Contract.Assert(Names.Count <= mLimits.MegaloStringIds.MaxCount);
 			#endregion
@@ -178,7 +205,9 @@ namespace KSoft.Blam.Megalo.Proto
 			#region HudWidgetIcons
 			using (s.EnterCursorBookmark("hud_widget_icons"))
 			using (s.EnterCursorBookmark("icons"))
+			{
 				s.StreamableElements("entry", HudWidgetIcons);
+			}
 
 			Contract.Assert(HudWidgetIcons.Count <= mLimits.MegaloHudWidgetIcons.MaxCount);
 			#endregion
@@ -186,7 +215,9 @@ namespace KSoft.Blam.Megalo.Proto
 			#region GameEngineIcons
 			using (s.EnterCursorBookmark("engine_icons"))
 			using (s.EnterCursorBookmark("icons"))
+			{
 				s.StreamableElements("entry", GameEngineIcons);
+			}
 
 			Contract.Assert(GameEngineIcons.Count <= mLimits.GameEngineIcons.MaxCount);
 			#endregion
@@ -204,28 +235,28 @@ namespace KSoft.Blam.Megalo.Proto
 
 				for (int x = 0; x < Sounds.Count; x++)
 				{
-					if (Sounds[x].IsAvailable) continue;
+					if (Sounds[x].IsAvailable) { continue; }
 
 					Sounds[x].UpdateForUndefined("MEGALO_SOUND", x);
 				}
 
 				for (int x = 0; x < Incidents.Count; x++)
 				{
-					if (Incidents[x].IsAvailable) continue;
+					if (Incidents[x].IsAvailable) { continue; }
 
 					Incidents[x].UpdateForUndefined("INCIDENT", x);
 				}
 
 				for (int x = 0; x < HudWidgetIcons.Count; x++)
 				{
-					if (HudWidgetIcons[x].IsAvailable) continue;
+					if (HudWidgetIcons[x].IsAvailable) { continue; }
 
 					HudWidgetIcons[x].UpdateForUndefined("HUD_WIDGET", x);
 				}
 
 				for (int x = 0; x < GameEngineIcons.Count; x++)
 				{
-					if (GameEngineIcons[x].IsAvailable) continue;
+					if (GameEngineIcons[x].IsAvailable) { continue; }
 
 					GameEngineIcons[x].UpdateForUndefined("ENGINE_ICON", x);
 				}

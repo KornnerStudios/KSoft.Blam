@@ -14,11 +14,11 @@ namespace KSoft.Blam.RuntimeData
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
-		static readonly Text.RadixEncoding kRadixEncoding = new Text.RadixEncoding(
+		static readonly Text.RadixEncoding kRadixEncoding = new(
 			"abcdefghijklmnopqrstuvwxyz012345", Shell.EndianFormat.Big, true);
-		static readonly Memory.Strings.StringStorage kAuthorStorage = new Memory.Strings.StringStorage(Memory.Strings.StringStorageWidthType.Ascii, Memory.Strings.StringStorageType.CharArray,
+		static readonly Memory.Strings.StringStorage kAuthorStorage = new(Memory.Strings.StringStorageWidthType.Ascii, Memory.Strings.StringStorageType.CharArray,
 			fixedLength: kAuthorStorageLength);
-		static readonly Text.StringStorageEncoding kAuthorEncoding = new Text.StringStorageEncoding(kAuthorStorage);
+		static readonly Text.StringStorageEncoding kAuthorEncoding = new(kAuthorStorage);
 
 		const int kBitStreamSizeInBytes = 0x80;
 		const int kEncodedPortionLength = 0x2A; // characters
@@ -48,10 +48,14 @@ namespace KSoft.Blam.RuntimeData
 		public static ContentMiniMetadata Create(Engine.EngineBuildHandle gameBuild)
 		{
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+			{
 				return new Games.HaloReach.RuntimeData.ContentMiniMetadataHaloReach(gameBuild);
+			}
 
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+			{
 				return new Games.Halo4.RuntimeData.ContentMiniMetadataHalo4(gameBuild);
+			}
 
 			throw new KSoft.Debug.UnreachableException(gameBuild.ToDisplayString());
 		}
@@ -85,7 +89,10 @@ namespace KSoft.Blam.RuntimeData
 		{
 			var build = s.IsWriting ? BuildHandle : Engine.EngineBuildHandle.None;
 			using(s.EnterCursorBookmark("Game"))
+			{
 				Engine.EngineBuildHandle.Serialize(s, ref build);
+			}
+
 			if (s.IsReading)
 			{
 				// #TODO_BLAM: validate build handle?
@@ -150,7 +157,9 @@ namespace KSoft.Blam.RuntimeData
 
 			result.Type = (ContentMiniMetadataType)containerName[0];
 			if (!result.Type.IsValid())
+			{
 				throw new ArgumentException("Unrecognized content type: " + containerName[0]);
+			}
 
 			string encoded_porition = containerName.Substring(1);
 

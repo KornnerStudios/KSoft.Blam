@@ -38,19 +38,19 @@ namespace KSoft.Blam.Megalo.Proto
 		#endregion
 
 		#region IMegaloScriptProtoAction Members
-		int IMegaloScriptProtoObject.DBID										{ get { return TypeExtensions.kNone; } }
-		string IMegaloScriptProtoObject.Name									{ get { return Name; } }
-		IReadOnlyList<MegaloScriptProtoParam> IMegaloScriptProtoObjectWithParams.ParameterList		{ get { return Parameters; } }
-		IReadOnlyList<MegaloScriptProtoParam> IMegaloScriptProtoObjectWithParams.ParametersBySigId	{ get { throw new NotImplementedException(); } }
+		int IMegaloScriptProtoObject.DBID => TypeExtensions.kNone;
+		string IMegaloScriptProtoObject.Name => Name;
+		IReadOnlyList<MegaloScriptProtoParam> IMegaloScriptProtoObjectWithParams.ParameterList => Parameters;
+		IReadOnlyList<MegaloScriptProtoParam> IMegaloScriptProtoObjectWithParams.ParametersBySigId => throw new NotImplementedException();
 		bool IMegaloScriptProtoObjectWithParams.ContainsObjectTypeParameter
 		{
 			get { return Parameters.ContainsObjectTypeParameter; }
 			set { Parameters.ContainsObjectTypeParameter = value; }
 		}
 		MegaloScriptProtoParam IMegaloScriptProtoObjectWithParams.GetParameterBySigId(int sigId)
-		{ throw new NotImplementedException(); }
+			=> throw new NotImplementedException();
 
-		IMegaloScriptProtoAction IMegaloScriptProtoAction.Template				{ get { return Parent; } }
+		IMegaloScriptProtoAction IMegaloScriptProtoAction.Template => Parent;
 		#endregion
 	};
 }

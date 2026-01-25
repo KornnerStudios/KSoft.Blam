@@ -14,14 +14,8 @@ namespace KSoft.Blam.Megalo.Proto
 		public int SigId;
 		public MegaloScriptValueType Type;
 		public string Name;
-		public MegaloScriptParamType Kind;
-		public bool Optional;
-
-		public MegaloScriptProtoParam()
-		{
-			Kind = MegaloScriptParamType.Input;
-			Optional = false;
-		}
+		public MegaloScriptParamType Kind = MegaloScriptParamType.Input;
+		public bool Optional = false;
 
 		#region ITagElementStringNameStreamable Members
 		const string kSigIdAttributeName = "sigID";
@@ -42,8 +36,10 @@ namespace KSoft.Blam.Megalo.Proto
 			db.SerializeValueTypeReference(s, kTypeAttributeName, ref Type);
 			if (!s.StreamAttributeOpt(kNameAttirbuteName, ref Name, Predicates.IsNotNullOrEmpty) &&
 				 reading)
+			{
 				Name = string.Format(Util.InvariantCultureInfo,
 					"Param{0}", SigId.ToString(Util.InvariantCultureInfo));
+			}
 			s.StreamAttributeEnumOpt(kKindAttributeName, ref Kind);
 			s.StreamAttributeOpt("optional", ref Optional, Predicates.IsTrue);
 		}
@@ -53,13 +49,21 @@ namespace KSoft.Blam.Megalo.Proto
 			where TCursor : class
 		{
 			if ((flags & MegaloScriptModelTagElementStreamFlags.WriteParamKinds) != 0 && Kind > MegaloScriptParamType.Input)
+			{
 				s.WriteAttributeEnum(kKindAttributeName, Kind);
+			}
 			if ((flags & MegaloScriptModelTagElementStreamFlags.WriteParamSigIds) != 0 && multipleParameters)
+			{
 				s.WriteAttribute(kSigIdAttributeName, SigId);
+			}
 			if ((flags & MegaloScriptModelTagElementStreamFlags.WriteParamTypes) != 0)
+			{
 				s.WriteAttribute(kTypeAttributeName, db.ValueTypeNames[Type.NameIndex]);
+			}
 			if ((flags & MegaloScriptModelTagElementStreamFlags.WriteParamNames) != 0)
+			{
 				s.WriteAttribute(kNameAttirbuteName, Name);
+			}
 		}
 
 		internal static KeyValuePair<int, string> SigIdNamePairFromStream<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)

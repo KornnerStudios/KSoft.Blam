@@ -15,7 +15,9 @@ namespace KSoft.Blam.Megalo.Proto
 		internal void UpdateForUndefined(string suffix, int index)
 		{
 			if (index.IsNone())
+			{
 				Name = kUndefinedPrefix + "_" + suffix;
+			}
 			else
 			{
 				Name = string.Format(Util.InvariantCultureInfo,
@@ -25,7 +27,7 @@ namespace KSoft.Blam.Megalo.Proto
 		}
 
 		#region IMegaloStaticDataNamedObject Members
-		string IMegaloStaticDataNamedObject.Name	{ get { return Name; } }
+		string IMegaloStaticDataNamedObject.Name => Name;
 		#endregion
 
 		#region ITagElementStringNameStreamable Members
@@ -45,7 +47,7 @@ namespace KSoft.Blam.Megalo.Proto
 	public abstract class MegaloStaticDataNamedObjectWithAvailability
 		: MegaloStaticDataNamedObject
 	{
-		public bool IsAvailable { get { return kIsAvailable(Name); } }
+		public bool IsAvailable => kIsAvailable(Name);
 
 		#region ITagElementStringNameStreamable Members
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)

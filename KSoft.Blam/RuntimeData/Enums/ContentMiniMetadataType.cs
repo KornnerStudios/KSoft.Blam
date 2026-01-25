@@ -40,70 +40,69 @@ namespace KSoft.Blam
 		[Contracts.Pure]
 		internal static string ToEncodingPrefix(this ContentMiniMetadataType type)
 		{
-			switch (type)
+			return type switch
 			{
-				case ContentMiniMetadataType.DLC:			return ContentMiniMetadataTypeUtils.DLC;
-				case ContentMiniMetadataType.Save:			return ContentMiniMetadataTypeUtils.Save;
-				case ContentMiniMetadataType.Screenshot:	return ContentMiniMetadataTypeUtils.Screenshot;
-				case ContentMiniMetadataType.Film:			return ContentMiniMetadataTypeUtils.Film;
-				case ContentMiniMetadataType.FilmClip:		return ContentMiniMetadataTypeUtils.FilmClip;
-				case ContentMiniMetadataType.MapVariant:	return ContentMiniMetadataTypeUtils.MapVariant;
-				case ContentMiniMetadataType.GameVariant:	return ContentMiniMetadataTypeUtils.GameVariant;
-				case ContentMiniMetadataType.Unknown7:		return ContentMiniMetadataTypeUtils.Unknown7;
-				case ContentMiniMetadataType.Unknown8:		return ContentMiniMetadataTypeUtils.Unknown8;
+				ContentMiniMetadataType.DLC =>			ContentMiniMetadataTypeUtils.DLC,
+				ContentMiniMetadataType.Save =>			ContentMiniMetadataTypeUtils.Save,
+				ContentMiniMetadataType.Screenshot =>	ContentMiniMetadataTypeUtils.Screenshot,
+				ContentMiniMetadataType.Film =>			ContentMiniMetadataTypeUtils.Film,
+				ContentMiniMetadataType.FilmClip =>		ContentMiniMetadataTypeUtils.FilmClip,
+				ContentMiniMetadataType.MapVariant =>	ContentMiniMetadataTypeUtils.MapVariant,
+				ContentMiniMetadataType.GameVariant =>	ContentMiniMetadataTypeUtils.GameVariant,
+				ContentMiniMetadataType.Unknown7 =>		ContentMiniMetadataTypeUtils.Unknown7,
+				ContentMiniMetadataType.Unknown8 =>		ContentMiniMetadataTypeUtils.Unknown8,
 
-				default: throw new KSoft.Debug.UnreachableException(type.ToString());
-			}
+				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
+			};
 		}
 		[Contracts.Pure]
 		internal static bool IsValid(this ContentMiniMetadataType type)
 		{
-			switch (type)
+			return type switch
 			{
-				case ContentMiniMetadataType.DLC:
-				case ContentMiniMetadataType.Save:
-				case ContentMiniMetadataType.Screenshot:
-				case ContentMiniMetadataType.Film:
-				case ContentMiniMetadataType.FilmClip:
-				case ContentMiniMetadataType.MapVariant:
-				case ContentMiniMetadataType.GameVariant:
-				case ContentMiniMetadataType.Unknown7:
-				case ContentMiniMetadataType.Unknown8:
-					return true;
+				ContentMiniMetadataType.DLC or
+				ContentMiniMetadataType.Save or
+				ContentMiniMetadataType.Screenshot or
+				ContentMiniMetadataType.Film or
+				ContentMiniMetadataType.FilmClip or
+				ContentMiniMetadataType.MapVariant or
+				ContentMiniMetadataType.GameVariant or
+				ContentMiniMetadataType.Unknown7 or
+				ContentMiniMetadataType.Unknown8
+				=> true,
 
-				default: return false;
-			}
+				_ => false,
+			};
 		}
 		[Contracts.Pure]
 		internal static string ToFileExtension(this ContentMiniMetadataType type)
 		{
-			switch (type)
+			return type switch
 			{
-				case ContentMiniMetadataType.Save:			return "bmf";
-				case ContentMiniMetadataType.Screenshot:	return "shot";
-				case ContentMiniMetadataType.Film:			return "film";
-				case ContentMiniMetadataType.FilmClip:		return "clip";
-				case ContentMiniMetadataType.MapVariant:	return "map";
-				case ContentMiniMetadataType.GameVariant:	return "game";
+				ContentMiniMetadataType.Save =>			"bmf",
+				ContentMiniMetadataType.Screenshot =>	"shot",
+				ContentMiniMetadataType.Film =>			"film",
+				ContentMiniMetadataType.FilmClip =>		"clip",
+				ContentMiniMetadataType.MapVariant =>	"map",
+				ContentMiniMetadataType.GameVariant =>	"game",
 
-				default: return "";
-			}
+				_ => "",
+			};
 		}
 		[Contracts.Pure]
 		internal static string ToFileNameAndExtension(this ContentMiniMetadataType type)
 		{
-			switch (type)
+			return type switch
 			{
-				case ContentMiniMetadataType.Save:			return "mmiof.bmf";
-				case ContentMiniMetadataType.Screenshot:	return "screen.shot";
-				case ContentMiniMetadataType.Film:			return "feature.film";
-				case ContentMiniMetadataType.FilmClip:		return "snippit.clip";
-				case ContentMiniMetadataType.MapVariant:	return "sandbox.map";
-				case ContentMiniMetadataType.GameVariant:	return "variant";
-				case ContentMiniMetadataType.Unknown8:		return "data.cache";
-
-				default: return "";
-			}
+				ContentMiniMetadataType.Save =>			"mmiof.bmf",
+				ContentMiniMetadataType.Screenshot =>	"screen.shot",
+				ContentMiniMetadataType.Film =>			"feature.film",
+				ContentMiniMetadataType.FilmClip =>		"snippit.clip",
+				ContentMiniMetadataType.MapVariant =>	"sandbox.map",
+				ContentMiniMetadataType.GameVariant =>	"variant",
+				ContentMiniMetadataType.Unknown8 =>		"data.cache",
+				_ => "",
+			};
 		}
 	};
 }

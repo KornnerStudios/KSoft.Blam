@@ -11,18 +11,16 @@ namespace KSoft.Blam.RuntimeData
 		const ushort kDeveloperNameCode = 0xA600; // includes null terminator
 
 		const int kNameLength = 16;
-		static readonly Memory.Strings.StringStorage kNameStorage = new Memory.Strings.StringStorage(
+		static readonly Memory.Strings.StringStorage kNameStorage = new(
 			Memory.Strings.StringStorageWidthType.Ascii, Memory.Strings.StringStorageType.CString, fixedLength: kNameLength);
-		public static readonly Text.StringStorageEncoding kNameEncoding = new Text.StringStorageEncoding(
-			kNameStorage);
+		public static readonly Text.StringStorageEncoding kNameEncoding = new(kNameStorage);
 
 		public DateTime TimeStamp;
 		public ulong Xuid;
 		public string Name = "";
 		public bool IsOnlineId;
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
-		public bool Name_NeedsDevHack { get { return Name.Length == 1 && Name[0] == 0x3F; } }
+		public bool Name_NeedsDevHack => Name.Length == 1 && Name[0] == 0x3F;
 
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
@@ -30,9 +28,13 @@ namespace KSoft.Blam.RuntimeData
 			s.Stream(ref TimeStamp);
 			s.Stream(ref Xuid);
 			if (s.IsWriting && Name_NeedsDevHack)
+			{
 				s.Write(kDeveloperNameCode);
+			}
 			else
+			{
 				s.Stream(ref Name, Memory.Strings.StringStorage.CStringAscii, maxLength: kNameLength - 1);
+			}
 			s.Stream(ref IsOnlineId);
 		}
 		#endregion

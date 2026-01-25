@@ -19,16 +19,16 @@ namespace KSoft.Blam.Megalo.Proto
 		/// <summary>What we should name 'data' (instead of just presenting it as 'data')</summary>
 		public string ValueName;
 
-		public bool IsReadOnly	{ get { return (Flags & MegaloScriptProtoVariableReferenceMemberFlags.Readonly) != 0; } }
-		public bool HasDataType { get { return (Flags & MegaloScriptProtoVariableReferenceMemberFlags.HasDataType) != 0; } }
-		public bool HasDataValue{ get { return (Flags & MegaloScriptProtoVariableReferenceMemberFlags.HasDataValue) != 0; } }
+		public bool IsReadOnly =>	(Flags & MegaloScriptProtoVariableReferenceMemberFlags.Readonly) != 0;
+		public bool HasDataType =>	(Flags & MegaloScriptProtoVariableReferenceMemberFlags.HasDataType) != 0;
+		public bool HasDataValue =>	(Flags & MegaloScriptProtoVariableReferenceMemberFlags.HasDataValue) != 0;
 
 		#region ITagElementStringNameStreamable Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
 		{
-			var db = s.Owner as MegaloScriptDatabase;
+			var db = KSoft.Debug.TypeCheck.CastReference<MegaloScriptDatabase>(s.Owner);
 			bool reading = s.IsReading;
 
 			s.StreamAttributeEnum("type", ref Type);
@@ -38,7 +38,9 @@ namespace KSoft.Blam.Megalo.Proto
 			s.StreamAttributeOpt("readonly", ref read_only, Predicates.IsTrue);
 
 			if (db.SerializeValueTypeReference(s, "paramTypeEnum", ref EnumValueType, isOptional:true))
+			{
 				Flags |= MegaloScriptProtoVariableReferenceMemberFlags.HasDataType;
+			}
 
 			if (db.SerializeValueTypeReference(s, "paramValueType", ref ValueType, isOptional:true))
 			{
@@ -48,8 +50,10 @@ namespace KSoft.Blam.Megalo.Proto
 
 			if (reading)
 			{
-				if(read_only)
+				if (read_only)
+				{
 					Flags |= MegaloScriptProtoVariableReferenceMemberFlags.Readonly;
+				}
 			}
 		}
 		#endregion

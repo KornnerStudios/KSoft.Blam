@@ -22,24 +22,15 @@ namespace KSoft.Blam.Megalo.Proto
 
 		// #NOTE_BLAM: there should only ever actually be 1 or 2 entries (beta and release)
 		const int kBuildProtoFilesExpectedCapacity = 2;
-		readonly Dictionary<Engine.EngineBuildHandle, BuildProtoFiles> mBuildProtoFiles;
+		readonly Dictionary<Engine.EngineBuildHandle, BuildProtoFiles> mBuildProtoFiles
+			 = new(kBuildProtoFilesExpectedCapacity);
 
-		readonly Dictionary<string, MegaloStaticDatabase> mLoadedStaticDbs;
-		readonly Dictionary<string, MegaloScriptDatabase> mLoadedScriptDbs;
-
-		internal MegaloProtoSystem()
-		{
-			mBuildProtoFiles = new Dictionary<Engine.EngineBuildHandle, BuildProtoFiles>(kBuildProtoFilesExpectedCapacity);
-
-			mLoadedStaticDbs = new Dictionary<string, MegaloStaticDatabase>();
-			mLoadedScriptDbs = new Dictionary<string, MegaloScriptDatabase>();
-		}
+		readonly Dictionary<string, MegaloStaticDatabase> mLoadedStaticDbs = new();
+		readonly Dictionary<string, MegaloScriptDatabase> mLoadedScriptDbs = new();
 
 		public bool IsSpecificBuildSupported(Engine.EngineBuildHandle forBuild)
 		{
-			Engine.EngineBuildHandle actual_build;
-
-			return IsSpecificBuildSupported(forBuild, out actual_build);
+			return IsSpecificBuildSupported(forBuild, out Engine.EngineBuildHandle /*actual_build*/_);
 		}
 		public bool IsSpecificBuildSupported(Engine.EngineBuildHandle forBuild, out Engine.EngineBuildHandle actualBuild)
 		{
@@ -95,8 +86,8 @@ namespace KSoft.Blam.Megalo.Proto
 			Contract.Requires(getPathFunc != null);
 			Contract.Requires(loadedDbs != null);
 
-			Engine.EngineBuildHandle actual_build;
-			string path = getPathFunc(forBuild, out actual_build);
+			string path = getPathFunc(forBuild, out Engine.EngineBuildHandle actual_build);
+#pragma warning disable IDE0270 // Use coalesce expression
 			if (path == null)
 			{
 				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
@@ -104,16 +95,21 @@ namespace KSoft.Blam.Megalo.Proto
 					dbTypeName,
 					forBuild.ToDisplayString()));
 			}
+#pragma warning restore IDE0270 // Use coalesce expression
 
 			T db;
 			lock (loadedDbs)
+			{
 				loadedDbs.TryGetValue(path, out db);
+			}
 
 			if (db == null)
 			{
 				db = ctor(actual_build);
 				lock (loadedDbs)
+				{
 					loadedDbs[path] = db;
+				}
 
 				await Task.Run(() => LoadDatabase(db, path)).ConfigureAwait(false);
 			}
@@ -167,12 +163,12 @@ namespace KSoft.Blam.Megalo.Proto
 
 		public static void PrepareDatabasesForUse(MegaloStaticDatabase staticDb, MegaloScriptDatabase scriptDb)
 		{
-			if (staticDb == null)
-				throw new ArgumentNullException(nameof(staticDb));
-			if (scriptDb == null)
-				throw new ArgumentNullException(nameof(scriptDb));
+			ArgumentNullException.ThrowIfNull(staticDb);
+			ArgumentNullException.ThrowIfNull(scriptDb);
 			if (scriptDb.StaticDatabase != null)
+			{
 				throw new ArgumentException("Script db already had a static db reference set", nameof(scriptDb));
+			}
 
 			PostprocessMegaloDatabase(scriptDb, staticDb);
 		}

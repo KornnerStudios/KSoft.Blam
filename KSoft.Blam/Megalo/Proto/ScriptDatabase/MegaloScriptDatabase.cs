@@ -76,24 +76,24 @@ namespace KSoft.Blam.Megalo.Proto
 			}
 
 			#region Stream PlayerVarIndex interfaces
-			bool TypeIndexRefersToPlayerSlaveObject(int refTypeIndex)
-			{
-				return refTypeIndex >= FirstSlaveObjectTypeIndex && refTypeIndex <= HighestSlaveObjectTypeIndex;
-			}
-			MegaloScriptValueType GetPlayerVarIndexValueType(int refTypeIndex)
-			{
-				return !TypeIndexRefersToPlayerSlaveObject(refTypeIndex) ? PlayerIndexObject : PlayerIndexPlayer;
-			}
-			bool ValidatePlayerVarIndex(int playerVarIndex,
+			readonly bool TypeIndexRefersToPlayerSlaveObject(int refTypeIndex)
+				=> refTypeIndex >= FirstSlaveObjectTypeIndex && refTypeIndex <= HighestSlaveObjectTypeIndex;
+			readonly MegaloScriptValueType GetPlayerVarIndexValueType(int refTypeIndex)
+				=> !TypeIndexRefersToPlayerSlaveObject(refTypeIndex)
+					? PlayerIndexObject
+					: PlayerIndexPlayer;
+			readonly bool ValidatePlayerVarIndex(int playerVarIndex,
 				int refTypeIndex, Model.MegaloScriptModel model)
 			{
 				if (playerVarIndex.IsNone())
+				{
 					return true;
+				}
 
 				var varIndexType = GetPlayerVarIndexValueType(refTypeIndex);
 				return model.VarIndexIsValid(varIndexType.VarType, varIndexType.VarSet, playerVarIndex);
 			}
-			public void StreamPlayerVarIndex(IO.BitStream s, ref int playerVarIndex,
+			public readonly void StreamPlayerVarIndex(IO.BitStream s, ref int playerVarIndex,
 				int refTypeIndex, Model.MegaloScriptModel model)
 			{
 				Contract.Assert(refTypeIndex >= 0 && refTypeIndex < ObjectReferenceType.Members.Count);
@@ -103,7 +103,7 @@ namespace KSoft.Blam.Megalo.Proto
 				var varIndexType = GetPlayerVarIndexValueType(refTypeIndex);
 				s.StreamIndex(ref playerVarIndex, varIndexType.BitLength);
 			}
-			public void StreamPlayerVarIndex<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, ref int playerVarIndex,
+			public readonly void StreamPlayerVarIndex<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, ref int playerVarIndex,
 				int refTypeIndex, Model.MegaloScriptModel model)
 				where TDoc : class
 				where TCursor : class
@@ -121,7 +121,9 @@ namespace KSoft.Blam.Megalo.Proto
 						Model.MegaloScriptModelVariableSet.IndexNameResolvingContext.NameResolver);
 				}
 				else
+				{
 					s.StreamAttribute(kAttributeNamePlayerVarIndex, ref playerVarIndex);
+				}
 
 				Contract.Assert(ValidatePlayerVarIndex(playerVarIndex, refTypeIndex, model));
 			}
@@ -161,9 +163,13 @@ namespace KSoft.Blam.Megalo.Proto
 			ImportCodeEnum<MegaloScriptDamageReportingModifier>	("DamageReportingModifier");
 
 			if (forBuild.IsChildOf(Engine.EngineRegistry.EngineBranchHaloReach.BranchHandle))
+			{
 				InitializeForHaloReach();
+			}
 			else if (forBuild.IsChildOf(Engine.EngineRegistry.EngineBranchHalo4.BranchHandle))
+			{
 				InitializeForHalo4();
+			}
 			else
 			{
 				Contract.Assert(false);
@@ -194,37 +200,36 @@ namespace KSoft.Blam.Megalo.Proto
 		}
 		public MegaloScriptValueType GetValueType(string name)
 		{
-			MegaloScriptValueType type;
-			if (NameToValueType.TryGetValue(name, out type))
+			if (NameToValueType.TryGetValue(name, out MegaloScriptValueType type))
+			{
 				return type;
+			}
 
 			throw new KeyNotFoundException(name);
 		}
 		public MegaloScriptProtoCondition GetCondition(string conditionName)
 		{
-			MegaloScriptProtoCondition cond;
-			if (NameToConditionMap.TryGetValue(conditionName, out cond))
+			if (NameToConditionMap.TryGetValue(conditionName, out MegaloScriptProtoCondition cond))
+			{
 				return cond;
+			}
 
 			throw new KeyNotFoundException(conditionName);
 		}
 		public MegaloScriptProtoAction GetAction(string actionName)
 		{
-			MegaloScriptProtoAction action;
-			if (NameToActionMap.TryGetValue(actionName, out action))
+			if (NameToActionMap.TryGetValue(actionName, out MegaloScriptProtoAction action))
+			{
 				return action;
+			}
 
 			throw new KeyNotFoundException(actionName);
 		}
 
 		internal bool TryGetCondition(string conditionName, out MegaloScriptProtoCondition cond)
-		{
-			return NameToConditionMap.TryGetValue(conditionName, out cond);
-		}
+			=> NameToConditionMap.TryGetValue(conditionName, out cond);
 		internal bool TryGetAction(string actionName, out MegaloScriptProtoAction action)
-		{
-			return NameToActionMap.TryGetValue(actionName, out action);
-		}
+			=> NameToActionMap.TryGetValue(actionName, out action);
 
 		public void Postprocess(MegaloStaticDatabase associatedStaticDb, TextWriter errorWriter = null)
 		{
@@ -235,7 +240,7 @@ namespace KSoft.Blam.Megalo.Proto
 			this.StaticDatabase = associatedStaticDb;
 
 			#region ValueTypes
-			foreach (var type in ValueTypes)
+			foreach (MegaloScriptValueType type in ValueTypes)
 			{
 				if (type.BaseType.RequiresBitLength() && type.BitLength == 0)
 				{
@@ -298,7 +303,7 @@ namespace KSoft.Blam.Megalo.Proto
 			}
 			#endregion
 			#region Actions
-			foreach (var action in Actions)
+			foreach (MegaloScriptProtoAction action in Actions)
 			{
 				var state = new MegaloScriptProtoParamsPostprocessState(errorWriter, action);
 				state.Postprocess();
@@ -309,17 +314,11 @@ namespace KSoft.Blam.Megalo.Proto
 
 		#region Variable Sets util
 		internal int GetVariableMaxCount(MegaloScriptVariableSet set, MegaloScriptVariableType type)
-		{
-			return VariableSets[set].Traits[type].MaxCount;
-		}
+			=> VariableSets[set].Traits[type].MaxCount;
 		internal int GetVariableCountBitLength(MegaloScriptVariableSet set, MegaloScriptVariableType type)
-		{
-			return VariableSets[set].Traits[type].CountBitLength;
-		}
+			=> VariableSets[set].Traits[type].CountBitLength;
 		internal int GetVariableIndexBitLength(MegaloScriptVariableSet set, MegaloScriptVariableType type)
-		{
-			return VariableSets[set].Traits[type].IndexBitLength;
-		}
+			=> VariableSets[set].Traits[type].IndexBitLength;
 		#endregion
 
 		#region BitStream util
