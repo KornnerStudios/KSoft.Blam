@@ -11,7 +11,7 @@ namespace KSoft.Blam.Megalo.Proto
 	public struct ListLimitTraits
 		: IO.ITagElementStringNameStreamable
 	{
-		public static readonly ListLimitTraits Null = new ListLimitTraits
+		public static readonly ListLimitTraits Null = new()
 		{ MaxCount=0, CountBitLength=-1, IndexBitLength=-1 };
 
 		public int MaxCount;
@@ -25,12 +25,10 @@ namespace KSoft.Blam.Megalo.Proto
 			IndexBitLength = Bits.GetMaxEnumBits(MaxCount);
 		}
 
-		internal int GetBitLength(bool useIndex)
-		{
-			return useIndex ? IndexBitLength : CountBitLength;
-		}
+		internal readonly int GetBitLength(bool useIndex)
+			=> useIndex ? IndexBitLength : CountBitLength;
 
-		internal void ValidateListCount(System.Collections.IList list, string listName
+		internal readonly void ValidateListCount(System.Collections.IList list, string listName
 			, IO.ICanThrowReadExceptionsWithExtraDetails readExceptionThrower)
 		{
 			if (list.Count > MaxCount)
@@ -51,7 +49,9 @@ namespace KSoft.Blam.Megalo.Proto
 			s.StreamElement(elementName, ref traits.MaxCount);
 
 			if (s.IsReading)
+			{
 				traits.InitializeBitLengths();
+			}
 		}
 		internal static void SerializeViaElementOpt<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string elementName, ref ListLimitTraits traits)
@@ -61,7 +61,9 @@ namespace KSoft.Blam.Megalo.Proto
 			bool streamed = s.StreamElementOpt(elementName, ref traits.MaxCount, Predicates.IsNotZero);
 
 			if (streamed && s.IsReading)
+			{
 				traits.InitializeBitLengths();
+			}
 		}
 		internal static void SerializeViaAttribute<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string attributeName, ref ListLimitTraits traits)
@@ -71,7 +73,9 @@ namespace KSoft.Blam.Megalo.Proto
 			s.StreamAttribute(attributeName, ref traits.MaxCount);
 
 			if (s.IsReading)
+			{
 				traits.InitializeBitLengths();
+			}
 		}
 
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -81,7 +85,9 @@ namespace KSoft.Blam.Megalo.Proto
 			s.StreamAttribute("max", ref MaxCount);
 
 			if (s.IsReading)
+			{
 				InitializeBitLengths();
+			}
 		}
 		#endregion
 	};

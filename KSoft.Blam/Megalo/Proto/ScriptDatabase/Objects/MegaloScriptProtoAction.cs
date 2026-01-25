@@ -31,11 +31,17 @@ namespace KSoft.Blam.Megalo.Proto
 
 			if (!s.StreamAttributeOpt("name", ref Name, Predicates.IsNotNullOrEmpty) &&
 				 s.IsReading)
+			{
 				Name = string.Format(Util.InvariantCultureInfo,
 					"Action{0}", DBID.ToString(Util.InvariantCultureInfo));
+			}
+
 			if (db.SerializeProtoActionReference(s, "template", ref Template) && Template == null)
+			{
 				throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 					"Action '{0}' references undefined proto action {1}", Name, Template));
+			}
+
 			s.StreamAttributeEnumOpt("flags", ref Flags, f => f != 0);
 
 			Parameters.Serialize(s);
@@ -46,7 +52,9 @@ namespace KSoft.Blam.Megalo.Proto
 		internal void InitializeParameterList()
 		{
 			if (Template == null)
+			{
 				mInOrderParams = Parameters;
+			}
 			else
 			{
 				var list = new List<MegaloScriptProtoParam>(Parameters.Count);
@@ -56,9 +64,9 @@ namespace KSoft.Blam.Megalo.Proto
 		}
 
 		#region IMegaloScriptProtoAction Members
-		public override IReadOnlyList<MegaloScriptProtoParam> ParameterList	{ get { return mInOrderParams; } }
+		public override IReadOnlyList<MegaloScriptProtoParam> ParameterList => mInOrderParams;
 
-		IMegaloScriptProtoAction IMegaloScriptProtoAction.Template			{ get { return Template; } }
+		IMegaloScriptProtoAction IMegaloScriptProtoAction.Template => Template;
 		#endregion
 
 		internal void WriteForTryToPort<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
@@ -71,8 +79,8 @@ namespace KSoft.Blam.Megalo.Proto
 				? MegaloScriptDatabase.Halo4
 				: MegaloScriptDatabase.HaloReach;
 
-			MegaloScriptProtoAction other;
-			if (db.TryGetAction(Name, out other) && !other.Name.StartsWith("Action", System.StringComparison.Ordinal))
+			if (db.TryGetAction(Name, out MegaloScriptProtoAction other) &&
+				!other.Name.StartsWith("Action", System.StringComparison.Ordinal))
 			{
 				s.WriteAttribute("DBID", other.DBID);
 				s.WriteAttribute("origDBID", DBID);

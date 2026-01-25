@@ -14,9 +14,9 @@ namespace KSoft.Blam.Megalo.Proto
 		#region Scripting
 		public MegaloScriptTriggerEntryPoints SupportedEntryPoints;
 		public bool SupportsVirtualTriggers;
-		/// <summary>Hack for Reach, Reach, Reach</summary>
+		/// <summary>#Hack for Reach, Reach, Reach</summary>
 		internal bool StreamEntryPointIndexAsPointer;
-		/// <summary>Hack for Reach, Reach, Reach</summary>
+		/// <summary>#Hack for Reach, Reach, Reach</summary>
 		internal bool StreamConditionsAndActionsRefsAsRefs;
 
 		internal Collections.ActiveListDesc<Model.MegaloScriptUnionGroup> UnionGroupsDesc { get; private set; }
@@ -31,9 +31,7 @@ namespace KSoft.Blam.Megalo.Proto
 		internal Collections.ActiveListDesc<Model.MegaloScriptTrigger> TriggersDesc { get; private set; }
 
 		public bool Supports(MegaloScriptTriggerEntryPoints entryPoints)
-		{
-			return (SupportedEntryPoints & entryPoints) == entryPoints;
-		}
+			=> (SupportedEntryPoints & entryPoints) == entryPoints;
 		#endregion
 
 		#region Static
@@ -64,40 +62,40 @@ namespace KSoft.Blam.Megalo.Proto
 		public ListLimitTraits ObjectFilters = ListLimitTraits.Null;
 		public ListLimitTraits GameObjectFilters = ListLimitTraits.Null;
 
-		public bool SupportsGameObjectFilters { get { return GameObjectFilters.MaxCount > 0; } }
+		public bool SupportsGameObjectFilters => GameObjectFilters.MaxCount > 0;
 		#endregion
 
 		internal int GetIndexTargetBitLength(MegaloScriptValueIndexTarget target, MegaloScriptValueIndexTraits traits)
 		{
 			// use the index bit length (true) or the count bit length (false)
 			bool use_index = traits != MegaloScriptValueIndexTraits.Pointer;
-			switch (target)
+			return target switch
 			{
 				#region Scripting
-				case MegaloScriptValueIndexTarget.Trigger:			return Triggers.GetBitLength(use_index);
+				MegaloScriptValueIndexTarget.Trigger =>			Triggers.GetBitLength(use_index),
 				#endregion
 				#region Static
-				case MegaloScriptValueIndexTarget.ObjectType:		return MultiplayerObjectTypes.IndexBitLength;
-				case MegaloScriptValueIndexTarget.Name:				return MegaloStringIds.IndexBitLength;
-				case MegaloScriptValueIndexTarget.Sound:			return MegaloEngineSounds.IndexBitLength;
-				case MegaloScriptValueIndexTarget.Incident:			return GameIncidentTypes.IndexBitLength;
-				case MegaloScriptValueIndexTarget.HudWidgetIcon:	return MegaloHudWidgetIcons.IndexBitLength;
-				case MegaloScriptValueIndexTarget.GameEngineIcon:	return GameEngineIcons.IndexBitLength;
-				case MegaloScriptValueIndexTarget.Medal:			return GameMedals.IndexBitLength;
-				case MegaloScriptValueIndexTarget.Ordnance:			return GameOrdnanceTypes.IndexBitLength;
+				MegaloScriptValueIndexTarget.ObjectType =>		MultiplayerObjectTypes.IndexBitLength,
+				MegaloScriptValueIndexTarget.Name =>			MegaloStringIds.IndexBitLength,
+				MegaloScriptValueIndexTarget.Sound =>			MegaloEngineSounds.IndexBitLength,
+				MegaloScriptValueIndexTarget.Incident =>		GameIncidentTypes.IndexBitLength,
+				MegaloScriptValueIndexTarget.HudWidgetIcon =>	MegaloHudWidgetIcons.IndexBitLength,
+				MegaloScriptValueIndexTarget.GameEngineIcon =>	GameEngineIcons.IndexBitLength,
+				MegaloScriptValueIndexTarget.Medal =>			GameMedals.IndexBitLength,
+				MegaloScriptValueIndexTarget.Ordnance =>		GameOrdnanceTypes.IndexBitLength,
 				#endregion
 				#region Variant
-				case MegaloScriptValueIndexTarget.LoadoutPalette:	return LoadoutPalettes.GetBitLength(use_index);
-				case MegaloScriptValueIndexTarget.Option:			return UserDefinedOptions.GetBitLength(use_index);
-				case MegaloScriptValueIndexTarget.String:			return VariantStrings.GetBitLength(use_index);
-				case MegaloScriptValueIndexTarget.PlayerTraits:		return PlayerTraits.GetBitLength(use_index);
-				case MegaloScriptValueIndexTarget.Statistic:		return GameStatistics.GetBitLength(use_index);
-				case MegaloScriptValueIndexTarget.Widget:			return HudWidgets.GetBitLength(use_index);
-				case MegaloScriptValueIndexTarget.ObjectFilter:		return ObjectFilters.GetBitLength(use_index);
+				MegaloScriptValueIndexTarget.LoadoutPalette =>	LoadoutPalettes.GetBitLength(use_index),
+				MegaloScriptValueIndexTarget.Option =>			UserDefinedOptions.GetBitLength(use_index),
+				MegaloScriptValueIndexTarget.String =>			VariantStrings.GetBitLength(use_index),
+				MegaloScriptValueIndexTarget.PlayerTraits =>	PlayerTraits.GetBitLength(use_index),
+				MegaloScriptValueIndexTarget.Statistic =>		GameStatistics.GetBitLength(use_index),
+				MegaloScriptValueIndexTarget.Widget =>			HudWidgets.GetBitLength(use_index),
+				MegaloScriptValueIndexTarget.ObjectFilter =>	ObjectFilters.GetBitLength(use_index),
 				#endregion
 
-				default: throw new KSoft.Debug.UnreachableException(target.ToString());
-			}
+				_ => throw new KSoft.Debug.UnreachableException(target.ToString()),
+			};
 		}
 		#region ITagElementStringNameStreamable Members
 		const string kMaxTriggerGroupsElementName = "MaxTriggerGroups";

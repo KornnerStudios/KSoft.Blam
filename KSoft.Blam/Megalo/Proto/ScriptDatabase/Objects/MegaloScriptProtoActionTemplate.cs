@@ -24,12 +24,14 @@ namespace KSoft.Blam.Megalo.Proto
 			where TDoc : class
 			where TCursor : class
 		{
-			var db = (MegaloScriptDatabase)s.Owner;
+			var db = KSoft.Debug.TypeCheck.CastReference<MegaloScriptDatabase>(s.Owner);
 
 			s.StreamAttribute("name", ref Name);
 			if (db.SerializeActionTemplateReference(s, "template", ref Parent) && Parent == null)
+			{
 				throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 					"Action Template '{0}' references undefined template", Name));
+			}
 
 			Parameters.Serialize(s);
 		}
