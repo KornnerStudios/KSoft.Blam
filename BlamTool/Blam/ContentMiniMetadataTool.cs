@@ -9,8 +9,8 @@ namespace KSoft.Tool.Blam
 {
 	class ContentMiniMetadataTool : ProgramBase
 	{
-		protected override Environment ProgramEnvironment { get { return Environment.Blam; } }
-		public static void _Main(string helpName, List<string> args)
+		protected override Environment ProgramEnvironment => Environment.Blam;
+		public static void MainEntryPoint(string helpName, List<string> args)
 		{
 			var prog = new ContentMiniMetadataTool();
 			prog.MainImpl(helpName, args);
@@ -66,7 +66,7 @@ namespace KSoft.Tool.Blam
 				return false;
 			}
 
-			if (string.IsNullOrWhiteSpace(mOutputPath)) mOutputPath = Path.Combine(System.Environment.CurrentDirectory, @"\");
+			if (string.IsNullOrWhiteSpace(mOutputPath)) { mOutputPath = Path.Combine(System.Environment.CurrentDirectory, @"\"); }
 			if (!Directory.Exists(mOutputPath))
 			{
 				Console.WriteLine("Error: The output path doesn't exist or is inaccessible: {0}", mOutputPath);
@@ -83,7 +83,7 @@ namespace KSoft.Tool.Blam
 				return false;
 			}
 
-			if (string.IsNullOrWhiteSpace(mOutputPath)) mOutputPath = Path.Combine(System.Environment.CurrentDirectory, @"\");
+			if (string.IsNullOrWhiteSpace(mOutputPath)) { mOutputPath = Path.Combine(System.Environment.CurrentDirectory, @"\"); }
 			if (!Directory.Exists(mOutputPath))
 			{
 				Console.WriteLine("Error: The input path doesn't exist or is inaccessible: {0}", mOutputPath);
@@ -101,13 +101,12 @@ namespace KSoft.Tool.Blam
 				return false;
 			}
 
-			switch (mMode)
+			return mMode switch
 			{
-				case Mode.Decode: return ValidateArgsDecode();
-				case Mode.Encode: return ValidateArgsEncode();
-
-				default: return true;
-			}
+				Mode.Decode => ValidateArgsDecode(),
+				Mode.Encode => ValidateArgsEncode(),
+				_ => true,
+			};
 		}
 		#endregion
 
@@ -123,8 +122,7 @@ namespace KSoft.Tool.Blam
 		}
 		void MainImpl(string helpName, List<string> args)
 		{
-			List<string> extra;
-			MainImpl_Prologue(args, out extra, () => mMode == Mode.None);
+			MainImpl_Prologue(args, out List<string> extra, () => mMode == Mode.None);
 			MainImpl_Tool(helpName, "content mini-metadata", MainBody);
 		}
 
@@ -141,7 +139,9 @@ namespace KSoft.Tool.Blam
 				metadata.Serialize(xml);
 
 				using (var sw = new System.IO.StreamWriter(xml_filename, false, System.Text.Encoding.UTF8))
+				{
 					xml.Document.Save(sw);
+				}
 			}
 		}
 		void Encode()

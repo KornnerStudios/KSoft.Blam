@@ -17,13 +17,15 @@ namespace KSoft.Tool
 {
 	partial class Program : ProgramBase
 	{
-		protected override Environment ProgramEnvironment { get { return Environment.None; } }
+		protected override Environment ProgramEnvironment => Environment.None;
 
 		static string gName;
 		public static string GetName()
 		{
 			if (gName == null)
+			{
 				gName = System.Reflection.Assembly.GetAssembly(typeof(Program)).GetName().Name;
+			}
 
 			return gName;
 		}
@@ -31,7 +33,9 @@ namespace KSoft.Tool
 		public static string GetVersion()
 		{
 			if (gVersion == null)
+			{
 				gVersion = System.Reflection.Assembly.GetAssembly(typeof(Program)).GetName().Version.ToString();
+			}
 
 			return gVersion;
 		}
@@ -51,9 +55,14 @@ namespace KSoft.Tool
 
 			DependentAssemblyExists("ICSharpCode.SharpZipLib", false);
 			if (!DependentAssemblyExists("KSoft"))
+			{
 				return;
+			}
+
 			if (!DependentAssemblyExists("KSoft.Blam"))
+			{
 				return;
+			}
 
 			Initialize();
 
@@ -70,7 +79,9 @@ namespace KSoft.Tool
 				Console.Write("UNHANDLED EXCEPTION: ");
 				Console.WriteLine(e);
 				if (System.Diagnostics.Debugger.IsAttached)
+				{
 					throw;
+				}
 			}
 #endif
 
@@ -96,7 +107,9 @@ namespace KSoft.Tool
 		static string ToString(Environment env)
 		{
 			if (env == Environment.None)
+			{
 				return "Main";
+			}
 
 			return env.ToString();
 		}
@@ -114,7 +127,7 @@ namespace KSoft.Tool
 		}
 
 #if TEST_ARGS
-		static string[] kTestArgs = {
+		static string[] kTestArgs = [
 	#if TEST_ENV_BLAM_GVAR
 			"-env=blam",
 				"-tool=gvar",
@@ -137,7 +150,7 @@ namespace KSoft.Tool
 					"-path=" +		@"C:\Mount\A\Bungie\Games\HaloReach\Xbox\Retail\variants\Race\RaceTest.variant",
 					"-name=" +		 "Race",
 	#endif
-		};
+		];
 #endif
 		void MainImpl(string[] args)
 		{
@@ -146,18 +159,21 @@ namespace KSoft.Tool
 #endif
 			//return;
 
-			List<string> extra;
-			if (!TryParse(Environment.None, mOptions, args, out extra) || mArgEnv == Environment.None)
+			if (!TryParse(Environment.None, mOptions, args, out List<string> extra) || mArgEnv == Environment.None)
+			{
 				mArgShowHelp = true;
+			}
 
 			if (mArgShowHelp)
+			{
 				ShowHelp(Environment.None, mOptions);
+			}
 			else
 			{
 				switch (mArgEnv)
 				{
 					case Environment.Blam:
-						ProgramBlam._Main(extra);
+						ProgramBlam.MainEntryPoint(extra);
 						break;
 
 					default:
@@ -197,6 +213,7 @@ namespace KSoft.Tool
 		public static void UnavailableOption<T>(T option)
 		{
 			//string option_str = option == null ? null : option.ToString();
+			Util.MarkUnusedVariable(ref option);
 
 			Console.WriteLine("I don't think so scooter");
 		}
@@ -210,7 +227,9 @@ namespace KSoft.Tool
 			where T : struct
 		{
 			if (!Enum.TryParse<T>(input, true, out value))
+			{
 				value = invalidValue;
+			}
 		}
 		#endregion
 	};

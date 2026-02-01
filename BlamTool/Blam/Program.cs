@@ -5,8 +5,8 @@ namespace KSoft.Tool
 {
 	class ProgramBlam : ProgramBase
 	{
-		protected override Environment ProgramEnvironment { get { return Environment.Blam; } }
-		public static void _Main(List<string> args)
+		protected override Environment ProgramEnvironment => Environment.Blam;
+		public static void MainEntryPoint(List<string> args)
 		{
 			KSoft.Blam.Program.Initialize();
 			KSoft.Blam.Program.InitializeCoreSystems();
@@ -56,16 +56,15 @@ namespace KSoft.Tool
 
 			switch (mToolType)
 			{
-				case ToolType.Gvar: Blam.GameVariantTool._Main(help_name, args); break;
-				case ToolType.Metadata: Blam.ContentMiniMetadataTool._Main(help_name, args); break;
+				case ToolType.Gvar: Blam.GameVariantTool.MainEntryPoint(help_name, args); break;
+				case ToolType.Metadata: Blam.ContentMiniMetadataTool.MainEntryPoint(help_name, args); break;
 
 				default: Program.UnavailableOption(mToolType); break;
 			}
 		}
 		void MainImpl(List<string> args)
 		{
-			List<string> extra;
-			MainImpl_Prologue(args, out extra, () => mToolType == ToolType.None);
+			MainImpl_Prologue(args, out List<string> extra, () => mToolType == ToolType.None);
 			MainImpl_Program(extra, MainBody);
 		}
 	};

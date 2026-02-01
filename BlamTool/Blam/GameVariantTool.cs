@@ -12,8 +12,8 @@ namespace KSoft.Tool.Blam
 
 	class GameVariantTool : ProgramBase
 	{
-		protected override Environment ProgramEnvironment { get { return Environment.Blam; } }
-		public static void _Main(string helpName, List<string> args)
+		protected override Environment ProgramEnvironment => Environment.Blam;
+		public static void MainEntryPoint(string helpName, List<string> args)
 		{
 			var prog = new GameVariantTool();
 			prog.MainImpl(helpName, args);
@@ -74,9 +74,9 @@ namespace KSoft.Tool.Blam
 				{"stopwatch", "Time performance",
 					v => mTimeOperation = v != null },
 				{"ignoreInvalidHash", "Causes invalid data hases to be ignored",
-					v => { if (v != null) KBlam.Blob.GameEngineVariantBlob.RequireValidHashes = false; } },
+					v => { if (v != null) { KBlam.Blob.GameEngineVariantBlob.RequireValidHashes = false; } } },
 				{"debugScriptDatabase", "Print error messages about the megalo script db to console",
-					v => { if (v != null) MegaloProto.MegaloProtoSystem.OutputMegaloDatabasePostprocessErrorTextToConsole = true; } },
+					v => { if (v != null) { MegaloProto.MegaloProtoSystem.OutputMegaloDatabasePostprocessErrorTextToConsole = true; } } },
 			};
 			InitializeOptionArgShowHelp();
 		}
@@ -114,7 +114,9 @@ namespace KSoft.Tool.Blam
 		bool ValidateArgsDecode()
 		{
 			if (!ValidatePathAndName())
+			{
 				return false;
+			}
 
 			if (!File.Exists(mPath))
 			{
@@ -143,7 +145,9 @@ namespace KSoft.Tool.Blam
 		bool ValidateArgsEncode()
 		{
 			if (!ValidatePathAndName())
+			{
 				return false;
+			}
 
 			return true;
 		}
@@ -155,14 +159,14 @@ namespace KSoft.Tool.Blam
 				return false;
 			}
 
-			switch (mMode)
+			return mMode switch
 			{
-				case Mode.Decode: return ValidateArgsDecode();
-				case Mode.Encode: return ValidateArgsEncode();
-				case Mode.DecodeMass: return ValidateArgsDecodeMass();
+				Mode.Decode => ValidateArgsDecode(),
+				Mode.Encode => ValidateArgsEncode(),
+				Mode.DecodeMass => ValidateArgsDecodeMass(),
 
-				default: return true;
-			}
+				_ => true,
+			};
 		}
 		#endregion
 
@@ -212,12 +216,15 @@ namespace KSoft.Tool.Blam
 				stopwatch.Restart();
 			}
 
-			if (megalo_proto_system_ref.IsValid) switch (mMode)
+			if (megalo_proto_system_ref.IsValid)
 			{
-				case Mode.Decode: Decode(mPath, mName, mOutputPath); break;
-				case Mode.Encode: Encode(mPath, mName, mOutputPath); break;
+				switch (mMode)
+				{
+					case Mode.Decode: Decode(mPath, mName, mOutputPath); break;
+					case Mode.Encode: Encode(mPath, mName, mOutputPath); break;
 
-				default: Program.UnavailableOption(mMode); break;
+					default: Program.UnavailableOption(mMode); break;
+				}
 			}
 
 			megalo_proto_system_ref.Dispose();
@@ -232,8 +239,7 @@ namespace KSoft.Tool.Blam
 		}
 		void MainImpl(string helpName, List<string> args)
 		{
-			List<string> extra;
-			MainImpl_Prologue(args, out extra, () => mMode == Mode.None);
+			MainImpl_Prologue(args, out List<string> extra, () => mMode == Mode.None);
 			MainImpl_Tool(helpName, "game variant", MainBody);
 		}
 
@@ -304,7 +310,7 @@ namespace KSoft.Tool.Blam
 
 				MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjectsWriteSansIds
 				;
-			if (switches == null) switches = "";
+			if (switches == null) { switches = ""; }
 			const string k_switches_ctxt = "GameVariant:Decode";
 
 			bool using_op_names = false;
@@ -334,10 +340,14 @@ namespace KSoft.Tool.Blam
 				SwitchIsOn(switches, 3, k_switches_ctxt + ":Megalo", "Try to port Reach operations to H4"))
 			{
 				if (using_op_names)
+				{
 					Console.WriteLine("\tIgnoring switch since you have me writing operation names");
+				}
 				else
+				{
 					EnumFlags.Add(ref modelStreamFlags,
 						MegaloModel.MegaloScriptModelTagElementStreamFlags.TryToPort);
+				}
 			}
 			if (SwitchIsOn(switches, 4, k_switches_ctxt + ":Megalo", "Don't use enum/index names"))
 			{
@@ -380,8 +390,7 @@ namespace KSoft.Tool.Blam
 				{
 					blf.UnderlyingStream.StreamMode = FileAccess.Read;
 
-					IEnumerable<KBlam.Blob.BlobObject> objects;
-					blf_result = blf.EnumerateChunks(blob_system, out objects);
+					blf_result = blf.EnumerateChunks(blob_system, out IEnumerable<KBlam.Blob.BlobObject> objects);
 
 					if (blf_result.IsValid)
 					{
@@ -456,12 +465,14 @@ namespace KSoft.Tool.Blam
 				gev.Serialize(xml);
 
 				using (var sw = new System.IO.StreamWriter(xmlFilename, false, System.Text.Encoding.UTF8))
+				{
 					xml.Document.Save(sw);
+				}
 			}
 		}
 		void Decode(string filePath, string xmlName, string outputPath)
 		{
-			if (string.IsNullOrWhiteSpace(outputPath)) outputPath = Path.GetDirectoryName(filePath);
+			if (string.IsNullOrWhiteSpace(outputPath)) { outputPath = Path.GetDirectoryName(filePath); }
 			if (!Directory.Exists(outputPath))
 			{
 				Console.WriteLine("Error: The output path doesn't exist or is inaccessible: {0}", outputPath);
@@ -471,12 +482,12 @@ namespace KSoft.Tool.Blam
 			string xml_filename = Path.Combine(outputPath, xmlName) + kNameExtension;
 			string bin_filename = filePath;
 
-			MegaloModel.MegaloScriptModelTagElementStreamFlags model_stream_flags;
 			bool ignore_write_predicates = false;
-			DecodeParseSwitches(mSwitches, out model_stream_flags, ref ignore_write_predicates);
+			DecodeParseSwitches(mSwitches,
+				out MegaloModel.MegaloScriptModelTagElementStreamFlags model_stream_flags,
+				ref ignore_write_predicates);
 
-			KBlam.RuntimeData.Variants.GameEngineVariant gev = null;
-			if (DecodeVariantBlf(bin_filename, out gev))
+			if (DecodeVariantBlf(bin_filename, out KBlam.RuntimeData.Variants.GameEngineVariant gev))
 			{
 				DecodeSaveVariant(gev, xml_filename, model_stream_flags, ignore_write_predicates);
 			}
@@ -495,7 +506,11 @@ namespace KSoft.Tool.Blam
 			out EncodeSwitches flags)
 		{
 			flags = 0;
-			if (switches == null) switches = "";
+			if (switches == null)
+			{
+				switches = "";
+			}
+
 			const string k_switches_ctxt = "GameVariant:Encode";
 
 			if (SwitchIsOn(switches, 0, k_switches_ctxt + ":Megalo", "Clear TU weapon tuning data"))
@@ -553,9 +568,12 @@ namespace KSoft.Tool.Blam
 				var bv = gev.Variant.BaseVariant;
 
 				foreach (var team in bv.TeamOptions.Teams)
+				{
 					team.NameString.Clear();
+				}
 
 				if (File.Exists(k_teams_xml_filename))
+				{
 					using (var xml = new IO.XmlElementStream(k_teams_xml_filename, System.IO.FileAccess.Read))
 					{
 						xml.InitializeAtRootElement();
@@ -564,17 +582,26 @@ namespace KSoft.Tool.Blam
 						var team_xml_game = KBlam.Engine.EngineBuildHandle.None;
 						KBlam.Engine.EngineBuildHandle.Serialize(xml, ref team_xml_game);
 						if (team_xml_game.IsWithinSameBranch(KBlam.Engine.EngineRegistry.EngineBranchHalo4))
+						{
 							bv.TeamOptions.SerializeTeams(xml);
+						}
 						else
+						{
 							Console.WriteLine("Warning: Teams xml is not for this game, not modifying variant's team data");
+						}
 					}
+				}
 				else
+				{
 					Console.WriteLine("Warning: Teams xml not found, not modifying variant's team data");
+				}
 			}
 			#endregion
 
 			if (mv == null)
+			{
 				return true;
+			}
 
 			#region sanity check category name
 #if false
@@ -684,17 +711,18 @@ namespace KSoft.Tool.Blam
 			bool result = true;
 
 			using (var dst_fs = File.Open(filePath, System.IO.FileMode.Open, FileAccess.Write))
+			{
 				result = EncodeVariantBlob(dst_fs, gev);
+			}
 
 			return result;
 		}
 		void Encode(string filePath, string xmlName, string outputPath)
 		{
-			EncodeSwitches switches;
-			EncodeParseSwitches(mSwitches, out switches);
+			EncodeParseSwitches(mSwitches, out EncodeSwitches switches);
 			bool create_output_dir_and_file = (switches & EncodeSwitches.CreateVariantFile) != 0;
 
-			if (string.IsNullOrWhiteSpace(outputPath)) outputPath = Path.GetDirectoryName(filePath);
+			if (string.IsNullOrWhiteSpace(outputPath)) { outputPath = Path.GetDirectoryName(filePath); }
 			if (!Directory.Exists(outputPath) && !create_output_dir_and_file)
 			{
 				Console.WriteLine("Error: The output path doesn't exist or is inaccessible: {0}", outputPath);
