@@ -26,6 +26,8 @@ namespace KSoft.Blam.Localization.Test
 			var engines = Engine.EngineRegistry.Engines;
 			var reach = Engine.EngineRegistry.EngineBranchHaloReach;
 
+			Util.MarkUnusedVariable(ref engines);
+
 			using (var locale_system = Engine.EngineRegistry.GetSystem<LanguageSystem>(reach.BranchHandle))
 			{
 				Assert.IsNotNull(locale_system.System);
@@ -33,7 +35,9 @@ namespace KSoft.Blam.Localization.Test
 				var lang_table = locale_system.System.GetLanguageTable(reach.BranchHandle);
 
 				foreach (var supported_lang in lang_table.SupportedLanguageHandles)
+				{
 					Console.WriteLine(supported_lang.LanguageName);
+				}
 			}
 		}
 	};

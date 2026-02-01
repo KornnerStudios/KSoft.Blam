@@ -14,6 +14,8 @@ namespace KSoft.Blam.Blob.Test
 			var engines = Engine.EngineRegistry.Engines;
 			var reach = Engine.EngineRegistry.EngineBranchHaloReach;
 
+			Util.MarkUnusedVariable(ref engines);
+
 			using (var blob_system = Engine.EngineRegistry.GetSystem<BlobSystem>(reach.BranchHandle))
 			{
 				Assert.IsNotNull(blob_system.System);

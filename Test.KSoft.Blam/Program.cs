@@ -9,6 +9,8 @@ namespace KSoft.Blam
 		[AssemblyInitialize]
 		public static void AssemblyInitialize(TestContext context)
 		{
+			Util.MarkUnusedVariable(ref context);
+
 			KSoft.Blam.Program.RunningUnitTests = true;
 
 			KSoft.Program.Initialize();
