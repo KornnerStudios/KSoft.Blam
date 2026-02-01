@@ -37,9 +37,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		uint mValidFlags;
 		readonly float[] mArray;
 
-		public int Length { get { return mArray.Length; } }
-		public bool HasValues { get { return mValidFlags != 0; } }
-		internal bool AreUnchanged { get { return mValidFlags == 0; } }
+		public int Length => mArray.Length;
+		public bool HasValues => mValidFlags != 0;
+		internal bool AreUnchanged => mValidFlags == 0;
 
 		internal OptionalRealArray(OptionalRealArrayInfo info)
 		{
@@ -56,7 +56,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 			mArray[index] = value.GetValueOrDefault();
 
 			if (old_flags != mValidFlags)
+			{
 				NotifyPropertyChanged(kHasValuesChanged);
+			}
 
 			NotifyItemChanged(index, old_value, value);
 		}
@@ -66,7 +68,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 			float? old_value = this[index];
 			if (old_value.HasValue)
+			{
 				SetImpl(index, (float?)null);
+			}
 		}
 
 		public float? this[int index] {
@@ -84,8 +88,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		{
 			for (int x = 0, mask = 1; x < kInfo.kLength; x++, mask <<= 1)
 			{
-				bool has_value;
-				bs.Read(out has_value);
+				bs.Read(out bool has_value);
 
 				if (has_value)
 				{
@@ -102,14 +105,16 @@ namespace KSoft.Blam.RuntimeData.Variants
 				bool has_value = (mValidFlags & (uint)mask) != 0;
 				bs.Write(has_value);
 				if (has_value)
+				{
 					bs.Stream(ref mArray[x],
 						kInfo.kRangeMin, kInfo.kRangeMax, kInfo.kBitCount, kInfo.kSigned, kInfo.kUnknown);
+				}
 			}
 		}
 		public void Serialize(IO.BitStream s)
 		{
-				 if (s.IsReading) Read(s);
-			else if (s.IsWriting) Write(s);
+				 if (s.IsReading) { Read(s); }
+			else if (s.IsWriting) { Write(s); }
 		}
 		#endregion
 
@@ -125,6 +130,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			string[] names = kInfo.kValuesEnum.GetEnumNames();
 
 			foreach (var element in s.ElementsByName(kEntryElementName))
+			{
 				using (s.EnterCursorBookmark(element))
 				{
 					string name = null;
@@ -132,12 +138,17 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 					int name_index = Array.IndexOf(names, name);
 					if (name_index < 0)
-						s.ThrowReadException(new System.IO.InvalidDataException("Invalid name value: " + name));
+					{
+						s.ThrowReadException(new System.IO.InvalidDataException($"Invalid name value: {name}"));
+					}
 
 					mArray[name_index] = 0.0f;
 					if (s.ReadAttributeOpt(kEntryAttrValueName, ref mArray[name_index])) // #HACK_BLAM: IgnoreWritePredicates hack! didn't used to be Opt
+					{
 						mValidFlags |= 1U << name_index;
+					}
 				}
+			}
 		}
 		void Write<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
@@ -158,7 +169,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 				else if (s.IgnoreWritePredicates) // #HACK_BLAM: IgnoreWritePredicates hack!
 				{
 					using (s.EnterCursorBookmark(kEntryElementName))
+					{
 						s.WriteAttribute(kEntryAttrKeyName, names[x]);
+					}
 				}
 			}
 		}
@@ -166,8 +179,8 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-				 if (s.IsReading) Read(s);
-			else if (s.IsWriting) Write(s);
+				 if (s.IsReading) { Read(s); }
+			else if (s.IsWriting) { Write(s); }
 		}
 		#endregion
 	};

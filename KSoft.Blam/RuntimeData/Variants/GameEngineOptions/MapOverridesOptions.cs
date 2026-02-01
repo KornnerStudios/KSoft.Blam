@@ -25,9 +25,8 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 		public int WeaponSet, VehicleSet; // actually shorts at runtime
 
-		protected virtual bool ObjectSetsAreNotDefault { get {
-			return WeaponSet != TypeExtensionsBlam.kDefaultOption || VehicleSet != TypeExtensionsBlam.kDefaultOption;
-		} }
+		protected virtual bool ObjectSetsAreNotDefault
+			=> WeaponSet != TypeExtensionsBlam.kDefaultOption || VehicleSet != TypeExtensionsBlam.kDefaultOption;
 
 		protected GameOptionsMapOverrides(GameEngineBaseVariant variant)
 		{
@@ -55,10 +54,20 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TCursor : class
 		{
 			s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags != 0, true);
-			using (var bm = s.EnterCursorBookmarkOpt("ObjectSets", this, obj=>obj.ObjectSetsAreNotDefault)) if (bm.IsNotNull)
-				SerializeObjectSets(s);
-			using (var bm = s.EnterCursorBookmarkOpt("BaseTraits", BaseTraits, t=>!t.IsUnchanged)) if(bm.IsNotNull)
-				s.StreamObject(BaseTraits);
+			using (var bm = s.EnterCursorBookmarkOpt("ObjectSets", this, obj=>obj.ObjectSetsAreNotDefault))
+			{
+				if (bm.IsNotNull)
+				{
+					SerializeObjectSets(s);
+				}
+			}
+			using (var bm = s.EnterCursorBookmarkOpt("BaseTraits", BaseTraits, t=>!t.IsUnchanged))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(BaseTraits);
+				}
+			}
 		}
 		#endregion
 	};

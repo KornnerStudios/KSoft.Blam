@@ -40,18 +40,16 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public uint PrimaryColorOverride, SecondaryColorOverride, TextColorOverride;
 		public int FireteamCount;
 
-		public bool IsUsed { get { return InitialDesignator.IsNotNone(); } }
+		public bool IsUsed => InitialDesignator.IsNotNone();
 
-		public virtual bool OverridesAreDefault { get {
-			return PrimaryColorOverride == uint.MaxValue && SecondaryColorOverride == uint.MaxValue &&
+		public virtual bool OverridesAreDefault
+			=> PrimaryColorOverride == uint.MaxValue && SecondaryColorOverride == uint.MaxValue &&
 				TextColorOverride == uint.MaxValue &&
 				ModelOverride == GameOptionsSingleTeamModelOverride.Spartan;
-		} }
 
-		public virtual bool IsDefault { get {
-			return Flags == 0 && NameString.Count == 0 && InitialDesignator.IsNone() &&
+		public virtual bool IsDefault
+			=> Flags == 0 && NameString.Count == 0 && InitialDesignator.IsNone() &&
 				OverridesAreDefault && FireteamCount == 1;
-		} }
 
 		protected GameOptionsSingleTeamOptions(Engine.EngineBuildHandle buildHandle, LocaleStringTableInfo nameInfo)
 		{
@@ -97,8 +95,13 @@ namespace KSoft.Blam.RuntimeData.Variants
 			s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags != 0, true);
 			s.StreamAttributeOpt("fireteamCount", ref FireteamCount, v=>v!=1);
 
-			using (var bm = s.EnterCursorBookmarkOpt("Overrides", this, obj=>!obj.OverridesAreDefault)) if(bm.IsNotNull)
-				SerializeOverrides(s);
+			using (var bm = s.EnterCursorBookmarkOpt("Overrides", this, obj=>!obj.OverridesAreDefault))
+			{
+				if (bm.IsNotNull)
+				{
+					SerializeOverrides(s);
+				}
+			}
 		}
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
@@ -113,8 +116,13 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 			SerializeImpl(s);
 
-			using (var bm = s.EnterCursorBookmarkOpt("Name", NameString, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamObject(NameString);
+			using (var bm = s.EnterCursorBookmarkOpt("Name", NameString, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(NameString);
+				}
+			}
 		}
 		#endregion
 	};
@@ -140,17 +148,18 @@ namespace KSoft.Blam.RuntimeData.Variants
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
 		public abstract GameOptionsSingleTeamOptions[] Teams { get; }
 
-		public virtual bool IsDefault { get {
-			return ModelOverride == GameOptionsTeamOptionsModelOverride.Default && DesignatorSwitchType == 2 &&
+		public virtual bool IsDefault
+			=> ModelOverride == GameOptionsTeamOptionsModelOverride.Default && DesignatorSwitchType == 2 &&
 				Array.TrueForAll(Teams, t => t == null || t.IsDefault);
-		} }
 
 		public virtual void RevertToDefault()
 		{
 			ModelOverride = GameOptionsTeamOptionsModelOverride.Default;
 			DesignatorSwitchType = 2;
 			foreach (var team in Teams)
+			{
 				team.RevertToDefault();
+			}
 		}
 
 		#region IBitStreamSerializable Members

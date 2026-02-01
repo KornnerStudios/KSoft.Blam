@@ -11,7 +11,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
-		protected virtual bool ModifiersAreUnchanged { get { return true; } }
+		protected virtual bool ModifiersAreUnchanged => true;
 		public abstract bool IsUnchanged { get; }
 
 		public abstract void Serialize(IO.BitStream s);
@@ -26,8 +26,13 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			using (var bm = s.EnterCursorBookmarkOpt("Modifiers", this, obj=>!obj.ModifiersAreUnchanged)) if (bm.IsNotNull)
-				SerializeModifiers(s);
+			using (var bm = s.EnterCursorBookmarkOpt("Modifiers", this, obj=>!obj.ModifiersAreUnchanged))
+			{
+				if (bm.IsNotNull)
+				{
+					SerializeModifiers(s);
+				}
+			}
 		}
 		#endregion
 	};
@@ -69,10 +74,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public PlayerTraitsAppearanceBase Appearance { get; protected set; }
 		public PlayerTraitsSensorsBase Sensors { get; protected set; }
 
-		public virtual bool IsUnchanged { get {
-			return Damage.IsUnchanged && Weapons.IsUnchanged && Movement.IsUnchanged && Appearance.IsUnchanged &&
+		public virtual bool IsUnchanged
+			=> Damage.IsUnchanged && Weapons.IsUnchanged && Movement.IsUnchanged && Appearance.IsUnchanged &&
 				Sensors.IsUnchanged;
-		} }
 
 		#region IBitStreamSerializable Members
 		public virtual void Serialize(IO.BitStream s)
@@ -89,20 +93,45 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			using (var bm = s.EnterCursorBookmarkOpt("Damage", Damage, obj=>!obj.IsUnchanged)) if (bm.IsNotNull)
-				s.StreamObject(Damage);
+			using (var bm = s.EnterCursorBookmarkOpt("Damage", Damage, obj=>!obj.IsUnchanged))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(Damage);
+				}
+			}
 
-			using (var bm = s.EnterCursorBookmarkOpt("Weapons", Weapons, obj=>!obj.IsUnchanged)) if (bm.IsNotNull)
-				s.StreamObject(Weapons);
+			using (var bm = s.EnterCursorBookmarkOpt("Weapons", Weapons, obj=>!obj.IsUnchanged))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(Weapons);
+				}
+			}
 
-			using (var bm = s.EnterCursorBookmarkOpt("Movement", Movement, obj=>!obj.IsUnchanged)) if (bm.IsNotNull)
-				s.StreamObject(Movement);
+			using (var bm = s.EnterCursorBookmarkOpt("Movement", Movement, obj=>!obj.IsUnchanged))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(Movement);
+				}
+			}
 
-			using (var bm = s.EnterCursorBookmarkOpt("Appearance", Appearance, obj=>!obj.IsUnchanged)) if (bm.IsNotNull)
-				s.StreamObject(Appearance);
+			using (var bm = s.EnterCursorBookmarkOpt("Appearance", Appearance, obj=>!obj.IsUnchanged))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(Appearance);
+				}
+			}
 
-			using (var bm = s.EnterCursorBookmarkOpt("Sensors", Sensors, obj=>!obj.IsUnchanged)) if(bm.IsNotNull)
-				s.StreamObject(Sensors);
+			using (var bm = s.EnterCursorBookmarkOpt("Sensors", Sensors, obj=>!obj.IsUnchanged))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(Sensors);
+				}
+			}
 		}
 		#endregion
 	};

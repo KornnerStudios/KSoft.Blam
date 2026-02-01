@@ -24,10 +24,14 @@ namespace KSoft.Blam.RuntimeData.Variants
 			var game_build = variantManager.GameBuild;
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+			{
 				return new GameEngineCampaignVariant(variantManager);
+			}
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+			{
 				return new GameEngineCampaignVariant(variantManager);
+			}
 
 			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
 		}
@@ -40,7 +44,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public void Serialize(IO.BitStream s)
 		{
 			using (s.EnterOwnerBookmark(this))
+			{
 				SerializeImpl(s);
+			}
 		}
 		#endregion
 
@@ -50,17 +56,21 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TCursor : class
 		{
 			using (s.EnterCursorBookmark("Base"))
+			{
 				s.StreamObject(BaseVariant);
+			}
 		}
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
 		{
 			using (s.EnterOwnerBookmark(this))
+			{
 				SerializeImpl(s);
+			}
 		}
 		#endregion
 
-		GameEngineType IGameEngineVariant.EngineType { get { return GameEngineType.Campaign; } }
+		GameEngineType IGameEngineVariant.EngineType => GameEngineType.Campaign;
 	};
 }

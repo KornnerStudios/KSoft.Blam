@@ -11,7 +11,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public int CreateMegaloPlayerTraits(string codeName, int nameStringIndex, int descStringIndex)
 		{
 			if (PlayerTraits.Count == PlayerTraits.Capacity)
+			{
 				return TypeExtensions.kNone;
+			}
 
 			var traits = NewMegaloPlayerTraits();
 			traits.CodeName = codeName;
@@ -40,7 +42,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			Traits = variant.BaseVariant.NewPlayerTraits();
 		}
 
-		public bool IsValid { get { return NameStringIndex.IsNotNone(); } }
+		public bool IsValid => NameStringIndex.IsNotNone();
 
 		#region IBitStreamSerializable Members
 		public virtual void Serialize(IO.BitStream s)
@@ -58,15 +60,20 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			var variant = (GameEngineMegaloVariant)s.Owner;
+			var variant = KSoft.Debug.TypeCheck.CastReference<GameEngineMegaloVariant>(s.Owner);
 
 			variant.SerializeStringTableIndex(s, "nameIndex", ref NameStringIndex);
 			variant.SerializeStringTableIndex(s, "descIndex", ref DescriptionStringIndex);
 
 			SerializeCodeName(s);
 
-			using (var bm = s.EnterCursorBookmarkOpt("Traits", Traits, obj=>!obj.IsUnchanged)) if (bm.IsNotNull)
-				s.StreamObject(Traits);
+			using (var bm = s.EnterCursorBookmarkOpt("Traits", Traits, obj=>!obj.IsUnchanged))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(Traits);
+				}
+			}
 		}
 		#endregion
 	};

@@ -23,9 +23,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 	public abstract partial class GameEngineMegaloVariant
 		: IGameEngineVariant
 	{
-		GameEngineType IGameEngineVariant.EngineType { get { return GameEngineType.Megalo; } }
+		GameEngineType IGameEngineVariant.EngineType => GameEngineType.Megalo;
 
-		public Engine.EngineBuildHandle BuildHandle { get { return BaseVariant.BuildHandle; } }
+		public Engine.EngineBuildHandle BuildHandle => BaseVariant.BuildHandle;
 
 		protected int mEncodingVersion;
 		public int EngineVersion;
@@ -56,11 +56,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		#endregion
 
 		public Megalo.Model.MegaloScriptModel EngineDefinition { get; private set; }
-		public Megalo.Proto.MegaloScriptDatabase MegaloDatabase { get { return EngineDefinition.Database; } }
+		public Megalo.Proto.MegaloScriptDatabase MegaloDatabase => EngineDefinition.Database;
 
-		bool StringTableIsNotDefault { get {
-			return BaseNameStringIndex.IsNotNone() || StringTable.HasStrings;
-		} }
+		bool StringTableIsNotDefault => BaseNameStringIndex.IsNotNone() || StringTable.HasStrings;
 		void StringTableRevertToDefault()
 		{
 			BaseNameStringIndex = TypeExtensions.kNone;
@@ -98,10 +96,14 @@ namespace KSoft.Blam.RuntimeData.Variants
 			var game_build = variantManager.GameBuild;
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+			{
 				return new Games.HaloReach.RuntimeData.Variants.GameEngineMegaloVariantHaloReach(variantManager);
+			}
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+			{
 				return new Games.Halo4.RuntimeData.Variants.GameEngineMegaloVariantHalo4(variantManager);
+			}
 
 			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
 		}
@@ -137,7 +139,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 			{
 				s.Stream(ref mEncodingVersion);
 				if (s.IsReading && !VerifyEncodingVersion())
+				{
 					throw new IO.VersionMismatchException("Megalo encoding", (uint)mEncodingVersion);
+				}
 
 				s.Stream(ref EngineVersion);				// global, not a c_game_engine_megalo_variant member
 				s.StreamObject(BaseVariant);
@@ -185,7 +189,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 					this, StringTableEntryIdResolver, StringTableEntryNameResolver);
 			}
 			else
+			{
 				s.StreamAttribute(attributeName, ref stringIndex);
+			}
 		}
 		internal void SerializeStringTableIndexOpt<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string attributeName, ref int stringIndex)
@@ -205,7 +211,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 			}
 
 			if (!streamed)
+			{
 				stringIndex = TypeExtensions.kNone;
+			}
 		}
 		#endregion
 
@@ -225,7 +233,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TCursor : class
 		{
 			if (!variant.TagElementStreamSerializeFlags.UseUserOptionNames())
+			{
 				s.StreamCursor(ref bitIndex);
+			}
 			else if (s.IsReading)
 			{
 				string option_name = null;
@@ -247,21 +257,47 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TCursor : class
 		{
 			#region EngineOptions
-			using(var bm = s.EnterCursorBookmarkOpt("EngineOptions", this, _obj=>_obj.HasEngineOptionToggles)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("EngineOptions", this, _obj=>_obj.HasEngineOptionToggles))
 			{
-				using (var bm2 = s.EnterCursorBookmarkOpt("Disabled", DisabledEngineOptions, Predicates.HasBits)) if (bm2.IsNotNull)
-					DisabledEngineOptions.Serialize(s, "Option", this, SerializeEngineOptionToggle);
-				using (var bm2 = s.EnterCursorBookmarkOpt("Hidden", HiddenEngineOptions, Predicates.HasBits)) if (bm2.IsNotNull)
-					HiddenEngineOptions.Serialize(s, "Option", this, SerializeEngineOptionToggle);
+				if (bm.IsNotNull)
+				{
+					using (var bm2 = s.EnterCursorBookmarkOpt("Disabled", DisabledEngineOptions, Predicates.HasBits))
+					{
+						if (bm2.IsNotNull)
+						{
+							DisabledEngineOptions.Serialize(s, "Option", this, SerializeEngineOptionToggle);
+						}
+					}
+					using (var bm2 = s.EnterCursorBookmarkOpt("Hidden", HiddenEngineOptions, Predicates.HasBits))
+					{
+						if (bm2.IsNotNull)
+						{
+							HiddenEngineOptions.Serialize(s, "Option", this, SerializeEngineOptionToggle);
+						}
+					}
+				}
 			}
 			#endregion
 			#region UserOptions
-			using(var bm = s.EnterCursorBookmarkOpt("UserOptions", this, _obj => _obj.HasUserOptionToggles)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("UserOptions", this, _obj => _obj.HasUserOptionToggles))
 			{
-				using (var bm2 = s.EnterCursorBookmarkOpt("Disabled", DisabledUserOptions, Predicates.HasBits)) if (bm2.IsNotNull)
-					DisabledUserOptions.Serialize(s, "Option", this, SerializeUserOptionToggle);
-				using (var bm2 = s.EnterCursorBookmarkOpt("Hidden", HiddenUserOptions, Predicates.HasBits)) if (bm2.IsNotNull)
-					HiddenUserOptions.Serialize(s, "Option", this, SerializeUserOptionToggle);
+				if (bm.IsNotNull)
+				{
+					using (var bm2 = s.EnterCursorBookmarkOpt("Disabled", DisabledUserOptions, Predicates.HasBits))
+					{
+						if (bm2.IsNotNull)
+						{
+							DisabledUserOptions.Serialize(s, "Option", this, SerializeUserOptionToggle);
+						}
+					}
+					using (var bm2 = s.EnterCursorBookmarkOpt("Hidden", HiddenUserOptions, Predicates.HasBits))
+					{
+						if (bm2.IsNotNull)
+						{
+							HiddenUserOptions.Serialize(s, "Option", this, SerializeUserOptionToggle);
+						}
+					}
+				}
 			}
 			#endregion
 		}
@@ -271,54 +307,100 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			using (var bm = s.EnterCursorBookmarkOpt("StringTable", this, _obj=>_obj.StringTableIsNotDefault)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("StringTable", this, _obj=>_obj.StringTableIsNotDefault))
 			{
-				s.StreamObject(StringTable);
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(StringTable);
 
-				SerializeStringTableIndexOpt(s, "baseNameIndex", ref BaseNameStringIndex);
+					SerializeStringTableIndexOpt(s, "baseNameIndex", ref BaseNameStringIndex);
+				}
+				else
+				{
+					StringTableRevertToDefault();
+				}
 			}
-			else
-				StringTableRevertToDefault();
 
-			using (var bm = s.EnterCursorBookmarkOpt("NameString", NameString, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamObject(NameString);
-			using (var bm = s.EnterCursorBookmarkOpt("DescString", DescriptionString, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamObject(DescriptionString);
-			using (var bm = s.EnterCursorBookmarkOpt("CategoryString", CategoryString, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamObject(CategoryString);
+			using (var bm = s.EnterCursorBookmarkOpt("NameString", NameString, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(NameString);
+				}
+			}
+			using (var bm = s.EnterCursorBookmarkOpt("DescString", DescriptionString, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(DescriptionString);
+				}
+			}
+			using (var bm = s.EnterCursorBookmarkOpt("CategoryString", CategoryString, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(CategoryString);
+				}
+			}
 		}
 		protected virtual void SerializeImpl<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
 		{
 			using (s.EnterCursorBookmark("SerializeFlags"))
+			{
 				s.StreamCursorEnum(ref TagElementStreamSerializeFlags, true);
+			}
 
 			s.StreamAttribute("encoding", ref mEncodingVersion, NumeralBase.Hex);
 			s.StreamAttribute("version", ref EngineVersion);
 			// Must come first. Most of the other variant data contains string references
 			SerializeLocaleStrings(s);
 
-			using (var bm = s.EnterCursorBookmarkOpt("PlayerTraits", PlayerTraits, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamableElements("entry", PlayerTraits, this, _this => _this.NewMegaloPlayerTraits());
-			using (var bm = s.EnterCursorBookmarkOpt("UserDefinedOptions", UserDefinedOptions, Predicates.HasItems)) if (bm.IsNotNull)
-				s.StreamableElements("entry", UserDefinedOptions);
+			using (var bm = s.EnterCursorBookmarkOpt("PlayerTraits", PlayerTraits, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamableElements("entry", PlayerTraits, this, _this => _this.NewMegaloPlayerTraits());
+				}
+			}
+
+			using (var bm = s.EnterCursorBookmarkOpt("UserDefinedOptions", UserDefinedOptions, Predicates.HasItems))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamableElements("entry", UserDefinedOptions);
+				}
+			}
 
 			if (!s.StreamAttributeOpt("engineIcon", ref EngineIconIndex, Predicates.IsNotNone))
+			{
 				EngineIconIndex = TypeExtensions.kNone;
-			if (!s.StreamAttributeOpt("engineCategory", ref EngineCategory, Predicates.IsNotNone))
-				EngineCategory = TypeExtensions.kNone;
-
-			using (var bm = s.EnterCursorBookmarkOpt("MapPermissions", MapPermissions, mp=>!mp.IsDefault)) if (bm.IsNotNull)
-				s.StreamObject(MapPermissions);
-
-			using (var bm = s.EnterCursorBookmarkOpt("PlayerRatingParams", PlayerRatingParameters, prp=>!prp.IsDefault)) if (bm.IsNotNull)
-			{
-				s.StreamObject(PlayerRatingParameters);
 			}
-			else
+
+			if (!s.StreamAttributeOpt("engineCategory", ref EngineCategory, Predicates.IsNotNone))
 			{
-				PlayerRatingParameters.RevertToDefault();
+				EngineCategory = TypeExtensions.kNone;
+			}
+
+			using (var bm = s.EnterCursorBookmarkOpt("MapPermissions", MapPermissions, mp=>!mp.IsDefault))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(MapPermissions);
+				}
+			}
+
+			using (var bm = s.EnterCursorBookmarkOpt("PlayerRatingParams", PlayerRatingParameters, prp=>!prp.IsDefault))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamObject(PlayerRatingParameters);
+				}
+				else
+				{
+					PlayerRatingParameters.RevertToDefault();
+				}
 			}
 
 			s.StreamAttributeOpt("scoreToWinRound", ref ScoreToWinRound, Predicates.IsNotZero);
@@ -332,10 +414,14 @@ namespace KSoft.Blam.RuntimeData.Variants
 			using (s.EnterOwnerBookmark(this))
 			{
 				using (s.EnterCursorBookmark("Base"))
+				{
 					s.StreamObject(BaseVariant);
+				}
 
 				using (s.EnterCursorBookmark("Megalo"))
+				{
 					SerializeImpl(s);
+				}
 
 				if (s.IsWriting && s.IgnoreWritePredicates) // #HACK_BLAM: IgnoreWritePredicates hack!
 				{
@@ -351,7 +437,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 				}
 
 				using (s.EnterCursorBookmark("MegaloScript"))
+				{
 					s.StreamObject(EngineDefinition);
+				}
 			}
 		}
 		#endregion

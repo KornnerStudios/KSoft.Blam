@@ -25,14 +25,13 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public sbyte PrimaryWeapon, SecondaryWeapon, ArmorAbility;
 		public byte InitialGrenadeCount;
 
-		public bool IsUsed { get { return NameIndex.IsNotNone(); } }
-		public bool IsHidden { get { return (Flags & GameOptionsSingleLoadoutFlags.Enabled) == 0; } }
+		public bool IsUsed => NameIndex.IsNotNone();
+		public bool IsHidden => (Flags & GameOptionsSingleLoadoutFlags.Enabled) == 0;
 
-		public virtual bool IsDefault { get {
-			return NameIndex.IsNone() && Flags == 0 && InitialGrenadeCount == 0 &&
+		public virtual bool IsDefault
+			=> NameIndex.IsNone() && Flags == 0 && InitialGrenadeCount == 0 &&
 				PrimaryWeapon == TypeExtensionsBlam.kUnchanged && SecondaryWeapon == TypeExtensionsBlam.kUnchanged &&
 				ArmorAbility == TypeExtensionsBlam.kUnchanged;
-		} }
 
 		public virtual void RevertToDefault()
 		{
@@ -84,25 +83,25 @@ namespace KSoft.Blam.RuntimeData.Variants
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
 		public abstract GameOptionsLoadout[] Loadouts { get; }
 
-		public bool IsUsed { get {
-			return Loadouts.TrueForAny(lo => lo.IsUsed);
-		} }
+		public bool IsUsed => Loadouts.TrueForAny(lo => lo.IsUsed);
 
-		public bool IsDefault { get {
-			return Array.TrueForAll(Loadouts, lo => lo.IsDefault);
-		} }
+		public bool IsDefault => Array.TrueForAll(Loadouts, lo => lo.IsDefault);
 
 		public virtual void RevertToDefault()
 		{
 			foreach (var lo in Loadouts)
+			{
 				lo.RevertToDefault();
+			}
 		}
 
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
 		{
 			foreach (var lo in Loadouts)
+			{
 				lo.Serialize(s);
+			}
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -118,7 +117,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 			// FIXME: I noticed in H4's ricochet that the first two Palettes weren't default, but their names were NONE still, so this wouldn't write their non-default values out (but who cares?)
 			if (is_used)
+			{
 				SerializeLoadouts(s, is_used);
+			}
 		}
 		#endregion
 	};
@@ -138,14 +139,16 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public virtual void RevertToDefault()
 		{
 			foreach (var p in Palettes)
+			{
 				p.RevertToDefault();
+			}
 		}
 
 		#region IBitStreamSerializable Members
 		protected abstract void SerializeLoadoutFlags(IO.BitStream s);
 		private void SerializePalettes(IO.BitStream s)
 		{
-			foreach (var p in Palettes) p.Serialize(s);
+			foreach (var p in Palettes) { p.Serialize(s); }
 		}
 		public void Serialize(IO.BitStream s)
 		{
@@ -166,20 +169,20 @@ namespace KSoft.Blam.RuntimeData.Variants
 			SerializeLoadoutFlags(s);
 
 			GameOptionsLoadoutPalette p;
-			Predicate<GameOptionsLoadoutPalette> p_is_not_default = obj => !obj.IsDefault;
+			static bool p_is_not_default(GameOptionsLoadoutPalette obj) => !obj.IsDefault;
 
 			p = Palettes[0];
-			using (var bm = s.EnterCursorBookmarkOpt("Palette0", p, p_is_not_default)) p.Serialize(s);
+			using (var bm = s.EnterCursorBookmarkOpt("Palette0", p, p_is_not_default)) { p.Serialize(s); }
 			p = Palettes[1];
-			using (var bm = s.EnterCursorBookmarkOpt("Palette1", p, p_is_not_default)) p.Serialize(s);
+			using (var bm = s.EnterCursorBookmarkOpt("Palette1", p, p_is_not_default)) { p.Serialize(s); }
 			p = Palettes[2];
-			using (var bm = s.EnterCursorBookmarkOpt("Palette2", p, p_is_not_default)) p.Serialize(s);
+			using (var bm = s.EnterCursorBookmarkOpt("Palette2", p, p_is_not_default)) { p.Serialize(s); }
 			p = Palettes[3];
-			using (var bm = s.EnterCursorBookmarkOpt("Palette3", p, p_is_not_default)) p.Serialize(s);
+			using (var bm = s.EnterCursorBookmarkOpt("Palette3", p, p_is_not_default)) { p.Serialize(s); }
 			p = Palettes[4];
-			using (var bm = s.EnterCursorBookmarkOpt("Palette4", p, p_is_not_default)) p.Serialize(s);
+			using (var bm = s.EnterCursorBookmarkOpt("Palette4", p, p_is_not_default)) { p.Serialize(s); }
 			p = Palettes[5];
-			using (var bm = s.EnterCursorBookmarkOpt("Palette5", p, p_is_not_default)) p.Serialize(s);
+			using (var bm = s.EnterCursorBookmarkOpt("Palette5", p, p_is_not_default)) { p.Serialize(s); }
 		}
 		#endregion
 	};

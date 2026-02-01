@@ -12,7 +12,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public int CreateUserDefinedOption(string codeName, int nameStringIndex, int descStringIndex)
 		{
 			if (UserDefinedOptions.Count == UserDefinedOptions.Capacity)
+			{
 				return TypeExtensions.kNone;
+			}
 
 			var option = new MegaloVariantUserDefinedOption()
 			{
@@ -29,7 +31,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 	[System.Reflection.Obfuscation(Exclude=false)]
 	internal struct MegaloVariantUserDefinedOptionValueParams
 	{
-		public static readonly MegaloVariantUserDefinedOptionValueParams Null = new MegaloVariantUserDefinedOptionValueParams()
+		public static readonly MegaloVariantUserDefinedOptionValueParams Null = new()
 		{
 			NameStringIndex=TypeExtensions.kNone,
 			DescriptionStringIndex=TypeExtensions.kNone,
@@ -94,7 +96,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public bool IsRangeValue;
 		public int DefaultValueIndex = TypeExtensions.kNone;
 		public int Value = TypeExtensions.kNone;
-		public List<MegaloVariantUserDefinedOptionValueElement> Values { get; private set; }
+		public List<MegaloVariantUserDefinedOptionValueElement> Values { get; private set; } = new();
 
 		#region Range values
 		public MegaloVariantUserDefinedOptionValueElement RangeMinValue { get {
@@ -106,11 +108,6 @@ namespace KSoft.Blam.RuntimeData.Variants
 			return Values[1];
 		} }
 		#endregion
-
-		public MegaloVariantUserDefinedOptionValue()
-		{
-			Values = new List<MegaloVariantUserDefinedOptionValueElement>();
-		}
 
 		public void Clear()
 		{
@@ -149,12 +146,16 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 			Values.Clear();
 			foreach (var vp in values)
+			{
 				Values.Add(new MegaloVariantUserDefinedOptionValueElement(vp));
+			}
 		}
 		internal void AddValue(MegaloVariantUserDefinedOptionValueParams valueParam, bool isDefault)
 		{
 			if (isDefault)
+			{
 				DefaultValueIndex = Values.Count;
+			}
 
 			Values.Add(new MegaloVariantUserDefinedOptionValueElement(valueParam));
 		}
@@ -164,7 +165,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		void ValuesRead(IO.BitStream s, GameEngineMegaloVariant megalo, int count, bool isRangeValue)
 		{
 			if (count.IsNone())
+			{
 				megalo.StreamUserDefinedValuesCount(s, ref count);
+			}
 
 			for (int x = 0; x < count; x++)
 			{
@@ -176,7 +179,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		void ValuesWrite(IO.BitStream s, GameEngineMegaloVariant megalo, bool isRangeValue)
 		{
 			for (int x = 0; x < Values.Count; x++)
+			{
 				Values[x].Serialize(s, megalo, isRangeValue);
+			}
 		}
 		public void Serialize(IO.BitStream s, GameEngineMegaloVariant megalo)
 		{
@@ -187,13 +192,13 @@ namespace KSoft.Blam.RuntimeData.Variants
 			{
 				s.Stream(ref Value, 10, signExtend:true);
 				// min, max
-					 if (s.IsReading) ValuesRead(s, megalo, 2, IsRangeValue);
-				else if (s.IsWriting) ValuesWrite(s, megalo, IsRangeValue);
+					 if (s.IsReading) { ValuesRead(s, megalo, 2, IsRangeValue); }
+				else if (s.IsWriting) { ValuesWrite(s, megalo, IsRangeValue); }
 			}
 			else
 			{
 				megalo.StreamUserDefinedValueIndex(s, ref DefaultValueIndex);
-				if (s.IsReading) ValuesRead(s, megalo, TypeExtensions.kNone, IsRangeValue);
+					 if (s.IsReading) { ValuesRead(s, megalo, TypeExtensions.kNone, IsRangeValue); }
 				else if (s.IsWriting)
 				{
 					int count = Values.Count;
@@ -212,17 +217,20 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TCursor : class
 		{
 			if (!IsRangeValue)
+			{
 				return; // #HACK_BLAM: IgnoreWritePredicates hack!
+			}
 
 			s.StreamAttribute("rangeValue", ref Value);
 			if (s.IsReading)
-			{	Values.Add(new MegaloVariantUserDefinedOptionValueElement());
+			{
+				Values.Add(new MegaloVariantUserDefinedOptionValueElement());
 				Values.Add(new MegaloVariantUserDefinedOptionValueElement());
 			}
 			using (s.EnterCursorBookmark(kValuesElementName))
 			{
-				using (s.EnterCursorBookmark("Min")) RangeMinValue.SerializeValue(s);
-				using (s.EnterCursorBookmark("Max")) RangeMaxValue.SerializeValue(s);
+				using (s.EnterCursorBookmark("Min")) { RangeMinValue.SerializeValue(s); }
+				using (s.EnterCursorBookmark("Max")) { RangeMaxValue.SerializeValue(s); }
 			}
 		}
 		internal void SerializeValues<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -242,9 +250,13 @@ namespace KSoft.Blam.RuntimeData.Variants
 			variant.SerializeStringTableIndex(s, "nameIndex", ref NameStringIndex);
 			variant.SerializeStringTableIndex(s, "descIndex", ref DescriptionStringIndex);
 			if (s.StreamAttributeOpt("isRangeValue", ref IsRangeValue, Predicates.IsTrue))
+			{
 				SerializeRangeValues(s);
+			}
 			else
+			{
 				SerializeValues(s);
+			}
 		}
 		#endregion
 	};
@@ -254,7 +266,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		, IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
-		public MegaloVariantUserDefinedOptionValue ValueData = new MegaloVariantUserDefinedOptionValue();
+		public MegaloVariantUserDefinedOptionValue ValueData = new();
 		public int ValueIndex = TypeExtensions.kNone;
 		public int Value = TypeExtensions.kNone;
 
@@ -292,17 +304,23 @@ namespace KSoft.Blam.RuntimeData.Variants
 		internal void AddValue(MegaloVariantUserDefinedOptionValueParams valueParam, bool isDefault = false)
 		{
 			if (isDefault)
+			{
 				ValueIndex = ValueData.Values.Count;
+			}
 
 			ValueData.AddValue(valueParam, isDefault);
 		}
 		internal void CopyValueFrom(MegaloVariantUserDefinedOption other, int otherIndex = -1, bool isDefault = false)
 		{
 			if (otherIndex.IsNone())
+			{
 				otherIndex = other.ValueData.Values.Count-1;
+			}
 
 			if (isDefault)
+			{
 				ValueIndex = ValueData.Values.Count;
+			}
 
 			var other_value = other.ValueData.Values[otherIndex];
 			ValueData.AddValue(new MegaloVariantUserDefinedOptionValueParams()
@@ -320,9 +338,13 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 			ValueData.Serialize(s, megalo);
 			if (ValueData.IsRangeValue)
+			{
 				s.Stream(ref Value, 10, signExtend:true);
+			}
 			else
+			{
 				megalo.StreamUserDefinedValueIndex(s, ref ValueIndex);
+			}
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -336,9 +358,13 @@ namespace KSoft.Blam.RuntimeData.Variants
 			SerializeCodeName(s);
 
 			if (ValueData.IsRangeValue)
+			{
 				s.StreamAttribute("value", ref Value);
+			}
 			else
+			{
 				s.StreamAttribute("valueIndex", ref ValueIndex);
+			}
 		}
 		#endregion
 	};

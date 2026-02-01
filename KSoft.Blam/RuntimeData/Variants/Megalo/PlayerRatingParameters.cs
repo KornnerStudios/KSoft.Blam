@@ -45,33 +45,27 @@ namespace KSoft.Blam.RuntimeData.Variants
 				for (int x = 0; x < ParameterArray.Length && is_default; x++)
 				{
 					var param = (PlayerRatingParameter)x;
-					switch (param)
+					is_default = param switch
 					{
-						case PlayerRatingParameter.RatingScale:
-						case PlayerRatingParameter.KillWeight:
-						case PlayerRatingParameter.AssistWeight:
-						case PlayerRatingParameter.BetrayalWeight:
-						case PlayerRatingParameter.NormalizeByMaxKills:
-							is_default = ParameterArray[x] == 1.0f;
-							break;
+						PlayerRatingParameter.RatingScale or
+						PlayerRatingParameter.KillWeight or
+						PlayerRatingParameter.AssistWeight or
+						PlayerRatingParameter.BetrayalWeight or
+						PlayerRatingParameter.NormalizeByMaxKills
+							=> ParameterArray[x] == 1.0f,
 
-						case PlayerRatingParameter.DeathWeight:
-							is_default = ParameterArray[x] == 0.33f;
-							break;
+						PlayerRatingParameter.DeathWeight
+							=> ParameterArray[x] == 0.33f,
 
-						case PlayerRatingParameter.Base:
-						case PlayerRatingParameter.Range:
-							is_default = ParameterArray[x] == 1000.0f;
-							break;
+						PlayerRatingParameter.Base or
+						PlayerRatingParameter.Range
+							=> ParameterArray[x] == 1000.0f,
 
-						case PlayerRatingParameter.LossScalar:
-							is_default = ParameterArray[x] == 0.96f;
-							break;
+						PlayerRatingParameter.LossScalar
+							=> ParameterArray[x] == 0.96f,
 
-						default:
-							is_default = ParameterArray[x] == 0.0f;
-							break;
-					}
+						_ => ParameterArray[x] == 0.0f,
+					};
 				}
 			}
 

@@ -63,10 +63,14 @@ namespace KSoft.Blam.RuntimeData.Variants
 			var game_build = variantManager.GameBuild;
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
+			{
 				return new Games.HaloReach.RuntimeData.Variants.GameEngineSandboxVariantHaloReach(variantManager);
+			}
 
 			if (game_build.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
+			{
 				return new Games.Halo4.RuntimeData.Variants.GameEngineSandboxVariantHalo4(variantManager);
+			}
 
 			throw new KSoft.Debug.UnreachableException(game_build.ToDisplayString());
 		}
@@ -84,7 +88,9 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public void Serialize(IO.BitStream s)
 		{
 			using (s.EnterOwnerBookmark(this))
+			{
 				SerializeImpl(s);
+			}
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members
@@ -98,8 +104,13 @@ namespace KSoft.Blam.RuntimeData.Variants
 				s.StreamAttributeEnumOpt("editMode", ref EditMode, e => e != SandboxEditingMode.AllPlayers);
 				s.StreamAttributeEnumOpt("respawnTime", ref RespawnTime, v => v!=TypeExtensionsBlam.kUsualDefaultRespawnTimeInSeconds);
 
-				using (var bm = s.EnterCursorBookmarkOpt("EditorTraits", EditorTraits, obj=>!obj.IsUnchanged)) if (bm.IsNotNull)
-					EditorTraits.Serialize(s);
+				using (var bm = s.EnterCursorBookmarkOpt("EditorTraits", EditorTraits, obj=>!obj.IsUnchanged))
+				{
+					if (bm.IsNotNull)
+					{
+						EditorTraits.Serialize(s);
+					}
+				}
 			}
 		}
 
@@ -110,11 +121,13 @@ namespace KSoft.Blam.RuntimeData.Variants
 			MegaloVariant.Serialize(s);
 
 			using (s.EnterOwnerBookmark(this))
+			{
 				SerializeImpl(s);
+			}
 		}
 		#endregion
 
-		GameEngineType IGameEngineVariant.EngineType { get { return GameEngineType.Sandbox; } }
-		GameEngineBaseVariant IGameEngineVariant.BaseVariant { get { return MegaloVariant.BaseVariant; } }
+		GameEngineType IGameEngineVariant.EngineType => GameEngineType.Sandbox;
+		GameEngineBaseVariant IGameEngineVariant.BaseVariant => MegaloVariant.BaseVariant;
 	};
 }

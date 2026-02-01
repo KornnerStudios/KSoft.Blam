@@ -30,19 +30,15 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 		public PlayerTraitsBase Traits { get; private set; }
 
-		bool LivesAreDefault { get {
-			return LivesPerRound == 0 && TeamLivesPerRound == 0;
-		} }
-		protected virtual bool TimesAreDefault { get {
-			return RespawnTime == 5 && SuicideTime == 5 && BetrayalTime == 5 && RespawnGrowthTime == 0 &&
+		bool LivesAreDefault
+			=> LivesPerRound == 0 && TeamLivesPerRound == 0;
+		protected virtual bool TimesAreDefault
+			=> RespawnTime == 5 && SuicideTime == 5 && BetrayalTime == 5 && RespawnGrowthTime == 0 &&
 				InitialLoadoutSelectionTime == 10;
-		} }
-		bool TraitsAreDefault { get {
-			return TraitsDuration == 5 && Traits.IsUnchanged;
-		} }
-		public virtual bool IsDefault { get {
-			return Flags == 0 && LivesAreDefault && TimesAreDefault;
-		} }
+		bool TraitsAreDefault
+			=> TraitsDuration == 5 && Traits.IsUnchanged;
+		public virtual bool IsDefault
+			=> Flags == 0 && LivesAreDefault && TimesAreDefault;
 
 		protected GameOptionsRepawning(GameEngineBaseVariant variant)
 		{
@@ -83,18 +79,27 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TCursor : class
 		{
 			s.StreamAttributeEnumOpt("flags", ref Flags, f => f != 0, true);
-			using (var bm = s.EnterCursorBookmarkOpt("Lives", this, obj=>!obj.LivesAreDefault)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("Lives", this, obj=>!obj.LivesAreDefault))
 			{
-				s.StreamAttribute("perRound", ref LivesPerRound);
-				s.StreamAttribute("perRoundTeam", ref TeamLivesPerRound);
+				if (bm.IsNotNull)
+				{
+					s.StreamAttribute("perRound", ref LivesPerRound);
+					s.StreamAttribute("perRoundTeam", ref TeamLivesPerRound);
+				}
 			}
-			using (s.EnterCursorBookmark("Times"))
-				SerializeTimes(s);
 
-			using (var bm = s.EnterCursorBookmarkOpt("Traits", Traits, obj=>!obj.IsUnchanged)) if (bm.IsNotNull)
+			using (s.EnterCursorBookmark("Times"))
 			{
-				s.StreamAttributeOpt("duration", ref TraitsDuration, Predicates.IsNotZero);
-				s.StreamObject(Traits);
+				SerializeTimes(s);
+			}
+
+			using (var bm = s.EnterCursorBookmarkOpt("Traits", Traits, obj=>!obj.IsUnchanged))
+			{
+				if (bm.IsNotNull)
+				{
+					s.StreamAttributeOpt("duration", ref TraitsDuration, Predicates.IsNotZero);
+					s.StreamObject(Traits);
+				}
 			}
 		}
 		#endregion
