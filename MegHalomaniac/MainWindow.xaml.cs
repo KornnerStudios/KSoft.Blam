@@ -8,7 +8,7 @@ namespace MgloGui
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private MainWindowViewModel mViewModel = new MainWindowViewModel();
+		private readonly MainWindowViewModel mViewModel = new();
 
 		public MainWindow()
 		{
@@ -26,7 +26,9 @@ namespace MgloGui
 		private void OnDrop(object sender, DragEventArgs e)
 		{
 			if (mViewModel.IsProcessing)
+			{
 				return;
+			}
 
 			if (e.Data.GetDataPresent(DataFormats.FileDrop))
 			{
@@ -39,7 +41,9 @@ namespace MgloGui
 		private void OnPreviewDragOver(object sender, DragEventArgs e)
 		{
 			if (mViewModel.IsProcessing)
+			{
 				return;
+			}
 
 			e.Handled = true;
 		}
@@ -48,7 +52,9 @@ namespace MgloGui
 		{
 			e.Effects = DragDropEffects.None;
 			if (mViewModel.IsProcessing)
+			{
 				return;
+			}
 
 			if (e.Data.GetDataPresent(DataFormats.FileDrop))
 			{
@@ -63,7 +69,9 @@ namespace MgloGui
 		private void OnPreviewDragLeave(object sender, DragEventArgs e)
 		{
 			if (mViewModel.IsProcessing)
+			{
 				return;
+			}
 
 			mViewModel.ClearProcessFilesHelpText();
 		}
@@ -71,16 +79,22 @@ namespace MgloGui
 		private void OnMessagesBlockMouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (mViewModel.IsProcessing)
+			{
 				return;
+			}
 
 			if (!string.IsNullOrWhiteSpace(mViewModel.MessagesText))
+			{
 				Clipboard.SetText(mViewModel.MessagesText);
+			}
 		}
 
 		private void OnSelectedGameGameBuildChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
 		{
 			if (mViewModel.IsProcessing)
+			{
 				return;
+			}
 
 			mViewModel.RefreshForCurrentlySelectedGameBuild();
 		}

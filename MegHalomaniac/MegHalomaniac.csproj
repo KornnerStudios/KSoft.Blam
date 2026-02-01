@@ -7,6 +7,7 @@
     <Description>Halo Engine Megalo script assembler</Description>
     <TargetFramework>net9.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <NeutralLanguage>en</NeutralLanguage>
     <!-- Don't do this. See https://stackoverflow.com/a/55348070/444977 -->
     <!-- <Deterministic>true</Deterministic> -->
   </PropertyGroup>

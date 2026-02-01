@@ -47,7 +47,9 @@ namespace MgloGui
 		{
 			finalOutputFileName = outputFileName;
 			if (base.IgnoreOutputPaths)
+			{
 				return;
+			}
 
 			string desired_output_path = null;
 			switch (FileReverseEngineeringMode)
@@ -62,7 +64,9 @@ namespace MgloGui
 			}
 
 			if (desired_output_path.IsNullOrEmpty())
+			{
 				return;
+			}
 
 			string final_file_name_and_extension = Path.GetFileName(finalOutputFileName);
 			finalOutputFileName = Path.Combine(desired_output_path, final_file_name_and_extension);

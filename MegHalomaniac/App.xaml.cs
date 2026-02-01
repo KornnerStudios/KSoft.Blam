@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using KSoft;
 
+#pragma warning disable IDE0270 // Use coalesce expression
+
 namespace MgloGui
 {
 	using KBlam = KSoft.Blam;
@@ -62,19 +64,25 @@ namespace MgloGui
 			// Initializing it in OnStartup or OnLoaded is too late.
 			// Lazy loading, however, works (on my machine)
 			if (gAppIconBitmap == null)
-				RenderAppIconBitmap();
+				{
+					RenderAppIconBitmap();
+				}
 
-			return gAppIconBitmap;
+				return gAppIconBitmap;
 		} }
 
 		private static void RenderAppIconBitmap()
 		{
 			var grid = (Grid)Application.Current.FindResource("MgloLogoGrid");
 			if (grid == null)
+			{
 				throw new ArgumentException("Failed to find logo Grid", "MgloLogoGrid");
+			}
 
-			var viewbox = new Viewbox();
-			viewbox.Child = grid;
+			var viewbox = new Viewbox
+			{
+				Child = grid
+			};
 			viewbox.Measure(new Size(512, 512));
 			viewbox.Arrange(new Rect(0, 0, 512, 512));
 			viewbox.UpdateLayout();
@@ -106,6 +114,8 @@ namespace MgloGui
 			GameBuildAndTarget = gameBuildAndTarget;
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize",
+			Justification = "Not expecting any derived classes to have Finalizers")]
 		public void Dispose()
 		{
 			MegaloSystemRef.Dispose();
@@ -117,7 +127,9 @@ namespace MgloGui
 		public void LoadSystems()
 		{
 			if (mIsLoaded)
+			{
 				return;
+			}
 
 			BlobSystemRef = KBlam.Engine.EngineRegistry.GetSystem<KBlam.Blob.BlobSystem>(GameBuildAndTarget.Build);
 			LangSystemRef = KBlam.Engine.EngineRegistry.GetSystem<KBlam.Localization.LanguageSystem>(GameBuildAndTarget.Build);
@@ -158,7 +170,7 @@ namespace MgloGui
 			MegaloProto.MegaloProtoSystem/*megalo_proto_system*/.PrepareDatabasesForUse(all_dbs_tasks.Item1.Result, all_dbs_tasks.Item2.Result);
 		}
 
-		static Dictionary<string, MgloBlamGameRequiredSystems> gCachedGames = new Dictionary<string, MgloBlamGameRequiredSystems>();
+		static readonly Dictionary<string, MgloBlamGameRequiredSystems> gCachedGames = new();
 		public static MgloBlamGameRequiredSystems GetOrCreateFromSelectableGameBuildName(string name)
 		{
 			MgloBlamGameRequiredSystems instance;
@@ -168,7 +180,9 @@ namespace MgloGui
 				{
 					KBlam.Engine.EngineBuildRevision build_revision = KBlam.Engine.EngineRegistry.TryParseExportedBuildName(name);
 					if (build_revision == null)
+					{
 						throw new ArgumentOutOfRangeException(nameof(name), name, "Not a valid build name");
+					}
 
 					instance = new MgloBlamGameRequiredSystems(build_revision.BuildHandle.ToEngineTargetHandle());
 					gCachedGames.Add(name, instance);
@@ -192,7 +206,7 @@ namespace MgloGui.Properties
 {
 	partial class Settings
 	{
-		private static List<string> mSelectableGameBuildNameValuesSupportingMegalo = new List<string>();
+		private static readonly List<string> mSelectableGameBuildNameValuesSupportingMegalo = new();
 		public IReadOnlyList<string> SelectableGameBuildNameValuesSupportingMegalo { get {
 			if (mSelectableGameBuildNameValuesSupportingMegalo.Count == 0 &&
 				KSoft.Blam.Engine.EngineRegistry.IsInitialized)

@@ -69,9 +69,9 @@ namespace MgloGui
 	{
 		bool mIgnoreWritePredicates;
 
-		int mFileOffset;
+		readonly int mFileOffset;
 
-		protected override ReverseEngineeringMode FileReverseEngineeringMode { get { return ReverseEngineeringMode.Disassemble; } }
+		protected override ReverseEngineeringMode FileReverseEngineeringMode => ReverseEngineeringMode.Disassemble;
 
 		public GvarDisassembler(MainWindowViewModel mainViewModel)
 			: base(mainViewModel)
@@ -158,8 +158,7 @@ namespace MgloGui
 
 		protected override void ReverseEngineerInputFile(string inputFile, string outputFile)
 		{
-			KBlam.RuntimeData.Variants.GameEngineVariant gev = null;
-			if (DecodeVariantBlf(inputFile, out gev))
+			if (DecodeVariantBlf(inputFile, out KBlam.RuntimeData.Variants.GameEngineVariant gev))
 			{
 				DecodeSaveVariant(gev, outputFile);
 			}
@@ -208,8 +207,7 @@ namespace MgloGui
 				{
 					blf.UnderlyingStream.StreamMode = FileAccess.Read;
 
-					IEnumerable<KBlam.Blob.BlobObject> objects;
-					blf_result = blf.EnumerateChunks(blob_system, out objects);
+					blf_result = blf.EnumerateChunks(blob_system, out IEnumerable<KBlam.Blob.BlobObject> objects);
 
 					if (blf_result.IsValid)
 					{
@@ -261,7 +259,9 @@ namespace MgloGui
 				gev.Serialize(xml);
 
 				using (var sw = new System.IO.StreamWriter(xmlFilename, false, System.Text.Encoding.UTF8))
+				{
 					xml.Document.Save(sw);
+				}
 			}
 		}
 	};
@@ -272,7 +272,9 @@ namespace MgloGui
 		private static KSoft.WPF.BitVectorUserInterfaceData gGameVariantDisassmblerFlagsUserInterfaceSource;
 		public static KSoft.WPF.BitVectorUserInterfaceData GameVariantDisassmblerFlagsUserInterfaceSource { get {
 			if (gGameVariantDisassmblerFlagsUserInterfaceSource == null)
+			{
 				gGameVariantDisassmblerFlagsUserInterfaceSource = KSoft.WPF.BitVectorUserInterfaceData.ForEnum(typeof(GvarDisassemblerFlags));
+			}
 			return gGameVariantDisassmblerFlagsUserInterfaceSource;
 		} }
 
@@ -286,7 +288,9 @@ namespace MgloGui
 
 		public string GameVariantDisassemblerOutputPathOverride { get {
 			if (Flags.Test(MiscFlags.IgnoreOutputPaths))
+			{
 				return "";
+			}
 
 			return Properties.Settings.Default.GvarDisassemblyOutputPath;
 		} }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KSoft;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -54,6 +55,8 @@ namespace MgloGui
 
 		void NotifyOutputFileReadOnly(string inputFile, string outputFile)
 		{
+			Util.MarkUnusedVariable(ref outputFile);
+
 			Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background,
 				new Action(() =>
 				{
@@ -90,10 +93,8 @@ namespace MgloGui
 			{
 				try
 				{
-					string disasm_file, asm_file, output_file;
-					GetReverseEngineeringFiles(f, out disasm_file, out asm_file, out output_file);
-					string final_output_file;
-					GetFinalReverseEngineeringFile(output_file, out final_output_file);
+					GetReverseEngineeringFiles(f, out string disasm_file, out string asm_file, out string output_file);
+					GetFinalReverseEngineeringFile(output_file, out string final_output_file);
 
 					var output_info = new System.IO.FileInfo(final_output_file);
 					if (output_info.Exists)

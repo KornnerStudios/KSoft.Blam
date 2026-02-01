@@ -39,10 +39,10 @@ namespace MgloGui
 		bool mClearTitleUpdateData = false;
 		bool mClearWeaponTuning = false;
 
-		int mFileOffset;
-		int mEngineVersion;
+		readonly int mFileOffset;
+		readonly int mEngineVersion;
 
-		protected override ReverseEngineeringMode FileReverseEngineeringMode { get { return ReverseEngineeringMode.Assemble; } }
+		protected override ReverseEngineeringMode FileReverseEngineeringMode => ReverseEngineeringMode.Assemble;
 
 		public GvarAssembler(MainWindowViewModel mainViewModel)
 			: base(mainViewModel)
@@ -87,6 +87,8 @@ namespace MgloGui
 			success = success && EncodeLoadVariant(inputFile, out gev);
 			success = success && EncodeVariantPreprocess(gev, outputFile);
 			success = success && EncodeVariantBlf(outputFile, gev);
+
+			Util.MarkUnusedVariable(ref success);
 		}
 
 		bool EncodeLoadVariant(string xmlFilename, out KBlam.RuntimeData.Variants.GameEngineVariant ev)
@@ -115,10 +117,14 @@ namespace MgloGui
 		bool EncodeVariantPreprocess(
 			KBlam.RuntimeData.Variants.GameEngineVariant gev, string filePath)
 		{
+			Util.MarkUnusedVariable(ref filePath);
+
 			var mv = gev.TryGetMegaloVariant();
 
 			if (mv == null)
+			{
 				return true;
+			}
 
 			if (mClearTitleUpdateData)
 			{
@@ -139,7 +145,9 @@ namespace MgloGui
 			bool result = true;
 
 			using (var dst_fs = File.Open(filePath, System.IO.FileMode.Create, FileAccess.Write))
+			{
 				result = EncodeVariantBlob(dst_fs, gev);
+			}
 
 			return result;
 		}
@@ -171,9 +179,13 @@ namespace MgloGui
 					if (megalo_variant != null)
 					{
 						if (megalo_variant.EngineVersion <= 0)
+						{
 							megalo_variant.EngineVersion = engine_version_to_write;
+						}
 						else
+						{
 							engine_version_to_write = megalo_variant.EngineVersion;
+						}
 					}
 
 					var chdr = (KBlam.Blob.ContentHeaderBlob)blob_system.CreateObject(mGameBuildAndTarget, KBlam.Blob.WellKnownBlob.ContentHeader);
@@ -202,7 +214,9 @@ namespace MgloGui
 		private static KSoft.WPF.BitVectorUserInterfaceData gGameVariantAssemblerFlagsUserInterfaceSource;
 		public static KSoft.WPF.BitVectorUserInterfaceData GameVariantAssemblerFlagsUserInterfaceSource { get {
 			if (gGameVariantAssemblerFlagsUserInterfaceSource == null)
+			{
 				gGameVariantAssemblerFlagsUserInterfaceSource = KSoft.WPF.BitVectorUserInterfaceData.ForEnum(typeof(GvarAssemblerFlags));
+			}
 			return gGameVariantAssemblerFlagsUserInterfaceSource;
 		} }
 
@@ -216,7 +230,9 @@ namespace MgloGui
 
 		public string GameVariantAssemblerOutputPathOverride { get {
 			if (Flags.Test(MiscFlags.IgnoreOutputPaths))
+			{
 				return "";
+			}
 
 			return Properties.Settings.Default.GvarAssemblyOutputPath;
 		} }

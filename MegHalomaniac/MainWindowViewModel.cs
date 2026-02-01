@@ -42,8 +42,11 @@ namespace MgloGui
 		private static KSoft.WPF.BitVectorUserInterfaceData gFlagsUserInterfaceSource;
 		public static KSoft.WPF.BitVectorUserInterfaceData FlagsUserInterfaceSource { get {
 			if (gFlagsUserInterfaceSource == null)
-				gFlagsUserInterfaceSource = KSoft.WPF.BitVectorUserInterfaceData.ForEnum(typeof(MiscFlags));
-			return gFlagsUserInterfaceSource;
+				{
+					gFlagsUserInterfaceSource = KSoft.WPF.BitVectorUserInterfaceData.ForEnum(typeof(MiscFlags));
+				}
+
+				return gFlagsUserInterfaceSource;
 		} }
 
 		KSoft.Collections.BitVector32 mFlags;
@@ -164,10 +167,14 @@ namespace MgloGui
 		};
 		public static AcceptedFilesResults DetermineAcceptedFiles(string[] files, BitVector32 miscFlags)
 		{
+			Util.MarkUnusedVariable(ref miscFlags);
+
 			var results = new AcceptedFilesResults();
 
 			if (files == null || files.Length == 0)
+			{
 				return results;
+			}
 
 			results.FilesCount = files.Length;
 
@@ -204,12 +211,16 @@ namespace MgloGui
 		{
 			var results = DetermineAcceptedFiles(files, this.Flags);
 			if (results.FilesCount == 0)
+			{
 				return false;
+			}
 
 			if (results.AcceptedFileTypes.Cardinality != 0 && !results.AcceptedFileTypes.Test(AcceptedFileType.Unaccepted))
 			{
 				if (AcceptsFilesInternal(results, files))
+				{
 					return true;
+				}
 			}
 
 			ProcessFilesHelpText = "Unacceptable file or group of files";
@@ -219,12 +230,16 @@ namespace MgloGui
 		{
 			var results = DetermineAcceptedFiles(files, this.Flags);
 			if (results.FilesCount == 0)
+			{
 				return;
+			}
 
 			if (results.AcceptedFileTypes.Cardinality != 0 && !results.AcceptedFileTypes.Test(AcceptedFileType.Unaccepted))
 			{
 				if (ProcessFilesInternal(results, files))
+				{
 					ProcessFilesHelpText = "";
+				}
 			}
 		}
 
@@ -329,7 +344,9 @@ namespace MgloGui
 		public void RefreshForCurrentlySelectedGameBuild()
 		{
 			if (SelectedGameBuildNameSetting.IsNullOrEmpty())
+			{
 				return;
+			}
 
 			ClearMessages();
 			ClearStatus();
@@ -340,11 +357,13 @@ namespace MgloGui
 			var task = Task.Run(() =>
 			{
 				var required_systems = SelectGameBuildRequiredSystems;
+#pragma warning disable IDE0031 // Use null propagation
 				if (required_systems != null)
 				{
 					required_systems.LoadSystems();
 					//System.Threading.Thread.Sleep(3 * 1000);
 				}
+#pragma warning restore IDE0031 // Use null propagation
 			});
 
 			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
