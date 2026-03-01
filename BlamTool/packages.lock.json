@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net9.0": {
+      "Mono.Options": {
+        "type": "Direct",
+        "requested": "[6.12.0.148, )",
+        "resolved": "6.12.0.148",
+        "contentHash": "kf6bdXnP4IzqIp4bJ1YKPI3/PAcOV6qm4mznChJ3c92zHQUXTWJSp0+h+Cfcii0O6m/EgW7KA+tbCiB2al0DDA=="
+      },
+      "SharpZipLib": {
+        "type": "Transitive",
+        "resolved": "1.4.2",
+        "contentHash": "yjj+3zgz8zgXpiiC3ZdF/iyTBbz2fFvMxZFEBPUcwZjIvXOf37Ylm+K58hqMfIBt5JgU/Z2uoUS67JmTLe973A=="
+      },
+      "ksoft": {
+        "type": "Project"
+      },
+      "ksoft.blam": {
+        "type": "Project",
+        "dependencies": {
+          "KSoft": "[1.0.0, )",
+          "KSoft.Compression": "[1.0.0, )",
+          "KSoft.IO.TagElementStreams": "[1.0.0, )",
+          "KSoft.Security": "[1.0.0, )"
+        }
+      },
+      "ksoft.compression": {
+        "type": "Project",
+        "dependencies": {
+          "KSoft": "[1.0.0, )",
+          "SharpZipLib": "[1.4.2, )"
+        }
+      },
+      "ksoft.io.tagelementstreams": {
+        "type": "Project",
+        "dependencies": {
+          "KSoft": "[1.0.0, )"
+        }
+      },
+      "ksoft.security": {
+        "type": "Project",
+        "dependencies": {
+          "KSoft": "[1.0.0, )"
+        }
+      }
+    }
+  }
+}

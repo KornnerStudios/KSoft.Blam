@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net9.0": {
+      "SharpZipLib": {
+        "type": "Transitive",
+        "resolved": "1.4.2",
+        "contentHash": "yjj+3zgz8zgXpiiC3ZdF/iyTBbz2fFvMxZFEBPUcwZjIvXOf37Ylm+K58hqMfIBt5JgU/Z2uoUS67JmTLe973A=="
+      },
+      "ksoft": {
+        "type": "Project"
+      },
+      "ksoft.compression": {
+        "type": "Project",
+        "dependencies": {
+          "KSoft": "[1.0.0, )",
+          "SharpZipLib": "[1.4.2, )"
+        }
+      },
+      "ksoft.io.tagelementstreams": {
+        "type": "Project",
+        "dependencies": {
+          "KSoft": "[1.0.0, )"
+        }
+      },
+      "ksoft.security": {
+        "type": "Project",
+        "dependencies": {
+          "KSoft": "[1.0.0, )"
+        }
+      }
+    }
+  }
+}
