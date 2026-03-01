@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="MSTest.Sdk/4.1.0">
   <PropertyGroup>
-    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Test.KSoft.Blam</RootNamespace>
     <AssemblyName>Test.KSoft.Blam</AssemblyName>
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
     <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(VitaRootDir)KSoft\KSoft\KSoft.csproj">
       <Project>{eb07f515-e27c-4768-8bd8-2829f657807e}</Project>

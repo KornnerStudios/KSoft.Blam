@@ -27,13 +27,13 @@ namespace KSoft.Blam.Engine.Test
 		[Description("Test the core engine registry for proper init and initial state")]
 		public void Engine_RegistryInitializeTest()
 		{
-			Assert.AreEqual(5, EngineRegistry.Engines.Count,
+			Assert.HasCount(5, EngineRegistry.Engines,
 				"Unexpected engine count in the registry. Was a new one added?");
 
-			Assert.AreEqual(5, EngineRegistry.TargetPlatforms.Count,
+			Assert.HasCount(5, EngineRegistry.TargetPlatforms,
 				"Unexpected target platform count in the registry. Was a new one added?");
 
-			Assert.AreEqual(3, EngineRegistry.ResourceModels.Count,
+			Assert.HasCount(3, EngineRegistry.ResourceModels,
 				"Unexpected resource model count in the registry. Was a new one added?");
 
 			Assert.IsNotNull(EngineRegistry.EngineBranchHalo1);
@@ -48,18 +48,17 @@ namespace KSoft.Blam.Engine.Test
 		[Description("Test that all systems are properly registered and initialized")]
 		public void Engine_RegistryRegisteredSystemsTest()
 		{
-			Assert.AreEqual(0
+			Assert.HasCount(0
 				+ 1 // Blob
 				+ 1 // Language
 				+ 1 // MegaloProto
-				, EngineRegistry.Systems.Count
+				, EngineRegistry.Systems
 				, "Unexpected engine system count in registry. Was a new one added?");
 
-			foreach(var kv in EngineRegistry.Systems)
+			foreach (var kv in EngineRegistry.Systems)
 			{
 				Assert.IsTrue(kv.Value.IsValid,
-					"Failed to properly initialize the metadata for engine system {0}. Check the debug logs.",
-					kv.Value.EngineSystemType);
+					$"Failed to properly initialize the metadata for engine system {kv.Value.EngineSystemType}. Check the debug logs.");
 			}
 		}
 
