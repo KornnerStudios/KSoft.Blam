@@ -190,7 +190,7 @@ namespace KSoft.Blam.Megalo.Proto
 		#endregion
 
 		public void ImportCodeEnum<TEnum>(string enumName)
-			where TEnum : struct, IComparable, IFormattable, IConvertible
+			where TEnum : struct, Enum, IComparable, IFormattable, IConvertible
 		{
 			Contract.Requires(!string.IsNullOrEmpty(enumName));
 			Contract.Requires(Actions.Count == 0, "Why are you importing an Enum after the DB has been loaded?");

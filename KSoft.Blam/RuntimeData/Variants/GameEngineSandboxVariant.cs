@@ -102,7 +102,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			{
 				s.StreamAttributeEnumOpt("flags", ref Flags, flags => flags != GameEngineSandboxVariantFlags.OpenChannelVoiceEnabled, true);
 				s.StreamAttributeEnumOpt("editMode", ref EditMode, e => e != SandboxEditingMode.AllPlayers);
-				s.StreamAttributeEnumOpt("respawnTime", ref RespawnTime, v => v!=TypeExtensionsBlam.kUsualDefaultRespawnTimeInSeconds);
+				s.StreamAttributeOpt("respawnTime", ref RespawnTime, v => v!=TypeExtensionsBlam.kUsualDefaultRespawnTimeInSeconds);
 
 				using (var bm = s.EnterCursorBookmarkOpt("EditorTraits", EditorTraits, obj=>!obj.IsUnchanged))
 				{
