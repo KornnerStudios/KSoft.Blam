@@ -26,7 +26,7 @@ namespace KSoft.Blam.Megalo.Proto
 
 		#region Ctor
 		void ForEnumPopulateMembers<TEnum>(string[] names, TEnum[] values)
-			where TEnum : struct, Enum, IComparable, IFormattable, IConvertible
+			where TEnum : struct, Enum
 		{
 			int index = 0;
 			int length = names.Length;
@@ -49,7 +49,7 @@ namespace KSoft.Blam.Megalo.Proto
 			}
 		}
 		internal static MegaloScriptEnum ForEnum<TEnum>(string name)
-			where TEnum : struct, Enum, IComparable, IFormattable, IConvertible
+			where TEnum : struct, Enum
 		{
 			var result = new MegaloScriptEnum {
 				Name = name,
