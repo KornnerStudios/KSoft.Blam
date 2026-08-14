@@ -317,189 +317,189 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value0) || reading) &&
 				s.StreamElementOpt("Value0", ref mValue0))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value0;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value0);
 			}
 			#endregion
 			#region Value1
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value1) || reading) &&
 				s.StreamElementOpt("Value1", ref mValue1))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value1;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value1);
 			}
 			#endregion
 			#region Value2
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value2) || reading) &&
 				s.StreamElementOpt("Value2", ref mValue2))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value2;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value2);
 			}
 			#endregion
 			#region Value3
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value3) || reading) &&
 				s.StreamElementOpt("Value3", ref mValue3))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value3;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value3);
 			}
 			#endregion
 			#region Value4
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value4) || reading) &&
 				s.StreamElementOpt("Value4", ref mValue4))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value4;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value4);
 			}
 			#endregion
 			#region Value5
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value5) || reading) &&
 				s.StreamElementOpt("Value5", ref mValue5))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value5;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value5);
 			}
 			#endregion
 			#region Value6
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value6) || reading) &&
 				s.StreamElementOpt("Value6", ref mValue6))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value6;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value6);
 			}
 			#endregion
 			#region Value7
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value7) || reading) &&
 				s.StreamElementOpt("Value7", ref mValue7))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value7;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value7);
 			}
 			#endregion
 			#region Value8
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value8) || reading) &&
 				s.StreamElementOpt("Value8", ref mValue8))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value8;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value8);
 			}
 			#endregion
 			#region Value9
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value9) || reading) &&
 				s.StreamElementOpt("Value9", ref mValue9))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value9;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value9);
 			}
 			#endregion
 			#region Value10
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value10) || reading) &&
 				s.StreamElementOpt("Value10", ref mValue10))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value10;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value10);
 			}
 			#endregion
 			#region Value11
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value11) || reading) &&
 				s.StreamElementOpt("Value11", ref mValue11))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value11;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value11);
 			}
 			#endregion
 			#region Value12
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value12) || reading) &&
 				s.StreamElementOpt("Value12", ref mValue12))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value12;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value12);
 			}
 			#endregion
 			#region Value13
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value13) || reading) &&
 				s.StreamElementOpt("Value13", ref mValue13))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value13;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value13);
 			}
 			#endregion
 			#region Value14
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value14) || reading) &&
 				s.StreamElementOpt("Value14", ref mValue14))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value14;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value14);
 			}
 			#endregion
 			#region Value15
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value15) || reading) &&
 				s.StreamElementOpt("Value15", ref mValue15))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value15;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value15);
 			}
 			#endregion
 			#region Value16
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value16) || reading) &&
 				s.StreamElementOpt("Value16", ref mValue16))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value16;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value16);
 			}
 			#endregion
 			#region Value17
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value17) || reading) &&
 				s.StreamElementOpt("Value17", ref mValue17))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value17;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value17);
 			}
 			#endregion
 			#region Value18
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value18) || reading) &&
 				s.StreamElementOpt("Value18", ref mValue18))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value18;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value18);
 			}
 			#endregion
 			#region Value19
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value19) || reading) &&
 				s.StreamElementOpt("Value19", ref mValue19))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value19;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value19);
 			}
 			#endregion
 			#region Value20
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value20) || reading) &&
 				s.StreamElementOpt("Value20", ref mValue20))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value20;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value20);
 			}
 			#endregion
 			#region Value21
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value21) || reading) &&
 				s.StreamElementOpt("Value21", ref mValue21))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value21;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value21);
 			}
 			#endregion
 			#region Value22
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value22) || reading) &&
 				s.StreamElementOpt("Value22", ref mValue22))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value22;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value22);
 			}
 			#endregion
 			#region Value23
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value23) || reading) &&
 				s.StreamElementOpt("Value23", ref mValue23))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value23;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value23);
 			}
 			#endregion
 			#region Value24
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value24) || reading) &&
 				s.StreamElementOpt("Value24", ref mValue24))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value24;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value24);
 			}
 			#endregion
 			#region Value25
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value25) || reading) &&
 				s.StreamElementOpt("Value25", ref mValue25))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value25;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value25);
 			}
 			#endregion
 			#region Value26
 			if ((Modifiers.HasFlag(WeaponTuningBarrelModifiers.Value26) || reading) &&
 				s.StreamElementOpt("Value26", ref mValue26))
 			{
-				Modifiers |= WeaponTuningBarrelModifiers.Value26;
+				EnumFlags.Add(ref Modifiers, WeaponTuningBarrelModifiers.Value26);
 			}
 			#endregion
 		}
@@ -690,98 +690,98 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value0) || reading) &&
 				s.StreamElementOpt("Value0", ref mValue0))
 			{
-				Modifiers |= WeaponTuningModifiers.Value0;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value0);
 			}
 			#endregion
 			#region Value1
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value1) || reading) &&
 				s.StreamElementOpt("Value1", ref mValue1))
 			{
-				Modifiers |= WeaponTuningModifiers.Value1;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value1);
 			}
 			#endregion
 			#region Value2
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value2) || reading) &&
 				s.StreamElementOpt("Value2", ref mValue2))
 			{
-				Modifiers |= WeaponTuningModifiers.Value2;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value2);
 			}
 			#endregion
 			#region Value3
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value3) || reading) &&
 				s.StreamElementOpt("Value3", ref mValue3))
 			{
-				Modifiers |= WeaponTuningModifiers.Value3;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value3);
 			}
 			#endregion
 			#region Value4
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value4) || reading) &&
 				s.StreamElementOpt("Value4", ref mValue4))
 			{
-				Modifiers |= WeaponTuningModifiers.Value4;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value4);
 			}
 			#endregion
 			#region Value5
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value5) || reading) &&
 				s.StreamElementOpt("Value5", ref mValue5))
 			{
-				Modifiers |= WeaponTuningModifiers.Value5;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value5);
 			}
 			#endregion
 			#region Value6
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value6) || reading) &&
 				s.StreamElementOpt("Value6", ref mValue6))
 			{
-				Modifiers |= WeaponTuningModifiers.Value6;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value6);
 			}
 			#endregion
 			#region Value7
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value7) || reading) &&
 				s.StreamElementOpt("Value7", ref mValue7))
 			{
-				Modifiers |= WeaponTuningModifiers.Value7;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value7);
 			}
 			#endregion
 			#region Value8
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value8) || reading) &&
 				s.StreamElementOpt("Value8", ref mValue8))
 			{
-				Modifiers |= WeaponTuningModifiers.Value8;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value8);
 			}
 			#endregion
 			#region Value9
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value9) || reading) &&
 				s.StreamElementOpt("Value9", ref mValue9))
 			{
-				Modifiers |= WeaponTuningModifiers.Value9;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value9);
 			}
 			#endregion
 			#region Value10
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value10) || reading) &&
 				s.StreamElementOpt("Value10", ref mValue10))
 			{
-				Modifiers |= WeaponTuningModifiers.Value10;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value10);
 			}
 			#endregion
 			#region Value11
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value11) || reading) &&
 				s.StreamElementOpt("Value11", ref mValue11))
 			{
-				Modifiers |= WeaponTuningModifiers.Value11;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value11);
 			}
 			#endregion
 			#region Value12
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value12) || reading) &&
 				s.StreamElementOpt("Value12", ref mValue12))
 			{
-				Modifiers |= WeaponTuningModifiers.Value12;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value12);
 			}
 			#endregion
 			#region Value13
 			if ((Modifiers.HasFlag(WeaponTuningModifiers.Value13) || reading) &&
 				s.StreamElementOpt("Value13", ref mValue13))
 			{
-				Modifiers |= WeaponTuningModifiers.Value13;
+				EnumFlags.Add(ref Modifiers, WeaponTuningModifiers.Value13);
 			}
 			#endregion
 		}

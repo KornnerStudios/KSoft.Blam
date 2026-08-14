@@ -45,14 +45,14 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 		public void RevertToDefault()
 		{
-			Flags |= GameEngineSandboxVariantFlags.OpenChannelVoiceEnabled;
+			EnumFlags.Add(ref Flags, GameEngineSandboxVariantFlags.OpenChannelVoiceEnabled);
 			EditMode = SandboxEditingMode.AllPlayers;
 			RespawnTime = TypeExtensionsBlam.kUsualDefaultRespawnTimeInSeconds;
 			// #TODO_BLAM: EditorTraits
 
 			MegaloVariant.BaseVariant.OptionsMisc.RoundLimit = 1;
 			MegaloVariant.BaseVariant.OptionsMisc.RoundTimeLimit = 0;
-			MegaloVariant.BaseVariant.OptionsMisc.Flags |= GameOptionsMiscFlags.TeamsEnabled;
+			EnumFlags.Add(ref MegaloVariant.BaseVariant.OptionsMisc.Flags, GameOptionsMiscFlags.TeamsEnabled);
 			MegaloVariant.BaseVariant.OptionsRespawning.InitialLoadoutSelectionTime = 0;
 		}
 

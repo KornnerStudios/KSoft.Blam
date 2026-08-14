@@ -39,12 +39,12 @@ namespace KSoft.Blam.Megalo.Proto
 
 			if (db.SerializeValueTypeReference(s, "paramTypeEnum", ref EnumValueType, isOptional:true))
 			{
-				Flags |= MegaloScriptProtoVariableReferenceMemberFlags.HasDataType;
+				EnumFlags.Add(ref Flags, MegaloScriptProtoVariableReferenceMemberFlags.HasDataType);
 			}
 
 			if (db.SerializeValueTypeReference(s, "paramValueType", ref ValueType, isOptional:true))
 			{
-				Flags |= MegaloScriptProtoVariableReferenceMemberFlags.HasDataValue;
+				EnumFlags.Add(ref Flags, MegaloScriptProtoVariableReferenceMemberFlags.HasDataValue);
 				s.StreamAttribute("paramValueName", ref ValueName);
 			}
 
@@ -52,7 +52,7 @@ namespace KSoft.Blam.Megalo.Proto
 			{
 				if (read_only)
 				{
-					Flags |= MegaloScriptProtoVariableReferenceMemberFlags.Readonly;
+					EnumFlags.Add(ref Flags, MegaloScriptProtoVariableReferenceMemberFlags.Readonly);
 				}
 			}
 		}
