@@ -115,11 +115,6 @@
         "resolved": "4.1.0",
         "contentHash": "4ElL/aqomiUInr090VN4udqz46AuszXLrifHkLrgj0zb7na8eAoyUQt3BwDLTcGd1bSkmk3SfD02rZtKU+ZiqQ=="
       },
-      "SharpZipLib": {
-        "type": "Transitive",
-        "resolved": "1.4.2",
-        "contentHash": "yjj+3zgz8zgXpiiC3ZdF/iyTBbz2fFvMxZFEBPUcwZjIvXOf37Ylm+K58hqMfIBt5JgU/Z2uoUS67JmTLe973A=="
-      },
       "System.Collections.Immutable": {
         "type": "Transitive",
         "resolved": "8.0.0",
@@ -154,7 +149,7 @@
         "type": "Project",
         "dependencies": {
           "KSoft": "[1.0.0, )",
-          "SharpZipLib": "[1.4.2, )"
+          "KSoft.Security": "[1.0.0, )"
         }
       },
       "ksoft.io.tagelementstreams": {

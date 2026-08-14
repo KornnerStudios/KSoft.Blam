@@ -53,7 +53,6 @@ namespace KSoft.Tool
 		{
 			Console.WriteLine(); // newline, because long command lines don't go great with real messages
 
-			DependentAssemblyExists("ICSharpCode.SharpZipLib", false);
 			if (!DependentAssemblyExists("KSoft"))
 			{
 				return;
