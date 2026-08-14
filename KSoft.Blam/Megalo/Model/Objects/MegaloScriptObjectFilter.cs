@@ -66,15 +66,15 @@ namespace KSoft.Blam.Megalo.Model
 			NotifyPropertyChanged(kHasParametersChanged);
 		}
 		public bool HasObjectTypeIndex	{
-			get { return EnumFlags.Test(mValidParameters, MegaloScriptObjectFilterValidParameters.ObjectType); }
+			get { return mValidParameters.HasFlag(MegaloScriptObjectFilterValidParameters.ObjectType); }
 			set { ParameterSet(value, MegaloScriptObjectFilterValidParameters.ObjectType); }
 		}
 		public bool HasTeam	{
-			get { return EnumFlags.Test(mValidParameters, MegaloScriptObjectFilterValidParameters.Team); }
+			get { return mValidParameters.HasFlag(MegaloScriptObjectFilterValidParameters.Team); }
 			set { ParameterSet(value, MegaloScriptObjectFilterValidParameters.Team); }
 		}
 		public bool HasNumeric	{
-			get { return EnumFlags.Test(mValidParameters, MegaloScriptObjectFilterValidParameters.Numeric); }
+			get { return mValidParameters.HasFlag(MegaloScriptObjectFilterValidParameters.Numeric); }
 			set { ParameterSet(value, MegaloScriptObjectFilterValidParameters.Numeric); }
 		}
 		#endregion
