@@ -100,25 +100,21 @@ namespace MgloGui
 
 			if (flags.Test(GvarDisassemblerFlags.WriteOperationNamesOnly))
 			{
-				EnumFlags.Add(ref mModelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseConditionTypeNames |
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseActionTypeNames);
+				mModelStreamFlags |= MegaloModel.MegaloScriptModelTagElementStreamFlags.UseConditionTypeNames |
+					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseActionTypeNames;
 
-				EnumFlags.Remove(ref mModelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteConditionTypeNames |
+				mModelStreamFlags &= ~(MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteConditionTypeNames |
 					MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteActionTypeNames);
 
 				using_op_names = true;
 			}
 			if (flags.Test(GvarDisassemblerFlags.WriteOperationParameterNames))
 			{
-				EnumFlags.Add(ref mModelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteParamNames);
+				mModelStreamFlags |= MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteParamNames;
 			}
 			if (flags.Test(GvarDisassemblerFlags.WriteOperationParameterContexts))
 			{
-				EnumFlags.Add(ref mModelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteParamKinds);
+				mModelStreamFlags |= MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteParamKinds;
 			}
 			if (flags.Test(GvarDisassemblerFlags.TryToPort) &&
 				mGameBuildAndTarget.Build.IsWithinSameBranch(KBlam.Engine.EngineRegistry.EngineBranchHaloReach))
@@ -129,25 +125,21 @@ namespace MgloGui
 				}
 				else
 				{
-					EnumFlags.Add(ref mModelStreamFlags,
-						MegaloModel.MegaloScriptModelTagElementStreamFlags.TryToPort);
+					mModelStreamFlags |= MegaloModel.MegaloScriptModelTagElementStreamFlags.TryToPort;
 				}
 			}
 			if (flags.Test(GvarDisassemblerFlags.DoNotWriteEnumOrIndexNames))
 			{
-				EnumFlags.Remove(ref mModelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseEnumNames |
+				mModelStreamFlags &= ~(MegaloModel.MegaloScriptModelTagElementStreamFlags.UseEnumNames |
 					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseIndexNames);
 			}
 			if (flags.Test(GvarDisassemblerFlags.WriteWithObjectIds))
 			{
-				EnumFlags.Remove(ref mModelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjectsWriteSansIds);
+				mModelStreamFlags &= ~(MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjectsWriteSansIds);
 			}
 			if (flags.Test(GvarDisassemblerFlags.DoNotEmbedObjects))
 			{
-				EnumFlags.Remove(ref mModelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjects |
+				mModelStreamFlags &= ~(MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjects |
 					MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjectsWriteSansIds);
 			}
 			if (flags.Test(GvarDisassemblerFlags.AlwaysWriteDefaultData))

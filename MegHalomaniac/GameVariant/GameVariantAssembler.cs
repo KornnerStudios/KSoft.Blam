@@ -74,9 +74,8 @@ namespace MgloGui
 			}
 			if (flags.Test(GvarAssemblerFlags.ReadOperationNamesOnly))
 			{
-				EnumFlags.Add(ref mModelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseConditionTypeNames |
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseActionTypeNames);
+				mModelStreamFlags |= MegaloModel.MegaloScriptModelTagElementStreamFlags.UseConditionTypeNames |
+					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseActionTypeNames;
 			}
 		}
 

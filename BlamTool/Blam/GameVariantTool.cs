@@ -316,25 +316,21 @@ namespace KSoft.Tool.Blam
 			bool using_op_names = false;
 			if (SwitchIsOn(switches, 0, k_switches_ctxt + ":Megalo", "Use operation names (instead of DBIDs)"))
 			{
-				EnumFlags.Add(ref modelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseConditionTypeNames |
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseActionTypeNames);
+				modelStreamFlags |= MegaloModel.MegaloScriptModelTagElementStreamFlags.UseConditionTypeNames |
+					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseActionTypeNames;
 
-				EnumFlags.Remove(ref modelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteConditionTypeNames |
+				modelStreamFlags &= ~(MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteConditionTypeNames |
 					MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteActionTypeNames);
 
 				using_op_names = true;
 			}
 			if (SwitchIsOn(switches, 1, k_switches_ctxt + ":Megalo", "Write operation parameter names"))
 			{
-				EnumFlags.Add(ref modelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteParamNames);
+				modelStreamFlags |= MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteParamNames;
 			}
 			if (SwitchIsOn(switches, 2, k_switches_ctxt + ":Megalo", "Write operation parameter contexts"))
 			{
-				EnumFlags.Add(ref modelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteParamKinds);
+				modelStreamFlags |= MegaloModel.MegaloScriptModelTagElementStreamFlags.WriteParamKinds;
 			}
 			if (mGameBuildAndTarget.Build.IsWithinSameBranch(KBlam.Engine.EngineRegistry.EngineBranchHaloReach) &&
 				SwitchIsOn(switches, 3, k_switches_ctxt + ":Megalo", "Try to port Reach operations to H4"))
@@ -345,25 +341,21 @@ namespace KSoft.Tool.Blam
 				}
 				else
 				{
-					EnumFlags.Add(ref modelStreamFlags,
-						MegaloModel.MegaloScriptModelTagElementStreamFlags.TryToPort);
+					modelStreamFlags |= MegaloModel.MegaloScriptModelTagElementStreamFlags.TryToPort;
 				}
 			}
 			if (SwitchIsOn(switches, 4, k_switches_ctxt + ":Megalo", "Don't use enum/index names"))
 			{
-				EnumFlags.Remove(ref modelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseEnumNames |
+				modelStreamFlags &= ~(MegaloModel.MegaloScriptModelTagElementStreamFlags.UseEnumNames |
 					MegaloModel.MegaloScriptModelTagElementStreamFlags.UseIndexNames);
 			}
 			if (SwitchIsOn(switches, 5, k_switches_ctxt + ":Megalo", "Serialize with object IDs"))
 			{
-				EnumFlags.Remove(ref modelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjectsWriteSansIds);
+				modelStreamFlags &= ~(MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjectsWriteSansIds);
 			}
 			if (SwitchIsOn(switches, 6, k_switches_ctxt + ":Megalo", "Don't embed objects"))
 			{
-				EnumFlags.Remove(ref modelStreamFlags,
-					MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjects |
+				modelStreamFlags &= ~(MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjects |
 					MegaloModel.MegaloScriptModelTagElementStreamFlags.EmbedObjectsWriteSansIds);
 			}
 			if (SwitchIsOn(switches, 7, k_switches_ctxt + ":Megalo", "Always write 'default' data"))
