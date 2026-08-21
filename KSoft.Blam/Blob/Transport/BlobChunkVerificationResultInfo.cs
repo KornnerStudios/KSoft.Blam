@@ -1,5 +1,4 @@
 ﻿using System;
-using Contracts = System.Diagnostics.Contracts;
 
 namespace KSoft.Blam.Blob.Transport
 {
@@ -65,7 +64,6 @@ namespace KSoft.Blam.Blob.Transport
 		#endregion
 
 		#region Logical 'And' util
-		[Contracts.Pure]
 		public readonly BlobChunkVerificationResultInfo And<T>(T contextObj,
 			Func<T, BlobChunkVerificationResultInfo> lhs)
 		{
@@ -76,7 +74,6 @@ namespace KSoft.Blam.Blob.Transport
 
 			return this;
 		}
-		[Contracts.Pure]
 		public readonly BlobChunkVerificationResultInfo And<T, TParam>(T contextObj, TParam param,
 			Func<T, TParam, BlobChunkVerificationResultInfo> lhs)
 		{

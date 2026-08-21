@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Blob
 {
@@ -32,7 +27,12 @@ namespace KSoft.Blam.Blob
 		{
 			Data = RuntimeData.ContentHeader.Create(gameTarget.Build);
 
-			Contract.Assert(gameTarget.Build.RevisionIndex.IsNotNone());
+			if (gameTarget.Build.RevisionIndex.IsNone())
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Game target build revision index must be set for {0}.",
+					gameTarget.Build.ToDisplayString()));
+			}
 			mBuildMajor = (short)gameTarget.Build.Revision.Version;
 		}
 

@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Blob
 {
@@ -131,9 +126,16 @@ namespace KSoft.Blam.Blob
 			BlobGroup blobGroup,
 			int version = TypeExtensions.kNone, int binarySize = TypeExtensions.kNone)
 		{
-			Contract.Requires(!gameTarget.IsNone);
-			Contract.Requires(blobGroup != null);
-			Contract.Requires(version.IsNoneOrPositive());
+			if (gameTarget.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(gameTarget));
+			}
+			ArgumentNullException.ThrowIfNull(blobGroup);
+			if (!version.IsNoneOrPositive())
+			{
+				throw new ArgumentOutOfRangeException(nameof(version), version,
+					"Version must be None or positive.");
+			}
 
 			return CreateObjectImpl(gameTarget, blobGroup, version, binarySize);
 		}
@@ -249,7 +251,11 @@ namespace KSoft.Blam.Blob
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(obj != null || s.IsReading);
+			ArgumentNullException.ThrowIfNull(s);
+			if (s.IsWriting)
+			{
+				ArgumentNullException.ThrowIfNull(obj);
+			}
 
 			const string kAttributeNameSignature = "signature";
 			const string kAttributeNameVersion = "version";

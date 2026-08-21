@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Blob.Transport
 {
@@ -95,6 +90,13 @@ namespace KSoft.Blam.Blob.Transport
 				throw new InvalidOperationException("Blob transport stream is not writable.");
 			}
 		}
+		void VerifyIsClosedForOpen()
+		{
+			if (!IsClosed)
+			{
+				throw new InvalidOperationException("Blob transport stream is already open.");
+			}
+		}
 		static void VerifyOpenArguments(Stream baseStream, FileAccess permissions)
 		{
 			ArgumentNullException.ThrowIfNull(baseStream);
@@ -116,7 +118,7 @@ namespace KSoft.Blam.Blob.Transport
 			ArgumentNullException.ThrowIfNull(objects);
 			if (objects.Length == 0)
 			{
-				throw new InvalidOperationException("Need at least one blob object");
+				throw new InvalidOperationException("Need at least one blob object; actual count is 0.");
 			}
 			if (!Array.TrueForAll(objects, Predicates.IsNotNull))
 			{
@@ -128,9 +130,13 @@ namespace KSoft.Blam.Blob.Transport
 			long startPosition = 0, long length = TypeExtensions.kNoneInt64,
 			Shell.EndianFormat endian = Shell.EndianFormat.Big)
 		{
-			Contract.Requires(IsClosed);
+			VerifyIsClosedForOpen();
 			VerifyOpenArguments(baseStream, FileAccess.Write);
-			Contract.Requires(length.IsNoneOrPositive());
+			if (!length.IsNoneOrPositive())
+			{
+				throw new ArgumentOutOfRangeException(nameof(length), length,
+					"Length must be None or positive.");
+			}
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
 			OpenUnderlyingStream(baseStream, FileAccess.Write, endian);
@@ -153,9 +159,13 @@ namespace KSoft.Blam.Blob.Transport
 			long startPosition = 0, long length = TypeExtensions.kNoneInt64,
 			FileAccess permissions = FileAccess.ReadWrite, Shell.EndianFormat endian = Shell.EndianFormat.Big)
 		{
-			Contract.Requires(IsClosed);
+			VerifyIsClosedForOpen();
 			VerifyOpenArguments(baseStream, permissions);
-			Contract.Requires(length.IsNoneOrPositive());
+			if (!length.IsNoneOrPositive())
+			{
+				throw new ArgumentOutOfRangeException(nameof(length), length,
+					"Length must be None or positive.");
+			}
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
 			OpenUnderlyingStream(baseStream, permissions, endian);
@@ -172,9 +182,13 @@ namespace KSoft.Blam.Blob.Transport
 			long startPosition = 0, long endPosition = TypeExtensions.kNoneInt64,
 			FileAccess permissions = FileAccess.ReadWrite, Shell.EndianFormat endian = Shell.EndianFormat.Big)
 		{
-			Contract.Requires(IsClosed);
+			VerifyIsClosedForOpen();
 			VerifyOpenArguments(baseStream, permissions);
-			Contract.Requires(endPosition.IsNoneOrPositive());
+			if (!endPosition.IsNoneOrPositive())
+			{
+				throw new ArgumentOutOfRangeException(nameof(endPosition), endPosition,
+					"End position must be None or positive.");
+			}
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
 			OpenUnderlyingStream(baseStream, permissions, endian);
@@ -210,9 +224,12 @@ namespace KSoft.Blam.Blob.Transport
 
 		byte[] BuildAuthenticationData()
 		{
-			Contract.Ensures(Contract.Result<byte[]>() != null ||
-				mFooter.Authentication == BlobTransportStreamAuthentication.None);
-			Contract.Assert(mFooterPosition.IsNotNone());
+			if (mFooterPosition.IsNone())
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Footer position must be set before building authentication data; actual value is {0}.",
+					mFooterPosition));
+			}
 
 			System.Security.Cryptography.HashAlgorithm hash_algo = null;
 			switch (mFooter.Authentication)
@@ -229,6 +246,7 @@ namespace KSoft.Blam.Blob.Transport
 				return hash_algo.ComputeHash(BaseStream, StartPosition, mFooterPosition);
 			}
 
+			System.Diagnostics.Debug.Assert(mFooter.Authentication == BlobTransportStreamAuthentication.None);
 			return null;
 		}
 
@@ -334,7 +352,6 @@ namespace KSoft.Blam.Blob.Transport
 
 			Util.MarkUnusedVariable(ref signature);
 
-			bool blob_found = false;
 			long orig_pos = TypeExtensions.kNone;
 
 			if (findStartPosition.IsNotNone())
@@ -343,15 +360,17 @@ namespace KSoft.Blam.Blob.Transport
 				UnderlyingStream.Seek(findStartPosition + StartPosition, System.IO.SeekOrigin.Begin);
 			}
 
-			// #TODO_IMPLEMENT
-			Contract.Assert(false, "TODO");
-
-			if (orig_pos.IsNotNone())
+			try
 			{
-				UnderlyingStream.Seek(orig_pos, System.IO.SeekOrigin.Begin);
+				throw new NotImplementedException("Blob chunk searching is not implemented.");
 			}
-
-			return blob_found;
+			finally
+			{
+				if (orig_pos.IsNotNone())
+				{
+					UnderlyingStream.Seek(orig_pos, System.IO.SeekOrigin.Begin);
+				}
+			}
 		}
 
 		#region EnumerateStream
@@ -654,7 +673,13 @@ namespace KSoft.Blam.Blob.Transport
 
 				if (auth_data != null)
 				{
-					Contract.Assert(mFooter.AuthenticationData.Length >= auth_data.Length);
+					if (mFooter.AuthenticationData.Length < auth_data.Length)
+					{
+						throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+							"Footer authentication buffer length {0} is smaller than authentication data length {1}.",
+							mFooter.AuthenticationData.Length,
+							auth_data.Length));
+					}
 					Buffer.BlockCopy(auth_data, 0, mFooter.AuthenticationData, 0, auth_data.Length);
 				}
 
@@ -812,7 +837,6 @@ namespace KSoft.Blam.Blob.Transport
 		public async Task<BlobChunkVerificationResultInfo> WriteChunksSansAuthenticationAsync(params BlobObject[] objects)
 		{
 			VerifyIsOpenForWrite();
-			Contract.Requires(objects != null && objects.Length > 0);
 			VerifyWriteObjectArray(objects);
 
 			return await WriteChunksAsync(objects, BlobTransportStreamAuthentication.None).ConfigureAwait(true);
@@ -820,7 +844,6 @@ namespace KSoft.Blam.Blob.Transport
 		public BlobChunkVerificationResultInfo WriteChunksSansAuthentication(params BlobObject[] objects)
 		{
 			VerifyIsOpenForWrite();
-			Contract.Requires(objects != null && objects.Length > 0);
 			VerifyWriteObjectArray(objects);
 
 			return WriteChunks(objects, BlobTransportStreamAuthentication.None);
@@ -830,7 +853,6 @@ namespace KSoft.Blam.Blob.Transport
 			params BlobObject[] objects)
 		{
 			VerifyIsOpenForWrite();
-			Contract.Requires(objects != null && objects.Length > 0);
 			VerifyWriteObjectArray(objects);
 
 			return await WriteChunksAsync(objects, authentication).ConfigureAwait(true);
@@ -839,7 +861,6 @@ namespace KSoft.Blam.Blob.Transport
 			params BlobObject[] objects)
 		{
 			VerifyIsOpenForWrite();
-			Contract.Requires(objects != null && objects.Length > 0);
 			VerifyWriteObjectArray(objects);
 
 			return WriteChunks(objects, authentication);
