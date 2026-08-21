@@ -1,9 +1,4 @@
 ﻿using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Proto
 {
@@ -108,6 +103,56 @@ namespace KSoft.Blam.Megalo.Proto
 		const string kGroupTagMegaloGamEngineSounds = "mgls";
 		const string kGroupTagMegaloStringIdTable = "msit";
 
+		static void ThrowIfCountExceedsLimit<TDoc, TCursor, T>(IO.TagElementStream<TDoc, TCursor, string> s,
+			string listName, ICollection<T> list, int maxCount)
+			where TDoc : class
+			where TCursor : class
+		{
+			if (list.Count <= maxCount)
+			{
+				return;
+			}
+
+			string msg = string.Format(Util.InvariantCultureInfo,
+				"{0} has {1} entries, maximum is {2}.",
+				listName,
+				list.Count,
+				maxCount);
+			if (s.IsReading)
+			{
+				s.ThrowReadException(new System.IO.InvalidDataException(msg));
+			}
+			else
+			{
+				throw new System.InvalidOperationException(msg);
+			}
+		}
+
+		static void ThrowIfCountDoesNotEqualLimit<TDoc, TCursor, T>(IO.TagElementStream<TDoc, TCursor, string> s,
+			string listName, ICollection<T> list, int expectedCount)
+			where TDoc : class
+			where TCursor : class
+		{
+			if (list.Count == expectedCount)
+			{
+				return;
+			}
+
+			string msg = string.Format(Util.InvariantCultureInfo,
+				"{0} has {1} entries, expected {2}.",
+				listName,
+				list.Count,
+				expectedCount);
+			if (s.IsReading)
+			{
+				s.ThrowReadException(new System.IO.InvalidDataException(msg));
+			}
+			else
+			{
+				throw new System.InvalidOperationException(msg);
+			}
+		}
+
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
@@ -131,7 +176,8 @@ namespace KSoft.Blam.Megalo.Proto
 				ObjectTypeList.Serialize(s);
 			}
 
-			Contract.Assert(ObjectTypeList.Types.Count <= mLimits.MultiplayerObjectTypes.MaxCount);
+			ThrowIfCountExceedsLimit(s, nameof(ObjectTypeList), ObjectTypeList.Types,
+				mLimits.MultiplayerObjectTypes.MaxCount);
 			#endregion
 
 			#region custom_app_globals (Halo4 only)
@@ -154,7 +200,8 @@ namespace KSoft.Blam.Megalo.Proto
 				{
 					OrdnanceList.Serialize(s);
 
-					Contract.Assert(OrdnanceList.Types.Count <= mLimits.GameOrdnanceTypes.MaxCount);
+					ThrowIfCountExceedsLimit(s, nameof(OrdnanceList), OrdnanceList.Types,
+						mLimits.GameOrdnanceTypes.MaxCount);
 				}
 			}
 			#endregion
@@ -166,7 +213,7 @@ namespace KSoft.Blam.Megalo.Proto
 				s.StreamableElements("entry", Medals);
 			}
 
-			Contract.Assert(Medals.Count <= mLimits.GameMedals.MaxCount);
+			ThrowIfCountExceedsLimit(s, nameof(Medals), Medals, mLimits.GameMedals.MaxCount);
 			#endregion
 
 			#region incident_globals_definition
@@ -176,7 +223,7 @@ namespace KSoft.Blam.Megalo.Proto
 				s.StreamableElements("entry", Incidents);
 			}
 
-			Contract.Assert(Incidents.Count <= mLimits.GameIncidentTypes.MaxCount);
+			ThrowIfCountExceedsLimit(s, nameof(Incidents), Incidents, mLimits.GameIncidentTypes.MaxCount);
 			#endregion
 
 			#region loadout_globals_definition
@@ -189,7 +236,7 @@ namespace KSoft.Blam.Megalo.Proto
 				s.StreamableElements("entry", Sounds);
 			}
 
-			Contract.Assert(Sounds.Count == mLimits.MegaloEngineSounds.MaxCount);
+			ThrowIfCountDoesNotEqualLimit(s, nameof(Sounds), Sounds, mLimits.MegaloEngineSounds.MaxCount);
 			#endregion
 
 			#region megalo_string_id_table
@@ -199,7 +246,7 @@ namespace KSoft.Blam.Megalo.Proto
 				s.StreamableElements("entry", Names);
 			}
 
-			Contract.Assert(Names.Count <= mLimits.MegaloStringIds.MaxCount);
+			ThrowIfCountExceedsLimit(s, nameof(Names), Names, mLimits.MegaloStringIds.MaxCount);
 			#endregion
 
 			#region HudWidgetIcons
@@ -209,7 +256,8 @@ namespace KSoft.Blam.Megalo.Proto
 				s.StreamableElements("entry", HudWidgetIcons);
 			}
 
-			Contract.Assert(HudWidgetIcons.Count <= mLimits.MegaloHudWidgetIcons.MaxCount);
+			ThrowIfCountExceedsLimit(s, nameof(HudWidgetIcons), HudWidgetIcons,
+				mLimits.MegaloHudWidgetIcons.MaxCount);
 			#endregion
 
 			#region GameEngineIcons
@@ -219,7 +267,8 @@ namespace KSoft.Blam.Megalo.Proto
 				s.StreamableElements("entry", GameEngineIcons);
 			}
 
-			Contract.Assert(GameEngineIcons.Count <= mLimits.GameEngineIcons.MaxCount);
+			ThrowIfCountExceedsLimit(s, nameof(GameEngineIcons), GameEngineIcons,
+				mLimits.GameEngineIcons.MaxCount);
 			#endregion
 
 			if (s.IsReading)

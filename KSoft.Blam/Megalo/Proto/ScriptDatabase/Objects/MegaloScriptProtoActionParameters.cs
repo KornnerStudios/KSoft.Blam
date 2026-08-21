@@ -1,9 +1,4 @@
 ﻿using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Proto
 {
@@ -22,7 +17,11 @@ namespace KSoft.Blam.Megalo.Proto
 		public int Count { get; private set; }
 		public bool HasNameOverrides => mNameOverrides != null;
 		public IReadOnlyDictionary<int, string> NameOverrides { get {
-			Contract.Requires(HasNameOverrides, "It's an invalid operation to access the name overrides when there are none");
+			if (!HasNameOverrides)
+			{
+				throw new System.InvalidOperationException(
+					"Name overrides cannot be accessed when there are none.");
+			}
 			return mNameOverrides;
 		} }
 
@@ -35,8 +34,13 @@ namespace KSoft.Blam.Megalo.Proto
 
 		internal void SetBase(MegaloScriptProtoActionParameters baseParams)
 		{
-			Contract.Requires(baseParams != null);
-			Contract.Assert(mParams.Count == 0, "Base shouldn't be set once params are loaded!");
+			System.ArgumentNullException.ThrowIfNull(baseParams);
+			if (mParams.Count != 0)
+			{
+				throw new System.InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Base parameters cannot be set after local params are loaded; local count is {0}.",
+					mParams.Count));
+			}
 
 			mBase = baseParams;
 			Count = mBase.Count;

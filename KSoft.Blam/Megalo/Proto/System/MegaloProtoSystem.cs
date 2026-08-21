@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Proto
 {
@@ -87,10 +82,14 @@ namespace KSoft.Blam.Megalo.Proto
 			Func<Engine.EngineBuildHandle, T> ctor)
 			where T : class, IO.ITagElementStringNameStreamable
 		{
-			Contract.Requires/*<ArgumentNullException>*/(!forBuild.IsNone);
-			Contract.Requires(!string.IsNullOrEmpty(dbTypeName));
-			Contract.Requires(getPathFunc != null);
-			Contract.Requires(loadedDbs != null);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
+			ArgumentException.ThrowIfNullOrEmpty(dbTypeName);
+			ArgumentNullException.ThrowIfNull(getPathFunc);
+			ArgumentNullException.ThrowIfNull(loadedDbs);
+			ArgumentNullException.ThrowIfNull(ctor);
 
 			string path = getPathFunc(forBuild, out Engine.EngineBuildHandle actual_build);
 #pragma warning disable IDE0270 // Use coalesce expression
@@ -212,7 +211,10 @@ namespace KSoft.Blam.Megalo.Proto
 		// For simple queries only! Don't hold on to the value
 		internal static Task<MegaloScriptDatabase> GetScriptDatabaseAsync(Engine.EngineBuildHandle gameBuild)
 		{
-			Contract.Requires(!gameBuild.IsNone);
+			if (gameBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(gameBuild));
+			}
 
 			using (var system_ref = Blam.Engine.EngineRegistry.GetSystem<MegaloProtoSystem>(gameBuild))
 			{

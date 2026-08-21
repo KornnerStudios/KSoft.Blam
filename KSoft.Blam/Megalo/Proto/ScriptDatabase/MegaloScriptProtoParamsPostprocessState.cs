@@ -1,9 +1,4 @@
 ﻿using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 using TextWriter = System.IO.TextWriter;
 
@@ -140,7 +135,13 @@ namespace KSoft.Blam.Megalo.Proto
 			else if (mCond != null)
 			{
 				PostprocessObjectWithParams(mCond, "Condition", out contains_virtual_trigger_param);
-				Contract.Assert(!contains_virtual_trigger_param);
+				if (contains_virtual_trigger_param)
+				{
+					throw new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+						"Condition {0}/{1} contains a virtual trigger parameter.",
+						mCond.DBID.ToString(Util.InvariantCultureInfo),
+						mCond.Name));
+				}
 			}
 		}
 	};

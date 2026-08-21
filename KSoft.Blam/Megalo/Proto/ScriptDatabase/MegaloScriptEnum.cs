@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Proto
 {
@@ -32,7 +27,13 @@ namespace KSoft.Blam.Megalo.Proto
 			int length = names.Length;
 			#region Handle None values
 			int last_value = Reflection.EnumUtil<TEnum>.GetHashCodeSignExtended(values[length - 1]);
-			Contract.Assert(last_value.IsNoneOrPositive());
+			if (!last_value.IsNoneOrPositive())
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Enum {0} last value is {1}, expected None or positive.",
+					typeof(TEnum).FullName,
+					last_value));
+			}
 			// Enum.GetNames() sorts values by ToUInt64'ing, meaning negative values will appear after positive ones
 			if (last_value.IsNone())
 			{
@@ -96,7 +97,12 @@ namespace KSoft.Blam.Megalo.Proto
 				}
 			}
 
-			Contract.Assert(!IsCodeEnum);
+			if (IsCodeEnum)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Code enum {0} cannot be serialized as database data.",
+					Name));
+			}
 		}
 		#endregion
 
@@ -168,11 +174,16 @@ namespace KSoft.Blam.Megalo.Proto
 
 			return flags;
 		}
-		[System.Diagnostics.Conditional("CONTRACTS_FULL")]
 		static void ToFlagsNameValidateFlags(MegaloScriptEnum e, uint flags)
 		{
 			uint bitmask = Bits.GetBitmaskEnum((uint)e.Members.Count);
-			Contract.Assert(Bitwise.Flags.Test(flags, ~bitmask)==false);
+			if (Bitwise.Flags.Test(flags, ~bitmask))
+			{
+				throw new ArgumentOutOfRangeException(nameof(flags), flags,
+					string.Format(Util.InvariantCultureInfo,
+						"Flags include bits outside the valid mask {0:X8}.",
+						bitmask));
+			}
 		}
 		internal static string ToFlagsName(MegaloScriptDatabase db, MegaloScriptValueType flagsValueType, uint flags)
 		{

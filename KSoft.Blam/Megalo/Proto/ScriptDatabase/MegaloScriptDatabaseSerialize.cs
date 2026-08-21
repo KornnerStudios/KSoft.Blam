@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Proto
 {
@@ -147,8 +142,19 @@ namespace KSoft.Blam.Megalo.Proto
 				case MegaloScriptValueBaseType.None:
 					if (reading)
 					{
-						Contract.Assert(name_index == 0, "There should only be one None value type and it should come first");
-						Contract.Assert(db.ValueTypeNames[name_index] == kNoValueTypeName, "None value type is using non-standard name");
+						if (name_index != 0)
+						{
+							s.ThrowReadException(new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+								"None value type index is {0}, expected 0.",
+								name_index)));
+						}
+						if (db.ValueTypeNames[name_index] != kNoValueTypeName)
+						{
+							s.ThrowReadException(new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+								"None value type name is {0}, expected {1}.",
+								db.ValueTypeNames[name_index],
+								kNoValueTypeName)));
+						}
 						value = new MegaloScriptValueType(name_index, base_type, 0);
 					}
 					break;

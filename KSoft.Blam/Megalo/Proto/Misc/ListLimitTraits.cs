@@ -1,10 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
-
-namespace KSoft.Blam.Megalo.Proto
+﻿namespace KSoft.Blam.Megalo.Proto
 {
 	[System.Reflection.Obfuscation(Exclude=false)]
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
@@ -20,7 +14,13 @@ namespace KSoft.Blam.Megalo.Proto
 
 		public void InitializeBitLengths()
 		{
-			Contract.Assume(MaxCount > 0);
+			if (MaxCount <= 0)
+			{
+				throw new System.InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"MaxCount must be positive before initializing bit lengths; actual value is {0}.",
+					MaxCount));
+			}
+
 			CountBitLength = Bits.GetMaxEnumBits(MaxCount + 1);
 			IndexBitLength = Bits.GetMaxEnumBits(MaxCount);
 		}

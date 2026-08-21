@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 using TextWriter = System.IO.TextWriter;
 
@@ -93,10 +88,50 @@ namespace KSoft.Blam.Megalo.Proto
 				var varIndexType = GetPlayerVarIndexValueType(refTypeIndex);
 				return model.VarIndexIsValid(varIndexType.VarType, varIndexType.VarSet, playerVarIndex);
 			}
+			readonly void ThrowIfInvalidRefTypeIndex(int refTypeIndex)
+			{
+				if (refTypeIndex < 0 || refTypeIndex >= ObjectReferenceType.Members.Count)
+				{
+					throw new ArgumentOutOfRangeException(nameof(refTypeIndex), refTypeIndex,
+						string.Format(Util.InvariantCultureInfo,
+							"Reference type index must be between 0 and {0}.",
+							ObjectReferenceType.Members.Count - 1));
+				}
+			}
+			readonly string BuildInvalidPlayerVarIndexMessage(int playerVarIndex, int refTypeIndex)
+			{
+				var varIndexType = GetPlayerVarIndexValueType(refTypeIndex);
+				return string.Format(Util.InvariantCultureInfo,
+					"Player variable index {0} is invalid for ref type {1}, variable set {2}, variable type {3}.",
+					playerVarIndex,
+					refTypeIndex,
+					varIndexType.VarSet,
+					varIndexType.VarType);
+			}
+			readonly void ThrowIfInvalidPlayerVarIndex<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
+				int playerVarIndex, int refTypeIndex, Model.MegaloScriptModel model)
+				where TDoc : class
+				where TCursor : class
+			{
+				if (ValidatePlayerVarIndex(playerVarIndex, refTypeIndex, model))
+				{
+					return;
+				}
+
+				string msg = BuildInvalidPlayerVarIndexMessage(playerVarIndex, refTypeIndex);
+				if (s.IsReading)
+				{
+					s.ThrowReadException(new System.IO.InvalidDataException(msg));
+				}
+				else
+				{
+					throw new InvalidOperationException(msg);
+				}
+			}
 			public readonly void StreamPlayerVarIndex(IO.BitStream s, ref int playerVarIndex,
 				int refTypeIndex, Model.MegaloScriptModel model)
 			{
-				Contract.Assert(refTypeIndex >= 0 && refTypeIndex < ObjectReferenceType.Members.Count);
+				ThrowIfInvalidRefTypeIndex(refTypeIndex);
 
 				Util.MarkUnusedVariable(ref model);
 
@@ -108,6 +143,8 @@ namespace KSoft.Blam.Megalo.Proto
 				where TDoc : class
 				where TCursor : class
 			{
+				ThrowIfInvalidRefTypeIndex(refTypeIndex);
+
 				const string kAttributeNamePlayerVarIndex = "playerVarIndex";
 
 				if ((model.TagElementStreamSerializeFlags & Model.MegaloScriptModelTagElementStreamFlags.UseIndexNames) != 0)
@@ -125,7 +162,7 @@ namespace KSoft.Blam.Megalo.Proto
 					s.StreamAttribute(kAttributeNamePlayerVarIndex, ref playerVarIndex);
 				}
 
-				Contract.Assert(ValidatePlayerVarIndex(playerVarIndex, refTypeIndex, model));
+				ThrowIfInvalidPlayerVarIndex(s, playerVarIndex, refTypeIndex, model);
 			}
 			#endregion
 		};
@@ -172,7 +209,6 @@ namespace KSoft.Blam.Megalo.Proto
 			}
 			else
 			{
-				Contract.Assert(false);
 				throw new KSoft.Debug.UnreachableException(string.Format(Util.InvariantCultureInfo,
 					"Failed to handle build: {0}",
 					forBuild));
@@ -192,8 +228,13 @@ namespace KSoft.Blam.Megalo.Proto
 		public void ImportCodeEnum<TEnum>(string enumName)
 			where TEnum : struct, Enum
 		{
-			Contract.Requires(!string.IsNullOrEmpty(enumName));
-			Contract.Requires(Actions.Count == 0, "Why are you importing an Enum after the DB has been loaded?");
+			ArgumentException.ThrowIfNullOrEmpty(enumName);
+			if (Actions.Count != 0)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Code enums cannot be imported after actions are loaded; actual action count is {0}.",
+					Actions.Count));
+			}
 
 			var script_enum = MegaloScriptEnum.ForEnum<TEnum>(enumName);
 			Enums.Add(script_enum);
@@ -233,7 +274,7 @@ namespace KSoft.Blam.Megalo.Proto
 
 		public void Postprocess(MegaloStaticDatabase associatedStaticDb, TextWriter errorWriter = null)
 		{
-			Contract.Requires(associatedStaticDb != null);
+			ArgumentNullException.ThrowIfNull(associatedStaticDb);
 
 			// #REVIEW_BLAM: I've added TraceInformation calls now, can we get rid of the TextWriter?
 

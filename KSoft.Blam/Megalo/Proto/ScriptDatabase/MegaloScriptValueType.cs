@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 using Interop = System.Runtime.InteropServices;
 
 namespace KSoft.Blam.Megalo.Proto
@@ -81,10 +75,8 @@ namespace KSoft.Blam.Megalo.Proto
 		public static int BitCount => Constants.kLastBitField.FieldsBitCount;
 		public static uint Bitmask => Constants.kLastBitField.FieldsBitmask.u32;
 
-		/// <remarks>ONLY PUBLIC FOR USE IN CODE CONTRACTS</remarks>
-		[Contracts.Pure] public static bool ValidateNameIndex(int index) => index >= 0 && index <= kMaxNameIndex;
-		/// <remarks>ONLY PUBLIC FOR USE IN CODE CONTRACTS</remarks>
-		[Contracts.Pure] public static bool ValidateBitLength(int length) => length >= 0 && length <= kMaxBitLength;
+		public static bool ValidateNameIndex(int index) => index >= 0 && index <= kMaxNameIndex;
+		public static bool ValidateBitLength(int length) => length >= 0 && length <= kMaxBitLength;
 		#endregion
 
 		#region Internal Value
@@ -108,9 +100,45 @@ namespace KSoft.Blam.Megalo.Proto
 			encoder.Encode32(typeParam, Constants.kTypeParamBitField);
 			encoder.Encode32(typeTraits, Constants.kTypeTraitsBitField);
 
-			Contract.Assert(encoder.UsedBitCount == MegaloScriptValueType.BitCount);
+			if (encoder.UsedBitCount != MegaloScriptValueType.BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Encoded value-type handle used {0} bits, expected {1}.",
+					encoder.UsedBitCount,
+					MegaloScriptValueType.BitCount));
+			}
 
 			handle = encoder.GetHandle32();
+		}
+
+		static void ThrowIfInvalidNameIndex(int nameIndex)
+		{
+			if (!ValidateNameIndex(nameIndex))
+			{
+				throw new ArgumentOutOfRangeException(nameof(nameIndex), nameIndex,
+					string.Format(Util.InvariantCultureInfo, "Name index must be between 0 and {0}.", kMaxNameIndex));
+			}
+		}
+
+		static void ThrowIfInvalidBitLength(int bitLength)
+		{
+			if (!ValidateBitLength(bitLength))
+			{
+				throw new ArgumentOutOfRangeException(nameof(bitLength), bitLength,
+					string.Format(Util.InvariantCultureInfo, "Bit length must be between 0 and {0}.", kMaxBitLength));
+			}
+		}
+
+		static void ThrowIfDisallowedGeneralBaseType(MegaloScriptValueBaseType baseType)
+		{
+			if (baseType == MegaloScriptValueBaseType.Enum ||
+				baseType == MegaloScriptValueBaseType.Index ||
+				baseType == MegaloScriptValueBaseType.VarReference)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Base type {0} must use its specialized constructor.",
+					baseType), nameof(baseType));
+			}
 		}
 		#endregion
 
@@ -118,11 +146,9 @@ namespace KSoft.Blam.Megalo.Proto
 		public MegaloScriptValueType(int nameIndex, MegaloScriptValueBaseType baseType, int bitLength,
 			uint typeParam = 0, uint typeTraits = 0) : this()
 		{
-			Contract.Requires(ValidateNameIndex(nameIndex));
-			Contract.Requires(	baseType != MegaloScriptValueBaseType.Enum &&
-								baseType != MegaloScriptValueBaseType.Index &&
-								baseType != MegaloScriptValueBaseType.VarReference);
-			Contract.Requires(ValidateBitLength(bitLength));
+			ThrowIfInvalidNameIndex(nameIndex);
+			ThrowIfDisallowedGeneralBaseType(baseType);
+			ThrowIfInvalidBitLength(bitLength);
 
 			InitializeHandle(out mHandle, nameIndex, baseType, bitLength, typeParam, typeTraits);
 		}
@@ -130,8 +156,8 @@ namespace KSoft.Blam.Megalo.Proto
 		public MegaloScriptValueType(int nameIndex, int bitLength,
 			int enumIndex, MegaloScriptValueEnumTraits enumTraits) : this()
 		{
-			Contract.Requires(ValidateNameIndex(nameIndex));
-			Contract.Requires(ValidateBitLength(bitLength));
+			ThrowIfInvalidNameIndex(nameIndex);
+			ThrowIfInvalidBitLength(bitLength);
 
 			InitializeHandle(out mHandle, nameIndex, MegaloScriptValueBaseType.Enum, bitLength, (uint)enumIndex, (uint)enumTraits);
 		}
@@ -140,8 +166,8 @@ namespace KSoft.Blam.Megalo.Proto
 		public MegaloScriptValueType(int nameIndex, int bitLength,
 			MegaloScriptValueIndexTarget indexTarget, MegaloScriptValueIndexTraits indexTraits) : this()
 		{
-			Contract.Requires(ValidateNameIndex(nameIndex));
-			Contract.Requires(ValidateBitLength(bitLength));
+			ThrowIfInvalidNameIndex(nameIndex);
+			ThrowIfInvalidBitLength(bitLength);
 
 			InitializeHandle(out mHandle, nameIndex, MegaloScriptValueBaseType.Index, bitLength, (uint)indexTarget, (uint)indexTraits);
 		}
@@ -150,8 +176,8 @@ namespace KSoft.Blam.Megalo.Proto
 		public MegaloScriptValueType(int nameIndex, int bitLength,
 			MegaloScriptVariableType varType, MegaloScriptVariableSet varSet) : this()
 		{
-			Contract.Requires(ValidateNameIndex(nameIndex));
-			Contract.Requires(ValidateBitLength(bitLength));
+			ThrowIfInvalidNameIndex(nameIndex);
+			ThrowIfInvalidBitLength(bitLength);
 
 			InitializeHandle(out mHandle, nameIndex, MegaloScriptValueBaseType.Var, bitLength, (uint)varType, (uint)varSet);
 		}
@@ -160,7 +186,7 @@ namespace KSoft.Blam.Megalo.Proto
 		public MegaloScriptValueType(int nameIndex,
 			MegaloScriptVarReferenceType varRefType, MegaloScriptValueBaseType baseType = MegaloScriptValueBaseType.VarReference) : this()
 		{
-			Contract.Requires(ValidateNameIndex(nameIndex));
+			ThrowIfInvalidNameIndex(nameIndex);
 
 			InitializeHandle(out mHandle, nameIndex, baseType, 0, (uint)varRefType);
 		}
@@ -222,9 +248,7 @@ namespace KSoft.Blam.Megalo.Proto
 		#endregion
 
 		#region Operators
-		[Contracts.Pure]
 		public static bool operator ==(MegaloScriptValueType lhs, MegaloScriptValueType rhs) => lhs.mHandle == rhs.mHandle;
-		[Contracts.Pure]
 		public static bool operator !=(MegaloScriptValueType lhs, MegaloScriptValueType rhs) => lhs.mHandle != rhs.mHandle;
 		#endregion
 
@@ -260,8 +284,13 @@ namespace KSoft.Blam.Megalo.Proto
 		{
 			// #TODO figure out a a utility to do this generically for bit-encoded handles that can run
 			// in the internal Constants class.
-			Contract.Assert(MegaloScriptValueType.BitCount < Bits.kInt32BitCount,
-				"Handle bits needs to be <= 31 (ie, sans sign bit) in order for this implementation of CompareTo to reasonably work");
+			if (MegaloScriptValueType.BitCount >= Bits.kInt32BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Handle bit count is {0}, expected less than {1} for signed CompareTo.",
+					MegaloScriptValueType.BitCount,
+					Bits.kInt32BitCount));
+			}
 
 			int lhs_data = (int)lhs.mHandle;
 			int rhs_data = (int)rhs.mHandle;
