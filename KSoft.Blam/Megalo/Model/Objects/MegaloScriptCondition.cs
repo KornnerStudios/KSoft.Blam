@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -24,7 +19,11 @@ namespace KSoft.Blam.Megalo.Model
 		/// <returns></returns>
 		public MegaloScriptCondition CreateConditionWithUnionGroup(int unionGroupId = TypeExtensions.kNone)
 		{
-			Contract.Requires(unionGroupId.IsNoneOrPositive());
+			if (!unionGroupId.IsNoneOrPositive())
+			{
+				throw new ArgumentOutOfRangeException(nameof(unionGroupId), unionGroupId,
+					"Union group id must be NONE or non-negative.");
+			}
 
 			var cond = CreateCondition();
 
@@ -39,9 +38,21 @@ namespace KSoft.Blam.Megalo.Model
 		/// <returns></returns>
 		public MegaloScriptCondition CreateConditionInUnionGroup(int unionGroupId, MegaloScriptModelObjectHandle evaluationBefore)
 		{
-			Contract.Requires(unionGroupId.IsNotNone());
-			Contract.Requires(evaluationBefore.Type == MegaloScriptModelObjectType.Condition);
-			Contract.Requires(evaluationBefore.IsNoneOrPositive);
+			if (unionGroupId.IsNone())
+			{
+				throw new ArgumentNoneException(nameof(unionGroupId));
+			}
+			if (evaluationBefore.Type != MegaloScriptModelObjectType.Condition)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Evaluation-before handle must be a {0}; actual type is {1}.",
+					MegaloScriptModelObjectType.Condition, evaluationBefore.Type), nameof(evaluationBefore));
+			}
+			if (!evaluationBefore.IsNoneOrPositive)
+			{
+				throw new ArgumentOutOfRangeException(nameof(evaluationBefore), evaluationBefore,
+					"Evaluation-before handle id must be NONE or non-negative.");
+			}
 
 			var cond = CreateCondition();
 
@@ -56,7 +67,10 @@ namespace KSoft.Blam.Megalo.Model
 		/// <remarks>Appends the condition to the end of the end of the evaluation list</remarks>
 		public MegaloScriptCondition CreateConditionInUnionGroup(int unionGroupId)
 		{
-			Contract.Requires(unionGroupId.IsNotNone());
+			if (unionGroupId.IsNone())
+			{
+				throw new ArgumentNoneException(nameof(unionGroupId));
+			}
 
 			return CreateConditionInUnionGroup(unionGroupId, MegaloScriptModelObjectHandle.NullCondition);
 		}
@@ -114,7 +128,14 @@ namespace KSoft.Blam.Megalo.Model
 
 		internal void InitializeForType(MegaloScriptModel model, int condType)
 		{
-			Contract.Requires(condType >= 0 && condType < model.Database.Conditions.Count);
+			ArgumentNullException.ThrowIfNull(model);
+
+			if (condType < 0 || condType >= model.Database.Conditions.Count)
+			{
+				throw new ArgumentOutOfRangeException(nameof(condType), condType,
+					string.Format(Util.InvariantCultureInfo,
+						"Condition type must be between 0 and {0}.", model.Database.Conditions.Count - 1));
+			}
 
 			ProtoData = model.Database.Conditions[condType];
 			NotifyPropertyChanged(kProtoDataChanged);

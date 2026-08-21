@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -59,7 +54,11 @@ namespace KSoft.Blam.Megalo.Model
 		internal static readonly Func<MegaloScriptModelObject, int> kObjectToIndex = obj => obj.Id;
 
 		public MegaloScriptModelObjectHandle Handle { get {
-			Contract.Requires(Id.IsNotNone());
+			if (Id.IsNone())
+			{
+				throw new InvalidOperationException("Cannot create a handle for a model object without an ID.");
+			}
+
 			return new MegaloScriptModelObjectHandle(ObjectType, Id);
 		} }
 
@@ -69,7 +68,13 @@ namespace KSoft.Blam.Megalo.Model
 		public int Id {
 			get { return mId; }
 			internal set {
-				Contract.Assert(mId.IsNone(), "ID should be considered immutable after it is first set");
+				if (mId.IsNotNone())
+				{
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"Model object ID is immutable once set; current ID is {0}, requested ID is {1}.",
+						mId, value));
+				}
+
 				mId = value;
 		} }
 		#endregion
@@ -114,8 +119,11 @@ namespace KSoft.Blam.Megalo.Model
 			}
 			else if (s.IsReading)
 			{
-				Contract.Assert(Id.IsNotNone(), // ID should have been set prior to serialize (eg, in the object's Create method in the Model)
-					"Tried to read an embedded object (sans ID) which wasn't given an ID already");
+				if (Id.IsNone())
+				{
+					s.ThrowReadException(new System.IO.InvalidDataException(
+						"Tried to read an embedded object without an ID before one was assigned."));
+				}
 			}
 		}
 		#endregion

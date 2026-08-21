@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -38,7 +33,14 @@ namespace KSoft.Blam.Megalo.Model
 
 		internal void InitializeForType(MegaloScriptModel model, int actionType)
 		{
-			Contract.Requires(actionType >= 0 && actionType < model.Database.Actions.Count);
+			ArgumentNullException.ThrowIfNull(model);
+
+			if (actionType < 0 || actionType >= model.Database.Actions.Count)
+			{
+				throw new ArgumentOutOfRangeException(nameof(actionType), actionType,
+					string.Format(Util.InvariantCultureInfo,
+						"Action type must be between 0 and {0}.", model.Database.Actions.Count - 1));
+			}
 
 			ProtoData = model.Database.Actions[actionType];
 			NotifyPropertyChanged(kProtoDataChanged);

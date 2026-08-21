@@ -1,10 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -64,7 +59,13 @@ namespace KSoft.Blam.Megalo.Model
 			if (TriggerRemappings.Count > 0)
 			{
 				bool remapped = TriggerRemappings.TryGetValue(triggerIndex, out int remapped_index);
-				Contract.Assert(remapped, "Failed to remap a trigger index");
+				if (!remapped)
+				{
+					throw new System.InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"Failed to remap trigger index {0}; remapping count is {1}.",
+						triggerIndex, TriggerRemappings.Count));
+				}
+
 				triggerIndex = remapped_index;
 			}
 		}

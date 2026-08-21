@@ -1,9 +1,4 @@
 ﻿using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -89,7 +84,12 @@ namespace KSoft.Blam.Megalo.Model
 				var cond = Model.Conditions[id];
 
 				int insert_index = cond.ExecuteBeforeAction;
-				Contract.Assert(insert_index.IsNotNone(), "Did we already process this condition?");
+				if (insert_index.IsNone())
+				{
+					throw new System.InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"Condition {0} has already had its execute-before action processed.", cond.Id));
+				}
+
 				refs.Insert(insert_index, cond.Handle);
 				cond.ExecuteBeforeAction = TypeExtensions.kNone;
 
@@ -108,8 +108,14 @@ namespace KSoft.Blam.Megalo.Model
 		void ReferencesSwapLogicUnits(MegaloScriptConditionActionReferences refs,
 			MegaloScriptModelObjectHandle lhs, MegaloScriptModelObjectHandle rhs)
 		{
-			Contract.Requires(lhs.IsNotNone);
-			Contract.Requires(rhs.IsNotNone);
+			if (lhs.IsNone)
+			{
+				throw new System.ArgumentException("Handle cannot be NONE.", nameof(lhs));
+			}
+			if (rhs.IsNone)
+			{
+				throw new System.ArgumentException("Handle cannot be NONE.", nameof(rhs));
+			}
 
 			refs.Swap(lhs, rhs);
 
@@ -152,9 +158,20 @@ namespace KSoft.Blam.Megalo.Model
 		internal void Swap(MegaloScriptModelObjectHandle lhs, MegaloScriptModelObjectHandle rhs)
 		{
 			int lhs_index = mElements.IndexOf(lhs);
-			Contract.Assert(lhs_index >= 0);
+			if (lhs_index < 0)
+			{
+				throw new System.InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Cannot swap; left handle type {0}, id {1} is not in the references collection.",
+					lhs.Type, lhs.Id));
+			}
+
 			int rhs_index = mElements.IndexOf(rhs);
-			Contract.Assert(rhs_index >= 0);
+			if (rhs_index < 0)
+			{
+				throw new System.InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Cannot swap; right handle type {0}, id {1} is not in the references collection.",
+					rhs.Type, rhs.Id));
+			}
 
 			mElements[rhs_index] = lhs;
 			mElements[lhs_index] = rhs;

@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -81,7 +76,14 @@ namespace KSoft.Blam.Megalo.Model
 		bool mCommentOut;
 		public bool CommentOut {
 			get { return mCommentOut; }
-			set { Contract.Requires(TriggerType == MegaloScriptTriggerType.Normal);
+			set {
+				if (TriggerType != MegaloScriptTriggerType.Normal)
+				{
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"Only {0} triggers can be commented out; actual trigger type is {1}.",
+						MegaloScriptTriggerType.Normal, TriggerType));
+				}
+
 				mCommentOut = value;
 				NotifyPropertyChanged(kCommentOutChanged);
 		} }

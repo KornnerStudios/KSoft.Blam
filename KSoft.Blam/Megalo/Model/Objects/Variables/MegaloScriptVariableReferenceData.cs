@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -61,7 +56,14 @@ namespace KSoft.Blam.Megalo.Model
 			refTypeMember = protoType.Members[result.Type];
 			if (refTypeMember.HasDataType)
 			{
-				Contract.Assert(dataTypeName != null, "Reference type uses a data type parameter, but one wasn't defined");
+				if (dataTypeName == null)
+				{
+					throw new ArgumentNullException(nameof(dataTypeName),
+						string.Format(Util.InvariantCultureInfo,
+							"Reference kind {0} member '{1}' requires a data type parameter.",
+							refKind, refMemberName));
+				}
+
 				var id_resolving_ctxt = new Proto.MegaloScriptEnum.EnumNameResolvingContext(model.Database, refTypeMember.EnumValueType);
 				result.DataType = Proto.MegaloScriptEnum.EnumNameResolvingContext.IdResolver(id_resolving_ctxt, dataTypeName);
 			}

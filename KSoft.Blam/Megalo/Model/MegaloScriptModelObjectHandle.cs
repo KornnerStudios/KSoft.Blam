@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 using Interop = System.Runtime.InteropServices;
 
 namespace KSoft.Blam.Megalo.Model
@@ -44,8 +38,7 @@ namespace KSoft.Blam.Megalo.Model
 		public static int BitCount => Constants.kLastBitField.FieldsBitCount;
 		public static uint Bitmask => Constants.kLastBitField.FieldsBitmask.u32;
 
-		/// <remarks>ONLY PUBLIC FOR USE IN CODE CONTRACTS</remarks>
-		[Contracts.Pure] public static bool ValidateId(int id) => id.IsNoneOrPositive() && id < Constants.kMaxId;
+		public static bool ValidateId(int id) => id.IsNoneOrPositive() && id < Constants.kMaxId;
 
 		public static readonly MegaloScriptModelObjectHandle Null = new(MegaloScriptModelObjectType.None);
 		public static readonly MegaloScriptModelObjectHandle NullCondition = new(MegaloScriptModelObjectType.Condition);
@@ -62,7 +55,12 @@ namespace KSoft.Blam.Megalo.Model
 			encoder.EncodeNoneable32(id, Constants.kIdBitField);
 			encoder.Encode32(type, BitEncoders.MegaloScriptModelObjectType);
 
-			Contract.Assert(encoder.UsedBitCount == MegaloScriptModelObjectHandle.BitCount);
+			if (encoder.UsedBitCount != MegaloScriptModelObjectHandle.BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Encoded handle used {0} bits; expected {1}.",
+					encoder.UsedBitCount, MegaloScriptModelObjectHandle.BitCount));
+			}
 
 			handle = encoder.GetHandle32();
 		}
@@ -71,7 +69,12 @@ namespace KSoft.Blam.Megalo.Model
 		#region Ctor
 		public MegaloScriptModelObjectHandle(MegaloScriptModelObjectType type, int id = TypeExtensions.kNone)
 		{
-			Contract.Requires(ValidateId(id));
+			if (!ValidateId(id))
+			{
+				throw new ArgumentOutOfRangeException(nameof(id), id,
+					string.Format(Util.InvariantCultureInfo,
+						"Object handle id must be NONE or in the range [0, {0}).", Constants.kMaxId));
+			}
 
 			InitializeHandle(out mHandle, type, id);
 		}
@@ -117,8 +120,12 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			// #TODO figure out a a utility to do this generically for bit-encoded handles that can run
 			// in the internal Constants class.
-			Contract.Assert(MegaloScriptModelObjectHandle.BitCount < Bits.kInt32BitCount,
-				"Handle bits needs to be <= 31 (ie, sans sign bit) in order for this implementation of CompareTo to reasonably work");
+			if (MegaloScriptModelObjectHandle.BitCount >= Bits.kInt32BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Handle bit count must be less than {0}; actual bit count is {1}.",
+					Bits.kInt32BitCount, MegaloScriptModelObjectHandle.BitCount));
+			}
 
 			int lhs_data = (int)lhs.mHandle;
 			int rhs_data = (int)rhs.mHandle;
@@ -248,14 +255,12 @@ namespace KSoft.Blam.Megalo.Model
 		/// <param name="lhs">left-hand value for comparison expression</param>
 		/// <param name="rhs">right-hand value for comparison expression</param>
 		/// <returns><paramref name="lhs"/> == <paramref name="rhs"/></returns>
-		[Contracts.Pure]
 		public static bool operator ==(MegaloScriptModelObjectHandle lhs, MegaloScriptModelObjectHandle rhs) => lhs.mHandle == rhs.mHandle;
 		/// <summary>Compare two handles (inequality)</summary>
 		/// <param name="lhs">left-hand value for comparison expression</param>
 		/// <param name="rhs">right-hand value for comparison expression</param>
 		/// <returns><paramref name="lhs"/> != <paramref name="rhs"/></returns>
 		/// <remarks>Ignores address size</remarks>
-		[Contracts.Pure]
 		public static bool operator !=(MegaloScriptModelObjectHandle lhs, MegaloScriptModelObjectHandle rhs) => lhs.mHandle != rhs.mHandle;
 	};
 }

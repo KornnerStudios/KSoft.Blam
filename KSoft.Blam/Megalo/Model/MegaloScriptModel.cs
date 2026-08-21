@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -155,7 +150,12 @@ namespace KSoft.Blam.Megalo.Model
 		#region IndexTargetIsValid
 		public bool EnumIndexIsValid(Proto.MegaloScriptValueType enumType, int index)
 		{
-			Contract.Requires(enumType.BaseType == Proto.MegaloScriptValueBaseType.Enum);
+			if (enumType.BaseType != Proto.MegaloScriptValueBaseType.Enum)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Value type must have base type {0}; actual base type is {1}.",
+					Proto.MegaloScriptValueBaseType.Enum, enumType.BaseType), nameof(enumType));
+			}
 
 			var e = Database.Enums[enumType.EnumIndex];
 			var etraits = enumType.EnumTraits;
@@ -291,14 +291,21 @@ namespace KSoft.Blam.Megalo.Model
 
 		internal int GetTargetIndexFromName(Proto.MegaloScriptValueIndexTarget target, string indexName)
 		{
-			Contract.Requires(target.HasIndexName(), "Can't get an index value by name which doesn't support naming");
-			Contract.Requires(!string.IsNullOrEmpty(indexName));
+			if (!target.HasIndexName())
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Can't get an index value by name for target {0}, which doesn't support naming.",
+					target), nameof(target));
+			}
+			ArgumentException.ThrowIfNullOrEmpty(indexName);
 
 			var id_resolving_ctxt = new IndexNameResolvingContext(this, target);
 			int result = IndexNameResolvingContext.IdResolver(id_resolving_ctxt, indexName);
 			if (!result.IsNoneOrPositive())
 			{
-				throw new ArgumentException(indexName);
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Couldn't resolve index name '{0}' for target {1}; resolved value was {2}.",
+					indexName, target, result), nameof(indexName));
 			}
 
 			return result;
@@ -350,7 +357,18 @@ namespace KSoft.Blam.Megalo.Model
 			int game_object_filter_count = s.IsReading ? 0 : CandySpawnerFilters.Count;
 			s.Stream(ref game_object_filter_count, Database.Limits.GameObjectFilters.CountBitLength);
 			s.StreamElements(CandySpawnerFilters, Database.Limits.GameObjectFilters.CountBitLength);
-			Contract.Assert(CandySpawnerFilters.Count == game_object_filter_count);
+			if (CandySpawnerFilters.Count != game_object_filter_count)
+			{
+				var message = string.Format(Util.InvariantCultureInfo,
+					"GameObjectFilters count mismatch; expected {0}, actual {1}.",
+					game_object_filter_count, CandySpawnerFilters.Count);
+				if (s.IsReading)
+				{
+					throw new System.IO.InvalidDataException(message);
+				}
+
+				throw new InvalidOperationException(message);
+			}
 		}
 		protected virtual void SerializeImpl(IO.BitStream s)
 		{
@@ -451,7 +469,7 @@ namespace KSoft.Blam.Megalo.Model
 			string refMemberName, int dataValue = TypeExtensions.kNone,
 			string dataTypeName = null)
 		{
-			Contract.Requires(!string.IsNullOrEmpty(refMemberName));
+			ArgumentException.ThrowIfNullOrEmpty(refMemberName);
 
 			MegaloScriptVariableReferenceData.Initialize(this,
 				out MegaloScriptVariableReferenceData result,
@@ -475,8 +493,8 @@ namespace KSoft.Blam.Megalo.Model
 			string refMemberName, string enumMemberName,
 			string dataTypeName = null)
 		{
-			Contract.Requires(!string.IsNullOrEmpty(refMemberName));
-			Contract.Requires(!string.IsNullOrEmpty(enumMemberName));
+			ArgumentException.ThrowIfNullOrEmpty(refMemberName);
+			ArgumentException.ThrowIfNullOrEmpty(enumMemberName);
 
 			MegaloScriptVariableReferenceData.Initialize(this,
 				out MegaloScriptVariableReferenceData result,
@@ -484,7 +502,12 @@ namespace KSoft.Blam.Megalo.Model
 				out Proto.MegaloScriptProtoVariableReferenceMember member,
 				refMemberName, dataTypeName);
 
-			Contract.Assert(member.HasDataValue, "Member has no data field, let alone enum data");
+			if (!member.HasDataValue)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Variable reference member '{0}' has no data field, let alone enum data.",
+					refMemberName));
+			}
 
 			var id_resolving_ctxt = new Proto.MegaloScriptEnum.EnumNameResolvingContext(Database, member.EnumValueType);
 			result.Data = Proto.MegaloScriptEnum.EnumNameResolvingContext.IdResolver(id_resolving_ctxt, enumMemberName);
@@ -501,8 +524,8 @@ namespace KSoft.Blam.Megalo.Model
 			string refMemberName, string indexName,
 			string dataTypeName = null)
 		{
-			Contract.Requires(!string.IsNullOrEmpty(refMemberName));
-			Contract.Requires(indexName != null);
+			ArgumentException.ThrowIfNullOrEmpty(refMemberName);
+			ArgumentNullException.ThrowIfNull(indexName);
 
 			MegaloScriptVariableReferenceData.Initialize(this,
 				out MegaloScriptVariableReferenceData result,
@@ -510,7 +533,12 @@ namespace KSoft.Blam.Megalo.Model
 				out Proto.MegaloScriptProtoVariableReferenceMember member,
 				refMemberName, dataTypeName);
 
-			Contract.Assert(member.HasDataValue, "Member has no data field, let alone index data");
+			if (!member.HasDataValue)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Variable reference member '{0}' has no data field, let alone index data.",
+					refMemberName));
+			}
 
 			result.Data = GetTargetIndexFromName(member.ValueType.IndexTarget, indexName);
 

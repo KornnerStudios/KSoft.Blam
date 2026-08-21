@@ -1,9 +1,4 @@
 ﻿using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -39,13 +34,20 @@ namespace KSoft.Blam.Megalo.Model
 		#region RemapTriggerIndex
 		public void RemapTriggerReference(ref int triggerIndex)
 		{
-			Contract.Requires(triggerIndex.IsNotNone());
+			if (triggerIndex.IsNone())
+			{
+				throw new ArgumentNoneException(nameof(triggerIndex));
+			}
 
 			RemapTriggerIndex(ref triggerIndex);
 		}
 		public void RemapTriggerPointer(ref int triggerIndex)
 		{
-			Contract.Requires(triggerIndex.IsNoneOrPositive());
+			if (!triggerIndex.IsNoneOrPositive())
+			{
+				throw new System.ArgumentOutOfRangeException(nameof(triggerIndex), triggerIndex,
+					"Trigger pointer must be NONE or non-negative.");
+			}
 
 			if (triggerIndex.IsNotNone())
 			{

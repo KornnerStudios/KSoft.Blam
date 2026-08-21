@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -77,16 +72,33 @@ namespace KSoft.Blam.Megalo.Model
 			else
 			{
 				int insert_index = mConditions.IndexOf(evaluateBefore);
-				Contract.Assert(insert_index >= 0);
+				if (insert_index < 0)
+				{
+					throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+						"Evaluation-before handle type {0}, id {1} is not in union group {2}.",
+						evaluateBefore.Type, evaluateBefore.Id, Id), nameof(evaluateBefore));
+				}
+
 				mConditions.Insert(insert_index, cond.Handle);
 			}
 		}
 		internal void Swap(MegaloScriptModelObjectHandle lhs, MegaloScriptModelObjectHandle rhs)
 		{
 			int lhs_index = mConditions.IndexOf(lhs);
-			Contract.Assert(lhs_index >= 0);
+			if (lhs_index < 0)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Cannot swap; left condition handle id {0} is not in union group {1}.",
+					lhs.Id, Id));
+			}
+
 			int rhs_index = mConditions.IndexOf(rhs);
-			Contract.Assert(rhs_index >= 0);
+			if (rhs_index < 0)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Cannot swap; right condition handle id {0} is not in union group {1}.",
+					rhs.Id, Id));
+			}
 
 			mConditions[rhs_index] = lhs;
 			mConditions[lhs_index] = rhs;
@@ -151,7 +163,13 @@ namespace KSoft.Blam.Megalo.Model
 				}
 				else if (cond.UnionGroup == MegaloScriptCondition.kUsePrevUnionGroupId)
 				{
-					Contract.Assert(prev_union_group != null);
+					if (prev_union_group == null)
+					{
+						s.ThrowReadException(new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+							"Condition {0} references the previous union group before one exists.", cond.Id)));
+						continue;
+					}
+
 					prev_union_group.Add(cond);
 				}
 				else
@@ -190,7 +208,11 @@ namespace KSoft.Blam.Megalo.Model
 			if (s.IsWriting)
 			{
 				//s.WriteAttribute("condCount", mConditions.Count);
-				Contract.Assert(Count > 0, "Found a non-disposed union group!");
+				if (Count <= 0)
+				{
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"Cannot write empty union group {0}; it should have been disposed.", Id));
+				}
 			}
 		}
 		#endregion

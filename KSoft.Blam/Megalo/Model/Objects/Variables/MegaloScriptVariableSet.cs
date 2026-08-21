@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -239,11 +234,7 @@ namespace KSoft.Blam.Megalo.Model
 
 			if (s.IsReading)
 			{
-				Contract.Assert(Numerics.Count <= ProtoData.Traits[MegaloScriptVariableType.Numeric].MaxCount);
-				Contract.Assert(Timers.Count <= ProtoData.Traits[MegaloScriptVariableType.Timer].MaxCount);
-				Contract.Assert(Teams.Count <= ProtoData.Traits[MegaloScriptVariableType.Team].MaxCount);
-				Contract.Assert(Players.Count <= ProtoData.Traits[MegaloScriptVariableType.Player].MaxCount);
-				Contract.Assert(Objects.Count <= ProtoData.Traits[MegaloScriptVariableType.Object].MaxCount);
+				ValidateVariableListCounts(s);
 			}
 		}
 		#endregion

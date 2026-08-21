@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -35,11 +30,16 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptArguments(MegaloScriptModel model, Proto.IMegaloScriptProtoObjectWithParams protoObj, params int[] valueIds)
 		{
-			Contract.Requires(model != null);
-			Contract.Requires(protoObj != null);
-			Contract.Requires(valueIds != null); // should never happen unless we're explicitly passed null
-			Contract.Requires(valueIds.Length==0 || valueIds.Length==protoObj.ParameterList.Count,
-				"Either don't specify the parameter values or specify them all");
+			ArgumentNullException.ThrowIfNull(model);
+			ArgumentNullException.ThrowIfNull(protoObj);
+			ArgumentNullException.ThrowIfNull(valueIds);
+
+			if (valueIds.Length != 0 && valueIds.Length != protoObj.ParameterList.Count)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Either don't specify parameter values or specify them all; expected 0 or {0}, actual {1}.",
+					protoObj.ParameterList.Count, valueIds.Length), nameof(valueIds));
+			}
 
 			ProtoData = protoObj;
 			this.mValueIds = new int[protoObj.ParameterList.Count];
@@ -76,12 +76,28 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		public void InitializeValues(params MegaloScriptValueBase[] values)
 		{
-			Contract.Requires(values.Length == Count);
+			ArgumentNullException.ThrowIfNull(values);
+
+			if (values.Length != Count)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Expected {0} values, but received {1}.", Count, values.Length), nameof(values));
+			}
 
 			for (int x = 0; x < mValueIds.Length; x++)
 			{
-				Contract.Assert(values[x] != null);
-				Contract.Assert(ProtoData.ParameterList[x].Type.Equals(values[x].ValueType));
+				if (values[x] == null)
+				{
+					throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+						"Value at parameter index {0} cannot be null.", x), nameof(values));
+				}
+				if (!ProtoData.ParameterList[x].Type.Equals(values[x].ValueType))
+				{
+					throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+						"Value at parameter index {0} has type {1}; expected {2}.",
+						x, values[x].ValueType, ProtoData.ParameterList[x].Type), nameof(values));
+				}
+
 				mValueIds[x] = values[x].Id;
 			}
 
@@ -93,10 +109,21 @@ namespace KSoft.Blam.Megalo.Model
 		public T Get<T>(MegaloScriptModel model, int paramIndex)
 			where T : MegaloScriptValueBase
 		{
-			Contract.Requires(paramIndex >= 0 && paramIndex < ProtoData.ParameterList.Count);
+			ArgumentNullException.ThrowIfNull(model);
+
+			if (paramIndex < 0 || paramIndex >= ProtoData.ParameterList.Count)
+			{
+				throw new ArgumentOutOfRangeException(nameof(paramIndex), paramIndex,
+					string.Format(Util.InvariantCultureInfo,
+						"Parameter index must be between 0 and {0}.", ProtoData.ParameterList.Count - 1));
+			}
 
 			int value_id = mValueIds[paramIndex];
-			Contract.Assert(value_id.IsNotNone());
+			if (value_id.IsNone())
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Parameter index {0} has not been initialized with a script value.", paramIndex));
+			}
 
 			return (T)model.Values[value_id];
 		}
@@ -128,7 +155,11 @@ namespace KSoft.Blam.Megalo.Model
 			{
 				if (s.IsWriting)
 				{
-					Contract.Assert(value_id.IsNotNone());
+					if (value_id.IsNone())
+					{
+						throw new InvalidOperationException(
+							"Cannot write Megalo script arguments before all parameter values are initialized.");
+					}
 				}
 
 				var value = model.Values[value_id];
@@ -146,6 +177,13 @@ namespace KSoft.Blam.Megalo.Model
 			int param_index = 0;
 			foreach (var node in s.ElementsByName("Param"))
 			{
+				if (param_index >= mValueIds.Length)
+				{
+					s.ThrowReadException(new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+						"Encountered more Param elements than expected; expected {0}.", mValueIds.Length)));
+					continue;
+				}
+
 				using (s.EnterCursorBookmark(node))
 				{
 					if (embedValues)
@@ -157,7 +195,12 @@ namespace KSoft.Blam.Megalo.Model
 						s.StreamCursor(ref mValueIds[param_index]);
 					}
 
-					Contract.Assert(mValueIds[param_index].IsNotNone());
+					if (mValueIds[param_index].IsNone())
+					{
+						s.ThrowReadException(new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+							"Param element at index {0} did not resolve to a script value.", param_index)));
+					}
+
 					param_index++;
 
 					if (param_index == mValueIds.Length) { break; }
@@ -181,7 +224,12 @@ namespace KSoft.Blam.Megalo.Model
 						ProtoData.ParameterList[x].WriteExtraModelInfo(model.Database, s, multiple_params, model.TagElementStreamSerializeFlags);
 					}
 
-					Contract.Assert(mValueIds[x].IsNotNone());
+					if (mValueIds[x].IsNone())
+					{
+						throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+							"Cannot write Param element at index {0}; script value is not initialized.", x));
+					}
+
 					if (embedValues)
 					{
 						MegaloScriptValueBase.SerializeValueForEmbed(model, s, ref mValueIds[x]);

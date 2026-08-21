@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -61,11 +56,27 @@ namespace KSoft.Blam.Megalo.Model
 		internal void TriggerSwapLogicUnits(MegaloScriptModelObjectHandle triggerId,
 			MegaloScriptModelObjectHandle lhs, MegaloScriptModelObjectHandle rhs)
 		{
-			Contract.Requires(triggerId.Type == MegaloScriptModelObjectType.Trigger || triggerId.Type == MegaloScriptModelObjectType.VirtualTrigger);
-			Contract.Requires(triggerId.IsNotNone);
+			if (triggerId.Type != MegaloScriptModelObjectType.Trigger &&
+				triggerId.Type != MegaloScriptModelObjectType.VirtualTrigger)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Trigger handle must be {0} or {1}; actual type is {2}.",
+					MegaloScriptModelObjectType.Trigger,
+					MegaloScriptModelObjectType.VirtualTrigger,
+					triggerId.Type), nameof(triggerId));
+			}
+			if (triggerId.IsNone)
+			{
+				throw new ArgumentException("Trigger handle cannot be NONE.", nameof(triggerId));
+			}
 
 			var trigger = (MegaloScriptTriggerBase)this[triggerId];
-			Contract.Assert(trigger != null);
+			if (trigger == null)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Could not find trigger handle type {0}, id {1}.", triggerId.Type, triggerId.Id));
+			}
+
 			ReferencesSwapLogicUnits(trigger.References, lhs, rhs);
 		}
 
