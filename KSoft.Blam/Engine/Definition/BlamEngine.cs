@@ -42,7 +42,10 @@ namespace KSoft.Blam.Engine
 
 		public bool SupportsSystem(Values.KGuid systemGuid)
 		{
-			Contract.Requires<ArgumentNullException>(systemGuid != Values.KGuid.Empty);
+			if (systemGuid == Values.KGuid.Empty)
+			{
+				throw new ArgumentException("System GUID must not be empty.", nameof(systemGuid));
+			}
 
 			return mSystemPrototypes.TryGetValue(systemGuid, out BlamEngineSystem /*proto_system*/_);
 		}
@@ -114,7 +117,10 @@ namespace KSoft.Blam.Engine
 		public EngineSystemReference<T> GetSystem<T>(EngineBuildHandle forBuild)
 			where T : EngineSystemBase
 		{
-			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
 			Contract.Requires(forBuild.EngineIndex == RootBuildHandle.EngineIndex);
 
 			Values.KGuid system_guid = EngineSystemAttribute.GetSystemGuid<T>();
@@ -131,7 +137,10 @@ namespace KSoft.Blam.Engine
 		public EngineSystemReference<T> TryGetSystem<T>(EngineBuildHandle forBuild)
 			where T : EngineSystemBase
 		{
-			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
 			Contract.Requires(forBuild.EngineIndex == RootBuildHandle.EngineIndex);
 
 			Values.KGuid system_guid = EngineSystemAttribute.GetSystemGuid<T>();
@@ -151,8 +160,10 @@ namespace KSoft.Blam.Engine
 		#region Bit encoding
 		internal static void BitEncodeIndex(ref Bitwise.HandleBitEncoder encoder, int engineIndex)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(
-				engineIndex.IsNoneOrPositive() && engineIndex < EngineRegistry.Engines.Count);
+			if (!engineIndex.IsNoneOrPositive() || engineIndex >= EngineRegistry.Engines.Count)
+			{
+				throw new ArgumentOutOfRangeException(nameof(engineIndex));
+			}
 
 			encoder.EncodeNoneable32(engineIndex, kIndexBitMask);
 		}

@@ -173,7 +173,10 @@ namespace KSoft.Blam.Engine
 		/// <returns>Null if no system is registered with the provided guid</returns>
 		public static EngineSystemAttribute TryGetRegisteredSystem(Values.KGuid systemGuid)
 		{
-			Contract.Requires<ArgumentNullException>(systemGuid.IsNotEmpty);
+			if (systemGuid.IsEmpty)
+			{
+				throw new ArgumentException("System GUID must not be empty.", nameof(systemGuid));
+			}
 
 			Systems.TryGetValue(systemGuid, out EngineSystemAttribute metadata);
 
@@ -210,7 +213,10 @@ namespace KSoft.Blam.Engine
 		public static EngineSystemReference<T> GetSystem<T>(EngineBuildHandle forBuild)
 			where T : EngineSystemBase
 		{
-			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
 
 			BlamEngine engine = Engines[forBuild.EngineIndex];
 
@@ -223,7 +229,10 @@ namespace KSoft.Blam.Engine
 		public static EngineSystemReference<T> TryGetSystem<T>(EngineBuildHandle forBuild)
 			where T : EngineSystemBase
 		{
-			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
 
 			BlamEngine engine = Engines[forBuild.EngineIndex];
 
@@ -234,7 +243,10 @@ namespace KSoft.Blam.Engine
 		#region Bit encoding
 		internal static void BitEncodeResourceModelIndex(ref Bitwise.HandleBitEncoder encoder, int resourceModelIndex)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(IsValidResourceModelIndex(resourceModelIndex));
+			if (!IsValidResourceModelIndex(resourceModelIndex))
+			{
+				throw new ArgumentOutOfRangeException(nameof(resourceModelIndex));
+			}
 
 			encoder.EncodeNoneable32(resourceModelIndex, kResourceModelBitMask);
 		}

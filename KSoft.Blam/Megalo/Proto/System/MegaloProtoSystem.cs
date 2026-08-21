@@ -45,7 +45,10 @@ namespace KSoft.Blam.Megalo.Proto
 
 		public string GetStaticDatabasePath(Engine.EngineBuildHandle forBuild, out Engine.EngineBuildHandle actualBuild)
 		{
-			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
 
 			var files = BuildProtoFiles.Empty;
 			forBuild.TryGetValue(mBuildProtoFiles, ref files, out actualBuild);
@@ -54,7 +57,10 @@ namespace KSoft.Blam.Megalo.Proto
 		}
 		public string GetMegaloDatabasePath(Engine.EngineBuildHandle forBuild, out Engine.EngineBuildHandle actualBuild)
 		{
-			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
 
 			var files = BuildProtoFiles.Empty;
 			forBuild.TryGetValue(mBuildProtoFiles, ref files, out actualBuild);
@@ -119,7 +125,10 @@ namespace KSoft.Blam.Megalo.Proto
 
 		public Task<MegaloStaticDatabase> GetStaticDatabaseAsync(Engine.EngineBuildHandle forBuild)
 		{
-			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
 
 			return GetDatabaseAsync(forBuild, "static",
 				GetStaticDatabasePath, mLoadedStaticDbs,
@@ -130,7 +139,10 @@ namespace KSoft.Blam.Megalo.Proto
 		}
 		public Task<MegaloScriptDatabase> GetMegaloDatabaseAsync(Engine.EngineBuildHandle forBuild)
 		{
-			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
 
 			return GetDatabaseAsync(forBuild, "script",
 				GetMegaloDatabasePath, mLoadedScriptDbs,
@@ -150,7 +162,10 @@ namespace KSoft.Blam.Megalo.Proto
 
 		public AllDatabasesTasksTuple GetAllDatabasesAsync(Engine.EngineBuildHandle forBuild)
 		{
-			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
 
 			var static_db_task = GetStaticDatabaseAsync(forBuild);
 			var megalo_db_task = GetMegaloDatabaseAsync(forBuild);

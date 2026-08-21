@@ -196,7 +196,8 @@ namespace KSoft.Blam.Megalo.Model
 		#region IMegaloScriptAccessibleObject Members
 		string IMegaloScriptAccessibleObject.CodeName {
 			get { return base.Name; }
-			set { base.Name = value;
+			set { ArgumentNullException.ThrowIfNull(value);
+				base.Name = value;
 				NotifyPropertyChanged(kCodeNameChanged);
 		} }
 		#endregion

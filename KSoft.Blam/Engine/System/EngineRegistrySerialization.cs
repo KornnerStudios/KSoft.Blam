@@ -34,8 +34,12 @@ namespace KSoft.Blam.Engine
 
 		static dynamic OpenRegistryTagElementStream(FileAccess streamMode = FileAccess.Read)
 		{
-			Contract.Requires<FileNotFoundException>(File.Exists(kRegistryFilePath),
-				"Can't initialize the EngineRegistry, need the following file: " + kRegistryFilePath);
+			if (!File.Exists(kRegistryFilePath))
+			{
+				throw new FileNotFoundException(
+					"Can't initialize the EngineRegistry, need the following file: " + kRegistryFilePath,
+					kRegistryFilePath);
+			}
 
 			var stream = IO.TagElementStreamFactory.Open(kRegistryFilePath);
 			stream.StreamMode = streamMode;

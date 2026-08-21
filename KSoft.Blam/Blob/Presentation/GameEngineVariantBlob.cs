@@ -53,8 +53,11 @@ namespace KSoft.Blam.Blob
 
 		public void ChangeData(RuntimeData.Variants.GameEngineVariant newData)
 		{
-			Contract.Requires<ArgumentNullException>(newData != null);
-			Contract.Requires<ArgumentException>(newData.GameBuild == GameTarget.Build);
+			ArgumentNullException.ThrowIfNull(newData);
+			if (newData.GameBuild != GameTarget.Build)
+			{
+				throw new ArgumentException("New data must target the current game build.", nameof(newData));
+			}
 
 			Data = newData;
 		}

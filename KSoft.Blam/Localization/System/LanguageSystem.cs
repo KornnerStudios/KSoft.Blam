@@ -37,7 +37,10 @@ namespace KSoft.Blam.Localization
 		public GameLanguageTable GetLanguageTable(Engine.EngineBuildHandle forBuild)
 		{
 #if LANGUAGE_SYSTEM_USE_ONLY_ONE_TABLE
-			Contract.Requires<ArgumentNullException>(!forBuild.IsNone);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
 			Contract.Assert(forBuild.EngineIndex == mEngineTable.BuildHandle.EngineIndex);
 
 			return mEngineTable;

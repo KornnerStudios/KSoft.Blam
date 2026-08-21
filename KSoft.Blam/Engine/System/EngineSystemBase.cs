@@ -171,7 +171,10 @@ namespace KSoft.Blam.Engine
 
 		internal async Task AddReferenceAsync(EngineBuildHandle buildHandle)
 		{
-			Contract.Requires<ArgumentNullException>(!buildHandle.IsNone);
+			if (buildHandle.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(buildHandle));
+			}
 			Contract.Assert(mActiveInBlamEngine);
 
 			// #REVIEW_BLAM: this isn't an optimal setup
@@ -211,7 +214,10 @@ namespace KSoft.Blam.Engine
 		}
 		internal async Task RemoveReferenceAsync(EngineBuildHandle buildHandle)
 		{
-			Contract.Requires<ArgumentNullException>(!buildHandle.IsNone);
+			if (buildHandle.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(buildHandle));
+			}
 
 			bool unload_externs = !Prototype.SystemMetadata.KeepExternsLoaded;
 			var update_refs_side_effect = UpdateReferenceSideEffect.None;

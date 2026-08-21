@@ -49,7 +49,10 @@ namespace KSoft.Blam.Blob
 		bool TryGetBlobGroup(string tagString, int version,
 			out BlobGroup group, out BlobGroupVersionAndBuildInfo infoForVersion)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(version.IsNotNone());
+			if (version.IsNone())
+			{
+				throw new ArgumentOutOfRangeException(nameof(version));
+			}
 
 			group = null;
 			infoForVersion = null;
@@ -61,7 +64,10 @@ namespace KSoft.Blam.Blob
 		public bool TryGetBlobGroup(uint signature, int binarySize, int version,
 			out BlobGroup group, out BlobGroupVersionAndBuildInfo infoForVersion)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(version.IsNotNone());
+			if (version.IsNone())
+			{
+				throw new ArgumentOutOfRangeException(nameof(version));
+			}
 
 			Util.MarkUnusedVariable(ref binarySize);
 
@@ -74,7 +80,10 @@ namespace KSoft.Blam.Blob
 		public bool TryGetBlobGroup(uint signature, int binarySize, int version,
 			out BlobGroup group)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(version.IsNotNone());
+			if (version.IsNone())
+			{
+				throw new ArgumentOutOfRangeException(nameof(version));
+			}
 
 			return TryGetBlobGroup(signature, binarySize, version,
 				out group,
@@ -290,7 +299,10 @@ namespace KSoft.Blam.Blob
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires<ArgumentNullException>(!gameTarget.IsNone);
+			if (gameTarget.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(gameTarget));
+			}
 
 			if (s.IsReading)
 			{

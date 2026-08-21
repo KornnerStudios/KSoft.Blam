@@ -73,15 +73,63 @@ namespace KSoft.Blam.Blob.Transport
 					BlobChunkVerificationResultContext.Stream, AssumedBlobSize);
 			}
 		}
+		void VerifyIsOpenForRead()
+		{
+			if (IsClosed)
+			{
+				throw new InvalidOperationException("Blob transport stream is closed.");
+			}
+			if (!UnderlyingStream.CanRead)
+			{
+				throw new InvalidOperationException("Blob transport stream is not readable.");
+			}
+		}
+		void VerifyIsOpenForWrite()
+		{
+			if (IsClosed)
+			{
+				throw new InvalidOperationException("Blob transport stream is closed.");
+			}
+			if (!UnderlyingStream.CanWrite)
+			{
+				throw new InvalidOperationException("Blob transport stream is not writable.");
+			}
+		}
+		static void VerifyOpenArguments(Stream baseStream, FileAccess permissions)
+		{
+			ArgumentNullException.ThrowIfNull(baseStream);
+			if (!baseStream.CanSeek)
+			{
+				throw new ArgumentException("Stream must support seeking.", nameof(baseStream));
+			}
+			if (permissions == 0)
+			{
+				throw new ArgumentException("Why do we have NO permissions?", nameof(permissions));
+			}
+			if (!baseStream.HasPermissions(permissions))
+			{
+				throw new ArgumentException("Stream does not have the requested permissions.", nameof(baseStream));
+			}
+		}
+		static void VerifyWriteObjectArray(BlobObject[] objects)
+		{
+			ArgumentNullException.ThrowIfNull(objects);
+			if (objects.Length == 0)
+			{
+				throw new InvalidOperationException("Need at least one blob object");
+			}
+			if (!Array.TrueForAll(objects, Predicates.IsNotNull))
+			{
+				throw new ArgumentNullException(nameof(objects), "Blob object in array was null");
+			}
+		}
 
 		public BlobChunkVerificationResultInfo OpenForWrite(Stream baseStream,
 			long startPosition = 0, long length = TypeExtensions.kNoneInt64,
 			Shell.EndianFormat endian = Shell.EndianFormat.Big)
 		{
 			Contract.Requires(IsClosed);
-			Contract.Requires<ArgumentNullException>(baseStream != null);
-			Contract.Requires<ArgumentException>(baseStream.CanSeek);
-			Contract.Requires<ArgumentException>(baseStream.HasPermissions(FileAccess.Write));
+			VerifyOpenArguments(baseStream, FileAccess.Write);
 			Contract.Requires(length.IsNoneOrPositive());
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
@@ -106,10 +154,7 @@ namespace KSoft.Blam.Blob.Transport
 			FileAccess permissions = FileAccess.ReadWrite, Shell.EndianFormat endian = Shell.EndianFormat.Big)
 		{
 			Contract.Requires(IsClosed);
-			Contract.Requires<ArgumentNullException>(baseStream != null);
-			Contract.Requires<ArgumentException>(baseStream.CanSeek);
-			Contract.Requires<ArgumentException>(permissions != 0, "Why do we have NO permissions?");
-			Contract.Requires<ArgumentException>(baseStream.HasPermissions(permissions));
+			VerifyOpenArguments(baseStream, permissions);
 			Contract.Requires(length.IsNoneOrPositive());
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
@@ -128,10 +173,7 @@ namespace KSoft.Blam.Blob.Transport
 			FileAccess permissions = FileAccess.ReadWrite, Shell.EndianFormat endian = Shell.EndianFormat.Big)
 		{
 			Contract.Requires(IsClosed);
-			Contract.Requires<ArgumentNullException>(baseStream != null);
-			Contract.Requires<ArgumentException>(baseStream.CanSeek);
-			Contract.Requires<ArgumentException>(permissions != 0, "Why do we have NO permissions?");
-			Contract.Requires<ArgumentException>(baseStream.HasPermissions(permissions));
+			VerifyOpenArguments(baseStream, permissions);
 			Contract.Requires(endPosition.IsNoneOrPositive());
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
@@ -285,8 +327,10 @@ namespace KSoft.Blam.Blob.Transport
 
 		/*public*/ bool TryAndFind(BlobChunkHeader signature, long findStartPosition = TypeExtensions.kNone)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(findStartPosition.IsNone() ||
-				findStartPosition < AssumedBlobSize);
+			if (!findStartPosition.IsNone() && findStartPosition >= AssumedBlobSize)
+			{
+				throw new ArgumentOutOfRangeException(nameof(findStartPosition));
+			}
 
 			Util.MarkUnusedVariable(ref signature);
 
@@ -410,7 +454,10 @@ namespace KSoft.Blam.Blob.Transport
 		BlobObject EnumerateChunksReadObject(BlobSystem blobSystem, BlobGroup blobGroup, BlobGroupVersionAndBuildInfo infoForVersion,
 			BlobChunkHeader header, byte[] data)
 		{
-			Contract.Requires<InvalidOperationException>(!GameTarget.IsNone);
+			if (GameTarget.IsNone)
+			{
+				throw new InvalidOperationException("Game target must be set before reading blob chunks.");
+			}
 
 			var obj = blobSystem.CreateObject(GameTarget, blobGroup, header.Version, header.Size);
 
@@ -529,9 +576,8 @@ namespace KSoft.Blam.Blob.Transport
 			BlobTransportStreamAuthentication expectedAuthentication = BlobTransportStreamAuthentication.None,
 			bool authenticateBlob = true)
 		{
-			Contract.Requires<ArgumentNullException>(blobSystem != null);
-			Contract.Requires<InvalidOperationException>(!IsClosed);
-			Contract.Requires<InvalidOperationException>(UnderlyingStream.CanRead);
+			ArgumentNullException.ThrowIfNull(blobSystem);
+			VerifyIsOpenForRead();
 
 			IEnumerable<BlobObject> objects = null;
 
@@ -559,9 +605,8 @@ namespace KSoft.Blam.Blob.Transport
 			BlobTransportStreamAuthentication expectedAuthentication = BlobTransportStreamAuthentication.None,
 			bool authenticateBlob = true)
 		{
-			Contract.Requires<ArgumentNullException>(blobSystem != null);
-			Contract.Requires<InvalidOperationException>(!IsClosed);
-			Contract.Requires<InvalidOperationException>(UnderlyingStream.CanRead);
+			ArgumentNullException.ThrowIfNull(blobSystem);
+			VerifyIsOpenForRead();
 
 			objects = null;
 
@@ -726,8 +771,7 @@ namespace KSoft.Blam.Blob.Transport
 		public async Task<BlobChunkVerificationResultInfo> WriteChunksAsync(IEnumerable<BlobObject> objects,
 			BlobTransportStreamAuthentication authentication = BlobTransportStreamAuthentication.None)
 		{
-			Contract.Requires<InvalidOperationException>(!IsClosed);
-			Contract.Requires<InvalidOperationException>(UnderlyingStream.CanWrite);
+			VerifyIsOpenForWrite();
 
 			var result_info = WriteChunksWriteStart();
 
@@ -747,8 +791,7 @@ namespace KSoft.Blam.Blob.Transport
 		public BlobChunkVerificationResultInfo WriteChunks(IEnumerable<BlobObject> objects,
 			BlobTransportStreamAuthentication authentication = BlobTransportStreamAuthentication.None)
 		{
-			Contract.Requires<InvalidOperationException>(!IsClosed);
-			Contract.Requires<InvalidOperationException>(UnderlyingStream.CanWrite);
+			VerifyIsOpenForWrite();
 
 			var result_info = WriteChunksWriteStart();
 
@@ -768,19 +811,17 @@ namespace KSoft.Blam.Blob.Transport
 
 		public async Task<BlobChunkVerificationResultInfo> WriteChunksSansAuthenticationAsync(params BlobObject[] objects)
 		{
-			Contract.Requires<InvalidOperationException>(!IsClosed);
-			Contract.Requires<InvalidOperationException>(UnderlyingStream.CanWrite);
+			VerifyIsOpenForWrite();
 			Contract.Requires(objects != null && objects.Length > 0);
-			Contract.Requires<ArgumentNullException>(Array.TrueForAll(objects, Predicates.IsNotNull));
+			VerifyWriteObjectArray(objects);
 
 			return await WriteChunksAsync(objects, BlobTransportStreamAuthentication.None).ConfigureAwait(true);
 		}
 		public BlobChunkVerificationResultInfo WriteChunksSansAuthentication(params BlobObject[] objects)
 		{
-			Contract.Requires<InvalidOperationException>(!IsClosed);
-			Contract.Requires<InvalidOperationException>(UnderlyingStream.CanWrite);
+			VerifyIsOpenForWrite();
 			Contract.Requires(objects != null && objects.Length > 0);
-			Contract.Requires<ArgumentNullException>(Array.TrueForAll(objects, Predicates.IsNotNull));
+			VerifyWriteObjectArray(objects);
 
 			return WriteChunks(objects, BlobTransportStreamAuthentication.None);
 		}
@@ -788,20 +829,18 @@ namespace KSoft.Blam.Blob.Transport
 		public async Task<BlobChunkVerificationResultInfo> WriteChunksWithAuthenticationAsync(BlobTransportStreamAuthentication authentication,
 			params BlobObject[] objects)
 		{
-			Contract.Requires<InvalidOperationException>(!IsClosed);
-			Contract.Requires<InvalidOperationException>(UnderlyingStream.CanWrite);
+			VerifyIsOpenForWrite();
 			Contract.Requires(objects != null && objects.Length > 0);
-			Contract.Requires<ArgumentNullException>(Array.TrueForAll(objects, Predicates.IsNotNull));
+			VerifyWriteObjectArray(objects);
 
 			return await WriteChunksAsync(objects, authentication).ConfigureAwait(true);
 		}
 		public BlobChunkVerificationResultInfo WriteChunksWithAuthentication(BlobTransportStreamAuthentication authentication,
 			params BlobObject[] objects)
 		{
-			Contract.Requires<InvalidOperationException>(!IsClosed);
-			Contract.Requires<InvalidOperationException>(UnderlyingStream.CanWrite);
+			VerifyIsOpenForWrite();
 			Contract.Requires(objects != null && objects.Length > 0);
-			Contract.Requires<ArgumentNullException>(Array.TrueForAll(objects, Predicates.IsNotNull));
+			VerifyWriteObjectArray(objects);
 
 			return WriteChunks(objects, authentication);
 		}

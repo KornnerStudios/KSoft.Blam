@@ -79,9 +79,12 @@ namespace KSoft.Blam.Engine
 		public static EngineBuildHandle Create(int engineIndex,
 			int branchIndex = TypeExtensions.kNone, int revisionIndex = TypeExtensions.kNone)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(BlamEngine.IsValidIndex(engineIndex));
-			Contract.Requires<ArgumentOutOfRangeException>(branchIndex.IsNoneOrPositive());
-			Contract.Requires<ArgumentOutOfRangeException>(revisionIndex.IsNoneOrPositive());
+			if (!BlamEngine.IsValidIndex(engineIndex))
+			{
+				throw new ArgumentOutOfRangeException(nameof(engineIndex));
+			}
+			ArgumentOutOfRangeException.ThrowIfLessThan(branchIndex, TypeExtensions.kNone);
+			ArgumentOutOfRangeException.ThrowIfLessThan(revisionIndex, TypeExtensions.kNone);
 
 			return new EngineBuildHandle(engineIndex, branchIndex, revisionIndex);
 		}

@@ -150,8 +150,14 @@ namespace KSoft.Blam.RuntimeData
 		}
 		public static ContentMiniMetadata Decode(Engine.EngineBuildHandle buildHandle, string containerName)
 		{
-			Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(containerName));
-			Contract.Requires<ArgumentException>(containerName.Length <= kEncodedPortionLength+1);
+			if (string.IsNullOrEmpty(containerName))
+			{
+				throw new ArgumentNullException(nameof(containerName));
+			}
+			if (containerName.Length > kEncodedPortionLength+1)
+			{
+				throw new ArgumentException("Container name is too long.", nameof(containerName));
+			}
 
 			var result = Create(buildHandle);
 

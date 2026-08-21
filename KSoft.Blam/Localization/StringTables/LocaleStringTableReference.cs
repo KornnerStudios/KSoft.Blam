@@ -17,7 +17,7 @@ namespace KSoft.Blam.Localization.StringTables
 		public string CodeName {
 			get { Contract.Ensures(Contract.Result<string>() != null);
 				return mCodeName;
-			} set { Contract.Requires<ArgumentNullException>(value != null);
+			} set { ArgumentNullException.ThrowIfNull(value);
 				mCodeName = value;
 				NotifyPropertyChanged(kCodeNameChanged);
 		} }

@@ -70,9 +70,15 @@ namespace KSoft.Blam.Engine
 		#region Ctor
 		public BlamEngineTargetHandle(EngineBuildHandle buildHandle, int platformIndex, int resourceModelIndex)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(EngineTargetPlatform.IsValidIndex(platformIndex));
-			Contract.Requires<ArgumentOutOfRangeException>(EngineRegistry.IsValidResourceModelIndex(resourceModelIndex) ||
-				(platformIndex.IsNone() && resourceModelIndex.IsNone()));
+			if (!EngineTargetPlatform.IsValidIndex(platformIndex))
+			{
+				throw new ArgumentOutOfRangeException(nameof(platformIndex));
+			}
+			if (!EngineRegistry.IsValidResourceModelIndex(resourceModelIndex) &&
+				!(platformIndex.IsNone() && resourceModelIndex.IsNone()))
+			{
+				throw new ArgumentOutOfRangeException(nameof(resourceModelIndex));
+			}
 
 			InitializeHandle(out mHandle, buildHandle, platformIndex, resourceModelIndex);
 		}

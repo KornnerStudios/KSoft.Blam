@@ -205,7 +205,7 @@ namespace KSoft.Blam.Engine
 		/// <param name="assembly"></param>
 		internal static void InitializeForNewAssembly(Assembly assembly)
 		{
-			Contract.Requires<ArgumentNullException>(assembly != null);
+			ArgumentNullException.ThrowIfNull(assembly);
 
 			var attrs =
 				from type in assembly.GetTypes()

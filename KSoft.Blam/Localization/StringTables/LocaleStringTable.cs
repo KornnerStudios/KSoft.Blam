@@ -35,7 +35,10 @@ namespace KSoft.Blam.Localization.StringTables
 		}
 
 		public LocaleStringTableReference this[int index] { get {
-			Contract.Requires<ArgumentOutOfRangeException>(index >= 0 && index < Count);
+			if (index < 0 || index >= Count)
+			{
+				throw new ArgumentOutOfRangeException(nameof(index));
+			}
 			return mStringReferences[index];
 		} }
 
@@ -227,7 +230,10 @@ namespace KSoft.Blam.Localization.StringTables
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires<InvalidOperationException>(Count < Capacity);
+			if (Count >= Capacity)
+			{
+				throw new InvalidOperationException("String table is already at capacity.");
+			}
 			Contract.Assert(s.IsReading);
 
 			using (s.EnterOwnerBookmark(this))

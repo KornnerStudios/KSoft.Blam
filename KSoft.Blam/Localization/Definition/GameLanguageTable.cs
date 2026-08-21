@@ -51,7 +51,10 @@ namespace KSoft.Blam.Localization
 		[Contracts.Pure]
 		public GameLanguageHandle GetEngineLanguage(int langIndex)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(LanguageRegistry.IsValidLanguageIndex(langIndex));
+			if (!LanguageRegistry.IsValidLanguageIndex(langIndex))
+			{
+				throw new ArgumentOutOfRangeException(nameof(langIndex));
+			}
 			Contract.Assert(mEngineLanguageTable != null, kErrorMessageNotInitialized);
 
 			return mEngineLanguageTable[langIndex];
@@ -59,7 +62,10 @@ namespace KSoft.Blam.Localization
 		[Contracts.Pure]
 		public GameLanguageHandle GetGameLanguage(int gameIndex)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(IsValidGameIndex(gameIndex));
+			if (!IsValidGameIndex(gameIndex))
+			{
+				throw new ArgumentOutOfRangeException(nameof(gameIndex));
+			}
 			Contract.Assert(mGameLanguageTable != null, kErrorMessageNotInitialized);
 
 			return mGameLanguageTable[gameIndex];
@@ -97,14 +103,20 @@ namespace KSoft.Blam.Localization
 		[Contracts.Pure]
 		public int LanguageIndexToGameIndex(int langIndex)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(LanguageRegistry.IsValidLanguageIndex(langIndex));
+			if (!LanguageRegistry.IsValidLanguageIndex(langIndex))
+			{
+				throw new ArgumentOutOfRangeException(nameof(langIndex));
+			}
 
 			return GetEngineLanguage(langIndex).GameIndex;
 		}
 		[Contracts.Pure]
 		public int LanguageIndexFromGameIndex(int gameIndex)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(IsValidGameIndex(gameIndex));
+			if (!IsValidGameIndex(gameIndex))
+			{
+				throw new ArgumentOutOfRangeException(nameof(gameIndex));
+			}
 			Contract.Assert(mGameLanguageTable != null, kErrorMessageNotInitialized);
 
 			return GetGameLanguage(gameIndex).LanguageIndex;

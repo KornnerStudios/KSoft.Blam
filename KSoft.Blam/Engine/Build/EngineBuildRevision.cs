@@ -156,7 +156,7 @@ namespace KSoft.Blam.Engine
 		#region Bit encoding
 		internal static void BitEncodeIndex(ref Bitwise.HandleBitEncoder encoder, int revisionIndex)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(revisionIndex.IsNoneOrPositive());
+			ArgumentOutOfRangeException.ThrowIfLessThan(revisionIndex, TypeExtensions.kNone);
 
 			encoder.EncodeNoneable32(revisionIndex, kIndexBitMask);
 		}

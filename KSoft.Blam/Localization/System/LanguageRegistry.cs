@@ -149,7 +149,10 @@ namespace KSoft.Blam.Localization
 		#region Bit encoding
 		internal static void BitEncodeLanguageIndex(ref Bitwise.HandleBitEncoder encoder, int languageIndex)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(IsValidLanguageIndex(languageIndex));
+			if (!IsValidLanguageIndex(languageIndex))
+			{
+				throw new ArgumentOutOfRangeException(nameof(languageIndex));
+			}
 
 			encoder.EncodeNoneable32(languageIndex, kLanguageIndexBitMask);
 		}
@@ -165,8 +168,12 @@ namespace KSoft.Blam.Localization
 		#region ITagElementStreamable<string> Members
 		static dynamic OpenRegistryTagElementStream(FileAccess streamMode = FileAccess.Read)
 		{
-			Contract.Requires<FileNotFoundException>(File.Exists(kRegistryFilePath),
-				"Can't initialize the LanguageRegistry, need the following file: " + kRegistryFilePath);
+			if (!File.Exists(kRegistryFilePath))
+			{
+				throw new FileNotFoundException(
+					"Can't initialize the LanguageRegistry, need the following file: " + kRegistryFilePath,
+					kRegistryFilePath);
+			}
 
 			var stream = IO.TagElementStreamFactory.Open(kRegistryFilePath);
 			stream.StreamMode = streamMode;
