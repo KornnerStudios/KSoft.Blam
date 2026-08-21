@@ -1,10 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
-
-namespace KSoft.Blam.Megalo.Model
+﻿namespace KSoft.Blam.Megalo.Model
 {
 	using Proto;
 
@@ -63,7 +57,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptBoolValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Bool);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.Bool);
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -111,7 +105,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptIntValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Int);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.Int);
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -159,7 +153,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptUIntValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.UInt);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.UInt);
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -207,7 +201,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptSingleValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Single);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.Single);
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -280,7 +274,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptPoint3dValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Point3d);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.Point3d);
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -335,7 +329,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptVarIndexValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Var);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.Var);
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -360,7 +354,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public void ChangeValue(MegaloScriptModel model, string varName)
 		{
-			Contract.Requires(!string.IsNullOrEmpty(varName));
+			System.ArgumentException.ThrowIfNullOrEmpty(varName);
 
 			var id_resolving_ctxt = new MegaloScriptModelVariableSet.IndexNameResolvingContext(model, ValueType);
 			Value = MegaloScriptModelVariableSet.IndexNameResolvingContext.IdResolver(id_resolving_ctxt, varName);

@@ -1,10 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
-
-namespace KSoft.Blam.Megalo.Model
+﻿namespace KSoft.Blam.Megalo.Model
 {
 	using Proto;
 
@@ -26,7 +20,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptVirtualTriggerValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.VirtualTrigger);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.VirtualTrigger);
 
 			mVirtualTriggerHandle = MegaloScriptModelObjectHandle.Null;
 		}

@@ -1,10 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
-
-namespace KSoft.Blam.Megalo.Model
+﻿namespace KSoft.Blam.Megalo.Model
 {
 	using Proto;
 
@@ -43,7 +37,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptTeamFilterParametersValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.TeamFilterParameters);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.TeamFilterParameters);
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -76,7 +70,12 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		public void ChangeValue(MegaloScriptModel model, MegaloScriptPlayerFilterType filterType)
 		{
-			Contract.Requires(filterType != MegaloScriptPlayerFilterType.PlayerMask, "Wrong ChangeValue overload");
+			if (filterType == MegaloScriptPlayerFilterType.PlayerMask)
+			{
+				throw new System.ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Filter type is {0}; use the player-mask ChangeValue overload.",
+					filterType), nameof(filterType));
+			}
 
 			Util.MarkUnusedVariable(ref model);
 
@@ -117,8 +116,8 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		public void SetAsPlayerMask(MegaloScriptVariableReferenceData player, MegaloScriptVariableReferenceData addOrRemove)
 		{
-			Contract.Requires(player.ReferenceKind == MegaloScriptVariableReferenceType.Player);
-			Contract.Requires(addOrRemove.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
+			ThrowIfUnexpectedReferenceKind(player, MegaloScriptVariableReferenceType.Player, nameof(player));
+			ThrowIfUnexpectedReferenceKind(addOrRemove, MegaloScriptVariableReferenceType.Custom, nameof(addOrRemove));
 
 			Player = player;
 			PlayerAddOrRemove = addOrRemove;

@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Megalo.Model
 {
@@ -45,6 +40,50 @@ namespace KSoft.Blam.Megalo.Model
 		protected MegaloScriptValueBase(Proto.MegaloScriptValueType valueType)
 		{
 			ValueType = valueType;
+		}
+
+		protected static void ThrowIfUnexpectedBaseType(Proto.MegaloScriptValueType valueType,
+			Proto.MegaloScriptValueBaseType expectedBaseType)
+		{
+			if (valueType == null)
+			{
+				throw new ArgumentNullException(nameof(valueType));
+			}
+			if (valueType.BaseType != expectedBaseType)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Value type base is {0}, expected {1}.",
+					valueType.BaseType,
+					expectedBaseType), nameof(valueType));
+			}
+		}
+
+		protected static void ThrowIfUnexpectedReferenceKind(MegaloScriptVariableReferenceData value,
+			MegaloScriptVariableReferenceType expectedReferenceKind, string paramName)
+		{
+			if (value.ReferenceKind != expectedReferenceKind)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Variable reference kind is {0}, expected {1}.",
+					value.ReferenceKind,
+					expectedReferenceKind), paramName);
+			}
+		}
+
+		protected static void ThrowIfUnexpectedReferenceKind(MegaloScriptVariableReferenceData value,
+			MegaloScriptVariableReferenceType firstExpectedReferenceKind,
+			MegaloScriptVariableReferenceType secondExpectedReferenceKind,
+			string paramName)
+		{
+			if (value.ReferenceKind != firstExpectedReferenceKind &&
+				value.ReferenceKind != secondExpectedReferenceKind)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Variable reference kind is {0}, expected {1} or {2}.",
+					value.ReferenceKind,
+					firstExpectedReferenceKind,
+					secondExpectedReferenceKind), paramName);
+			}
 		}
 
 		public abstract MegaloScriptValueBase Copy(MegaloScriptModel model);
@@ -124,7 +163,10 @@ namespace KSoft.Blam.Megalo.Model
 
 			if (!is_global) // stream non-global values essentially like locals
 			{
-				Contract.Assume(value != null);
+				if (value == null)
+				{
+					throw new InvalidOperationException("Non-global value serialization did not resolve a value instance.");
+				}
 				value.Serialize(model, s);
 			}
 		}

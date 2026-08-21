@@ -1,10 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
-
-namespace KSoft.Blam.Megalo.Model
+﻿namespace KSoft.Blam.Megalo.Model
 {
 	using Proto;
 
@@ -50,7 +44,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptWidgetMeterParametersValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.WidgetMeterParameters);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.WidgetMeterParameters);
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -96,8 +90,8 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		public void SetAsNumeric(MegaloScriptVariableReferenceData value, MegaloScriptVariableReferenceData maxValue)
 		{
-			Contract.Requires(value.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
-			Contract.Requires(maxValue.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
+			ThrowIfUnexpectedReferenceKind(value, MegaloScriptVariableReferenceType.Custom, nameof(value));
+			ThrowIfUnexpectedReferenceKind(maxValue, MegaloScriptVariableReferenceType.Custom, nameof(maxValue));
 
 			Numeric1 = value;
 			Numeric2 = maxValue;
@@ -107,7 +101,7 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		public void SetAsTimer(MegaloScriptVariableReferenceData timer)
 		{
-			Contract.Requires(timer.ReferenceKind == MegaloScriptVariableReferenceType.Timer);
+			ThrowIfUnexpectedReferenceKind(timer, MegaloScriptVariableReferenceType.Timer, nameof(timer));
 
 			Numeric1 = MegaloScriptVariableReferenceData.Custom;
 			Numeric2 = MegaloScriptVariableReferenceData.Custom;

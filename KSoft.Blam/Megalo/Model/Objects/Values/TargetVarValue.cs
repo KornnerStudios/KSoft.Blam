@@ -1,10 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
-
-namespace KSoft.Blam.Megalo.Model
+﻿namespace KSoft.Blam.Megalo.Model
 {
 	using Proto;
 
@@ -34,7 +28,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptTargetVarValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.TargetVar);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.TargetVar);
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -56,8 +50,10 @@ namespace KSoft.Blam.Megalo.Model
 		#region SetAs
 		public void SetFromVarReference(MegaloScriptVariableReferenceData value)
 		{
-			Contract.Requires(	value.ReferenceKind == MegaloScriptVariableReferenceType.Team ||
-								value.ReferenceKind == MegaloScriptVariableReferenceType.Player);
+			ThrowIfUnexpectedReferenceKind(value,
+				MegaloScriptVariableReferenceType.Team,
+				MegaloScriptVariableReferenceType.Player,
+				nameof(value));
 
 			switch (value.ReferenceKind)
 			{
@@ -68,13 +64,13 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		public void SetAsTeam(MegaloScriptVariableReferenceData team)
 		{
-			Contract.Requires(team.ReferenceKind == MegaloScriptVariableReferenceType.Team);
+			ThrowIfUnexpectedReferenceKind(team, MegaloScriptVariableReferenceType.Team, nameof(team));
 
 			SetFromVarReference(team);
 		}
 		public void SetAsPlayer(MegaloScriptVariableReferenceData player)
 		{
-			Contract.Requires(player.ReferenceKind == MegaloScriptVariableReferenceType.Player);
+			ThrowIfUnexpectedReferenceKind(player, MegaloScriptVariableReferenceType.Player, nameof(player));
 
 			SetFromVarReference(player);
 		}

@@ -1,10 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
-
-namespace KSoft.Blam.Megalo.Model
+﻿namespace KSoft.Blam.Megalo.Model
 {
 	using Proto;
 
@@ -24,7 +18,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptEnumValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Enum);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.Enum);
 
 			if (valueType.EnumTraits == Proto.MegaloScriptValueEnumTraits.HasNoneMember)
 			{
@@ -49,7 +43,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public void ChangeValue(MegaloScriptModel model, string enumMemberName)
 		{
-			Contract.Requires(!string.IsNullOrEmpty(enumMemberName));
+			System.ArgumentException.ThrowIfNullOrEmpty(enumMemberName);
 
 			var id_resolving_ctxt = new Proto.MegaloScriptEnum.EnumNameResolvingContext(model.Database, ValueType);
 			Value = Proto.MegaloScriptEnum.EnumNameResolvingContext.IdResolver(id_resolving_ctxt, enumMemberName);
@@ -87,7 +81,7 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Enum);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.Enum);
 
 			if ((model.TagElementStreamSerializeFlags & MegaloScriptModelTagElementStreamFlags.UseEnumNames) != 0)
 			{

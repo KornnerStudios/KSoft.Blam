@@ -1,10 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
-
-namespace KSoft.Blam.Megalo.Model
+﻿namespace KSoft.Blam.Megalo.Model
 {
 	using Proto;
 
@@ -24,7 +18,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptIndexValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Index);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.Index);
 
 			if (valueType.IndexTraits != Proto.MegaloScriptValueIndexTraits.Reference)
 			{
@@ -54,7 +48,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public void ChangeValue(MegaloScriptModel model, string indexName)
 		{
-			Contract.Requires(!string.IsNullOrEmpty(indexName));
+			System.ArgumentException.ThrowIfNullOrEmpty(indexName);
 
 			Value = model.GetTargetIndexFromName(ValueType.IndexTarget, indexName);
 		}
@@ -113,7 +107,15 @@ namespace KSoft.Blam.Megalo.Model
 
 			if (s.IsWriting)
 			{
-				Contract.Assert(model.Triggers[handle.Id].TriggerType == MegaloScriptTriggerType.InnerLoop);
+				var trigger_type = model.Triggers[handle.Id].TriggerType;
+				if (trigger_type != MegaloScriptTriggerType.InnerLoop)
+				{
+					throw new System.InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"Trigger {0} type is {1}, expected {2}.",
+						handle.Id,
+						trigger_type,
+						MegaloScriptTriggerType.InnerLoop));
+				}
 			}
 			using (s.EnterCursorBookmark("T")) // have to nest or MegaloScriptModelObjectHandle will overwrite our Param ID with the Trigger's
 			{
@@ -131,7 +133,7 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Index);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.Index);
 
 			var target = valueType.IndexTarget;
 

@@ -1,10 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
-
-namespace KSoft.Blam.Megalo.Model
+﻿namespace KSoft.Blam.Megalo.Model
 {
 	using Proto;
 
@@ -83,7 +77,7 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		public MegaloScriptVarReferenceValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.VarReference);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.VarReference);
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -110,7 +104,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptObjectReferenceWithPlayerVarIndexValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.ObjectReferenceWithPlayerVarIndex);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.ObjectReferenceWithPlayerVarIndex);
 
 			Var = MegaloScriptVariableReferenceData.Object;
 			PlayerVarIndex = TypeExtensions.kNone;

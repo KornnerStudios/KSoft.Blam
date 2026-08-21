@@ -1,10 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
-
-namespace KSoft.Blam.Megalo.Model
+﻿namespace KSoft.Blam.Megalo.Model
 {
 	using Proto;
 
@@ -58,7 +52,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		public MegaloScriptShapeValue(MegaloScriptValueType valueType) : base(valueType)
 		{
-			Contract.Requires(valueType.BaseType == MegaloScriptValueBaseType.Shape);
+			ThrowIfUnexpectedBaseType(valueType, MegaloScriptValueBaseType.Shape);
 		}
 
 		public override MegaloScriptValueBase Copy(MegaloScriptModel model)
@@ -130,7 +124,7 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		public void SetAsSphere(MegaloScriptVariableReferenceData radius)
 		{
-			Contract.Requires(radius.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
+			ThrowIfUnexpectedReferenceKind(radius, MegaloScriptVariableReferenceType.Custom, nameof(radius));
 
 			mRadius = radius;
 			mLength = MegaloScriptVariableReferenceData.Custom;
@@ -143,9 +137,9 @@ namespace KSoft.Blam.Megalo.Model
 		public void SetAsCylinder(MegaloScriptVariableReferenceData radius,
 			MegaloScriptVariableReferenceData top, MegaloScriptVariableReferenceData bottom)
 		{
-			Contract.Requires(radius.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
-			Contract.Requires(top.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
-			Contract.Requires(bottom.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
+			ThrowIfUnexpectedReferenceKind(radius, MegaloScriptVariableReferenceType.Custom, nameof(radius));
+			ThrowIfUnexpectedReferenceKind(top, MegaloScriptVariableReferenceType.Custom, nameof(top));
+			ThrowIfUnexpectedReferenceKind(bottom, MegaloScriptVariableReferenceType.Custom, nameof(bottom));
 
 			mRadius = radius;
 			mLength = MegaloScriptVariableReferenceData.Custom;
@@ -160,10 +154,10 @@ namespace KSoft.Blam.Megalo.Model
 		public void SetAsBox(MegaloScriptVariableReferenceData width, MegaloScriptVariableReferenceData length,
 			MegaloScriptVariableReferenceData top, MegaloScriptVariableReferenceData bottom)
 		{
-			Contract.Requires(width.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
-			Contract.Requires(length.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
-			Contract.Requires(top.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
-			Contract.Requires(bottom.ReferenceKind == MegaloScriptVariableReferenceType.Custom);
+			ThrowIfUnexpectedReferenceKind(width, MegaloScriptVariableReferenceType.Custom, nameof(width));
+			ThrowIfUnexpectedReferenceKind(length, MegaloScriptVariableReferenceType.Custom, nameof(length));
+			ThrowIfUnexpectedReferenceKind(top, MegaloScriptVariableReferenceType.Custom, nameof(top));
+			ThrowIfUnexpectedReferenceKind(bottom, MegaloScriptVariableReferenceType.Custom, nameof(bottom));
 
 			mRadius = width;
 			mLength = length;
