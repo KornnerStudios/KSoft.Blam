@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -72,7 +67,10 @@ namespace KSoft.Blam.Engine
 			}
 			else
 			{
-				Contract.Assert(engine == Engine);
+				if (!object.ReferenceEquals(engine, Engine))
+				{
+					throw new InvalidOperationException("Build repository engine context does not match the serialized engine.");
+				}
 			}
 
 			using (s.EnterCursorBookmark("Repository"))

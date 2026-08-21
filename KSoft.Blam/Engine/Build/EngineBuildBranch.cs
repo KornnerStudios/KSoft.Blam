@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -83,8 +78,11 @@ namespace KSoft.Blam.Engine
 		/// <see cref="Object.GetHashCode"/>
 		public override int GetHashCode()
 		{
-			Contract.Assert(!BranchHandle.IsNone,
-				"Requested the hash code before the build data was fully initialized");
+			if (BranchHandle.IsNone)
+			{
+				throw new InvalidOperationException(
+					"Requested the hash code before the branch build data was fully initialized.");
+			}
 
 			return BranchHandle.GetHashCode();
 		}
@@ -108,7 +106,10 @@ namespace KSoft.Blam.Engine
 			}
 			else
 			{
-				Contract.Assert(repo == Repository);
+				if (!object.ReferenceEquals(repo, Repository))
+				{
+					throw new InvalidOperationException("Branch repository context does not match the serialized repository.");
+				}
 			}
 
 			using (s.EnterUserDataBookmark(this))
@@ -174,7 +175,12 @@ namespace KSoft.Blam.Engine
 		{
 			int index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
 
-			Contract.Assert(index.IsNoneOrPositive());
+			if (!index.IsNoneOrPositive())
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Decoded branch index must be NONE or non-negative; actual value is {0}.", index));
+			}
+
 			return index;
 		}
 		#endregion

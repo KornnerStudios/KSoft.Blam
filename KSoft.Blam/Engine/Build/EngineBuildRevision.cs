@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -71,8 +66,11 @@ namespace KSoft.Blam.Engine
 		/// <see cref="Object.GetHashCode"/>
 		public override int GetHashCode()
 		{
-			Contract.Assert(!BuildHandle.IsNone,
-				"Requested the hash code before the build data was fully initialized");
+			if (BuildHandle.IsNone)
+			{
+				throw new InvalidOperationException(
+					"Requested the hash code before the revision build data was fully initialized.");
+			}
 
 			return BuildHandle.GetHashCode();
 		}
@@ -80,8 +78,6 @@ namespace KSoft.Blam.Engine
 		/// <returns></returns>
 		public override string ToString()
 		{
-			Contract.Ensures(Contract.Result<string>() != null);
-
 			return BuildString;
 		}
 		#endregion
@@ -98,7 +94,10 @@ namespace KSoft.Blam.Engine
 			}
 			else
 			{
-				Contract.Assert(branch == Branch);
+				if (!object.ReferenceEquals(branch, Branch))
+				{
+					throw new InvalidOperationException("Revision branch context does not match the serialized branch.");
+				}
 			}
 
 			s.StreamAttribute("versionId", this, obj => obj.Version);
@@ -164,7 +163,12 @@ namespace KSoft.Blam.Engine
 		{
 			int index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
 
-			Contract.Assert(index.IsNoneOrPositive());
+			if (!index.IsNoneOrPositive())
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Decoded revision index must be NONE or non-negative; actual value is {0}.", index));
+			}
+
 			return index;
 		}
 		#endregion

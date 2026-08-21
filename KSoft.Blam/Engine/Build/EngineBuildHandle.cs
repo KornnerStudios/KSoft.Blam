@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 using Interop = System.Runtime.InteropServices;
 
 namespace KSoft.Blam.Engine
@@ -57,7 +51,12 @@ namespace KSoft.Blam.Engine
 			EngineBuildBranch.BitEncodeIndex(ref encoder, branchIndex);
 			BlamEngine.BitEncodeIndex(ref encoder, engineIndex);
 
-			Contract.Assert(encoder.UsedBitCount == EngineBuildHandle.BitCount);
+			if (encoder.UsedBitCount != EngineBuildHandle.BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Encoded build handle used {0} bits; expected {1}.",
+					encoder.UsedBitCount, EngineBuildHandle.BitCount));
+			}
 
 			handle = encoder.GetHandle32();
 		}
@@ -91,14 +90,10 @@ namespace KSoft.Blam.Engine
 		#endregion
 
 		#region Value properties
-		[Contracts.Pure]
 		public readonly int EngineIndex => BlamEngine.BitDecodeIndex(mHandle, Constants.kEngineBitField.BitIndex);
-		[Contracts.Pure]
 		public readonly int BranchIndex => EngineBuildBranch.BitDecodeIndex(mHandle, Constants.kBranchBitField.BitIndex);
-		[Contracts.Pure]
 		public readonly int RevisionIndex => EngineBuildRevision.BitDecodeIndex(mHandle, Constants.kRevisionBitField.BitIndex);
 
-		[Contracts.Pure]
 		public readonly BlamEngine Engine { get {
 			int index = EngineIndex;
 
@@ -107,27 +102,39 @@ namespace KSoft.Blam.Engine
 				: null;
 		} }
 
-		[Contracts.Pure]
 		public readonly EngineBuildBranch Branch { get {
 			int index = BranchIndex;
 
 			if (index.IsNotNone())
 			{
-				Contract.Assert(EngineIndex.IsNotNone());
+				if (EngineIndex.IsNone())
+				{
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"Build handle has branch index {0}, but its engine index is NONE.", index));
+				}
+
 				return Engine.BuildRepository.Branches[index];
 			}
 
 			return null;
 		} }
 
-		[Contracts.Pure]
 		public readonly EngineBuildRevision Revision { get {
 			int index = RevisionIndex;
 
 			if (index.IsNotNone())
 			{
-				Contract.Assert(EngineIndex.IsNotNone());
-				Contract.Assert(BranchIndex.IsNotNone());
+				if (EngineIndex.IsNone())
+				{
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"Build handle has revision index {0}, but its engine index is NONE.", index));
+				}
+				if (BranchIndex.IsNone())
+				{
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"Build handle has revision index {0}, but its branch index is NONE.", index));
+				}
+
 				return Branch.Revisions[index];
 			}
 
@@ -135,14 +142,11 @@ namespace KSoft.Blam.Engine
 		} }
 		#endregion
 
-		[Contracts.Pure]
 		public readonly bool IsNone =>
 			// this only works because ALL bitfields are NONE encoded, meaning -1 values are encoded as 0
 			mHandle == 0;
-		[Contracts.Pure]
 		public readonly bool IsNotNone => !IsNone;
 		/// <summary>This handle refers to a fully formed build, down to the revision)</summary>
-		[Contracts.Pure]
 		public readonly bool IsFullyFormed => IsNotNone
 				&& EngineIndex.IsNotNone()
 				&& BranchIndex.IsNotNone()
@@ -170,8 +174,6 @@ namespace KSoft.Blam.Engine
 		/// <returns>"[Engine\tBranch\tRevision]"</returns>
 		public override string ToString()
 		{
-			Contract.Ensures(Contract.Result<string>() != null);
-
 			// #REVIEW_BLAM: This isn't great when viewing in a debugger, as the tabs seem to be ignored (so there's no whitespace)
 			return string.Format(Util.InvariantCultureInfo,
 				"[{0}\t{1}\t{2}]",
@@ -184,8 +186,6 @@ namespace KSoft.Blam.Engine
 		/// <remarks>If the <see cref="Branch"/>'s display name is the same as <see cref="Engine"/>, the former isn't included in the output</remarks>
 		public readonly string ToDisplayString()
 		{
-			Contract.Ensures(Contract.Result<string>() != null);
-
 			if (IsNone)
 			{
 				return TypeExtensions.kNoneDisplayString;
@@ -253,7 +253,7 @@ namespace KSoft.Blam.Engine
 		/// <remarks>If either handle in this equation <see cref="IsNone"/>, this will return false</remarks>
 		public readonly bool IsWithinSameBranch(EngineBuildBranch branch)
 		{
-			Contract.Requires(branch != null);
+			ArgumentNullException.ThrowIfNull(branch);
 
 			return this.IsWithinSameBranch(branch.BranchHandle);
 		}
@@ -332,9 +332,7 @@ namespace KSoft.Blam.Engine
 		#endregion
 
 		#region Operators
-		[Contracts.Pure]
 		public static bool operator==(EngineBuildHandle lhs, EngineBuildHandle rhs) => lhs.Handle == rhs.Handle;
-		[Contracts.Pure]
 		public static bool operator!=(EngineBuildHandle lhs, EngineBuildHandle rhs) => lhs.Handle != rhs.Handle;
 		#endregion
 
@@ -344,8 +342,12 @@ namespace KSoft.Blam.Engine
 		{
 			// #TODO figure out a a utility to do this generically for bit-encoded handles that can run
 			// in the internal Constants class.
-			Contract.Assert(EngineBuildHandle.BitCount < Bits.kInt32BitCount,
-				"Handle bits needs to be <= 31 (ie, sans sign bit) in order for this implementation of CompareTo to reasonably work");
+			if (EngineBuildHandle.BitCount >= Bits.kInt32BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Handle bit count must be less than {0}; actual bit count is {1}.",
+					Bits.kInt32BitCount, EngineBuildHandle.BitCount));
+			}
 
 			int lhs_data = (int)lhs.mHandle;
 			int rhs_data = (int)rhs.mHandle;
@@ -359,7 +361,6 @@ namespace KSoft.Blam.Engine
 		/// A new handle with only <see cref="EngineIndex"/> copied.
 		/// <see cref="BranchIndex"/> and <see cref="RevisionIndex"/> will always be NONE
 		/// </returns>
-		[Contracts.Pure]
 		public EngineBuildHandle ToEngineOnlyHandle()
 		{
 			if (IsNone) // avoid any bit operations if we're already 'none'
@@ -374,7 +375,6 @@ namespace KSoft.Blam.Engine
 		/// A new handle with only <see cref="EngineIndex"/> and <see cref="BranchIndex"/> copied.
 		/// <see cref="RevisionIndex"/> will always be NONE
 		/// </returns>
-		[Contracts.Pure]
 		public EngineBuildHandle ToEngineBranchHandle()
 		{
 			if (IsNone) // avoid any bit operations if we're already 'none'
