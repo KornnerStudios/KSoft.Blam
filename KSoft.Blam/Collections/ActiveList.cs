@@ -148,17 +148,31 @@ namespace KSoft.Collections
 		/// <summary>Get an inactive-only slot items enumerator</summary>
 		public BitStateFilterEnumeratorWrapper InactiveIndices => mSlotStates.ClearBitIndices;
 
+		void ValidateSlotIndex(int index)
+		{
+			if (index < 0 || index >= Length)
+			{
+				throw new ArgumentOutOfRangeException(nameof(index));
+			}
+		}
+		void ValidateSlotIndexOrNone(int index)
+		{
+			if (!index.IsNoneOrPositive() || index >= Length)
+			{
+				throw new ArgumentOutOfRangeException(nameof(index));
+			}
+		}
 		[Contracts.Pure]
 		public bool SlotIsFree(int index)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(index >= 0 && index < Length);
+			ValidateSlotIndex(index);
 
 			return mSlotStates[index] == kSlotStateInvalid;
 		}
 		[Contracts.Pure]
 		public bool SlotIsFreeOrIndexIsNone(int index)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(index.IsNoneOrPositive() && index < Length);
+			ValidateSlotIndexOrNone(index);
 
 			return !index.IsNotNone() || mSlotStates[index] == kSlotStateInvalid;
 		}
@@ -190,9 +204,11 @@ namespace KSoft.Collections
 		/// <param name="index">Slot index we want the item inserted at</param>
 		public void AddExplicit(T item, int index)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(index >= 0 && index < Length);
-			Contract.Requires<InvalidOperationException>(SlotIsFree(index),
-				"Tried inserting an item where we thought there was none. Duplicate entry?");
+			ValidateSlotIndex(index);
+			if (!SlotIsFree(index))
+			{
+				throw new InvalidOperationException("Tried inserting an item where we thought there was none. Duplicate entry?");
+			}
 
 			Insert(index, item);
 		}
