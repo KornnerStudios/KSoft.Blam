@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Collections
 {
@@ -17,9 +12,14 @@ namespace KSoft.Collections
 			IReadOnlyList<int> writeOrder = null)
 			where T : class, IO.IBitStreamSerializable
 		{
-			Contract.Requires(list != null);
-			Contract.Requires(countBitLength <= Bits.kInt32BitCount);
-			Contract.Requires(ctor != null);
+			ArgumentNullException.ThrowIfNull(list);
+			if (countBitLength > Bits.kInt32BitCount)
+			{
+				throw new ArgumentOutOfRangeException(nameof(countBitLength), countBitLength,
+					string.Format(Util.InvariantCultureInfo,
+						"Count bit length must be at most {0}.", Bits.kInt32BitCount));
+			}
+			ArgumentNullException.ThrowIfNull(ctor);
 
 			int count = writeOrder == null ? list.Count : writeOrder.Count;
 			s.Stream(ref count, countBitLength);
@@ -45,10 +45,14 @@ namespace KSoft.Collections
 				else
 				{
 					// #REVIEW_BLAM: well, shall we warn?
-					//Contract.Assert(writeOrder.Count == list.Count); // would rather just warn...
 					foreach (int index in writeOrder)
 					{
-						Contract.Assert(list.SlotIsFree(index) == false);
+						if (list.SlotIsFree(index))
+						{
+							throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+								"Write order references inactive slot {0}.", index));
+						}
+
 						list[index].Serialize(s);
 					}
 				}
@@ -142,8 +146,8 @@ namespace KSoft.Collections
 			where TCursor : class
 			where T : class, IO.ITagElementStringNameStreamable
 		{
-			Contract.Requires(list != null);
-			Contract.Requires(ctor != null);
+			ArgumentNullException.ThrowIfNull(list);
+			ArgumentNullException.ThrowIfNull(ctor);
 
 			if (writeShouldSkip == null)
 			{

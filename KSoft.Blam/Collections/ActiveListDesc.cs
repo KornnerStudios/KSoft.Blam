@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Collections
 {
@@ -22,7 +17,7 @@ namespace KSoft.Collections
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]
 		public static ActiveListDesc<T> CreateForNullData(int capacity, bool fixedLength = true)
 		{
-			Contract.Requires(capacity >= 0);
+			ArgumentOutOfRangeException.ThrowIfNegative(capacity);
 
 			return new ActiveListDesc<T>(capacity, fixedLength);
 		}
@@ -36,7 +31,7 @@ namespace KSoft.Collections
 
 		public ActiveListDesc(int capacity, T invalidData, Func<T, bool> invalidEquator, bool fixedLength = true)
 		{
-			Contract.Requires(capacity >= 0);
+			ArgumentOutOfRangeException.ThrowIfNegative(capacity);
 
 			mInvalidEquator = invalidEquator;
 			kInvalidData = invalidData;
@@ -52,7 +47,7 @@ namespace KSoft.Collections
 		public Func<T, int> ObjectToIndex	{
 			get { return mObjectToIndex; }
 			set {
-				Contract.Requires(value != null);
+				ArgumentNullException.ThrowIfNull(value);
 
 				mObjectToIndex = value;
 			}

@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 using NCollections = System.Collections;
 
@@ -29,7 +23,7 @@ namespace KSoft.Collections
 
 			public DebugView(ActiveList<T> list)
 			{
-				Contract.Requires(list != null);
+				ArgumentNullException.ThrowIfNull(list);
 
 				mList = list;
 			}
@@ -50,7 +44,7 @@ namespace KSoft.Collections
 		#region Ctor
 		public ActiveList(ActiveListDesc<T> description)
 		{
-			Contract.Requires(description != null);
+			ArgumentNullException.ThrowIfNull(description);
 
 			mDesc = description;
 			mSlots = new List<T>(description.Capacity);
@@ -162,21 +156,18 @@ namespace KSoft.Collections
 				throw new ArgumentOutOfRangeException(nameof(index));
 			}
 		}
-		[Contracts.Pure]
 		public bool SlotIsFree(int index)
 		{
 			ValidateSlotIndex(index);
 
 			return mSlotStates[index] == kSlotStateInvalid;
 		}
-		[Contracts.Pure]
 		public bool SlotIsFreeOrIndexIsNone(int index)
 		{
 			ValidateSlotIndexOrNone(index);
 
 			return !index.IsNotNone() || mSlotStates[index] == kSlotStateInvalid;
 		}
-		[Contracts.Pure]
 		public bool SlotIsFreeOrInvalidIndex(int index)
 		{
 			return index < 0 || index >= Length || mSlotStates[index] == kSlotStateInvalid;
