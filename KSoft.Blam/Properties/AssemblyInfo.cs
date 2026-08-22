@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 	Justification = "Because I do this all over the place")]
 [assembly: SuppressMessage("Microsoft.Design",
 	"CA1062:ValidateArgumentsOfPublicMethods",
-	Justification = "CodeContracts generally handle this already")]
+	Justification = "Explicit guard clauses validate public inputs where needed")]
 [assembly: SuppressMessage("Microsoft.Design",
 	"CA1303:DoNotPassLiteralsAsLocalizedParameters")]
 
