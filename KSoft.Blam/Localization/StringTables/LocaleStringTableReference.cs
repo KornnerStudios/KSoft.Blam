@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Localization.StringTables
 {
@@ -15,9 +10,8 @@ namespace KSoft.Blam.Localization.StringTables
 		#region CodeName
 		string mCodeName = string.Empty;
 		public string CodeName {
-			get { Contract.Ensures(Contract.Result<string>() != null);
-				return mCodeName;
-			} set { ArgumentNullException.ThrowIfNull(value);
+			get { return mCodeName; }
+			set { ArgumentNullException.ThrowIfNull(value);
 				mCodeName = value;
 				NotifyPropertyChanged(kCodeNameChanged);
 		} }
@@ -49,14 +43,24 @@ namespace KSoft.Blam.Localization.StringTables
 		string GetImpl(int langIndex)
 		{
 			var engine_lang = mLanguageTable.GetEngineLanguage(langIndex);
-			Contract.Assert(engine_lang.IsSupported);
+			if (engine_lang.IsUnsupported)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Language index {0} ({1}) is not supported by build {2}.",
+					langIndex, engine_lang.LanguageName, engine_lang.Build.ToDisplayString()));
+			}
 
 			return mLanguageStrings[engine_lang.GameIndex];
 		}
 		void SetImpl(int langIndex, string value)
 		{
 			var engine_lang = mLanguageTable.GetEngineLanguage(langIndex);
-			Contract.Assert(engine_lang.IsSupported);
+			if (engine_lang.IsUnsupported)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Language index {0} ({1}) is not supported by build {2}.",
+					langIndex, engine_lang.LanguageName, engine_lang.Build.ToDisplayString()));
+			}
 
 			mLanguageStrings[engine_lang.GameIndex] = value;
 
@@ -71,8 +75,11 @@ namespace KSoft.Blam.Localization.StringTables
 		#endregion
 
 		internal bool JustEnglish { get {
-			Contract.Requires(English != null);
 			string english = English;
+			if (english == null)
+			{
+				throw new InvalidOperationException("English translation must be set before testing for English-only text.");
+			}
 
 			bool just_english = true; // either all strings match the english one
 			bool rest_are_null = true;// or the rest are null and only the english one is set
@@ -82,10 +89,10 @@ namespace KSoft.Blam.Localization.StringTables
 				rest_are_null &= mLanguageStrings[x] == null;
 
 				if (mLanguageStrings[x] != null && !StringComparer.Ordinal.Equals(mLanguageStrings[x], english))
-					{
-						just_english = false;
-					}
+				{
+					just_english = false;
 				}
+			}
 
 			return just_english || rest_are_null;
 		} }
@@ -99,9 +106,16 @@ namespace KSoft.Blam.Localization.StringTables
 
 		internal void ReadLanguageStrings(IO.EndianReader buffer, uint langBitmask = uint.MaxValue)
 		{
-			Contract.Assert(LanguageRegistry.NumberOfLanguages <= Bits.kInt32BitCount,
-				nameof(langBitmask) + " is too small to actually be a language bitvector");
-			Contract.Assert(mLanguageOffsets != null);
+			if (LanguageRegistry.NumberOfLanguages > Bits.kInt32BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Language count must fit in a 32-bit bitvector; actual count is {0}.",
+					LanguageRegistry.NumberOfLanguages));
+			}
+			if (mLanguageOffsets == null)
+			{
+				throw new InvalidOperationException("Language offsets must be initialized before reading strings.");
+			}
 
 			for (int x = 0; x < mLanguageOffsets.Length; x++)
 			{
@@ -198,7 +212,8 @@ namespace KSoft.Blam.Localization.StringTables
 								"Tried to serialize multilingual string with no English translation"));
 						}
 
-						// Eg, HaloReach didn't originally ship with Polish loc support, so don't force to English at this level in those cases.
+						// Eg, HaloReach didn't originally ship with Polish loc support, so don't force to English at
+						// this level in those cases.
 						bool game_lang_is_optional = mLanguageTable.IsGameLanguageOptional(x);
 						// If ChineseSimple is empty, engine will fall back to ChineseTraditional (for HaloReach and H4 at least)
 						bool game_lang_is_chinese_simple = game_lang_handle.LanguageIndex == LanguageRegistry.ChineseSimpleIndex;

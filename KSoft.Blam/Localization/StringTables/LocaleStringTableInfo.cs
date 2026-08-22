@@ -1,8 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
+﻿using System;
 
 namespace KSoft.Blam.Localization.StringTables
 {
@@ -36,9 +32,24 @@ namespace KSoft.Blam.Localization.StringTables
 		}
 		internal LocaleStringTableInfo SetBufferRelatedBitLengths(int bufferOffsetBitLength, int bufferSizeBitLength)
 		{
-			Contract.Requires(bufferOffsetBitLength <= Bits.kInt32BitCount);
-			Contract.Requires(bufferSizeBitLength <= Bits.kInt32BitCount);
-			Contract.Requires(bufferOffsetBitLength <= bufferSizeBitLength);
+			if (bufferOffsetBitLength > Bits.kInt32BitCount)
+			{
+				throw new ArgumentOutOfRangeException(nameof(bufferOffsetBitLength), bufferOffsetBitLength,
+					string.Format(Util.InvariantCultureInfo,
+						"Buffer offset bit length must be at most {0}.", Bits.kInt32BitCount));
+			}
+			if (bufferSizeBitLength > Bits.kInt32BitCount)
+			{
+				throw new ArgumentOutOfRangeException(nameof(bufferSizeBitLength), bufferSizeBitLength,
+					string.Format(Util.InvariantCultureInfo,
+						"Buffer size bit length must be at most {0}.", Bits.kInt32BitCount));
+			}
+			if (bufferOffsetBitLength > bufferSizeBitLength)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Buffer offset bit length must be <= size bit length; offset {0}, size {1}.",
+					bufferOffsetBitLength, bufferSizeBitLength), nameof(bufferOffsetBitLength));
+			}
 
 			BufferSizeBitLength = bufferSizeBitLength;
 			BufferOffsetBitLength = bufferOffsetBitLength;

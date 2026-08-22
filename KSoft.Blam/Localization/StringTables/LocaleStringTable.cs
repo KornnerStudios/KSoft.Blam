@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Localization.StringTables
 {
@@ -146,7 +141,13 @@ namespace KSoft.Blam.Localization.StringTables
 				WriteStringsToBuffer(string_data);
 			}
 
-			Contract.Assert(Count <= Capacity);
+			if (Count > Capacity)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"String table count must be <= capacity; count {0}, capacity {1}.",
+					Count, Capacity));
+			}
+
 			s.Write(mStringReferences.Count, kInfo.CountBitLength);
 			ReferencesWrite(s);
 
@@ -234,7 +235,10 @@ namespace KSoft.Blam.Localization.StringTables
 			{
 				throw new InvalidOperationException("String table is already at capacity.");
 			}
-			Contract.Assert(s.IsReading);
+			if (!s.IsReading)
+			{
+				throw new InvalidOperationException("AddHack can only be used while reading a tag element stream.");
+			}
 
 			using (s.EnterOwnerBookmark(this))
 			using (s.EnterCursorBookmark(stringName))

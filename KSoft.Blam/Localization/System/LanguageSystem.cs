@@ -3,11 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Localization
 {
@@ -19,7 +14,8 @@ namespace KSoft.Blam.Localization
 		public static Values.KGuid SystemGuid { get; } = new Values.KGuid("EF39D343-DAD5-43D4-A215-F91722ED1CC5");
 
 #if LANGUAGE_SYSTEM_USE_ONLY_ONE_TABLE
-		// As it stands, all engines only need one table. All of their branches and pre-ship builds don't use different lang sets
+		// As it stands, all engines only need one table. All of their branches and pre-ship builds don't use
+		// different lang sets
 		readonly GameLanguageTable mEngineTable;
 #else
 		readonly Dictionary<Engine.EngineBuildHandle, GameLanguageTable> mEngineTables;
@@ -41,7 +37,12 @@ namespace KSoft.Blam.Localization
 			{
 				throw new ArgumentNoneException(nameof(forBuild));
 			}
-			Contract.Assert(forBuild.EngineIndex == mEngineTable.BuildHandle.EngineIndex);
+			if (forBuild.EngineIndex != mEngineTable.BuildHandle.EngineIndex)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Build handle engine index must be {0}; actual value is {1}.",
+					mEngineTable.BuildHandle.EngineIndex, forBuild.EngineIndex), nameof(forBuild));
+			}
 
 			return mEngineTable;
 #else
@@ -67,8 +68,12 @@ namespace KSoft.Blam.Localization
 
 				if (s.IsReading)
 				{
-					Contract.Assert(s.ElementsByName(kElementNameLanguageTable).Count() == 1,
-						"Engine has multiple tables defined! This is unexpected, backend code needs to be rewritten");
+					int table_count = s.ElementsByName(kElementNameLanguageTable).Count();
+					if (table_count != 1)
+					{
+						s.ThrowReadException(new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
+							"Expected exactly one engine language table, but found {0}.", table_count)));
+					}
 				}
 #else
 				s.StreamableElements(kElementNameLanguageTable,
@@ -81,7 +86,10 @@ namespace KSoft.Blam.Localization
 
 		internal static GameLanguageTable GetGameLanguageTable(Engine.EngineBuildHandle forBuild)
 		{
-			Contract.Requires(!forBuild.IsNone);
+			if (forBuild.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(forBuild));
+			}
 
 			using (var system_ref = Blam.Engine.EngineRegistry.GetSystem<LanguageSystem>(forBuild))
 			{

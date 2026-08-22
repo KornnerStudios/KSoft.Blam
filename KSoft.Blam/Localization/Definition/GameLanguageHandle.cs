@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 using Interop = System.Runtime.InteropServices;
 
 namespace KSoft.Blam.Localization
 {
 	using BitFieldTraits = Bitwise.BitFieldTraits;
 
-	/// <summary>Represents a mapping between a game-agnostic possibly-supported-language and a game implementation's language</summary>
+	/// <summary>
+	/// Represents a mapping between a game-agnostic possibly-supported-language and a game implementation's language
+	/// </summary>
 	/// <remarks>
 	/// EngineLanguage: a game-agnostic possibly-supported-language
 	/// GameLanguage: a game implementation's language
 	/// </remarks>
 	[System.Reflection.Obfuscation(Exclude=false)]
 	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
-	[System.Diagnostics.DebuggerDisplay("Game = {Game}, Lang = {Language}, Index = {GameIndex}, Supported = {IsSupported}")]
+	[System.Diagnostics.DebuggerDisplay(
+		"Game = {Game}, Lang = {Language}, Index = {GameIndex}, Supported = {IsSupported}")]
 	public readonly struct GameLanguageHandle
 		: IComparer<GameLanguageHandle>, System.Collections.IComparer // #REMOVE_BLAM
 		, IComparable<GameLanguageHandle>, IComparable
@@ -53,7 +50,6 @@ namespace KSoft.Blam.Localization
 
 		public static readonly GameLanguageHandle None = new();
 
-		[Contracts.Pure]
 		public static bool IsValidGameIndex(int index) => LanguageRegistry.IsValidLanguageIndex(index);
 		#endregion
 
@@ -73,7 +69,12 @@ namespace KSoft.Blam.Localization
 			LanguageRegistry.BitEncodeLanguageIndex(ref encoder, langIndex);
 			encoder.Encode32(buildHandle.Handle, Constants.kBuildBitField);
 
-			Contract.Assert(encoder.UsedBitCount == GameLanguageHandle.BitCount);
+			if (encoder.UsedBitCount != GameLanguageHandle.BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Encoded game language handle used {0} bits; expected {1}.",
+					encoder.UsedBitCount, GameLanguageHandle.BitCount));
+			}
 
 			handle = encoder.GetHandle32();
 		}
@@ -82,8 +83,20 @@ namespace KSoft.Blam.Localization
 		#region Ctor
 		internal GameLanguageHandle(Engine.EngineBuildHandle buildHandle, int langIndex, int gameIndex)
 		{
-			Contract.Requires(LanguageRegistry.IsValidLanguageIndex(langIndex));
-			Contract.Requires(IsValidGameIndex(gameIndex));
+			if (!LanguageRegistry.IsValidLanguageIndex(langIndex))
+			{
+				throw new ArgumentOutOfRangeException(nameof(langIndex), langIndex,
+					string.Format(Util.InvariantCultureInfo,
+						"Language index must be NONE or in the range [0, {0}).",
+						LanguageRegistry.NumberOfLanguages));
+			}
+			if (!IsValidGameIndex(gameIndex))
+			{
+				throw new ArgumentOutOfRangeException(nameof(gameIndex), gameIndex,
+					string.Format(Util.InvariantCultureInfo,
+						"Game language index must be NONE or in the range [0, {0}).",
+						LanguageRegistry.NumberOfLanguages));
+			}
 
 			InitializeHandle(out mHandle, buildHandle, langIndex, gameIndex);
 		}
@@ -91,25 +104,18 @@ namespace KSoft.Blam.Localization
 
 		#region Value properties
 		/// <summary>The handle to the game build this info specifically associates with</summary>
-		[Contracts.Pure]
 		public Engine.EngineBuildHandle Build => new(mHandle, Constants.kBuildBitField);
 		/// <summary>Index of a language registered in the <see cref="LanguageRegistry"/></summary>
-		[Contracts.Pure]
-		public int LanguageIndex => LanguageRegistry.BitDecodeLanguageIndex(mHandle, Constants.kLanguageIndexBitField.BitIndex);
+		public int LanguageIndex =>
+			LanguageRegistry.BitDecodeLanguageIndex(mHandle, Constants.kLanguageIndexBitField.BitIndex);
 		/// <summary>Is the language supported by <see cref="Build"/>?</summary>
-		[Contracts.Pure]
 		public bool IsSupported => 1 == Bits.BitDecode(mHandle, Constants.kIsSupportedBitField);
 		/// <summary>Is the language unsupported by <see cref="Build"/>?</summary>
-		[Contracts.Pure]
 		public bool IsUnsupported => 0 == Bits.BitDecode(mHandle, Constants.kIsSupportedBitField);
 		/// <summary>The index <see cref="LanguageIndex"/> maps to in <see cref="Build"/></summary>
-		[Contracts.Pure]
 		public int GameIndex => Bits.BitDecodeNoneable(mHandle, Constants.kGameIndexBitField);
 
-		[Contracts.Pure]
 		public string LanguageName { get {
-			Contract.Ensures(Contract.Result<string>() != null);
-
 			int lang_index = LanguageIndex;
 
 			return lang_index.IsNone()
@@ -118,7 +124,6 @@ namespace KSoft.Blam.Localization
 		} }
 		#endregion
 
-		[Contracts.Pure]
 		public bool IsNone =>
 			// this only works because ALL bitfields are NONE encoded, meaning -1 values are encoded as 0
 			mHandle == 0;
@@ -147,16 +152,12 @@ namespace KSoft.Blam.Localization
 		/// <returns></returns>
 		public override string ToString()
 		{
-			Contract.Ensures(Contract.Result<string>() != null);
-
 			return LanguageName;
 		}
 		#endregion
 
 		#region Operators
-		[Contracts.Pure]
 		public static bool operator==(GameLanguageHandle lhs, GameLanguageHandle rhs) => lhs.mHandle == rhs.mHandle;
-		[Contracts.Pure]
 		public static bool operator!=(GameLanguageHandle lhs, GameLanguageHandle rhs) => lhs.mHandle != rhs.mHandle;
 		#endregion
 
@@ -213,8 +214,12 @@ namespace KSoft.Blam.Localization
 		{
 			// #TODO figure out a a utility to do this generically for bit-encoded handles that can run
 			// in the internal Constants class.
-			Contract.Assert(GameLanguageHandle.BitCount < Bits.kInt32BitCount,
-				"Handle bits needs to be <= 31 (ie, sans sign bit) in order for this implementation of CompareTo to reasonably work");
+			if (GameLanguageHandle.BitCount >= Bits.kInt32BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Handle bit count must be less than {0}; actual bit count is {1}.",
+					Bits.kInt32BitCount, GameLanguageHandle.BitCount));
+			}
 
 			int lhs_data = (int)lhs.mHandle;
 			int rhs_data = (int)rhs.mHandle;

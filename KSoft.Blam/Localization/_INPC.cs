@@ -1,10 +1,5 @@
 ﻿using System.Collections.Specialized;
 using System.ComponentModel;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Localization
 {
@@ -22,14 +17,18 @@ namespace KSoft.Blam.Localization
 
 		internal static PropertyChangedEventArgs GetLanguageChangedEventArgs(int langIndex)
 		{
-			Contract.Requires(langIndex >= 0 && langIndex < NumberOfLanguages);
+			if (langIndex < 0 || langIndex >= NumberOfLanguages)
+			{
+				throw new System.ArgumentOutOfRangeException(nameof(langIndex), langIndex,
+					string.Format(Util.InvariantCultureInfo,
+						"Language index must be between 0 and {0}.", NumberOfLanguages - 1));
+			}
 
 			if (gLanguageChangedEventArgs == null)
 			{
 				InitializeLanguageChangedEventArgs();
 			}
 
-			Contract.Assume(gLanguageChangedEventArgs != null);
 			return gLanguageChangedEventArgs[langIndex];
 		}
 	};

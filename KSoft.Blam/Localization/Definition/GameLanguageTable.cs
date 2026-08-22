@@ -1,14 +1,10 @@
 ﻿using System;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Localization
 {
-	/// <summary>Represents mappings between game-agnostic possibly-supported-languages and a game implementation's languages</summary>
+	/// <summary>
+	/// Represents mappings between game-agnostic possibly-supported-languages and a game implementation's languages
+	/// </summary>
 	/// <remarks>
 	/// EngineLanguage: a game-agnostic possibly-supported-language
 	/// GameLanguage: a game implementation's language
@@ -30,94 +26,117 @@ namespace KSoft.Blam.Localization
 
 		/// <summary>The handle for the build of the engine this table is associated with</summary>
 		public Engine.EngineBuildHandle BuildHandle { get {
-			Contract.Assert(!mBuildHandle.IsNone, kErrorMessageNotInitialized);
+			if (mBuildHandle.IsNone)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return mBuildHandle;
 		} }
 
 		/// <summary>Number of languages supported in this build of the engine</summary>
 		public int GameLanguageCount { get {
-			Contract.Assert(mGameLanguageTable != null, kErrorMessageNotInitialized);
+			if (mGameLanguageTable == null)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return mGameLanguageTable.Length;
 		} }
 
 		public GameLanguageHandle EnglishGameLangaugeHandle { get {
-			Contract.Assert(mEngineLanguageTable != null, kErrorMessageNotInitialized);
+			if (mEngineLanguageTable == null)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return mEngineLanguageTable[LanguageRegistry.EnglishIndex];
 		} }
 
-		[Contracts.Pure]
 		public GameLanguageHandle GetEngineLanguage(int langIndex)
 		{
 			if (!LanguageRegistry.IsValidLanguageIndex(langIndex))
 			{
-				throw new ArgumentOutOfRangeException(nameof(langIndex));
+				throw new ArgumentOutOfRangeException(nameof(langIndex), langIndex,
+					string.Format(Util.InvariantCultureInfo,
+						"Language index must be NONE or in the range [0, {0}).",
+						LanguageRegistry.NumberOfLanguages));
 			}
-			Contract.Assert(mEngineLanguageTable != null, kErrorMessageNotInitialized);
+			if (mEngineLanguageTable == null)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return mEngineLanguageTable[langIndex];
 		}
-		[Contracts.Pure]
 		public GameLanguageHandle GetGameLanguage(int gameIndex)
 		{
 			if (!IsValidGameIndex(gameIndex))
 			{
-				throw new ArgumentOutOfRangeException(nameof(gameIndex));
+				throw new ArgumentOutOfRangeException(nameof(gameIndex), gameIndex,
+					string.Format(Util.InvariantCultureInfo,
+						"Game language index must be NONE or in the range [0, {0}).",
+						GameLanguageCount));
 			}
-			Contract.Assert(mGameLanguageTable != null, kErrorMessageNotInitialized);
 
 			return mGameLanguageTable[gameIndex];
 		}
 
-		[Contracts.Pure]
 		public bool IsEngineLanguageOptional(int langIndex)
 		{
 			if (!LanguageRegistry.IsValidLanguageIndex(langIndex))
 			{
-				throw new ArgumentOutOfRangeException(nameof(langIndex), langIndex, "Out of bounds");
+				throw new ArgumentOutOfRangeException(nameof(langIndex), langIndex,
+					string.Format(Util.InvariantCultureInfo,
+						"Language index must be NONE or in the range [0, {0}).",
+						LanguageRegistry.NumberOfLanguages));
 			}
-			Contract.Assert(mEngineLanguageTable != null, kErrorMessageNotInitialized);
+			if (mEngineLanguageTable == null)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return mOptionalEngineLanguageFlags[langIndex];
 		}
-		[Contracts.Pure]
 		public bool IsGameLanguageOptional(int gameIndex)
 		{
 			if (!IsValidGameIndex(gameIndex))
 			{
-				throw new ArgumentOutOfRangeException(nameof(gameIndex), gameIndex, "Out of bounds");
+				throw new ArgumentOutOfRangeException(nameof(gameIndex), gameIndex,
+					string.Format(Util.InvariantCultureInfo,
+						"Game language index must be NONE or in the range [0, {0}).",
+						GameLanguageCount));
 			}
-			Contract.Assert(mEngineLanguageTable != null, kErrorMessageNotInitialized);
 
 			return mOptionalGameLanguageFlags[gameIndex];
 		}
 
 		#region Index interfaces
-		[Contracts.Pure]
 		[System.Diagnostics.DebuggerStepThrough]
 		public bool IsValidGameIndex(int gameIndex)
 			=> gameIndex.IsNoneOrPositive() && gameIndex < GameLanguageCount;
 
-		[Contracts.Pure]
 		public int LanguageIndexToGameIndex(int langIndex)
 		{
 			if (!LanguageRegistry.IsValidLanguageIndex(langIndex))
 			{
-				throw new ArgumentOutOfRangeException(nameof(langIndex));
+				throw new ArgumentOutOfRangeException(nameof(langIndex), langIndex,
+					string.Format(Util.InvariantCultureInfo,
+						"Language index must be NONE or in the range [0, {0}).",
+						LanguageRegistry.NumberOfLanguages));
 			}
 
 			return GetEngineLanguage(langIndex).GameIndex;
 		}
-		[Contracts.Pure]
 		public int LanguageIndexFromGameIndex(int gameIndex)
 		{
 			if (!IsValidGameIndex(gameIndex))
 			{
-				throw new ArgumentOutOfRangeException(nameof(gameIndex));
+				throw new ArgumentOutOfRangeException(nameof(gameIndex), gameIndex,
+					string.Format(Util.InvariantCultureInfo,
+						"Game language index must be NONE or in the range [0, {0}).",
+						GameLanguageCount));
 			}
-			Contract.Assert(mGameLanguageTable != null, kErrorMessageNotInitialized);
 
 			return GetGameLanguage(gameIndex).LanguageIndex;
 		}
@@ -144,8 +163,6 @@ namespace KSoft.Blam.Localization
 		/// <returns></returns>
 		public override string ToString()
 		{
-			Contract.Ensures(Contract.Result<string>() != null);
-
 			return mBuildHandle.ToString();
 		}
 		#endregion
@@ -168,9 +185,12 @@ namespace KSoft.Blam.Localization
 					new GameLanguageHandle(mBuildHandle, langIndex, TypeExtensions.kNone);
 			}
 
-			Contract.Assert(LanguageRegistry.NumberOfLanguages <= Bits.kInt32BitCount,
-				nameof(mOptionalEngineLanguageFlags) + " and " + nameof(mOptionalGameLanguageFlags) +
-				" are too small to actually be a language bitvector");
+			if (LanguageRegistry.NumberOfLanguages > Bits.kInt32BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Language count must fit in a 32-bit bitvector; actual count is {0}.",
+					LanguageRegistry.NumberOfLanguages));
+			}
 		}
 		bool InitializeGameLanguageTableFromEngineTable(int gameLangCount)
 		{

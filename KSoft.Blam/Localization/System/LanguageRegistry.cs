@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Localization
 {
@@ -29,18 +23,23 @@ namespace KSoft.Blam.Localization
 		static List<string> gLanguageNames;
 		/// <summary>Names of all the registered languages</summary>
 		public static IReadOnlyList<string> LanguageNames { get {
-			Contract.Assert(gLanguageNames != null, kErrorMessageNotInitialized);
+			if (gLanguageNames == null)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return gLanguageNames;
 		} }
 		/// <summary>Number of languages that have been registered</summary>
 		public static int NumberOfLanguages { get {
-			Contract.Assert(gLanguageNames != null, kErrorMessageNotInitialized);
+			if (gLanguageNames == null)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return gLanguageNames.Count;
 		} }
 
-		[Contracts.Pure]
 		[System.Diagnostics.DebuggerStepThrough]
 		public static bool IsValidLanguageIndex(int languageIndex)
 			=> languageIndex.IsNoneOrPositive() && languageIndex < NumberOfLanguages;
@@ -83,7 +82,12 @@ namespace KSoft.Blam.Localization
 		/// <summary>Call before code which expects English to be the first registered language</summary>
 		internal static void CodeExpectsEnglishFirst()
 		{
-			Contract.Assert(LanguageRegistry.EnglishIndex == 0, "Caller code assumes english is first");
+			if (LanguageRegistry.EnglishIndex != 0)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Caller code assumes English is first; actual English index is {0}.",
+					LanguageRegistry.EnglishIndex));
+			}
 		}
 		#endregion
 
@@ -151,7 +155,10 @@ namespace KSoft.Blam.Localization
 		{
 			if (!IsValidLanguageIndex(languageIndex))
 			{
-				throw new ArgumentOutOfRangeException(nameof(languageIndex));
+				throw new ArgumentOutOfRangeException(nameof(languageIndex), languageIndex,
+					string.Format(Util.InvariantCultureInfo,
+						"Language index must be NONE or in the range [0, {0}).",
+						NumberOfLanguages));
 			}
 
 			encoder.EncodeNoneable32(languageIndex, kLanguageIndexBitMask);
@@ -160,7 +167,13 @@ namespace KSoft.Blam.Localization
 		{
 			int index = Bits.BitDecodeNoneable(handle, bitIndex, kLanguageIndexBitMask);
 
-			Contract.Assert(IsValidLanguageIndex(index));
+			if (!IsValidLanguageIndex(index))
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Decoded language index must be NONE or in the range [0, {0}); actual value is {1}.",
+					NumberOfLanguages, index));
+			}
+
 			return index;
 		}
 		#endregion
