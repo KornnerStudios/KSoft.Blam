@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 using Interop = System.Runtime.InteropServices;
 
 namespace KSoft.Blam.Engine
@@ -61,7 +55,12 @@ namespace KSoft.Blam.Engine
 			EngineTargetPlatform.BitEncodeIndex(ref encoder, platformIndex);
 			encoder.Encode32(buildHandle.Handle, EngineBuildHandle.Bitmask);
 
-			Contract.Assert(encoder.UsedBitCount == BlamEngineTargetHandle.BitCount);
+			if (encoder.UsedBitCount != BlamEngineTargetHandle.BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Encoded engine target handle used {0} bits; expected {1}.",
+					encoder.UsedBitCount, BlamEngineTargetHandle.BitCount));
+			}
 
 			handle = encoder.GetHandle32();
 		}
@@ -105,14 +104,10 @@ namespace KSoft.Blam.Engine
 		#endregion
 
 		#region Value properties
-		[Contracts.Pure]
 		public EngineBuildHandle Build => new(mHandle, Constants.kBuildBitField);
-		[Contracts.Pure]
 		public int TargetPlatformIndex => EngineTargetPlatform.BitDecodeIndex(mHandle, Constants.kTargetPlatformBitField.BitIndex);
-		[Contracts.Pure]
 		public int ResourceModelIndex => EngineRegistry.BitDecodeResourceModelIndex(mHandle, Constants.kResourceModelBitField.BitIndex);
 
-		[Contracts.Pure]
 		public EngineTargetPlatform TargetPlatform { get {
 			int index = TargetPlatformIndex;
 
@@ -122,7 +117,6 @@ namespace KSoft.Blam.Engine
 		} }
 		#endregion
 
-		[Contracts.Pure]
 		public bool IsNone =>
 			// this only works because ALL bitfields are NONE encoded, meaning -1 values are encoded as 0
 			mHandle == 0;
@@ -151,8 +145,6 @@ namespace KSoft.Blam.Engine
 		/// <returns>"[Build\tTargetPlatform\tResourceModelIndex]"</returns>
 		public override string ToString()
 		{
-			Contract.Ensures(Contract.Result<string>() != null);
-
 			return string.Format(Util.InvariantCultureInfo,
 				"[{0}\t{1}\t{2}]",
 				Build.ToString(),
@@ -164,11 +156,8 @@ namespace KSoft.Blam.Engine
 		/// <summary>Creates a string of the build component name ids separated by periods</summary>
 		/// <returns>Empty string if this <see cref="IsNone"/></returns>
 		/// <remarks>If the <see cref="Branch"/>'s display name is the same as <see cref="Engine"/>, the former isn't included in the output</remarks>
-		[Contracts.Pure]
 		public string ToDisplayString()
 		{
-			Contract.Ensures(Contract.Result<string>() != null);
-
 			if (IsNone)
 			{
 				return TypeExtensions.kNoneDisplayString;
@@ -246,9 +235,7 @@ namespace KSoft.Blam.Engine
 		#endregion
 
 		#region Operators
-		[Contracts.Pure]
 		public static bool operator==(BlamEngineTargetHandle lhs, BlamEngineTargetHandle rhs) => lhs.mHandle == rhs.mHandle;
-		[Contracts.Pure]
 		public static bool operator!=(BlamEngineTargetHandle lhs, BlamEngineTargetHandle rhs) => lhs.mHandle != rhs.mHandle;
 		#endregion
 
@@ -258,8 +245,12 @@ namespace KSoft.Blam.Engine
 		{
 			// #TODO figure out a a utility to do this generically for bit-encoded handles that can run
 			// in the internal Constants class.
-			Contract.Assert(BlamEngineTargetHandle.BitCount < Bits.kInt32BitCount,
-				"Handle bits needs to be <= 31 (ie, sans sign bit) in order for this implementation of CompareTo to reasonably work");
+			if (BlamEngineTargetHandle.BitCount >= Bits.kInt32BitCount)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Handle bit count must be less than {0}; actual bit count is {1}.",
+					Bits.kInt32BitCount, BlamEngineTargetHandle.BitCount));
+			}
 
 			int lhs_data = (int)lhs.mHandle;
 			int rhs_data = (int)rhs.mHandle;

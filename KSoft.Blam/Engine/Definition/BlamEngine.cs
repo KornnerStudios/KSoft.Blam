@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -54,13 +48,17 @@ namespace KSoft.Blam.Engine
 		/// <param name="activeSystem">The system which no longer has any active references</param>
 		internal void CloseSystem(EngineSystemBase activeSystem)
 		{
-			Contract.Assume(activeSystem != null);
+			ArgumentNullException.ThrowIfNull(activeSystem);
 
 			var system_guid = activeSystem.Prototype.SystemMetadata.SystemGuid;
 			lock (mActiveSystems)
 			{
-				Contract.Assume(mActiveSystems.ContainsKey(system_guid));
-				mActiveSystems.Remove(system_guid);
+				if (!mActiveSystems.Remove(system_guid))
+				{
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"System {0} was not active for engine {1}.",
+						system_guid.ToString(Values.KGuid.kFormatHyphenated, Util.InvariantCultureInfo), Name));
+				}
 			}
 		}
 
@@ -97,7 +95,12 @@ namespace KSoft.Blam.Engine
 			}
 
 			var system_metadata = EngineRegistry.TryGetRegisteredSystem(systemGuid);
-			Contract.Assume(system_metadata != null);
+			if (system_metadata == null)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"System {0} is not registered.",
+					systemGuid.ToString(Values.KGuid.kFormatHyphenated, Util.InvariantCultureInfo)));
+			}
 
 			return GetNewOrExistingSystem(system_metadata);
 		}
@@ -109,7 +112,12 @@ namespace KSoft.Blam.Engine
 			}
 
 			EngineSystemAttribute system_metadata = EngineRegistry.TryGetRegisteredSystem(systemGuid);
-			Contract.Assume(system_metadata != null);
+			if (system_metadata == null)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"System {0} is not registered.",
+					systemGuid.ToString(Values.KGuid.kFormatHyphenated, Util.InvariantCultureInfo)));
+			}
 
 			return GetNewOrExistingSystem(system_metadata);
 		}
@@ -121,7 +129,12 @@ namespace KSoft.Blam.Engine
 			{
 				throw new ArgumentNoneException(nameof(forBuild));
 			}
-			Contract.Requires(forBuild.EngineIndex == RootBuildHandle.EngineIndex);
+			if (forBuild.EngineIndex != RootBuildHandle.EngineIndex)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Build handle engine index must be {0}; actual value is {1}.",
+					RootBuildHandle.EngineIndex, forBuild.EngineIndex), nameof(forBuild));
+			}
 
 			Values.KGuid system_guid = EngineSystemAttribute.GetSystemGuid<T>();
 			var system = (T)GetSystem(system_guid, forBuild);
@@ -141,7 +154,12 @@ namespace KSoft.Blam.Engine
 			{
 				throw new ArgumentNoneException(nameof(forBuild));
 			}
-			Contract.Requires(forBuild.EngineIndex == RootBuildHandle.EngineIndex);
+			if (forBuild.EngineIndex != RootBuildHandle.EngineIndex)
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"Build handle engine index must be {0}; actual value is {1}.",
+					RootBuildHandle.EngineIndex, forBuild.EngineIndex), nameof(forBuild));
+			}
 
 			Values.KGuid system_guid = EngineSystemAttribute.GetSystemGuid<T>();
 			var system = (T)TryGetSystem(system_guid);
@@ -171,7 +189,13 @@ namespace KSoft.Blam.Engine
 		{
 			int index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
 
-			Contract.Assert(index.IsNoneOrPositive() && index < EngineRegistry.Engines.Count);
+			if (!IsValidIndex(index))
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Decoded engine index must be NONE or in the range [0, {0}); actual value is {1}.",
+					EngineRegistry.Engines.Count, index));
+			}
+
 			return index;
 		}
 		#endregion
@@ -195,8 +219,8 @@ namespace KSoft.Blam.Engine
 		}
 		internal static EngineBuildBranch ResolveWellKnownEngineBranch(string engineName, string branchName)
 		{
-			Contract.Requires(!string.IsNullOrEmpty(engineName));
-			Contract.Requires(!string.IsNullOrEmpty(branchName));
+			ArgumentException.ThrowIfNullOrEmpty(engineName);
+			ArgumentException.ThrowIfNullOrEmpty(branchName);
 
 			int engine_index = EngineIdResolverSansKeyNotFoundException(null, engineName);
 
@@ -205,7 +229,6 @@ namespace KSoft.Blam.Engine
 				: EngineRegistry.Engines[engine_index].BuildRepository.ResolveWellKnownEngineBranch(branchName);
 		}
 
-		[Contracts.Pure]
 		public static bool IsValidIndex(int engineIndex) =>
 			engineIndex.IsNoneOrPositive() && engineIndex < EngineRegistry.Engines.Count;
 

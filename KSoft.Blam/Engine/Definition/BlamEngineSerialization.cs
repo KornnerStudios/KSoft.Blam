@@ -1,9 +1,4 @@
 ﻿using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -51,7 +46,13 @@ namespace KSoft.Blam.Engine
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Assert(s.Owner == null);
+			if (s.Owner != null)
+			{
+				throw new System.InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Tag element stream owner must be null before engine serialization; actual owner is {0}.",
+					s.Owner.GetType().FullName));
+			}
+
 			s.Owner = this;
 
 			using (s.EnterUserDataBookmark(this))

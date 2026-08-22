@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -24,7 +18,11 @@ namespace KSoft.Blam.Engine
 			if (IsValid)
 			{
 				bool didntTimeout = mSystem.WaitForExternsIO();
-				Contract.Assert(didntTimeout);
+				if (!didntTimeout)
+				{
+					throw new TimeoutException(string.Format(Util.InvariantCultureInfo,
+						"Timed out waiting for extern I/O for {0}.", mSystem.Engine));
+				}
 			}
 
 			return mSystem;
@@ -40,8 +38,11 @@ namespace KSoft.Blam.Engine
 		}
 		internal EngineSystemReference(EngineSystemBase system, EngineBuildHandle buildHandle)
 		{
-			Contract.Assume(system != null);
-			Contract.Assume(!buildHandle.IsNone);
+			ArgumentNullException.ThrowIfNull(system);
+			if (buildHandle.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(buildHandle));
+			}
 
 			mSystem = system;
 			mBuildHandle = buildHandle;
@@ -51,9 +52,8 @@ namespace KSoft.Blam.Engine
 #pragma warning restore 4014
 		}
 		#endregion
-
 		/// <summary>Has this reference not yet been disposed of?</summary>
-		[Contracts.Pure]
+		/// <summary>Has this reference not yet been disposed of?</summary>
 		public readonly bool IsValid => mSystem != null;
 		public readonly bool IsNotValid => !IsValid;
 
@@ -97,7 +97,11 @@ namespace KSoft.Blam.Engine
 			if (IsValid)
 			{
 				bool didntTimeout = mSystem.WaitForExternsIO();
-				Contract.Assert(didntTimeout);
+				if (!didntTimeout)
+				{
+					throw new TimeoutException(string.Format(Util.InvariantCultureInfo,
+						"Timed out waiting for extern I/O for {0}.", mSystem.Engine));
+				}
 			}
 
 			return mSystem;
@@ -113,8 +117,11 @@ namespace KSoft.Blam.Engine
 		}
 		internal EngineSystemReference(T system, EngineBuildHandle buildHandle)
 		{
-			Contract.Assume(system != null);
-			Contract.Assume(!buildHandle.IsNone);
+			ArgumentNullException.ThrowIfNull(system);
+			if (buildHandle.IsNone)
+			{
+				throw new ArgumentNoneException(nameof(buildHandle));
+			}
 
 			mSystem = system;
 			mBuildHandle = buildHandle;
@@ -124,9 +131,8 @@ namespace KSoft.Blam.Engine
 #pragma warning restore 4014
 		}
 		#endregion
-
 		/// <summary>Has this reference not yet been disposed of?</summary>
-		[Contracts.Pure]
+		/// <summary>Has this reference not yet been disposed of?</summary>
 		public readonly bool IsValid => mSystem != null;
 		public readonly bool IsNotValid => !IsValid;
 

@@ -1,9 +1,4 @@
 ﻿using System.IO;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -11,21 +6,21 @@ namespace KSoft.Blam.Engine
 	{
 		static string GetEngineRootPath(BlamEngine engine)
 		{
-			Contract.Assert(engine != null);
+			System.ArgumentNullException.ThrowIfNull(engine);
 
 			return Path.Combine(@"Games\", engine.Name);
 		}
 		static string GetTagElementStreamPath(BlamEngine engine, string fileName)
 		{
-			Contract.Assert(engine != null);
-			Contract.Assert(!string.IsNullOrEmpty(fileName));
+			System.ArgumentNullException.ThrowIfNull(engine);
+			System.ArgumentException.ThrowIfNullOrEmpty(fileName);
 
 			return Path.Combine(GetEngineRootPath(engine), fileName);
 		}
 		internal static bool IsValidTagElmentStreamFile(BlamEngine engine, string fileName)
 		{
-			Contract.Requires(engine != null);
-			Contract.Requires(!string.IsNullOrEmpty(fileName));
+			System.ArgumentNullException.ThrowIfNull(engine);
+			System.ArgumentException.ThrowIfNullOrEmpty(fileName);
 
 			string path = GetTagElementStreamPath(engine, fileName);
 
@@ -49,7 +44,7 @@ namespace KSoft.Blam.Engine
 
 		static dynamic OpenEngineTagElementStream(BlamEngine engine, FileAccess streamMode = FileAccess.Read)
 		{
-			Contract.Assert(engine != null);
+			System.ArgumentNullException.ThrowIfNull(engine);
 
 			string engine_stream_path = GetTagElementStreamPath(engine, engine.Name);
 			engine_stream_path += ".xml";
@@ -70,7 +65,7 @@ namespace KSoft.Blam.Engine
 		internal static dynamic OpenEngineSystemTagElementStream(BlamEngine engine, Values.KGuid systemGuid, string externFileName,
 			FileAccess streamMode = FileAccess.Read)
 		{
-			Contract.Assert(engine != null);
+			System.ArgumentNullException.ThrowIfNull(engine);
 
 			string extern_stream_path = GetTagElementStreamPath(engine, externFileName);
 

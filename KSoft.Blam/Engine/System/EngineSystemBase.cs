@@ -2,11 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -175,7 +170,11 @@ namespace KSoft.Blam.Engine
 			{
 				throw new ArgumentNoneException(nameof(buildHandle));
 			}
-			Contract.Assert(mActiveInBlamEngine);
+			if (!mActiveInBlamEngine)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"{0} is not active in engine {1}.", GetType().Name, Engine.Name));
+			}
 
 			// #REVIEW_BLAM: this isn't an optimal setup
 			bool load_externs = true;
@@ -193,7 +192,6 @@ namespace KSoft.Blam.Engine
 
 			if (load_externs)
 			{
-				Contract.Assert(mExternIOTask == null);
 				if (mExternIOTask != null)
 				{
 					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
@@ -251,8 +249,12 @@ namespace KSoft.Blam.Engine
 			if (unload_externs)
 			{
 				// mExternIOTask should previously be a Task for LoadExterns
-				bool didntTimeout = WaitForExternsIO();
-				Contract.Assert(didntTimeout);
+				if (!WaitForExternsIO())
+				{
+					throw new TimeoutException(string.Format(Util.InvariantCultureInfo,
+						"Timed out waiting for extern I/O before unloading {0} under {1}.",
+						GetType().Name, this.Prototype.Engine));
+				}
 
 				if (mExternIOTask != null)
 				{
@@ -327,7 +329,12 @@ namespace KSoft.Blam.Engine
 		}
 		void UnloadExternsBegin()
 		{
-			Contract.Requires(!Prototype.SystemMetadata.KeepExternsLoaded);
+			if (Prototype.SystemMetadata.KeepExternsLoaded)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Cannot unload externs for {0} because it is configured to keep externs loaded.",
+					GetType().Name));
+			}
 
 			UnloadExternsData();
 		}
@@ -353,12 +360,6 @@ namespace KSoft.Blam.Engine
 			where TDoc : class
 			where TCursor : class
 		{
-/*			var prototype = KSoft.Debug.TypeCheck.CastReference<BlamEngineSystem>(s.Owner);
-			if (s.IsReading)
-				Prototype = prototype;
-			else
-				Contract.Assert(prototype == Prototype);*/
-
 			EngineBuildHandle.Serialize(s, ref mRootBuildHandleBaseline);
 
 			using (s.EnterUserDataBookmark(this))

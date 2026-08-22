@@ -2,11 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -37,9 +32,22 @@ namespace KSoft.Blam.Engine
 		/// <returns></returns>
 		internal static Values.KGuid GetSystemGuid(Type systemType)
 		{
-			Contract.Requires(systemType != null && systemType.IsSubclassOf(typeof(EngineSystemBase)));
+			ArgumentNullException.ThrowIfNull(systemType);
+
+			if (!systemType.IsSubclassOf(typeof(EngineSystemBase)))
+			{
+				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
+					"{0} must be a subclass of {1}.",
+					systemType.FullName, typeof(EngineSystemBase).FullName), nameof(systemType));
+			}
 
 			var guid_prop = GetSystemGuidPropertyInfo(systemType);
+			if (guid_prop == null)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"{0} doesn't specify a static property named {1}",
+					systemType.Name, kSystemGuidPropertyName));
+			}
 
 			return (Values.KGuid)guid_prop.GetValue(null);
 		}
@@ -105,11 +113,20 @@ namespace KSoft.Blam.Engine
 		/// <returns></returns>
 		internal EngineSystemBase NewInstance(BlamEngineSystem prototype)
 		{
-			Contract.Requires(prototype != null);
-			Contract.Assert(mFactoryMethod != null, "Rerun engine unit tests");
+			ArgumentNullException.ThrowIfNull(prototype);
+			if (mFactoryMethod == null)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"{0} doesn't have a factory method. Rerun engine unit tests.",
+					EngineSystemType));
+			}
 
 			EngineSystemBase system = mFactoryMethod();
-			Contract.Assert(system != null);
+			if (system == null)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"{0}'s factory returned null.", EngineSystemType));
+			}
 
 			system.InitializeForNewInstance(prototype);
 			return system;
@@ -192,7 +209,7 @@ namespace KSoft.Blam.Engine
 		}
 		void InitializeForNewProgram(Type systemType)
 		{
-			Contract.Assume(systemType != null);
+			ArgumentNullException.ThrowIfNull(systemType);
 
 			AttachToSystemType(systemType);
 			FindEngineSystemFactoryMethod();

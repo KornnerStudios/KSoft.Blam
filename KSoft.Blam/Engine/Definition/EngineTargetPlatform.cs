@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -48,8 +42,6 @@ namespace KSoft.Blam.Engine
 		/// <returns><see cref="Name"/></returns>
 		public override string ToString()
 		{
-			Contract.Ensures(Contract.Result<string>() != null);
-
 			return Name;
 		}
 		#endregion
@@ -78,13 +70,18 @@ namespace KSoft.Blam.Engine
 		{
 			int index = Bits.BitDecodeNoneable(handle, bitIndex, kIndexBitMask);
 
-			Contract.Assert(IsValidIndex(index));
+			if (!IsValidIndex(index))
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Decoded target platform index must be NONE or in the range [0, {0}); actual value is {1}.",
+					EngineRegistry.TargetPlatforms.Count, index));
+			}
+
 			return index;
 		}
 		#endregion
 
 		#region Index/Id interfaces
-		[Contracts.Pure]
 		public static bool IsValidIndex(int targetPlatformIndex)
 			=> targetPlatformIndex.IsNoneOrPositive() && targetPlatformIndex < EngineRegistry.TargetPlatforms.Count;
 

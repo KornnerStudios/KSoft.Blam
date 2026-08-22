@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Engine
 {
@@ -21,7 +15,10 @@ namespace KSoft.Blam.Engine
 		#region Engines
 		static List<BlamEngine> gEngines;
 		public static IReadOnlyList<BlamEngine> Engines { get {
-			Contract.Assert(gEngines != null, kErrorMessageNotInitialized);
+			if (gEngines == null)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return gEngines;
 		} }
@@ -63,7 +60,10 @@ namespace KSoft.Blam.Engine
 		#region TargetPlatforms
 		static List<EngineTargetPlatform> gTargetPlatforms;
 		public static IReadOnlyList<EngineTargetPlatform> TargetPlatforms { get {
-			Contract.Assert(gTargetPlatforms != null, kErrorMessageNotInitialized);
+			if (gTargetPlatforms == null)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return gTargetPlatforms;
 		} }
@@ -71,7 +71,10 @@ namespace KSoft.Blam.Engine
 		static Collections.IReadOnlyBitSet kNullValidTargetPlatforms;
 		/// <summary>Represents a BitSet of ValidTargetPlatforms that are all set to false</summary>
 		internal static Collections.IReadOnlyBitSet NullValidTargetPlatforms { get {
-			Contract.Assert(kNullValidTargetPlatforms != null, kErrorMessageNotInitialized);
+			if (kNullValidTargetPlatforms == null)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return kNullValidTargetPlatforms;
 		} }
@@ -84,12 +87,14 @@ namespace KSoft.Blam.Engine
 
 		static List<string> gResourceModels;
 		public static IReadOnlyList<string> ResourceModels { get {
-			Contract.Assert(gResourceModels != null, kErrorMessageNotInitialized);
+			if (gResourceModels == null)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return gResourceModels;
 		} }
 
-		[Contracts.Pure]
 		[System.Diagnostics.DebuggerStepThrough]
 		public static bool IsValidResourceModelIndex(int resourceModelIndex)
 		{
@@ -128,7 +133,10 @@ namespace KSoft.Blam.Engine
 		#region Exported Builds
 		static Dictionary<string, EngineBuildRevision> gExportedBuildsByName;
 		public static IReadOnlyDictionary<string, EngineBuildRevision> ExportedBuildsByName { get {
-			Contract.Assert(gExportedBuildsByName != null, kErrorMessageNotInitialized);
+			if (gExportedBuildsByName == null)
+			{
+				throw new InvalidOperationException(kErrorMessageNotInitialized);
+			}
 
 			return gExportedBuildsByName;
 		} }
@@ -161,9 +169,7 @@ namespace KSoft.Blam.Engine
 		/// <param name="systemMetadata">	The system metadata. </param>
 		internal static void Register(EngineSystemAttribute systemMetadata)
 		{
-			Contract.Requires(systemMetadata != null);
-			// IReadOnlyDictionary's ContainsKey is not Pure. Check is instead performed in EngineSystemAttribute code
-			//Contract.Requires(!Systems.ContainsKey(systemMetadata.SystemGuid));
+			ArgumentNullException.ThrowIfNull(systemMetadata);
 
 			gSystems.Add(systemMetadata.SystemGuid, systemMetadata);
 		}
@@ -188,8 +194,6 @@ namespace KSoft.Blam.Engine
 		/// <returns>Non-null or empty string, no matter the input</returns>
 		public static string GetSystemDebugDisplayString(Values.KGuid systemGuid)
 		{
-			Contract.Ensures(Contract.Result<string>().IsNotNullOrEmpty());
-
 			EngineSystemAttribute system_attribute = null;
 			if (systemGuid.IsNotEmpty)
 			{
@@ -254,7 +258,13 @@ namespace KSoft.Blam.Engine
 		{
 			int index = Bits.BitDecodeNoneable(handle, bitIndex, kResourceModelBitMask);
 
-			Contract.Assert(IsValidResourceModelIndex(index));
+			if (!IsValidResourceModelIndex(index))
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Decoded resource model index must be NONE or in the range [0, {0}); actual value is {1}.",
+					ResourceModels.Count, index));
+			}
+
 			return index;
 		}
 		#endregion

@@ -1,8 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
+﻿using System;
 
 namespace KSoft.Blam.Engine
 {
@@ -33,7 +29,10 @@ namespace KSoft.Blam.Engine
 			}
 			else
 			{
-				Contract.Assert(engine == Engine);
+				if (!object.ReferenceEquals(engine, Engine))
+				{
+					throw new InvalidOperationException("Engine system context does not match the serialized engine.");
+				}
 			}
 
 			if (reading)
@@ -54,7 +53,7 @@ namespace KSoft.Blam.Engine
 			}
 			else
 			{
-				Contract.Assert(false, "Writing not supported");
+				throw new NotSupportedException("Writing engine system prototype definitions is not supported.");
 			}
 
 			s.StreamAttribute("externs", this, o => o.ExternsFile);
