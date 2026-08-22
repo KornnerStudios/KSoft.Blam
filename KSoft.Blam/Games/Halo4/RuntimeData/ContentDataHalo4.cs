@@ -1,10 +1,4 @@
-﻿#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
-
-namespace KSoft.Blam.Games.Halo4.RuntimeData
+﻿namespace KSoft.Blam.Games.Halo4.RuntimeData
 {
 	using GameDifficultyBitStreamer = IO.EnumBitStreamer<Blam.RuntimeData.GameDifficulty>;
 	using MetagameScoringBitStreamer = IO.EnumBitStreamer<Blam.RuntimeData.MetagameScoring>;
@@ -73,7 +67,21 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData
 			var activity = s.IsReading ? GameActivity.None : (GameActivity)value;
 			s.StreamAttributeEnum(attrName, ref activity);
 
-			Contract.Assert(activity < GameActivity.kNumberOf);
+			if (activity >= GameActivity.kNumberOf)
+			{
+				string message = string.Format(Util.InvariantCultureInfo,
+					"Activity must be less than {0}; actual value is {1}.",
+					GameActivity.kNumberOf, activity);
+
+				if (s.IsReading)
+				{
+					s.ThrowReadException(new System.IO.InvalidDataException(message));
+				}
+				else if (s.IsWriting)
+				{
+					throw new System.InvalidOperationException(message);
+				}
+			}
 
 			if (s.IsReading)
 			{

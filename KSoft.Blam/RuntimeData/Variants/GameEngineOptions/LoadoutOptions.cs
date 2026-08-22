@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.RuntimeData.Variants
 {
@@ -164,7 +159,12 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Assert(Palettes.Length == 6, "Need to redo the streaming logic!");
+			if (Palettes.Length != 6)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Loadout palette streaming expects exactly 6 palettes; actual count is {0}.",
+					Palettes.Length));
+			}
 
 			SerializeLoadoutFlags(s);
 

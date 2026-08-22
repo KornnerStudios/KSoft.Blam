@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 {
@@ -918,8 +913,18 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 
 		static WeaponTuningData()
 		{
-			Contract.Assert(kOneBarrelEntries.Length == 33);
-			Contract.Assert(kTwoBarrelsEntries.Length == 6);
+			if (kOneBarrelEntries.Length != 33)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"One-barrel tuning table must contain 33 entries; actual count is {0}.",
+					kOneBarrelEntries.Length));
+			}
+			if (kTwoBarrelsEntries.Length != 6)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Two-barrel tuning table must contain 6 entries; actual count is {0}.",
+					kTwoBarrelsEntries.Length));
+			}
 			#region kDamageReportingTypeToTuningEntry
 #if false
 			kDamageReportingTypeToTuningEntry = new List<DamageReportingTypeToTuningMap>((int)DamageReportingTypeHalo4.kNumberOf);

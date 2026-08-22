@@ -1,9 +1,5 @@
 ﻿using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
+using System;
 
 namespace KSoft.Blam.RuntimeData.Variants
 {
@@ -100,11 +96,21 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 		#region Range values
 		public MegaloVariantUserDefinedOptionValueElement RangeMinValue { get {
-			Contract.Requires(IsRangeValue);
+			if (!IsRangeValue)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"User-defined option value is not a range; actual value count is {0}.",
+					Values.Count));
+			}
 			return Values[0];
 		} }
 		public MegaloVariantUserDefinedOptionValueElement RangeMaxValue { get {
-			Contract.Requires(IsRangeValue);
+			if (!IsRangeValue)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"User-defined option value is not a range; actual value count is {0}.",
+					Values.Count));
+			}
 			return Values[1];
 		} }
 		#endregion

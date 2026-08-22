@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.RuntimeData
 {
@@ -53,11 +48,21 @@ namespace KSoft.Blam.RuntimeData
 
 		public int EngineIconIndex {
 			get {
-				Contract.Requires(Type == ContentType.GameVariant);
+				if (Type != ContentType.GameVariant)
+				{
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"Engine icon index is only valid for content type {0}; actual type is {1}.",
+						ContentType.GameVariant, Type));
+				}
 				return unk280;
 			}
 			set {
-				Contract.Requires(Type == ContentType.GameVariant);
+				if (Type != ContentType.GameVariant)
+				{
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"Engine icon index is only valid for content type {0}; actual type is {1}.",
+						ContentType.GameVariant, Type));
+				}
 				unk280 = value;
 			}
 		}

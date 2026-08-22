@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.RuntimeData.Variants
 {
@@ -58,7 +53,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 		internal static GameEngineSandboxVariant Create(GameEngineVariant variantManager)
 		{
-			Contract.Requires(variantManager != null);
+			ArgumentNullException.ThrowIfNull(variantManager);
 
 			var game_build = variantManager.GameBuild;
 

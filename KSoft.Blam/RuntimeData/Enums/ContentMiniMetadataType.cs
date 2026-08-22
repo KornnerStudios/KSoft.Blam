@@ -1,6 +1,4 @@
-﻿using Contracts = System.Diagnostics.Contracts;
-
-namespace KSoft.Blam.RuntimeData
+﻿namespace KSoft.Blam.RuntimeData
 {
 	[System.Reflection.Obfuscation(Exclude=false)]
 	public enum ContentMiniMetadataType : byte
@@ -37,7 +35,6 @@ namespace KSoft.Blam
 
 	partial class TypeExtensionsBlam
 	{
-		[Contracts.Pure]
 		internal static string ToEncodingPrefix(this ContentMiniMetadataType type)
 		{
 			return type switch
@@ -55,7 +52,6 @@ namespace KSoft.Blam
 				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
 			};
 		}
-		[Contracts.Pure]
 		internal static bool IsValid(this ContentMiniMetadataType type)
 		{
 			return type switch
@@ -74,7 +70,6 @@ namespace KSoft.Blam
 				_ => false,
 			};
 		}
-		[Contracts.Pure]
 		internal static string ToFileExtension(this ContentMiniMetadataType type)
 		{
 			return type switch
@@ -89,7 +84,6 @@ namespace KSoft.Blam
 				_ => "",
 			};
 		}
-		[Contracts.Pure]
 		internal static string ToFileNameAndExtension(this ContentMiniMetadataType type)
 		{
 			return type switch

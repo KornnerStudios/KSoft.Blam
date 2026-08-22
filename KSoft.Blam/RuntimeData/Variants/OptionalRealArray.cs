@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.RuntimeData.Variants
 {
@@ -47,6 +42,17 @@ namespace KSoft.Blam.RuntimeData.Variants
 			mArray = new float[kInfo.kLength];
 		}
 
+		void ValidateIndex(int index)
+		{
+			if ((uint)index >= (uint)Length)
+			{
+				throw new ArgumentOutOfRangeException(nameof(index), index,
+					string.Format(Util.InvariantCultureInfo,
+						"Index must be in the range [0, {0}); actual value is {1}.",
+						Length, index));
+			}
+		}
+
 		void SetImpl(int index, float? value)
 		{
 			uint old_flags = mValidFlags;
@@ -64,7 +70,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		}
 		public void Clear(int index)
 		{
-			Contract.Requires(index >= 0 && index < Length);
+			ValidateIndex(index);
 
 			float? old_value = this[index];
 			if (old_value.HasValue)
@@ -74,12 +80,12 @@ namespace KSoft.Blam.RuntimeData.Variants
 		}
 
 		public float? this[int index] {
-			get { Contract.Requires(index >= 0 && index < Length);
+			get { ValidateIndex(index);
 				return Bitwise.Flags.Test(mValidFlags, 1U << index)
 					? mArray[index]
 					: (float?)null;
 			}
-			set { Contract.Requires(index >= 0 && index < Length);
+			set { ValidateIndex(index);
 				SetImpl(index, value);
 		} }
 

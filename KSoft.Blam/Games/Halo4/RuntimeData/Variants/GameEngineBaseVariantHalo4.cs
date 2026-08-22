@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 {
@@ -142,7 +137,12 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			s.StreamObject(OptionsMapOverrides);					// 0x3D4
 			s.StreamObject(OptionsRequisitions);					// 0x26D8
 			s.Stream(ref InfinityMissionId);
-			Contract.Assert(InfinityMissionId.IsNone()); // haven't see it equal anything but -1
+			if (InfinityMissionId.IsNotNone())
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Infinity mission id must be NONE; actual value is {0}.",
+					InfinityMissionId));
+			}
 			s.StreamObject(TeamOptions);							// 0xD00
 			s.StreamObject(LoadoutOptions);							// 0x2084
 			s.StreamObject(OrdnanceOptions);						// 0x21B4
@@ -263,7 +263,19 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			s.Stream(ref PlayerRequisitionFrequencySeconds);
 			s.Stream(ref InitialGameCurrency);
 			s.StreamElements(RequisitionItems, 7);					// 0x26E0	0x26E4
-			Contract.Assert(RequisitionItems.Count == 0);
+			if (RequisitionItems.Count != 0)
+			{
+				string message = string.Format(Util.InvariantCultureInfo,
+					"Requisition items must be empty; actual count is {0}.",
+					RequisitionItems.Count);
+
+				if (s.IsReading)
+				{
+					throw new System.IO.InvalidDataException(message);
+				}
+
+				throw new InvalidOperationException(message);
+			}
 		}
 		#endregion
 		#region ITagElementStringNameStreamable Members

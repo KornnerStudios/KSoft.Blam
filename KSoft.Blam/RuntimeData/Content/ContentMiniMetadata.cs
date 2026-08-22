@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.RuntimeData
 {
@@ -144,7 +139,12 @@ namespace KSoft.Blam.RuntimeData
 				encoded_porition = kRadixEncoding.Encode(bits);
 			}
 
-			Contract.Assert(encoded_porition.Length <= kEncodedPortionLength);
+			if (encoded_porition.Length > kEncodedPortionLength)
+			{
+				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+					"Encoded content metadata length must be <= {0}; actual length is {1}.",
+					kEncodedPortionLength, encoded_porition.Length));
+			}
 
 			return Type.ToEncodingPrefix() + encoded_porition;
 		}

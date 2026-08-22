@@ -1,9 +1,4 @@
 ﻿using System;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 namespace KSoft.Blam.RuntimeData.Variants
 {
@@ -51,7 +46,17 @@ namespace KSoft.Blam.RuntimeData.Variants
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
 		{
-			s.Stream(ref ObserversAllowed);					Contract.Assert(ObserversAllowed==false);
+			s.Stream(ref ObserversAllowed);
+			if (ObserversAllowed)
+			{
+				string message = "ObserversAllowed must remain false after streaming; actual value is true.";
+				if (s.IsReading)
+				{
+					throw new System.IO.InvalidDataException(message);
+				}
+
+				throw new InvalidOperationException(message);
+			}
 			s.Stream(ref TeamChanging, 2);
 			s.Stream(ref Flags, 5, GameOptionsSocialFlagsBitStreamer.Instance);
 		}
