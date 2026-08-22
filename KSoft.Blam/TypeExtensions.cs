@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Contracts = System.Diagnostics.Contracts;
-#if CONTRACTS_FULL_SHIM
-using Contract = System.Diagnostics.ContractsShim.Contract;
-#else
-using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
-#endif
 
 using MegaloScriptTokenTypeHaloReach = KSoft.Blam.Games.HaloReach.Megalo.MegaloScriptTokenTypeHaloReach;
 using MegaloScriptTokenTypeHalo4 = KSoft.Blam.Games.Halo4.Megalo.MegaloScriptTokenTypeHalo4;
@@ -86,7 +80,7 @@ namespace KSoft.Blam
 			, Func<TProp, string> generateNotFoundMessage = null)
 			where TProp : IEquatable<TProp>
 		{
-			Contract.Requires(property != null);
+			ArgumentNullException.ThrowIfNull(property);
 
 			for (int x = 0; x < list.Count; x++)
 			{
@@ -109,6 +103,17 @@ namespace KSoft.Blam
 		#region IO.BitStream
 		#region Single
 		// interesting: http://stackoverflow.com/a/3542975/444977
+
+		static void ThrowIfBitCountExceeds(int bitCount, int maxBitCount)
+		{
+			if (bitCount > maxBitCount)
+			{
+				throw new ArgumentOutOfRangeException(nameof(bitCount), bitCount,
+					string.Format(Util.InvariantCultureInfo,
+						"Bit count must be <= {0}; actual value is {1}.",
+						maxBitCount, bitCount));
+			}
+		}
 
 		public static float DecodeSingle(uint rawBits, float min, float max, int bitCount, bool isSigned, bool unknown)
 		{
@@ -252,7 +257,7 @@ namespace KSoft.Blam
 		}
 		public static void Stream(this IO.BitStream s, ref float real, float min, float max, int bitCount, bool isSigned, bool unknown)
 		{
-			Contract.Requires(bitCount <= Bits.kInt32BitCount);
+			ThrowIfBitCountExceeds(bitCount, Bits.kInt32BitCount);
 
 				 if (s.IsReading)	{ Read(s, out real, min, max, bitCount, isSigned, unknown); }
 			else if (s.IsWriting)	{ Write(s, real, min, max, bitCount, isSigned, unknown); }
@@ -263,7 +268,7 @@ namespace KSoft.Blam
 		/// <remarks>Used for indexes which *are* typically NONE (-1)</remarks>
 		public static void StreamIndex(this IO.BitStream s, ref int value, int bitCount = Bits.kInt32BitCount)
 		{
-			Contract.Requires(bitCount <= Bits.kInt32BitCount);
+			ThrowIfBitCountExceeds(bitCount, Bits.kInt32BitCount);
 
 			if (s.IsReading)
 			{
@@ -292,7 +297,7 @@ namespace KSoft.Blam
 		/// <remarks>Used for indexes which *are not* typically NONE (-1)</remarks>
 		public static void StreamIndexPos(this IO.BitStream s, ref int value, int bitCount = Bits.kInt32BitCount)
 		{
-			Contract.Requires(bitCount <= Bits.kInt32BitCount);
+			ThrowIfBitCountExceeds(bitCount, Bits.kInt32BitCount);
 
 			if (s.IsReading)
 			{
@@ -328,7 +333,7 @@ namespace KSoft.Blam
 		/// <param name="bitCount"></param>
 		public static void StreamNoneable(this IO.BitStream s, ref sbyte value, int bitCount = Bits.kByteBitCount)
 		{
-			Contract.Requires(bitCount <= Bits.kByteBitCount);
+			ThrowIfBitCountExceeds(bitCount, Bits.kByteBitCount);
 
 			if (s.IsReading)
 			{
@@ -337,7 +342,13 @@ namespace KSoft.Blam
 			}
 			else if (s.IsWriting)
 			{
-				Contract.Assert(value >= TypeExtensions.kNone);
+				if (value < TypeExtensions.kNone)
+				{
+					throw new ArgumentOutOfRangeException(nameof(value), value,
+						string.Format(Util.InvariantCultureInfo,
+							"Value must be >= NONE ({0}); actual value is {1}.",
+							TypeExtensions.kNone, value));
+				}
 				s.Write(value + 1, bitCount);
 			}
 		}
@@ -347,7 +358,7 @@ namespace KSoft.Blam
 		/// <param name="bitCount"></param>
 		public static void StreamNoneable(this IO.BitStream s, ref short value, int bitCount = Bits.kInt16BitCount)
 		{
-			Contract.Requires(bitCount <= Bits.kInt16BitCount);
+			ThrowIfBitCountExceeds(bitCount, Bits.kInt16BitCount);
 
 			if (s.IsReading)
 			{
@@ -356,7 +367,13 @@ namespace KSoft.Blam
 			}
 			else if (s.IsWriting)
 			{
-				Contract.Assert(value >= TypeExtensions.kNone);
+				if (value < TypeExtensions.kNone)
+				{
+					throw new ArgumentOutOfRangeException(nameof(value), value,
+						string.Format(Util.InvariantCultureInfo,
+							"Value must be >= NONE ({0}); actual value is {1}.",
+							TypeExtensions.kNone, value));
+				}
 				s.Write(value + 1, bitCount);
 			}
 		}
@@ -366,7 +383,7 @@ namespace KSoft.Blam
 		/// <param name="bitCount"></param>
 		public static void StreamNoneable(this IO.BitStream s, ref int value, int bitCount = Bits.kInt32BitCount)
 		{
-			Contract.Requires(bitCount <= Bits.kInt32BitCount);
+			ThrowIfBitCountExceeds(bitCount, Bits.kInt32BitCount);
 
 			if (s.IsReading)
 			{
@@ -375,7 +392,13 @@ namespace KSoft.Blam
 			}
 			else if (s.IsWriting)
 			{
-				Contract.Assert(value.IsNoneOrPositive());
+				if (!value.IsNoneOrPositive())
+				{
+					throw new ArgumentOutOfRangeException(nameof(value), value,
+						string.Format(Util.InvariantCultureInfo,
+							"Value must be NONE or non-negative; actual value is {0}.",
+							value));
+				}
 				s.Write(value + 1, bitCount);
 			}
 		}
@@ -464,7 +487,6 @@ namespace KSoft.Blam
 		#endregion
 
 		#region Megalo
-		[Contracts.Pure]
 		internal static Megalo.MegaloScriptVariableType ToVariableType(
 			this Megalo.MegaloScriptVariableReferenceType type)
 		{
@@ -479,7 +501,6 @@ namespace KSoft.Blam
 			};
 		}
 
-		[Contracts.Pure]
 		internal static bool RequiresBitLength(this MegaloProto.MegaloScriptValueBaseType type)
 		{
 			return type switch
@@ -495,7 +516,6 @@ namespace KSoft.Blam
 		/// <summary>Is the target based in static (ie, tag) data?</summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		[Contracts.Pure]
 		public static bool IsStaticData(this MegaloProto.MegaloScriptValueIndexTarget target)
 		{
 			return target switch
@@ -515,7 +535,6 @@ namespace KSoft.Blam
 		/// <summary>Is the target based in variant data?</summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		[Contracts.Pure]
 		public static bool IsVariantData(this MegaloProto.MegaloScriptValueIndexTarget target)
 		{
 			return target switch
@@ -535,7 +554,6 @@ namespace KSoft.Blam
 		/// <summary>Does the target have a human-friendly name?</summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		[Contracts.Pure]
 		public static bool HasIndexName(this MegaloProto.MegaloScriptValueIndexTarget target)
 		{
 			return target switch
@@ -600,7 +618,6 @@ namespace KSoft.Blam
 					type == Megalo.MegaloScriptTriggerType.Local;
 		}
 
-		[Contracts.Pure]
 		internal static MegaloScriptTokenTypeHaloReach ToHaloReach(
 			this Megalo.MegaloScriptTokenAbstractType type)
 		{
@@ -617,7 +634,6 @@ namespace KSoft.Blam
 				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
 			};
 		}
-		[Contracts.Pure]
 		internal static Megalo.MegaloScriptTokenAbstractType ToAbstract(
 			this MegaloScriptTokenTypeHaloReach type)
 		{
@@ -633,7 +649,6 @@ namespace KSoft.Blam
 			};
 		}
 
-		[Contracts.Pure]
 		internal static MegaloScriptTokenTypeHalo4 ToHalo4(
 			this Megalo.MegaloScriptTokenAbstractType type)
 		{
@@ -649,7 +664,6 @@ namespace KSoft.Blam
 				_ => throw new KSoft.Debug.UnreachableException(type.ToString()),
 			};
 		}
-		[Contracts.Pure]
 		internal static Megalo.MegaloScriptTokenAbstractType ToAbstract(
 			this MegaloScriptTokenTypeHalo4 type)
 		{
