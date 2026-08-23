@@ -134,11 +134,22 @@ namespace KSoft.Blam.Localization.StringTables
 		}
 		void Write(IO.BitStream s)
 		{
-			LocaleStringTableBuffer string_data = null;
 			if (HasStrings)
 			{
-				string_data = new LocaleStringTableBuffer(this);
+				var string_data = new LocaleStringTableBuffer(this);
 				WriteStringsToBuffer(string_data);
+
+				if (Count > Capacity)
+				{
+					throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
+						"String table count must be <= capacity; count {0}, capacity {1}.",
+						Count, Capacity));
+				}
+
+				s.Write(mStringReferences.Count, kInfo.CountBitLength);
+				ReferencesWrite(s);
+				s.StreamObject(string_data);
+				return;
 			}
 
 			if (Count > Capacity)
@@ -151,10 +162,6 @@ namespace KSoft.Blam.Localization.StringTables
 			s.Write(mStringReferences.Count, kInfo.CountBitLength);
 			ReferencesWrite(s);
 
-			if (HasStrings)
-			{
-				s.StreamObject(string_data);
-			}
 		}
 
 		public void Serialize(IO.BitStream s)
@@ -165,7 +172,7 @@ namespace KSoft.Blam.Localization.StringTables
 		#endregion
 
 		#region ITagElementStringNameStreamable Members
-		System.IO.InvalidDataException SerializePostprocessCodeNames()
+		System.IO.InvalidDataException? SerializePostprocessCodeNames()
 		{
 			var names_set = new HashSet<string>();
 			for (int x = 0; x < mStringReferences.Count; x++)
@@ -218,7 +225,7 @@ namespace KSoft.Blam.Localization.StringTables
 			{
 				if (kInfo.CodeNameEntries)
 				{
-					Exception code_names_ex = SerializePostprocessCodeNames();
+					Exception? code_names_ex = SerializePostprocessCodeNames();
 					if (code_names_ex != null)
 					{
 						s.ThrowReadException(code_names_ex);

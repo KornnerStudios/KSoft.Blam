@@ -108,7 +108,7 @@ namespace KSoft.Blam.Engine
 		public int TargetPlatformIndex => EngineTargetPlatform.BitDecodeIndex(mHandle, Constants.kTargetPlatformBitField.BitIndex);
 		public int ResourceModelIndex => EngineRegistry.BitDecodeResourceModelIndex(mHandle, Constants.kResourceModelBitField.BitIndex);
 
-		public EngineTargetPlatform TargetPlatform { get {
+		public EngineTargetPlatform? TargetPlatform { get {
 			int index = TargetPlatformIndex;
 
 			return index.IsNotNone()
@@ -125,7 +125,7 @@ namespace KSoft.Blam.Engine
 		/// <summary>See <see cref="Object.Equals"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (obj is BlamEngineTargetHandle objHandle)
 			{
@@ -199,10 +199,10 @@ namespace KSoft.Blam.Engine
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <returns></returns>
-		int System.Collections.IComparer.Compare(object x, object y)
+		int System.Collections.IComparer.Compare(object? x, object? y)
 		{
-			KSoft.Debug.TypeCheck.CastValue(x, out BlamEngineTargetHandle _x);
-			KSoft.Debug.TypeCheck.CastValue(y, out BlamEngineTargetHandle _y);
+			KSoft.Debug.TypeCheck.CastValue(x!, out BlamEngineTargetHandle _x);
+			KSoft.Debug.TypeCheck.CastValue(y!, out BlamEngineTargetHandle _y);
 
 			return BlamEngineTargetHandle.StaticCompare(_x, _y);
 		}
@@ -219,9 +219,9 @@ namespace KSoft.Blam.Engine
 		/// <summary>See <see cref="IComparable{T}.CompareTo"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		int IComparable.CompareTo(object obj)
+		int IComparable.CompareTo(object? obj)
 		{
-			KSoft.Debug.TypeCheck.CastValue(obj, out BlamEngineTargetHandle _obj);
+			KSoft.Debug.TypeCheck.CastValue(obj!, out BlamEngineTargetHandle _obj);
 
 			return BlamEngineTargetHandle.StaticCompare(this, _obj);
 		}

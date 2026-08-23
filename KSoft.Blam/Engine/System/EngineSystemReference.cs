@@ -10,7 +10,7 @@ namespace KSoft.Blam.Engine
 	{
 		public static readonly EngineSystemReference None = new(true);
 
-		EngineSystemBase mSystem;
+		EngineSystemBase mSystem = null!;
 		readonly EngineBuildHandle mBuildHandle;
 
 		/// <summary>The system that is referenced</summary>
@@ -33,7 +33,7 @@ namespace KSoft.Blam.Engine
 		{
 			Util.MarkUnusedVariable(ref dummy);
 
-			mSystem = null;
+			mSystem = null!;
 			mBuildHandle = EngineBuildHandle.None;
 		}
 		internal EngineSystemReference(EngineSystemBase system, EngineBuildHandle buildHandle)
@@ -65,7 +65,7 @@ namespace KSoft.Blam.Engine
 #pragma warning disable 4014
 				mSystem.RemoveReferenceAsync(mBuildHandle);
 #pragma warning restore 4014
-				mSystem = null;
+				mSystem = null!;
 			}
 		}
 		#endregion
@@ -89,7 +89,7 @@ namespace KSoft.Blam.Engine
 	{
 		public static readonly EngineSystemReference<T> None = new(true);
 
-		T mSystem;
+		T mSystem = null!;
 		readonly EngineBuildHandle mBuildHandle;
 
 		/// <summary>The system that is referenced</summary>
@@ -112,7 +112,7 @@ namespace KSoft.Blam.Engine
 		{
 			Util.MarkUnusedVariable(ref dummy);
 
-			mSystem = null;
+			mSystem = null!;
 			mBuildHandle = EngineBuildHandle.None;
 		}
 		internal EngineSystemReference(T system, EngineBuildHandle buildHandle)
@@ -144,7 +144,7 @@ namespace KSoft.Blam.Engine
 #pragma warning disable 4014
 				mSystem.RemoveReferenceAsync(mBuildHandle);
 #pragma warning restore 4014
-				mSystem = null;
+				mSystem = null!;
 			}
 		}
 		#endregion

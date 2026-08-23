@@ -7,12 +7,12 @@ namespace KSoft.Blam.Engine
 		: IO.ITagElementStringNameStreamable
 	{
 		/// <summary>Engine this repository defines builds for</summary>
-		public BlamEngine Engine { get; private set; }
+		public BlamEngine Engine { get; private set; } = null!;
 		/// <summary>The underlying general engine's Guid</summary>
 		public Values.KGuid RepositoryGuid { get; private set; } = Values.KGuid.Empty;
 
 		#region ValidTargetPlatforms
-		Collections.BitSet mValidTargetPlatforms;
+		Collections.BitSet? mValidTargetPlatforms;
 		/// <summary>Platforms which all builds in this repository can target</summary>
 		public Collections.IReadOnlyBitSet ValidTargetPlatforms { get {
 			if (mValidTargetPlatforms == null)
@@ -52,7 +52,7 @@ namespace KSoft.Blam.Engine
 		static readonly Func<EngineBuildRepository, int, string> BranchNameResolver =
 			(repo, id) => id.IsNotNone()
 				? repo.Branches[id].Name
-				: null;
+				: null!;
 		#endregion
 
 		#region ITagElementStreamable<string> Members
@@ -60,7 +60,7 @@ namespace KSoft.Blam.Engine
 			where TDoc : class
 			where TCursor : class
 		{
-			var engine = KSoft.Debug.TypeCheck.CastReference<BlamEngine>(s.Owner);
+			var engine = KSoft.Debug.TypeCheck.CastReference<BlamEngine>(s.Owner!);
 			if (s.IsReading)
 			{
 				Engine = engine;
@@ -135,7 +135,7 @@ namespace KSoft.Blam.Engine
 				branch.InitializeBuildHandles(engine_index, branch_index);
 			}
 		}
-		internal EngineBuildBranch ResolveWellKnownEngineBranch(string branchName)
+		internal EngineBuildBranch? ResolveWellKnownEngineBranch(string branchName)
 		{
 			int branch_index = BranchIdResolverSansKeyNotFoundException(this, branchName);
 

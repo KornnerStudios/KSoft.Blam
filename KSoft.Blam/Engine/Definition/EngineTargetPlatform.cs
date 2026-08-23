@@ -25,7 +25,7 @@ namespace KSoft.Blam.Engine
 		/// <summary>See <see cref="Object.Equals"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (obj is EngineTargetPlatform objPlatform)
 			{
@@ -85,7 +85,7 @@ namespace KSoft.Blam.Engine
 		public static bool IsValidIndex(int targetPlatformIndex)
 			=> targetPlatformIndex.IsNoneOrPositive() && targetPlatformIndex < EngineRegistry.TargetPlatforms.Count;
 
-		static int TargetPlatformIdResolver(object _null, string name)
+		static int TargetPlatformIdResolver(object? _null, string name)
 		{
 			int id = TypeExtensions.kNone;
 
@@ -108,10 +108,10 @@ namespace KSoft.Blam.Engine
 			(_null, name) => !string.IsNullOrEmpty(name)
 				? EngineRegistry.TargetPlatforms.FindIndex(x => x.Name == name)
 				: TypeExtensions.kNone;
-		static readonly Func<object, int, string> TargetPlatformNameResolver =
+		static readonly Func<object?, int, string> TargetPlatformNameResolver =
 			(_null, id) => id.IsNotNone()
 				? EngineRegistry.TargetPlatforms[id].Name
-				: null;
+				: null!;
 
 		internal static bool SerializeId<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string attributeName, ref int targetPlatformId, bool isOptional = false)
@@ -140,13 +140,13 @@ namespace KSoft.Blam.Engine
 		}
 
 		static int SerializeBitIndex<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
-			Collections.BitSet bitset, int bitIndex, object _null)
+			Collections.BitSet bitset, int bitIndex, object? _null)
 			where TDoc : class
 			where TCursor : class
 		{
 			if (s.IsReading)
 			{
-				string platform_name = null;
+				string platform_name = null!;
 				s.ReadCursor(ref platform_name);
 				bitIndex = TargetPlatformIdResolver(null, platform_name);
 			}
@@ -159,7 +159,7 @@ namespace KSoft.Blam.Engine
 			return bitIndex;
 		}
 		internal static void SerializeBitSet<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
-			ref Collections.BitSet bitset, string setElementName, string bitElementName = "Platform")
+			ref Collections.BitSet? bitset, string setElementName, string bitElementName = "Platform")
 			where TDoc : class
 			where TCursor : class
 		{
@@ -172,7 +172,7 @@ namespace KSoft.Blam.Engine
 						bitset = new Collections.BitSet(EngineRegistry.TargetPlatforms.Count);
 					}
 
-					bitset.Serialize(s, bitElementName, (object)null, SerializeBitIndex);
+					bitset!.Serialize(s, bitElementName, (object?)null, SerializeBitIndex);
 				}
 			}
 		}

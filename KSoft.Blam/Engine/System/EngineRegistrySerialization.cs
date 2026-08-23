@@ -96,7 +96,7 @@ namespace KSoft.Blam.Engine
 			{
 				if (bm.IsNotNull)
 				{
-					s.StreamElements("Engine", gEngines, (object)null,
+					s.StreamElements("Engine", gEngines, (object?)null,
 						BlamEngine.SerializePrototype);
 				}
 			}

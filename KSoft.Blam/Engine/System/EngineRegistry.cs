@@ -13,7 +13,7 @@ namespace KSoft.Blam.Engine
 		const string kSeriesName = "Blam";
 
 		#region Engines
-		static List<BlamEngine> gEngines;
+		static List<BlamEngine> gEngines = null!;
 		public static IReadOnlyList<BlamEngine> Engines { get {
 			if (gEngines == null)
 			{
@@ -25,13 +25,13 @@ namespace KSoft.Blam.Engine
 
 		public static bool IsInitialized { get { return gEngines != null; } }
 
-		public static EngineBuildBranch EngineBranchHalo1 { get; private set; }
-		public static EngineBuildBranch EngineBranchHalo2 { get; private set; }
-		public static EngineBuildBranch EngineBranchHalo3 { get; private set; }
-		public static EngineBuildBranch EngineBranchHaloOdst { get; private set; }
-		public static EngineBuildBranch EngineBranchHaloReach { get; private set; }
-		public static EngineBuildBranch EngineBranchHalo4 { get; private set; }
-		public static EngineBuildBranch EngineBranchHalo2A { get; private set; }
+		public static EngineBuildBranch EngineBranchHalo1 { get; private set; } = null!;
+		public static EngineBuildBranch EngineBranchHalo2 { get; private set; } = null!;
+		public static EngineBuildBranch EngineBranchHalo3 { get; private set; } = null!;
+		public static EngineBuildBranch EngineBranchHaloOdst { get; private set; } = null!;
+		public static EngineBuildBranch EngineBranchHaloReach { get; private set; } = null!;
+		public static EngineBuildBranch EngineBranchHalo4 { get; private set; } = null!;
+		public static EngineBuildBranch EngineBranchHalo2A { get; private set; } = null!;
 
 		public static EngineBuildHandle TryParseEngineBranchName(string branchNameToFind)
 		{
@@ -39,7 +39,7 @@ namespace KSoft.Blam.Engine
 
 			if (branchNameToFind.IsNotNullOrEmpty())
 			{
-				foreach (var engine in gEngines)
+				foreach (var engine in Engines)
 				{
 					foreach (var branch in engine.BuildRepository.Branches)
 					{
@@ -58,7 +58,7 @@ namespace KSoft.Blam.Engine
 		#endregion
 
 		#region TargetPlatforms
-		static List<EngineTargetPlatform> gTargetPlatforms;
+		static List<EngineTargetPlatform> gTargetPlatforms = null!;
 		public static IReadOnlyList<EngineTargetPlatform> TargetPlatforms { get {
 			if (gTargetPlatforms == null)
 			{
@@ -68,7 +68,7 @@ namespace KSoft.Blam.Engine
 			return gTargetPlatforms;
 		} }
 
-		static Collections.IReadOnlyBitSet kNullValidTargetPlatforms;
+		static Collections.IReadOnlyBitSet kNullValidTargetPlatforms = null!;
 		/// <summary>Represents a BitSet of ValidTargetPlatforms that are all set to false</summary>
 		internal static Collections.IReadOnlyBitSet NullValidTargetPlatforms { get {
 			if (kNullValidTargetPlatforms == null)
@@ -85,7 +85,7 @@ namespace KSoft.Blam.Engine
 		internal static readonly int kResourceModelBitCount = Bits.GetMaxEnumBits(kMaxResourceModels);
 		private static readonly uint kResourceModelBitMask = Bits.BitCountToMask32(kResourceModelBitCount);
 
-		static List<string> gResourceModels;
+		static List<string> gResourceModels = null!;
 		public static IReadOnlyList<string> ResourceModels { get {
 			if (gResourceModels == null)
 			{
@@ -101,7 +101,7 @@ namespace KSoft.Blam.Engine
 			return resourceModelIndex.IsNoneOrPositive() && resourceModelIndex < ResourceModels.Count;
 		}
 
-		static int ResourceModelIdResolver(object _null, string name)
+		static int ResourceModelIdResolver(object? _null, string name)
 		{
 			int id = TypeExtensions.kNone;
 
@@ -124,14 +124,14 @@ namespace KSoft.Blam.Engine
 			(_null, name) => !string.IsNullOrEmpty(name)
 				? ResourceModels.FindIndex(x => name.Equals(x, StringComparison.Ordinal))
 				: TypeExtensions.kNone;
-		static readonly Func<object, int, string> ResourceModelNameResolver =
+		static readonly Func<object?, int, string> ResourceModelNameResolver =
 			(_null, id) => id.IsNotNone()
 				? ResourceModels[id]
-				: null;
+				: null!;
 		#endregion
 
 		#region Exported Builds
-		static Dictionary<string, EngineBuildRevision> gExportedBuildsByName;
+		static Dictionary<string, EngineBuildRevision> gExportedBuildsByName = null!;
 		public static IReadOnlyDictionary<string, EngineBuildRevision> ExportedBuildsByName { get {
 			if (gExportedBuildsByName == null)
 			{
@@ -141,9 +141,9 @@ namespace KSoft.Blam.Engine
 			return gExportedBuildsByName;
 		} }
 
-		public static EngineBuildRevision TryParseExportedBuildName(string exportedNameToFind)
+		public static EngineBuildRevision? TryParseExportedBuildName(string exportedNameToFind)
 		{
-			EngineBuildRevision found_revision = null;
+			EngineBuildRevision? found_revision = null;
 
 			if (exportedNameToFind.IsNotNullOrEmpty())
 			{
@@ -177,14 +177,14 @@ namespace KSoft.Blam.Engine
 		/// <summary>Try to get the metadata for an <see cref="EngineSystemBase"/> via its guid</summary>
 		/// <param name="systemGuid"></param>
 		/// <returns>Null if no system is registered with the provided guid</returns>
-		public static EngineSystemAttribute TryGetRegisteredSystem(Values.KGuid systemGuid)
+		public static EngineSystemAttribute? TryGetRegisteredSystem(Values.KGuid systemGuid)
 		{
 			if (systemGuid.IsEmpty)
 			{
 				throw new ArgumentException("System GUID must not be empty.", nameof(systemGuid));
 			}
 
-			Systems.TryGetValue(systemGuid, out EngineSystemAttribute metadata);
+			Systems.TryGetValue(systemGuid, out EngineSystemAttribute? metadata);
 
 			return metadata;
 		}
@@ -194,7 +194,7 @@ namespace KSoft.Blam.Engine
 		/// <returns>Non-null or empty string, no matter the input</returns>
 		public static string GetSystemDebugDisplayString(Values.KGuid systemGuid)
 		{
-			EngineSystemAttribute system_attribute = null;
+			EngineSystemAttribute? system_attribute = null;
 			if (systemGuid.IsNotEmpty)
 			{
 				system_attribute = TryGetRegisteredSystem(systemGuid);

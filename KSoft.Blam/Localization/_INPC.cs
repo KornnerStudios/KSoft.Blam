@@ -5,7 +5,8 @@ namespace KSoft.Blam.Localization
 {
 	partial class LanguageRegistry
 	{
-		static PropertyChangedEventArgs[] gLanguageChangedEventArgs;
+		static PropertyChangedEventArgs[] gLanguageChangedEventArgs = null!;
+		[System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(gLanguageChangedEventArgs))]
 		static void InitializeLanguageChangedEventArgs()
 		{
 			gLanguageChangedEventArgs = new PropertyChangedEventArgs[NumberOfLanguages];
@@ -40,7 +41,7 @@ namespace KSoft.Blam.Localization.StringTables
 		: INotifyPropertyChanged
 	{
 		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		protected void NotifyPropertyChanged(PropertyChangedEventArgs args)
 		{
@@ -57,7 +58,7 @@ namespace KSoft.Blam.Localization.StringTables
 		, INotifyPropertyChanged
 	{
 		#region INotifyCollectionChanged
-		public event NotifyCollectionChangedEventHandler CollectionChanged;
+		public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
 		protected void NotifyItemsInitialized()
 		{
@@ -84,7 +85,7 @@ namespace KSoft.Blam.Localization.StringTables
 		#endregion
 
 		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		protected void NotifyPropertyChanged(PropertyChangedEventArgs args)
 		{

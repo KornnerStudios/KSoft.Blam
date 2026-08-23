@@ -4,6 +4,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KSoft.Blam</RootNamespace>
     <AssemblyName>KSoft.Blam</AssemblyName>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="$(VitaRootDir)\KSoft\KSoft\KSoft.csproj">

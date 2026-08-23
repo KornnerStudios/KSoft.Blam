@@ -22,8 +22,9 @@ namespace KSoft.Blam.Localization.StringTables
 
 		#region LanguageOffsets
 		// Only valid when reading/writing. Set to null once strings have been read, or the offsets have been written
-		int[] mLanguageOffsets;
+		int[] mLanguageOffsets = null!;
 
+		[System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(mLanguageOffsets))]
 		void LanguageOffsetsInitialize()
 		{
 			mLanguageOffsets = new int[mLanguageStrings.Length];
@@ -35,7 +36,7 @@ namespace KSoft.Blam.Localization.StringTables
 		}
 		void LanguageOffsetsDispose()
 		{
-			mLanguageOffsets = null;
+			mLanguageOffsets = null!;
 		}
 		#endregion
 
@@ -230,10 +231,12 @@ namespace KSoft.Blam.Localization.StringTables
 			where TDoc : class
 			where TCursor : class
 		{
-			if (!s.StreamAttributeOpt("name", ref mCodeName, Predicates.IsNotNullOrEmpty))
+			string? code_name = mCodeName;
+			if (!s.StreamAttributeOpt("name", ref code_name, Predicates.IsNotNullOrEmpty))
 			{
-				mCodeName = "";
+				code_name = "";
 			}
+			mCodeName = code_name ?? "";
 
 			using (var bm = s.EnterCursorBookmarkOpt("String", this, obj=>obj.JustEnglish))
 			{

@@ -80,13 +80,13 @@ namespace KSoft.Blam.Engine
 
 		static void ResolveWellKnownEngines()
 		{
-			EngineBranchHalo1 = BlamEngine.ResolveWellKnownEngineBranch("Halo1", "Halo1");
-			EngineBranchHalo2 = BlamEngine.ResolveWellKnownEngineBranch("Halo2", "Halo2");
-			EngineBranchHalo3 = BlamEngine.ResolveWellKnownEngineBranch("Halo3", "Halo3");
-			EngineBranchHaloOdst = BlamEngine.ResolveWellKnownEngineBranch("Halo3", "HaloOdst");
-			EngineBranchHaloReach = BlamEngine.ResolveWellKnownEngineBranch("HaloReach", "HaloReach");
-			EngineBranchHalo4 = BlamEngine.ResolveWellKnownEngineBranch("Halo4", "Halo4");
-			EngineBranchHalo2A = BlamEngine.ResolveWellKnownEngineBranch("Halo4", "Halo2A");
+			EngineBranchHalo1 = BlamEngine.ResolveWellKnownEngineBranch("Halo1", "Halo1")!;
+			EngineBranchHalo2 = BlamEngine.ResolveWellKnownEngineBranch("Halo2", "Halo2")!;
+			EngineBranchHalo3 = BlamEngine.ResolveWellKnownEngineBranch("Halo3", "Halo3")!;
+			EngineBranchHaloOdst = BlamEngine.ResolveWellKnownEngineBranch("Halo3", "HaloOdst")!;
+			EngineBranchHaloReach = BlamEngine.ResolveWellKnownEngineBranch("HaloReach", "HaloReach")!;
+			EngineBranchHalo4 = BlamEngine.ResolveWellKnownEngineBranch("Halo4", "Halo4")!;
+			EngineBranchHalo2A = BlamEngine.ResolveWellKnownEngineBranch("Halo4", "Halo2A")!;
 		}
 
 		public static void Initialize()
@@ -107,20 +107,20 @@ namespace KSoft.Blam.Engine
 		}
 		public static void Dispose()
 		{
-			gEngines = null;
-			gTargetPlatforms = null;
-			kNullValidTargetPlatforms = null;
-			gResourceModels = null;
-			gExportedBuildsByName = null;
+			gEngines = null!;
+			gTargetPlatforms = null!;
+			kNullValidTargetPlatforms = null!;
+			gResourceModels = null!;
+			gExportedBuildsByName = null!;
 
-			gSystems = null;
+			gSystems = null!;
 
 			EngineBranchHalo1 =
 				EngineBranchHalo2 =
 				EngineBranchHalo3 = EngineBranchHaloOdst =
 				EngineBranchHaloReach =
 				EngineBranchHalo4 = EngineBranchHalo2A =
-				null;
+				null!;
 		}
 
 		static bool mIsInitializedForNewProgram = false;

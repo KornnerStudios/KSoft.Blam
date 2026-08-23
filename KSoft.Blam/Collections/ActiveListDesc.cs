@@ -10,7 +10,7 @@ namespace KSoft.Collections
 		static readonly Func<T, bool> kNullEquator = obj => obj == null;
 		public static readonly Func<T, int> kObjectToNoneIndex = obj => -1;
 
-		ActiveListDesc(int capacity, bool fixedLength) : this(capacity, null, kNullEquator, fixedLength)
+		ActiveListDesc(int capacity, bool fixedLength) : this(capacity, null!, kNullEquator, fixedLength)
 		{
 		}
 
@@ -27,7 +27,7 @@ namespace KSoft.Collections
 		readonly T kInvalidData;
 		readonly int kCapacity;
 		readonly bool kIsFixedLength;
-		Func<T, int> mObjectToIndex;
+		Func<T, int> mObjectToIndex = null!;
 
 		public ActiveListDesc(int capacity, T invalidData, Func<T, bool> invalidEquator, bool fixedLength = true)
 		{

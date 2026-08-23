@@ -20,7 +20,7 @@ namespace KSoft.Blam.Localization
 		internal static readonly int kLanguageIndexBitCount = Bits.GetMaxEnumBits(kMaxLanguages);
 		private static readonly uint kLanguageIndexBitMask = Bits.BitCountToMask32(kLanguageIndexBitCount);
 
-		static List<string> gLanguageNames;
+		static List<string> gLanguageNames = null!;
 		/// <summary>Names of all the registered languages</summary>
 		public static IReadOnlyList<string> LanguageNames { get {
 			if (gLanguageNames == null)
@@ -44,7 +44,7 @@ namespace KSoft.Blam.Localization
 		public static bool IsValidLanguageIndex(int languageIndex)
 			=> languageIndex.IsNoneOrPositive() && languageIndex < NumberOfLanguages;
 
-		static int LanguageIdResolver(object _null, string name)
+		static int LanguageIdResolver(object? _null, string name)
 		{
 			int id = TypeExtensions.kNone;
 
@@ -62,11 +62,11 @@ namespace KSoft.Blam.Localization
 
 			return id;
 		}
-		static readonly Func<object, string, int> LanguageIdResolverSansKeyNotFoundException =
+		static readonly Func<object?, string, int> LanguageIdResolverSansKeyNotFoundException =
 			(_null, name) => name != kNoneName
 				? LanguageNames.FindIndex(name.Equals)
 				: TypeExtensions.kNone;
-		static readonly Func<object, int, string> LanguageNameResolver =
+		static readonly Func<object?, int, string> LanguageNameResolver =
 			(_null, id) => id.IsNotNone()
 				? LanguageNames[id]
 				: kNoneName;
@@ -144,7 +144,7 @@ namespace KSoft.Blam.Localization
 		}
 		public static void Dispose()
 		{
-			gLanguageNames = null;
+			gLanguageNames = null!;
 
 			EnglishIndex = TypeExtensions.kNone;
 		}

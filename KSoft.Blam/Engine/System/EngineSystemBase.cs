@@ -20,10 +20,10 @@ namespace KSoft.Blam.Engine
 		static readonly TimeSpan kWaitForExternIOTimeout = TimeSpan.FromSeconds(30);
 
 		/// <summary>The <see cref="BlamEngineSystem"/> used to describe this instance</summary>
-		internal BlamEngineSystem Prototype { get; private set; }
+		internal BlamEngineSystem Prototype { get; private set; } = null!;
 
 		// #NOTE_BLAM: will always be null if !Prototype.SystemRequiresReferenceTracking
-		Dictionary<EngineBuildHandle, int> mReferencesByBuildCounts;
+		Dictionary<EngineBuildHandle, int> mReferencesByBuildCounts = null!;
 		int mNonBuildSpecificReferences;
 		bool mActiveInBlamEngine;
 		EngineBuildHandle mRootBuildHandleBaseline;
@@ -201,7 +201,7 @@ namespace KSoft.Blam.Engine
 
 				mExternIOTask = Task.Run((Action)LoadExternsBegin);
 				await mExternIOTask.ConfigureAwait(false);
-				mExternIOTask = null;
+				mExternIOTask = null!;
 			}
 
 			// #REVIEW_BLAM: also don't do this if Prototype.SystemRequiresReferenceTracking==false?
@@ -265,7 +265,7 @@ namespace KSoft.Blam.Engine
 
 				mExternIOTask = Task.Run((Action)UnloadExternsBegin);
 				await mExternIOTask.ConfigureAwait(false);
-				mExternIOTask = null;
+				mExternIOTask = null!;
 			}
 
 			// #REVIEW_BLAM: also don't do this if Prototype.SystemRequiresReferenceTracking==false?
@@ -298,7 +298,7 @@ namespace KSoft.Blam.Engine
 		}
 
 		#region Externs I/O
-		Task mExternIOTask;
+		Task mExternIOTask = null!;
 
 		/// <summary>Waits for any extern IO tasks to finish, returning false if the wait timed out after <see cref="kWaitForExternIOTimeout"/></summary>
 		/// <returns>True if the task was successfully finished while waited on, or false if we timed out</returns>
@@ -311,7 +311,7 @@ namespace KSoft.Blam.Engine
 				success = mExternIOTask.Wait(kWaitForExternIOTimeout);
 				if (success)
 				{
-					mExternIOTask = null;
+					mExternIOTask = null!;
 				}
 			}
 

@@ -94,7 +94,7 @@ namespace KSoft.Blam.Engine
 		public readonly int BranchIndex => EngineBuildBranch.BitDecodeIndex(mHandle, Constants.kBranchBitField.BitIndex);
 		public readonly int RevisionIndex => EngineBuildRevision.BitDecodeIndex(mHandle, Constants.kRevisionBitField.BitIndex);
 
-		public readonly BlamEngine Engine { get {
+		public readonly BlamEngine? Engine { get {
 			int index = EngineIndex;
 
 			return index.IsNotNone()
@@ -102,7 +102,7 @@ namespace KSoft.Blam.Engine
 				: null;
 		} }
 
-		public readonly EngineBuildBranch Branch { get {
+		public readonly EngineBuildBranch? Branch { get {
 			int index = BranchIndex;
 
 			if (index.IsNotNone())
@@ -113,13 +113,13 @@ namespace KSoft.Blam.Engine
 						"Build handle has branch index {0}, but its engine index is NONE.", index));
 				}
 
-				return Engine.BuildRepository.Branches[index];
+				return Engine!.BuildRepository.Branches[index];
 			}
 
 			return null;
 		} }
 
-		public readonly EngineBuildRevision Revision { get {
+		public readonly EngineBuildRevision? Revision { get {
 			int index = RevisionIndex;
 
 			if (index.IsNotNone())
@@ -135,7 +135,7 @@ namespace KSoft.Blam.Engine
 						"Build handle has revision index {0}, but its branch index is NONE.", index));
 				}
 
-				return Branch.Revisions[index];
+				return Branch!.Revisions[index];
 			}
 
 			return null;
@@ -157,7 +157,7 @@ namespace KSoft.Blam.Engine
 		/// <summary>See <see cref="Object.Equals"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public override readonly bool Equals(object obj)
+		public override readonly bool Equals(object? obj)
 		{
 			if (obj is EngineBuildHandle handle)
 			{
@@ -296,10 +296,10 @@ namespace KSoft.Blam.Engine
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <returns></returns>
-		readonly int System.Collections.IComparer.Compare(object x, object y)
+		readonly int System.Collections.IComparer.Compare(object? x, object? y)
 		{
-			KSoft.Debug.TypeCheck.CastValue(x, out EngineBuildHandle _x);
-			KSoft.Debug.TypeCheck.CastValue(y, out EngineBuildHandle _y);
+			KSoft.Debug.TypeCheck.CastValue(x!, out EngineBuildHandle _x);
+			KSoft.Debug.TypeCheck.CastValue(y!, out EngineBuildHandle _y);
 
 			return EngineBuildHandle.StaticCompare(_x, _y);
 		}
@@ -313,9 +313,9 @@ namespace KSoft.Blam.Engine
 		/// <summary>See <see cref="IComparable{T}.CompareTo"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		readonly int IComparable.CompareTo(object obj)
+		readonly int IComparable.CompareTo(object? obj)
 		{
-			KSoft.Debug.TypeCheck.CastValue(obj, out EngineBuildHandle _obj);
+			KSoft.Debug.TypeCheck.CastValue(obj!, out EngineBuildHandle _obj);
 
 			return EngineBuildHandle.StaticCompare(this, _obj);
 		}
@@ -440,21 +440,24 @@ namespace KSoft.Blam.Engine
 				return false;
 			}
 
-			if (dic.TryGetValue(forBuild, out value))
+			if (dic.TryGetValue(forBuild, out T? absolute_value))
 			{
+				value = absolute_value!;
 				return true;
 			}
 
 			forBuild.ExtractHandles(out EngineBuildHandle engine, out EngineBuildHandle branch);
 
-			if (dic.TryGetValue(branch, out value))
+			if (dic.TryGetValue(branch, out T? branch_value))
 			{
+				value = branch_value!;
 				actualBuild = branch;
 				return true;
 			}
 
-			if (dic.TryGetValue(engine, out value))
+			if (dic.TryGetValue(engine, out T? engine_value))
 			{
+				value = engine_value!;
 				actualBuild = engine;
 				return true;
 			}
@@ -543,8 +546,8 @@ namespace KSoft.Blam.Engine
 			int engine_index = baseline.EngineIndex;
 			int branch_index = baseline.BranchIndex;
 			int revisn_index = baseline.RevisionIndex;
-			EngineBuildRepository repo = null;
-			EngineBuildBranch branch = null;
+			EngineBuildRepository repo = null!;
+			EngineBuildBranch branch = null!;
 
 			if (s.IsWriting)
 			{
@@ -564,7 +567,7 @@ namespace KSoft.Blam.Engine
 				#region prepare branch_index
 				if (value.BranchIndex == branch_index)
 				{
-					branch = repo.Branches[branch_index];
+					branch = repo!.Branches[branch_index];
 					// cause branch_index not to be written
 					branch_index = TypeExtensions.kNone;
 				}

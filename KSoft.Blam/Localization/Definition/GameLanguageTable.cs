@@ -20,9 +20,9 @@ namespace KSoft.Blam.Localization
 		Collections.BitVector32 mOptionalEngineLanguageFlags = new();
 		Collections.BitVector32 mOptionalGameLanguageFlags = new();
 		// An array of all registered languages and how they map to the build
-		GameLanguageHandle[] mEngineLanguageTable;
+		GameLanguageHandle[] mEngineLanguageTable = null!;
 		// All the IsSupported elements in mEngineLanguageTable, allowing us to index by game index
-		GameLanguageHandle[] mGameLanguageTable;
+		GameLanguageHandle[] mGameLanguageTable = null!;
 
 		/// <summary>The handle for the build of the engine this table is associated with</summary>
 		public Engine.EngineBuildHandle BuildHandle { get {
@@ -146,7 +146,7 @@ namespace KSoft.Blam.Localization
 		/// <summary>See <see cref="Object.Equals"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (obj is GameLanguageTable objTable)
 			{
@@ -171,7 +171,7 @@ namespace KSoft.Blam.Localization
 		/// <summary>See <see cref="IEquatable{T}.Equals"/></summary>
 		/// <param name="other"></param>
 		/// <returns></returns>
-		public bool Equals(GameLanguageTable other) => this.mBuildHandle.Equals(other.mBuildHandle);
+		public bool Equals(GameLanguageTable? other) => other is not null && this.mBuildHandle.Equals(other.mBuildHandle);
 		#endregion
 
 		#region Initialization
@@ -278,7 +278,7 @@ namespace KSoft.Blam.Localization
 		{
 			bool reading = s.IsReading;
 
-			var system = KSoft.Debug.TypeCheck.CastReference<LanguageSystem>(s.UserData);
+			var system = KSoft.Debug.TypeCheck.CastReference<LanguageSystem>(s.UserData!);
 
 			Engine.EngineBuildHandle.SerializeWithBaseline(s, system.Engine.RootBuildHandle,
 				ref mBuildHandle);

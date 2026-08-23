@@ -77,7 +77,7 @@ namespace KSoft.Blam
 
 		internal const int IndexOfByPropertyNotFoundResult = int.MinValue;
 		internal static int IndexOfByProperty<T, TProp>(this IList<T> list, TProp value, Func<T, TProp> property
-			, Func<TProp, string> generateNotFoundMessage = null)
+			, Func<TProp, string>? generateNotFoundMessage = null)
 			where TProp : IEquatable<TProp>
 		{
 			ArgumentNullException.ThrowIfNull(property);

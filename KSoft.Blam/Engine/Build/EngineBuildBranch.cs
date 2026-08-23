@@ -13,7 +13,7 @@ namespace KSoft.Blam.Engine
 			out kIndexBitCount);
 		#endregion
 
-		public EngineBuildRepository Repository { get; private set; }
+		public EngineBuildRepository Repository { get; private set; } = null!;
 
 		public EngineBuildHandle BranchHandle { get; private set; } = EngineBuildHandle.None;
 
@@ -21,7 +21,7 @@ namespace KSoft.Blam.Engine
 		public string ProjectName { get; private set; } = string.Empty;
 
 		#region ValidTargetPlatforms
-		Collections.BitSet mValidTargetPlatforms;
+		Collections.BitSet? mValidTargetPlatforms;
 		/// <summary>Platforms which all builds in this branch can target</summary>
 		public Collections.IReadOnlyBitSet ValidTargetPlatforms { get {
 			if (mValidTargetPlatforms == null)
@@ -69,7 +69,7 @@ namespace KSoft.Blam.Engine
 		/// <summary>See <see cref="Object.Equals"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			return object.ReferenceEquals(this, obj);
 		}
@@ -99,7 +99,7 @@ namespace KSoft.Blam.Engine
 			where TDoc : class
 			where TCursor : class
 		{
-			var repo = KSoft.Debug.TypeCheck.CastReference<EngineBuildRepository>(s.UserData);
+			var repo = KSoft.Debug.TypeCheck.CastReference<EngineBuildRepository>(s.UserData!);
 			if (s.IsReading)
 			{
 				Repository = repo;

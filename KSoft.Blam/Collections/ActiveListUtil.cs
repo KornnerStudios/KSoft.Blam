@@ -9,7 +9,7 @@ namespace KSoft.Collections
 		#region IBitStreamSerializable Members
 		public static void Serialize<T, TContext>(IO.BitStream s, ActiveList<T> list, int countBitLength,
 			TContext ctxt, Func<IO.BitStream, TContext, T> ctor,
-			IReadOnlyList<int> writeOrder = null)
+			IReadOnlyList<int>? writeOrder = null)
 			where T : class, IO.IBitStreamSerializable
 		{
 			ArgumentNullException.ThrowIfNull(list);
@@ -77,7 +77,7 @@ namespace KSoft.Collections
 			static void ReadElements(IO.TagElementStream<TDoc, TCursor, string> s, IEnumerable<TCursor> elements,
 				ActiveList<T> list,
 				TContext ctxt, Func<IO.TagElementStream<TDoc, TCursor, string>, TContext, T> ctor,
-				Func<TContext, TagElementStreamReadMode> getReadMode)
+				Func<TContext, TagElementStreamReadMode>? getReadMode)
 			{
 				var read_mode = getReadMode == null
 					? TagElementStreamReadMode.PostConstructor
@@ -106,7 +106,7 @@ namespace KSoft.Collections
 			public static void ReadElements(IO.TagElementStream<TDoc, TCursor, string> s, string elementName,
 				ActiveList<T> list,
 				TContext ctxt, Func<IO.TagElementStream<TDoc, TCursor, string>, TContext, T> ctor,
-				Func<TContext, TagElementStreamReadMode> getReadMode)
+				Func<TContext, TagElementStreamReadMode>? getReadMode)
 			{
 				ReadElements(s, s.ElementsByName(elementName), list, ctxt, ctor, getReadMode);
 			}
@@ -140,8 +140,8 @@ namespace KSoft.Collections
 		public static void Serialize<TDoc, TCursor, T, TContext>(IO.TagElementStream<TDoc, TCursor, string> s, string elementName,
 			ActiveList<T> list,
 			TContext ctxt, Func<IO.TagElementStream<TDoc, TCursor, string>, TContext, T> ctor,
-			Predicate<T> writeShouldSkip = null,
-			Func<TContext, TagElementStreamReadMode> getReadMode = null)
+			Predicate<T>? writeShouldSkip = null,
+			Func<TContext, TagElementStreamReadMode>? getReadMode = null)
 			where TDoc : class
 			where TCursor : class
 			where T : class, IO.ITagElementStringNameStreamable

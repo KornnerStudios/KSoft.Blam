@@ -6,12 +6,12 @@ namespace KSoft.Blam.Engine
 	internal sealed class BlamEngineSystem
 		: IO.ITagElementStringNameStreamable
 	{
-		public BlamEngine Engine { get; private set; }
+		public BlamEngine Engine { get; private set; } = null!;
 
-		internal EngineSystemAttribute SystemMetadata { get; private set; }
+		internal EngineSystemAttribute SystemMetadata { get; private set; } = null!;
 
 		/// <summary>Name of the file with the system's external definitions</summary>
-		public string ExternsFile { get; private set; }
+		public string ExternsFile { get; private set; } = null!;
 
 		internal bool SystemRequiresReferenceTracking => SystemMetadata.KeepExternsLoaded;
 
@@ -22,7 +22,7 @@ namespace KSoft.Blam.Engine
 		{
 			bool reading = s.IsReading;
 
-			var engine = KSoft.Debug.TypeCheck.CastReference<BlamEngine>(s.UserData);
+			var engine = KSoft.Debug.TypeCheck.CastReference<BlamEngine>(s.UserData!);
 			if (reading)
 			{
 				Engine = engine;
@@ -40,9 +40,9 @@ namespace KSoft.Blam.Engine
 				var system_guid = Values.KGuid.Empty;
 				s.StreamAttribute("guid", ref system_guid);
 
-				SystemMetadata = EngineRegistry.TryGetRegisteredSystem(system_guid);
+				var system_metadata = EngineRegistry.TryGetRegisteredSystem(system_guid);
 
-				if (SystemMetadata == null)
+				if (system_metadata == null)
 				{
 					string msg = string.Format(Util.InvariantCultureInfo,
 						"No system is registered with the GUID {0}",
@@ -50,6 +50,8 @@ namespace KSoft.Blam.Engine
 
 					s.ThrowReadException(new System.IO.InvalidDataException(msg));
 				}
+
+				SystemMetadata = system_metadata!;
 			}
 			else
 			{

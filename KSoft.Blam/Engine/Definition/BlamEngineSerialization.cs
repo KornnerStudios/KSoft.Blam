@@ -14,7 +14,7 @@ namespace KSoft.Blam.Engine
 
 			if (s.IsReading)
 			{
-				string invalid_guid_msg = null;
+				string? invalid_guid_msg = null;
 
 				if (systemGuid == Values.KGuid.Empty)
 				{
@@ -84,7 +84,7 @@ namespace KSoft.Blam.Engine
 		}
 
 		internal static void SerializePrototype<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
-			object _context, ref BlamEngine engine)
+			object? _context, ref BlamEngine engine)
 			where TDoc : class
 			where TCursor : class
 		{

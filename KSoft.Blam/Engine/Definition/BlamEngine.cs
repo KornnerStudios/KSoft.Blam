@@ -32,7 +32,7 @@ namespace KSoft.Blam.Engine
 		public override string ToString() => Name;
 
 		#region Engine System interfaces
-		Dictionary<Values.KGuid, EngineSystemBase> mActiveSystems;
+		Dictionary<Values.KGuid, EngineSystemBase> mActiveSystems = null!;
 
 		public bool SupportsSystem(Values.KGuid systemGuid)
 		{
@@ -41,7 +41,7 @@ namespace KSoft.Blam.Engine
 				throw new ArgumentException("System GUID must not be empty.", nameof(systemGuid));
 			}
 
-			return mSystemPrototypes.TryGetValue(systemGuid, out BlamEngineSystem /*proto_system*/_);
+			return mSystemPrototypes.TryGetValue(systemGuid, out _);
 		}
 
 		/// <summary>Only call me if you are <see cref="EngineSystemBase.RemoveReferenceAsync"/></summary>
@@ -69,7 +69,7 @@ namespace KSoft.Blam.Engine
 
 			var proto_system = mSystemPrototypes[systemMetadata.SystemGuid];
 
-			EngineSystemBase system;
+			EngineSystemBase? system;
 			lock (mActiveSystems)
 			{
 				if (!mActiveSystems.TryGetValue(systemMetadata.SystemGuid, out system))
@@ -79,7 +79,7 @@ namespace KSoft.Blam.Engine
 				}
 			}
 
-			return system;
+			return system!;
 		}
 		EngineSystemBase GetSystem(Values.KGuid systemGuid, EngineBuildHandle forBuild)
 		{
@@ -104,14 +104,14 @@ namespace KSoft.Blam.Engine
 
 			return GetNewOrExistingSystem(system_metadata);
 		}
-		EngineSystemBase TryGetSystem(Values.KGuid systemGuid)
+		EngineSystemBase? TryGetSystem(Values.KGuid systemGuid)
 		{
 			if (!SupportsSystem(systemGuid))
 			{
 				return null;
 			}
 
-			EngineSystemAttribute system_metadata = EngineRegistry.TryGetRegisteredSystem(systemGuid);
+			EngineSystemAttribute? system_metadata = EngineRegistry.TryGetRegisteredSystem(systemGuid);
 			if (system_metadata == null)
 			{
 				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
@@ -162,7 +162,7 @@ namespace KSoft.Blam.Engine
 			}
 
 			Values.KGuid system_guid = EngineSystemAttribute.GetSystemGuid<T>();
-			var system = (T)TryGetSystem(system_guid);
+			T? system = (T?)TryGetSystem(system_guid);
 
 			return system == null
 				? EngineSystemReference<T>.None
@@ -217,7 +217,7 @@ namespace KSoft.Blam.Engine
 				engine.BuildRepository.InitializeBuildHandles();
 			}
 		}
-		internal static EngineBuildBranch ResolveWellKnownEngineBranch(string engineName, string branchName)
+		internal static EngineBuildBranch? ResolveWellKnownEngineBranch(string engineName, string branchName)
 		{
 			ArgumentException.ThrowIfNullOrEmpty(engineName);
 			ArgumentException.ThrowIfNullOrEmpty(branchName);
@@ -232,7 +232,7 @@ namespace KSoft.Blam.Engine
 		public static bool IsValidIndex(int engineIndex) =>
 			engineIndex.IsNoneOrPositive() && engineIndex < EngineRegistry.Engines.Count;
 
-		static int EngineIdResolver(object _null, string name)
+		static int EngineIdResolver(object? _null, string name)
 		{
 			int id = TypeExtensions.kNone;
 
@@ -250,14 +250,14 @@ namespace KSoft.Blam.Engine
 
 			return id;
 		}
-		static readonly Func<object, string, int> EngineIdResolverSansKeyNotFoundException =
+		static readonly Func<object?, string, int> EngineIdResolverSansKeyNotFoundException =
 			(_null, name) => !string.IsNullOrEmpty(name)
 				? EngineRegistry.Engines.FindIndex(x => x.Name == name)
 				: TypeExtensions.kNone;
-		static readonly Func<object, int, string> EngineNameResolver =
+		static readonly Func<object?, int, string> EngineNameResolver =
 			(_null, id) => id.IsNotNone()
 				? EngineRegistry.Engines[id].Name
-				: null;
+				: null!;
 		#endregion
 	};
 }

@@ -15,7 +15,7 @@ namespace KSoft.Blam.Engine
 		#region SystemGuid util
 		const string kSystemGuidPropertyName = "SystemGuid";
 
-		static PropertyInfo GetSystemGuidPropertyInfo(Type systemType)
+		static PropertyInfo? GetSystemGuidPropertyInfo(Type systemType)
 		{
 			const BindingFlags k_property_binding_flags
 				= BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.DeclaredOnly;
@@ -49,7 +49,7 @@ namespace KSoft.Blam.Engine
 					systemType.Name, kSystemGuidPropertyName));
 			}
 
-			return (Values.KGuid)guid_prop.GetValue(null);
+			return (Values.KGuid)guid_prop.GetValue(null)!;
 		}
 		/// <summary>Get the system guid from an <see cref="EngineSystemBase"/> type</summary>
 		/// <typeparam name="T"></typeparam>
@@ -62,7 +62,7 @@ namespace KSoft.Blam.Engine
 		}
 		#endregion
 
-		public Type EngineSystemType { get; private set; }
+		public Type EngineSystemType { get; private set; } = null!;
 
 		public Values.KGuid SystemGuid { get; private set; }
 		public string GetSystemGuidString() => SystemGuid.ToString(Values.KGuid.kFormatHyphenated, Util.InvariantCultureInfo);
@@ -73,7 +73,7 @@ namespace KSoft.Blam.Engine
 				GetSystemGuidString(),
 				EngineSystemType);
 
-		EngineSystemCtorSignature mFactoryMethod;
+		EngineSystemCtorSignature mFactoryMethod = null!;
 
 		#region Parameters
 		/// <summary>
@@ -97,7 +97,7 @@ namespace KSoft.Blam.Engine
 		#region Overrides
 		public override int GetHashCode() => SystemGuid.GetHashCode();
 
-		public override bool Equals(object obj) =>
+		public override bool Equals(object? obj) =>
 			obj is EngineSystemAttribute objAttribute
 			&& objAttribute.SystemGuid == SystemGuid;
 
@@ -153,7 +153,7 @@ namespace KSoft.Blam.Engine
 			#endregion
 
 			#region Get and validate Guid
-			SystemGuid = (Values.KGuid)guid_prop.GetValue(null);
+			SystemGuid = (Values.KGuid)guid_prop.GetValue(null)!;
 
 			if (SystemGuid.IsEmpty)
 			{

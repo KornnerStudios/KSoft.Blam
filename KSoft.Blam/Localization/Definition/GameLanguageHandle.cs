@@ -132,7 +132,7 @@ namespace KSoft.Blam.Localization
 		/// <summary>See <see cref="Object.Equals"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (obj is GameLanguageHandle objHandle)
 			{
@@ -174,10 +174,10 @@ namespace KSoft.Blam.Localization
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <returns></returns>
-		int System.Collections.IComparer.Compare(object x, object y)
+		int System.Collections.IComparer.Compare(object? x, object? y)
 		{
-			KSoft.Debug.TypeCheck.CastValue(x, out GameLanguageHandle _x);
-			KSoft.Debug.TypeCheck.CastValue(y, out GameLanguageHandle _y);
+			KSoft.Debug.TypeCheck.CastValue(x!, out GameLanguageHandle _x);
+			KSoft.Debug.TypeCheck.CastValue(y!, out GameLanguageHandle _y);
 
 			return GameLanguageHandle.StaticCompare(_x, _y);
 		}
@@ -194,9 +194,9 @@ namespace KSoft.Blam.Localization
 		/// <summary>See <see cref="IComparable{T}.CompareTo"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		int IComparable.CompareTo(object obj)
+		int IComparable.CompareTo(object? obj)
 		{
-			KSoft.Debug.TypeCheck.CastValue(obj, out GameLanguageHandle _obj);
+			KSoft.Debug.TypeCheck.CastValue(obj!, out GameLanguageHandle _obj);
 
 			return GameLanguageHandle.StaticCompare(this, _obj);
 		}
