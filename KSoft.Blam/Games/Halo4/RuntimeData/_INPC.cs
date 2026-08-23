@@ -6,7 +6,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		: INotifyPropertyChanged
 	{
 		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		void NotifyPropertyChanged(PropertyChangedEventArgs args)
 		{
@@ -52,7 +52,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		: INotifyPropertyChanged
 	{
 		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		void NotifyPropertyChanged(PropertyChangedEventArgs args)
 		{

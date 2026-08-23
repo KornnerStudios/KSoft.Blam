@@ -125,7 +125,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		, IO.ITagElementStringNameStreamable
 	{
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-		public GameOptionsLoadoutPalette[] Palettes { get; protected set; }
+		public GameOptionsLoadoutPalette[] Palettes { get; protected set; } = null!;
 
 		public virtual bool IsDefault { get {
 			return Array.TrueForAll(Palettes, p => p.IsDefault);

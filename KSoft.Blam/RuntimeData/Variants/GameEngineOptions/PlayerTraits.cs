@@ -68,11 +68,11 @@ namespace KSoft.Blam.RuntimeData.Variants
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
-		public PlayerTraitsDamageBase Damage { get; protected set; }
-		public PlayerTraitsWeaponsBase Weapons { get; protected set; }
-		public PlayerTraitsMovementBase Movement { get; protected set; }
-		public PlayerTraitsAppearanceBase Appearance { get; protected set; }
-		public PlayerTraitsSensorsBase Sensors { get; protected set; }
+		public PlayerTraitsDamageBase Damage { get; protected set; } = null!;
+		public PlayerTraitsWeaponsBase Weapons { get; protected set; } = null!;
+		public PlayerTraitsMovementBase Movement { get; protected set; } = null!;
+		public PlayerTraitsAppearanceBase Appearance { get; protected set; } = null!;
+		public PlayerTraitsSensorsBase Sensors { get; protected set; } = null!;
 
 		public virtual bool IsUnchanged
 			=> Damage.IsUnchanged && Weapons.IsUnchanged && Movement.IsUnchanged && Appearance.IsUnchanged &&

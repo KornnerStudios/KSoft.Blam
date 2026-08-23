@@ -24,15 +24,15 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 		public ContentHeader Header { get; private set; }
 
-		public GameOptionsMisc OptionsMisc { get; protected set; }
-		public GameOptionsRepawning OptionsRespawning { get; protected set; }
+		public GameOptionsMisc OptionsMisc { get; protected set; } = null!;
+		public GameOptionsRepawning OptionsRespawning { get; protected set; } = null!;
 
 		public GameOptionsSocial OptionsSocial { get; protected set; } = new();
 
-		public GameOptionsMapOverrides OptionsMapOverrides { get; protected set; }
+		public GameOptionsMapOverrides OptionsMapOverrides { get; protected set; } = null!;
 
-		public GameOptionsTeamOptions TeamOptions { get; protected set; }
-		public GameOptionsLoadouts LoadoutOptions { get; protected set; }
+		public GameOptionsTeamOptions TeamOptions { get; protected set; } = null!;
+		public GameOptionsLoadouts LoadoutOptions { get; protected set; } = null!;
 
 		protected GameEngineBaseVariant(GameEngineVariant variantManager)
 		{

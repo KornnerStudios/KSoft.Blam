@@ -9,10 +9,10 @@ namespace KSoft.Blam.RuntimeData.Variants
 		public readonly int kBitCount;
 		public readonly float kRangeMin, kRangeMax;
 		public readonly bool kSigned, kUnknown;
-		public Type kValuesEnum;
+		public Type? kValuesEnum;
 
 		public OptionalRealArrayInfo(int len, int bits = 16, float min = -200.0f, float max = 200.0f, bool isSigned = true, bool unknown = true,
-			Type valuesEnum = null)
+			Type? valuesEnum = null)
 		{
 			kLength = len;
 			kBitCount = bits;
@@ -133,13 +133,13 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			string[] names = kInfo.kValuesEnum.GetEnumNames();
+			string[] names = kInfo.kValuesEnum!.GetEnumNames();
 
 			foreach (var element in s.ElementsByName(kEntryElementName))
 			{
 				using (s.EnterCursorBookmark(element))
 				{
-					string name = null;
+					string name = null!;
 					s.ReadAttribute(kEntryAttrKeyName, ref name);
 
 					int name_index = Array.IndexOf(names, name);
@@ -160,7 +160,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			string[] names = kInfo.kValuesEnum.GetEnumNames();
+			string[] names = kInfo.kValuesEnum!.GetEnumNames();
 			for (int x = 0, mask = 1; x < kInfo.kLength; x++, mask <<= 1)
 			{
 				bool has_value = (mValidFlags & (uint)mask) != 0;

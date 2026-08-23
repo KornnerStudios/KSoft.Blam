@@ -172,7 +172,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		static readonly Func<GameEngineMegaloVariant, int, string> StringTableEntryNameResolver =
 			(ctxt, id) => id.IsNotNone()
 				? ctxt.StringTable[id].CodeName
-				: null;
+				: null!;
 		internal void SerializeStringTableIndex<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string attributeName, ref int stringIndex)
 			where TDoc : class
@@ -233,7 +233,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			}
 			else if (s.IsReading)
 			{
-				string option_name = null;
+				string option_name = null!;
 				s.ReadCursor(ref option_name);
 				bitIndex = variant.EngineDefinition.FromIndexName(
 					Megalo.Proto.MegaloScriptValueIndexTarget.Option, option_name);

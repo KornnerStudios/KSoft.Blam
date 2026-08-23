@@ -8,7 +8,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		, INotifyCollectionChanged
 	{
 		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		void NotifyPropertyChanged(PropertyChangedEventArgs args)
 		{
@@ -17,7 +17,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		#endregion
 
 		#region INotifyCollectionChanged
-		public event NotifyCollectionChangedEventHandler CollectionChanged;
+		public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
 		void NotifyItemsInitialized()
 		{

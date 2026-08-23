@@ -25,7 +25,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		Engine.EngineBuildHandle mGameBuild;
 		GameEngineType mType = GameEngineType.None;
 
-		public IGameEngineVariant Variant { get; private set; }
+		public IGameEngineVariant Variant { get; private set; } = null!;
 
 		public Engine.EngineBuildHandle GameBuild => mGameBuild;
 		public GameEngineType Type => mType;
@@ -64,7 +64,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 		void InitializeVariant()
 		{
-			var engine = GameBuild.Engine;
+			var engine = GameBuild.Engine!;
 
 			mLanguageSystemRef = engine.GetSystem<Localization.LanguageSystem>(GameBuild);
 
@@ -128,7 +128,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		}
 		#endregion
 
-		public GameEngineMegaloVariant TryGetMegaloVariant()
+		public GameEngineMegaloVariant? TryGetMegaloVariant()
 		{
 			if (!RequiresMegaloProtoSystem)
 			{

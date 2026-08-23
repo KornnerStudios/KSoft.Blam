@@ -37,7 +37,7 @@ namespace KSoft.Blam.RuntimeData
 		public int EngineCategoryIndex; // sbyte at runtime
 		public ContentAuthor Creator { get; private set; }
 		public ContentAuthor Modifier { get; private set; }
-		public string Title, Description;
+		public string Title = null!, Description = null!;
 		protected int unk280 = TypeExtensions.kNone;
 		public short HopperId = TypeExtensions.kNone;
 		public sbyte CampaignId = TypeExtensions.kNone; // pretty sure this is actually unsigned, but we use -1 to know when we're touching it in non-campaign cases
@@ -220,7 +220,9 @@ namespace KSoft.Blam.RuntimeData
 			}
 
 			s.StreamElement("Title", ref Title);
-			s.StreamElementOpt("Description", ref Description, Predicates.IsNotNullOrEmpty);
+			string? description = Description;
+			s.StreamElementOpt("Description", ref description, Predicates.IsNotNullOrEmpty);
+			Description = description ?? "";
 
 			if (Type == ContentType.Film || Type == ContentType.FilmClip)
 			{

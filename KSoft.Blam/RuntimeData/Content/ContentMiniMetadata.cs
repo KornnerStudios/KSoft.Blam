@@ -33,7 +33,7 @@ namespace KSoft.Blam.RuntimeData
 		public int MegaloCategoryIndex = TypeExtensions.kNone;
 		public int EngineIconIndex = TypeExtensions.kNone;
 		public bool unkA, unkB;
-		public string Author;
+		public string Author = null!;
 
 		protected ContentMiniMetadata(Engine.EngineBuildHandle buildHandle)
 		{
@@ -169,7 +169,7 @@ namespace KSoft.Blam.RuntimeData
 
 			string encoded_porition = containerName.Substring(1);
 
-			byte[] bits = kRadixEncoding.Decode(encoded_porition);
+			byte[] bits = kRadixEncoding.Decode(encoded_porition)!;
 			using (var ms = new System.IO.MemoryStream(bits))
 			using (var bs = new IO.BitStream(ms))
 			{

@@ -41,10 +41,12 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			where TCursor : class
 		{
 			s.StreamAttributeOpt("weight", ref Weight, Predicates.IsNotZero);
-			if (!s.StreamAttributeOpt("name", ref Name, Predicates.IsNotNullOrEmpty))
+			string? name = Name;
+			if (!s.StreamAttributeOpt("name", ref name, Predicates.IsNotNullOrEmpty))
 			{
-				Name = "";
+				name = "";
 			}
+			Name = name ?? "";
 		}
 		#endregion
 	};
@@ -130,9 +132,9 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		public int unk6; // sbyte at runtime
 		public int ResupplyTimeMin, ResupplyTimeMax; // seconds; shorts at runtime
 		public int unk12; // short at runtime
-		public string InitialDropSet;
+		public string InitialDropSet = null!;
 		public int unk36, InitialDropDelay; // short at runtime; inital drop set related?
-		public string RandomDropSet, PersonalDropSet, OrdnanceSubstitutions;
+		public string RandomDropSet = null!, PersonalDropSet = null!, OrdnanceSubstitutions = null!;
 		public bool CustomizePersonalOrdnance; // 0x4 at runtime
 		// right, left, down (middle), up? (not exposed; unused?)
 		[SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
@@ -152,7 +154,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		} }
 
 		const string kDefaultString = "\x3F";
-		static readonly Predicate<string> IsNotDefaultString = s => s != kDefaultString;
+		static readonly Predicate<string?> IsNotDefaultString = s => s != kDefaultString;
 			//s.Length != 1 || s[0] != 0x3F;
 
 		[SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
@@ -285,25 +287,33 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			{
 				if (bm.IsNotNull)
 				{
-					if (!s.StreamAttributeOpt("initial", ref InitialDropSet, IsNotDefaultString))
+					string? initial_drop_set = InitialDropSet;
+					if (!s.StreamAttributeOpt("initial", ref initial_drop_set, IsNotDefaultString))
 					{
-						InitialDropSet = kDefaultString;
+						initial_drop_set = kDefaultString;
 					}
+					InitialDropSet = initial_drop_set ?? kDefaultString;
 
-					if (!s.StreamAttributeOpt("random", ref RandomDropSet, IsNotDefaultString))
+					string? random_drop_set = RandomDropSet;
+					if (!s.StreamAttributeOpt("random", ref random_drop_set, IsNotDefaultString))
 					{
-						RandomDropSet = kDefaultString;
+						random_drop_set = kDefaultString;
 					}
+					RandomDropSet = random_drop_set ?? kDefaultString;
 
-					if (!s.StreamAttributeOpt("personal", ref PersonalDropSet, IsNotDefaultString))
+					string? personal_drop_set = PersonalDropSet;
+					if (!s.StreamAttributeOpt("personal", ref personal_drop_set, IsNotDefaultString))
 					{
-						PersonalDropSet = kDefaultString;
+						personal_drop_set = kDefaultString;
 					}
+					PersonalDropSet = personal_drop_set ?? kDefaultString;
 
-					if (!s.StreamAttributeOpt("ordnanceSubstitutions", ref OrdnanceSubstitutions, Predicates.IsNotNullOrEmpty))
+					string? ordnance_substitutions = OrdnanceSubstitutions;
+					if (!s.StreamAttributeOpt("ordnanceSubstitutions", ref ordnance_substitutions, Predicates.IsNotNullOrEmpty))
 					{
-						OrdnanceSubstitutions = "";
+						ordnance_substitutions = "";
 					}
+					OrdnanceSubstitutions = ordnance_substitutions ?? "";
 				}
 			}
 

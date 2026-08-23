@@ -47,7 +47,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		#region IBitStreamSerializable Members
 		public virtual void Serialize(IO.BitStream s)
 		{
-			var megalo = (GameEngineMegaloVariant)s.Owner;
+			var megalo = (GameEngineMegaloVariant)s.Owner!;
 
 			megalo.StreamStringTableIndexReference(s, ref NameStringIndex);
 			megalo.StreamStringTableIndexReference(s, ref DescriptionStringIndex);
@@ -60,7 +60,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			var variant = KSoft.Debug.TypeCheck.CastReference<GameEngineMegaloVariant>(s.Owner);
+			var variant = KSoft.Debug.TypeCheck.CastReference<GameEngineMegaloVariant>(s.Owner!);
 
 			variant.SerializeStringTableIndex(s, "nameIndex", ref NameStringIndex);
 			variant.SerializeStringTableIndex(s, "descIndex", ref DescriptionStringIndex);

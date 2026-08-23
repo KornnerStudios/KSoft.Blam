@@ -77,7 +77,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			var variant = (GameEngineMegaloVariant)s.Owner;
+			var variant = (GameEngineMegaloVariant)s.Owner!;
 
 			variant.SerializeStringTableIndex(s, "nameIndex", ref NameStringIndex);
 			variant.SerializeStringTableIndex(s, "descIndex", ref DescriptionStringIndex);
@@ -340,7 +340,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
 		{
-			var megalo = (GameEngineMegaloVariant)s.Owner;
+			var megalo = (GameEngineMegaloVariant)s.Owner!;
 
 			ValueData.Serialize(s, megalo);
 			if (ValueData.IsRangeValue)
@@ -358,7 +358,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			var variant = (GameEngineMegaloVariant)s.Owner;
+			var variant = (GameEngineMegaloVariant)s.Owner!;
 			ValueData.SerializeHeader(variant, s);
 
 			SerializeCodeName(s);

@@ -58,7 +58,9 @@ namespace KSoft.Blam.RuntimeData
 			s.StreamAttribute("timeStamp", ref TimeStamp);
 			s.StreamAttributeOpt("xuid", ref Xuid, Predicates.IsNotZero, NumeralBase.Hex);
 			s.StreamAttributeOpt("onlineId", ref IsOnlineId, Predicates.IsTrue);
-			s.StreamAttributeOpt("name", ref Name, Predicates.IsNotNullOrEmpty);
+			string? name = Name;
+			s.StreamAttributeOpt("name", ref name, Predicates.IsNotNullOrEmpty);
+			Name = name ?? "";
 		}
 		#endregion
 	};
