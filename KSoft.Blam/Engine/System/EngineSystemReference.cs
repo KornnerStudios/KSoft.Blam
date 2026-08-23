@@ -5,6 +5,7 @@ namespace KSoft.Blam.Engine
 {
 	/// <summary>Represents a lightweight reference to a <see cref="EngineSystemBase"/></summary>
 	/// <remarks>Should be declared in a using() statement, or as an object member that implements IDisposable (and disposes this)</remarks>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Manages a disposable engine-system reference.")]
 	public struct EngineSystemReference
 		: IDisposable
 	{
@@ -83,6 +84,7 @@ namespace KSoft.Blam.Engine
 
 	/// <summary>Represents a lightweight reference to a specific <see cref="EngineSystemBase"/> implementation</summary>
 	/// <remarks>Should be declared in a using() statement, or as an object member that implements IDisposable (and disposes this)</remarks>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Manages a disposable engine-system reference.")]
 	public struct EngineSystemReference<T>
 		: IDisposable
 		where T : EngineSystemBase

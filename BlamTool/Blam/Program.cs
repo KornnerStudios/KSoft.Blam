@@ -3,7 +3,7 @@ using Mono.Options;
 
 namespace KSoft.Tool
 {
-	class ProgramBlam : ProgramBase
+	sealed class ProgramBlam : ProgramBase
 	{
 		protected override Environment ProgramEnvironment => Environment.Blam;
 		public static void MainEntryPoint(List<string> args)

@@ -7,6 +7,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 	public struct GameOptionsSingleTeamEmblemInfo
 		: IO.IBitStreamSerializable
 		, IO.ITagElementStringNameStreamable
+		, System.IEquatable<GameOptionsSingleTeamEmblemInfo>
 	{
 		public byte ForegroundIndex, BackgroundIndex, Flags,
 				PrimaryColor, SecondaryColor, BackgroundColor;
@@ -21,6 +22,14 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			ForegroundIndex = BackgroundIndex = Flags = 0;
 			PrimaryColor = SecondaryColor = BackgroundColor = 1;
 		}
+
+		#region Overrides
+		public override readonly bool Equals(object? obj) => obj is GameOptionsSingleTeamEmblemInfo other && Equals(other);
+		public readonly bool Equals(GameOptionsSingleTeamEmblemInfo other) => ForegroundIndex == other.ForegroundIndex && BackgroundIndex == other.BackgroundIndex && Flags == other.Flags && PrimaryColor == other.PrimaryColor && SecondaryColor == other.SecondaryColor && BackgroundColor == other.BackgroundColor;
+		public static bool operator ==(GameOptionsSingleTeamEmblemInfo left, GameOptionsSingleTeamEmblemInfo right) => left.Equals(right);
+		public static bool operator !=(GameOptionsSingleTeamEmblemInfo left, GameOptionsSingleTeamEmblemInfo right) => !left.Equals(right);
+		public override readonly int GetHashCode() => System.HashCode.Combine(ForegroundIndex, BackgroundIndex, Flags, PrimaryColor, SecondaryColor, BackgroundColor);
+		#endregion
 
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)

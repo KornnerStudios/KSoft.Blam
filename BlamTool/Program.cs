@@ -15,7 +15,7 @@ using Mono.Options;
 
 namespace KSoft.Tool
 {
-	partial class Program : ProgramBase
+	sealed partial class Program : ProgramBase
 	{
 		protected override Environment ProgramEnvironment => Environment.None;
 

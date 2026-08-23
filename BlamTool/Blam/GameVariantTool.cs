@@ -10,7 +10,7 @@ namespace KSoft.Tool.Blam
 	using MegaloModel = KSoft.Blam.Megalo.Model;
 	using MegaloProto = KSoft.Blam.Megalo.Proto;
 
-	class GameVariantTool : ProgramBase
+	sealed class GameVariantTool : ProgramBase
 	{
 		protected override Environment ProgramEnvironment => Environment.Blam;
 		public static void MainEntryPoint(string helpName, List<string> args)

@@ -7,7 +7,7 @@ using KBlam = KSoft.Blam;
 
 namespace KSoft.Tool.Blam
 {
-	class ContentMiniMetadataTool : ProgramBase
+	sealed class ContentMiniMetadataTool : ProgramBase
 	{
 		protected override Environment ProgramEnvironment => Environment.Blam;
 		public static void MainEntryPoint(string helpName, List<string> args)
