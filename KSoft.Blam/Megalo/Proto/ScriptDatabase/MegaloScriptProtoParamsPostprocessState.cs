@@ -7,21 +7,21 @@ namespace KSoft.Blam.Megalo.Proto
 	[System.Reflection.Obfuscation(Exclude=false)]
 	struct MegaloScriptProtoParamsPostprocessState
 	{
-		readonly IMegaloScriptProtoAction mAction;
-		readonly MegaloScriptProtoCondition mCond;
+		readonly IMegaloScriptProtoAction mAction = null!;
+		readonly MegaloScriptProtoCondition mCond = null!;
 
 		/*public*/ MegaloScriptProtoParam[] ParamsBySigId { get; /*private*/ set; }
-		readonly TextWriter mErrorWriter;
-		string mErrorPrefix;
+		readonly TextWriter? mErrorWriter;
+		string mErrorPrefix = null!;
 		bool ParamSigIdsMatchIndex; // Params[x] == Params[sigId] is true for all params
 
-		public MegaloScriptProtoParamsPostprocessState(TextWriter errorWriter, IMegaloScriptProtoAction action) : this()
+		public MegaloScriptProtoParamsPostprocessState(TextWriter? errorWriter, IMegaloScriptProtoAction action) : this()
 		{
 			mAction = action;
 			ParamsBySigId = new MegaloScriptProtoParam[action.Parameters.Count];
 			mErrorWriter = errorWriter;
 		}
-		public MegaloScriptProtoParamsPostprocessState(TextWriter errorWriter, MegaloScriptProtoCondition cond) : this()
+		public MegaloScriptProtoParamsPostprocessState(TextWriter? errorWriter, MegaloScriptProtoCondition cond) : this()
 		{
 			mCond = cond;
 			ParamsBySigId = new MegaloScriptProtoParam[cond.Parameters.Count];
@@ -117,13 +117,10 @@ namespace KSoft.Blam.Megalo.Proto
 			bool contains_virtual_trigger_param;
 			if (mAction != null)
 			{
-				if (mAction is MegaloScriptProtoAction protoAction)
+				MegaloScriptProtoAction? protoAction = mAction as MegaloScriptProtoAction;
+				if (protoAction != null)
 				{
 					protoAction.InitializeParameterList();
-				}
-				else
-				{
-					protoAction = null;
 				}
 
 				PostprocessObjectWithParams(mAction, "Action", out contains_virtual_trigger_param);

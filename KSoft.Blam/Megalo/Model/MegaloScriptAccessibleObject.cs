@@ -34,10 +34,12 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
-			if (!s.StreamAttributeOpt("name", ref mCodeName, Predicates.IsNotNullOrEmpty))
+			string? code_name = mCodeName;
+			if (!s.StreamAttributeOpt("name", ref code_name, Predicates.IsNotNullOrEmpty))
 			{
-				mCodeName = "";
+				code_name = "";
 			}
+			mCodeName = code_name ?? "";
 		}
 		#endregion
 	};

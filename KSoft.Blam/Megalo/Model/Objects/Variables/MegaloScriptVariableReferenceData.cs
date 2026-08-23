@@ -46,7 +46,7 @@ namespace KSoft.Blam.Megalo.Model
 		internal static void Initialize(MegaloScriptModel model,
 			out MegaloScriptVariableReferenceData result, MegaloScriptVariableReferenceType refKind,
 			out Proto.MegaloScriptProtoVariableReferenceMember refTypeMember,
-			string refMemberName, string dataTypeName = null)
+			string refMemberName, string? dataTypeName = null)
 		{
 			result.mReferenceKind = refKind;
 
@@ -364,7 +364,7 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region IEquatable<MegaloScriptVariableReferenceData> Members
-		public override readonly bool Equals(object obj)
+		public override readonly bool Equals(object? obj)
 		{
 			if (obj is MegaloScriptVariableReferenceData other)
 			{

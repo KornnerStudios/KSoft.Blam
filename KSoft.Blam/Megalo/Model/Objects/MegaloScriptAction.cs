@@ -29,7 +29,7 @@ namespace KSoft.Blam.Megalo.Model
 		: MegaloScriptModelObjectWithParameters
 	{
 		public override MegaloScriptModelObjectType ObjectType { get { return MegaloScriptModelObjectType.Action; } }
-		public Proto.MegaloScriptProtoAction ProtoData { get; private set; }
+		public Proto.MegaloScriptProtoAction ProtoData { get; private set; } = null!;
 
 		internal void InitializeForType(MegaloScriptModel model, int actionType)
 		{

@@ -7,7 +7,7 @@ namespace KSoft.Blam.Megalo.Proto
 		: MegaloStaticDataNamedMappingObject
 	{
 		/// <summary>String stored in variant data</summary>
-		public string LookupName;
+		public string LookupName = null!;
 
 		#region ITagElementStringNameStreamable Members
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -24,7 +24,7 @@ namespace KSoft.Blam.Megalo.Proto
 		: MegaloStaticDataNamedObject
 	{
 		/// <summary>String stored in variant data</summary>
-		public string LookupName;
+		public string LookupName = null!;
 
 		#region ITagElementStringNameStreamable Members
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -45,8 +45,8 @@ namespace KSoft.Blam.Megalo.Proto
 
 		public bool IsAvailable { get { return Types.Count > 0; } }
 
-		public Dictionary<string, GameGlobalsOrdnance> LookupType { get; private set; }
-		public Dictionary<string, GameGlobalsOrdnanceSetEntry> LookupSet { get; private set; }
+		public Dictionary<string, GameGlobalsOrdnance> LookupType { get; private set; } = null!;
+		public Dictionary<string, GameGlobalsOrdnanceSetEntry> LookupSet { get; private set; } = null!;
 
 		internal GameGlobalsOrdnanceList(EngineLimits limits)
 		{

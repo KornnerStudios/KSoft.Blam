@@ -102,7 +102,7 @@ namespace KSoft.Blam.Megalo.Proto
 			}
 #pragma warning restore IDE0270 // Use coalesce expression
 
-			T db;
+			T? db;
 			lock (loadedDbs)
 			{
 				loadedDbs.TryGetValue(path, out db);
@@ -119,7 +119,7 @@ namespace KSoft.Blam.Megalo.Proto
 				await Task.Run(() => LoadDatabase(db, path)).ConfigureAwait(false);
 			}
 
-			return db;
+			return db!;
 		}
 
 		public Task<MegaloStaticDatabase> GetStaticDatabaseAsync(Engine.EngineBuildHandle forBuild)
@@ -150,7 +150,7 @@ namespace KSoft.Blam.Megalo.Proto
 		public static bool OutputMegaloDatabasePostprocessErrorTextToConsole { get; set; } = false;
 		static void PostprocessMegaloDatabase(MegaloScriptDatabase db, MegaloStaticDatabase associatedStaticDb)
 		{
-			System.IO.TextWriter errorOutput = null;
+			System.IO.TextWriter? errorOutput = null;
 			if (Blam.Program.RunningUnitTests || OutputMegaloDatabasePostprocessErrorTextToConsole)
 			{
 				errorOutput = Console.Out;

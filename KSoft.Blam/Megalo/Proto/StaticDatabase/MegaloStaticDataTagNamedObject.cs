@@ -10,7 +10,9 @@ namespace KSoft.Blam.Megalo.Proto
 		#region ITagElementStringNameStreamable Members
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			s.StreamAttributeOpt("tagName", ref Name, kIsAvailable);
+			string? name = Name;
+			s.StreamAttributeOpt("tagName", ref name, kIsAvailable);
+			Name = name ?? "";
 		}
 		#endregion
 	};

@@ -13,12 +13,15 @@ namespace KSoft.Blam.Megalo.Proto
 		{
 			base.Serialize(s);
 
-			if (!s.StreamAttributeOpt("name", ref Name, Predicates.IsNotNullOrEmpty) &&
+			string? name = Name;
+			if (!s.StreamAttributeOpt("name", ref name, Predicates.IsNotNullOrEmpty) &&
 				 s.IsReading)
 			{
-				Name = string.Format(Util.InvariantCultureInfo,
+				name = string.Format(Util.InvariantCultureInfo,
 					"Condition{0}", DBID.ToString(Util.InvariantCultureInfo));
 			}
+			Name = name ?? string.Format(Util.InvariantCultureInfo,
+				"Condition{0}", DBID.ToString(Util.InvariantCultureInfo));
 
 			s.StreamableElements("Param", Parameters);
 		}

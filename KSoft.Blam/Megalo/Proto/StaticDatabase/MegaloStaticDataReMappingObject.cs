@@ -7,7 +7,7 @@ namespace KSoft.Blam.Megalo.Proto
 		: IMegaloStaticDataMappingObject
 	{
 		public int TypeIndex;
-		public string TypeName;
+		public string TypeName = null!;
 
 		#region IMegaloStaticDataMappingObject Members
 		string IMegaloStaticDataMappingObject.TypeName	{ get { return TypeName; } }

@@ -15,7 +15,7 @@ namespace KSoft.Blam.Megalo.Model
 		protected IEnumerable<MegaloScriptTrigger> TriggersToProcess { get; set; }
 
 		protected MegaloScriptTriggerProcessor(MegaloScriptModel model,
-			IEnumerable<MegaloScriptTrigger> triggersToProcess = null)
+			IEnumerable<MegaloScriptTrigger>? triggersToProcess = null)
 		{
 			Model = model;
 			TriggersToProcess = triggersToProcess ?? Model.Triggers;

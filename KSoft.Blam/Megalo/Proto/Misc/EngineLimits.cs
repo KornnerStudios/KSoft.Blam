@@ -7,8 +7,8 @@ namespace KSoft.Blam.Megalo.Proto
 	{
 		#region Internal
 //		internal Collections.ActiveListDesc<Editor.LogicalGroupUI> TriggerGroupsDesc { get; private set; }
-		internal Collections.ActiveListDesc<Model.MegaloScriptVirtualTrigger> VirtualTriggersDesc { get; private set; }
-		internal Collections.ActiveListDesc<Model.MegaloScriptValueBase> ScriptValuesDesc { get; private set; }
+		internal Collections.ActiveListDesc<Model.MegaloScriptVirtualTrigger> VirtualTriggersDesc { get; private set; } = null!;
+		internal Collections.ActiveListDesc<Model.MegaloScriptValueBase> ScriptValuesDesc { get; private set; } = null!;
 		#endregion
 
 		#region Scripting
@@ -19,16 +19,16 @@ namespace KSoft.Blam.Megalo.Proto
 		/// <summary>#Hack for Reach, Reach, Reach</summary>
 		internal bool StreamConditionsAndActionsRefsAsRefs;
 
-		internal Collections.ActiveListDesc<Model.MegaloScriptUnionGroup> UnionGroupsDesc { get; private set; }
+		internal Collections.ActiveListDesc<Model.MegaloScriptUnionGroup> UnionGroupsDesc { get; private set; } = null!;
 
 		public ListLimitTraits Conditions = ListLimitTraits.Null;
-		internal Collections.ActiveListDesc<Model.MegaloScriptCondition> ConditionsDesc { get; private set; }
+		internal Collections.ActiveListDesc<Model.MegaloScriptCondition> ConditionsDesc { get; private set; } = null!;
 
 		public ListLimitTraits Actions = ListLimitTraits.Null;
-		internal Collections.ActiveListDesc<Model.MegaloScriptAction> ActionsDesc { get; private set; }
+		internal Collections.ActiveListDesc<Model.MegaloScriptAction> ActionsDesc { get; private set; } = null!;
 
 		public ListLimitTraits Triggers = ListLimitTraits.Null;
-		internal Collections.ActiveListDesc<Model.MegaloScriptTrigger> TriggersDesc { get; private set; }
+		internal Collections.ActiveListDesc<Model.MegaloScriptTrigger> TriggersDesc { get; private set; } = null!;
 
 		public bool Supports(MegaloScriptTriggerEntryPoints entryPoints)
 			=> (SupportedEntryPoints & entryPoints) == entryPoints;

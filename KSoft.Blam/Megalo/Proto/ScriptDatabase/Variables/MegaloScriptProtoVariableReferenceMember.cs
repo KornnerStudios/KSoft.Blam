@@ -10,14 +10,14 @@ namespace KSoft.Blam.Megalo.Proto
 
 		/// <summary>Not strictly engine based; our own markup for the reference type's value</summary>
 		public MegaloScriptProtoVariableDataType Type;
-		public string Name;
+		public string Name = null!;
 		public MegaloScriptProtoVariableReferenceMemberFlags Flags;
 		/// <summary>The 'data type' information</summary>
 		public MegaloScriptValueType EnumValueType;
 		/// <summary>How we should interpret 'data'</summary>
 		public MegaloScriptValueType ValueType;
 		/// <summary>What we should name 'data' (instead of just presenting it as 'data')</summary>
-		public string ValueName;
+		public string ValueName = null!;
 
 		public bool IsReadOnly =>	(Flags & MegaloScriptProtoVariableReferenceMemberFlags.Readonly) != 0;
 		public bool HasDataType =>	(Flags & MegaloScriptProtoVariableReferenceMemberFlags.HasDataType) != 0;
@@ -28,7 +28,7 @@ namespace KSoft.Blam.Megalo.Proto
 			where TDoc : class
 			where TCursor : class
 		{
-			var db = KSoft.Debug.TypeCheck.CastReference<MegaloScriptDatabase>(s.Owner);
+			var db = KSoft.Debug.TypeCheck.CastReference<MegaloScriptDatabase>(s.Owner!);
 			bool reading = s.IsReading;
 
 			s.StreamAttributeEnum("type", ref Type);

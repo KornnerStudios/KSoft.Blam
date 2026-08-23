@@ -17,8 +17,12 @@ namespace KSoft.Blam.Megalo.Proto
 		{
 			base.Serialize(s);
 
-			s.StreamAttributeOpt("groupTag", ref GroupTag, Predicates.IsNotNullOrEmpty);
-			s.StreamAttributeOpt("tagName", ref TagName, Predicates.IsNotNullOrEmpty);
+			string? group_tag = GroupTag;
+			s.StreamAttributeOpt("groupTag", ref group_tag, Predicates.IsNotNullOrEmpty);
+			GroupTag = group_tag ?? "";
+			string? tag_name = TagName;
+			s.StreamAttributeOpt("tagName", ref tag_name, Predicates.IsNotNullOrEmpty);
+			TagName = tag_name ?? "";
 		}
 		#endregion
 	};
@@ -37,10 +41,18 @@ namespace KSoft.Blam.Megalo.Proto
 		{
 			base.Serialize(s);
 
-			s.StreamAttributeOpt("desc", ref DescriptionId, Predicates.IsNotNullOrEmpty);
-			s.StreamAttributeOpt("header", ref HeaderId, Predicates.IsNotNullOrEmpty);
-			s.StreamAttributeOpt("help", ref HelpId, Predicates.IsNotNullOrEmpty);
-			s.StreamAttributeOpt("icon", ref IconId, Predicates.IsNotNullOrEmpty);
+			string? description_id = DescriptionId;
+			s.StreamAttributeOpt("desc", ref description_id, Predicates.IsNotNullOrEmpty);
+			DescriptionId = description_id ?? "";
+			string? header_id = HeaderId;
+			s.StreamAttributeOpt("header", ref header_id, Predicates.IsNotNullOrEmpty);
+			HeaderId = header_id ?? "";
+			string? help_id = HelpId;
+			s.StreamAttributeOpt("help", ref help_id, Predicates.IsNotNullOrEmpty);
+			HelpId = help_id ?? "";
+			string? icon_id = IconId;
+			s.StreamAttributeOpt("icon", ref icon_id, Predicates.IsNotNullOrEmpty);
+			IconId = icon_id ?? "";
 		}
 		#endregion
 	};

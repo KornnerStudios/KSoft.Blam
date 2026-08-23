@@ -26,7 +26,7 @@ namespace KSoft.Blam.Megalo.Model
 			return theObject;
 		}
 
-		public MegaloScriptModelObject GetModelObjectFromHandle(MegaloScriptModelObjectHandle handle)
+		public MegaloScriptModelObject? GetModelObjectFromHandle(MegaloScriptModelObjectHandle handle)
 		{
 			int id = handle.Id;
 			return handle.Type switch
@@ -42,7 +42,7 @@ namespace KSoft.Blam.Megalo.Model
 			};
 		}
 
-		public MegaloScriptModelObject this[MegaloScriptModelObjectHandle handle] => GetModelObjectFromHandle(handle);
+		public MegaloScriptModelObject? this[MegaloScriptModelObjectHandle handle] => GetModelObjectFromHandle(handle);
 	};
 
 	[System.Reflection.Obfuscation(Exclude=false)]
@@ -89,7 +89,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		void IO.IBitStreamSerializable.Serialize(IO.BitStream s)
 		{
-			Serialize((MegaloScriptModel)s.Owner, s);
+			Serialize((MegaloScriptModel)s.Owner!, s);
 		}
 		#endregion
 
@@ -137,7 +137,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		void IO.ITagElementStreamable<string>.Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			Serialize((MegaloScriptModel)s.Owner, s);
+			Serialize((MegaloScriptModel)s.Owner!, s);
 		}
 		#endregion
 	};

@@ -12,7 +12,9 @@ namespace KSoft.Blam.Megalo.Proto
 		{
 			base.Serialize(s);
 
-			s.StreamAttributeOpt("icon", ref IconId, Predicates.IsNotNullOrEmpty);
+			string? icon_id = IconId;
+			s.StreamAttributeOpt("icon", ref icon_id, Predicates.IsNotNullOrEmpty);
+			IconId = icon_id ?? "";
 		}
 		#endregion
 	};

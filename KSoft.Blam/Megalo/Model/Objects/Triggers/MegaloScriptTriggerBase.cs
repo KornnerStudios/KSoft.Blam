@@ -30,8 +30,8 @@ namespace KSoft.Blam.Megalo.Model
 			var activate_action = CreateAction();
 			activate_action.InitializeForType(this, Database.ForEachAction.DBID);
 
-			var action_arg0 = CreateValue(Database.GetValueType("TriggerReference"))
-				as Megalo.Model.MegaloScriptIndexValue;
+			var action_arg0 = (CreateValue(Database.GetValueType("TriggerReference"))
+				as Megalo.Model.MegaloScriptIndexValue)!;
 			action_arg0.Value = triggerHandle.Id;
 
 			activate_action.Arguments.InitializeValues(action_arg0);
@@ -43,8 +43,8 @@ namespace KSoft.Blam.Megalo.Model
 			var vt_action = CreateAction();
 			vt_action.InitializeForType(this, Database.BeginAction.DBID);
 
-			var vt_action_arg0 = CreateValue(Database.GetValueType("VirtualTrigger"))
-				as Megalo.Model.MegaloScriptVirtualTriggerValue;
+			var vt_action_arg0 = (CreateValue(Database.GetValueType("VirtualTrigger"))
+				as Megalo.Model.MegaloScriptVirtualTriggerValue)!;
 			vt_action_arg0.VirtualTriggerHandle = virtualTriggerHandle;
 
 			vt_action.Arguments.InitializeValues(vt_action_arg0);
@@ -70,7 +70,7 @@ namespace KSoft.Blam.Megalo.Model
 				throw new ArgumentException("Trigger handle cannot be NONE.", nameof(triggerId));
 			}
 
-			var trigger = (MegaloScriptTriggerBase)this[triggerId];
+			MegaloScriptTriggerBase? trigger = (MegaloScriptTriggerBase?)this[triggerId];
 			if (trigger == null)
 			{
 				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,

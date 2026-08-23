@@ -4,9 +4,9 @@ namespace KSoft.Blam.Megalo.Model
 {
 	partial class MegaloScriptModel
 	{
-		internal MegaloScriptModelCompilerState mCompilerState;
-		internal MegaloScriptModelDecompilerState mDecompilerState;
-		internal Action<MegaloScriptModel> CompilePostprocess;
+		internal MegaloScriptModelCompilerState mCompilerState = null!;
+		internal MegaloScriptModelDecompilerState mDecompilerState = null!;
+		internal Action<MegaloScriptModel>? CompilePostprocess;
 
 		protected virtual void Compile()
 		{
@@ -40,7 +40,7 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		void EndCompile()
 		{
-			mCompilerState = null;
+			mCompilerState = null!;
 		}
 
 		void BeginDecompile()
@@ -51,7 +51,7 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		void EndDecompile()
 		{
-			mDecompilerState = null;
+			mDecompilerState = null!;
 		}
 	};
 

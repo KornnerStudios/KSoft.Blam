@@ -9,7 +9,7 @@ namespace KSoft.Blam.Megalo.Proto
 		, IMegaloScriptProtoObjectWithParams
 	{
 		public int DBID;
-		public string Name;
+		public string Name = null!;
 
 		#region ITagElementStringNameStreamable Members
 		public virtual void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -24,7 +24,7 @@ namespace KSoft.Blam.Megalo.Proto
 		int IMegaloScriptProtoObject.DBID => DBID;
 		string IMegaloScriptProtoObject.Name => Name;
 		public abstract IReadOnlyList<MegaloScriptProtoParam> ParameterList { get; }
-		public IReadOnlyList<MegaloScriptProtoParam> ParametersBySigId	{ get; private set; }
+		public IReadOnlyList<MegaloScriptProtoParam> ParametersBySigId	{ get; private set; } = null!;
 		public bool ContainsObjectTypeParameter							{ get; set; }
 		/// <summary>Do the SigId's not match the parameter list order?</summary>
 		public bool ParametersRequireAccessBySigId => ParametersBySigId != null;

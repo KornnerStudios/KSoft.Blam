@@ -85,9 +85,9 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region IEquatable<MegaloScriptToken> Members
-		public bool Equals(MegaloScriptToken other)
+		public bool Equals(MegaloScriptToken? other)
 		{
-			return Type == other.Type && Value.Equals(other.Value);
+			return other is not null && Type == other.Type && Value.Equals(other.Value);
 		}
 		#endregion
 	};

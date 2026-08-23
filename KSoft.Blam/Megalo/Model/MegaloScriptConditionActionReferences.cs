@@ -77,7 +77,7 @@ namespace KSoft.Blam.Megalo.Model
 
 			// We do conditions second as to keep the execute-before-action handling
 			// simple. Although, insert operations aren't computationally simple...
-			MegaloScriptUnionGroup global_union_group = null;
+			MegaloScriptUnionGroup? global_union_group = null;
 			for (int prev_union_group_id = TypeExtensions.kNone,
 				x = cond_count-1, id = first_cond+x; x >= 0; x--, id--)
 			{
@@ -98,7 +98,7 @@ namespace KSoft.Blam.Megalo.Model
 					prev_union_group_id = cond.UnionGroup;
 					global_union_group = Model.CreateUnionGroup();
 				}
-				global_union_group.Add(cond);
+				global_union_group!.Add(cond);
 			}
 		}
 	};

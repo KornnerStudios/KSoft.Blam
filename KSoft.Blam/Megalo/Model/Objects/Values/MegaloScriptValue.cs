@@ -110,9 +110,9 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
-			string value_type_name = null;
+			string value_type_name = null!;
 			s.ReadAttribute(kTypeAttributeName, ref value_type_name);
-			return db.GetValueType(value_type_name);
+			return db.GetValueType(value_type_name!);
 		}
 
 		internal static void SerializeValueForEmbed<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s,
@@ -121,7 +121,7 @@ namespace KSoft.Blam.Megalo.Model
 			where TCursor : class
 		{
 			bool is_global = false;
-			MegaloScriptValueBase value = null;
+			MegaloScriptValueBase? value = null;
 
 			if (s.IsReading)
 			{
@@ -197,9 +197,9 @@ namespace KSoft.Blam.Megalo.Model
 		#region IEquatable<MegaloScriptValueBase> Members
 		protected abstract bool ValueEquals(MegaloScriptValueBase other);
 
-		public bool Equals(MegaloScriptValueBase other)
+		public bool Equals(MegaloScriptValueBase? other)
 		{
-			return ValueType.Equals(other.ValueType) && ValueEquals(other);
+			return other is not null && ValueType.Equals(other.ValueType) && ValueEquals(other);
 		}
 		#endregion
 	};

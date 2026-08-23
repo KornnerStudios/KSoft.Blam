@@ -9,9 +9,9 @@ namespace KSoft.Blam.Megalo.Proto
 		: MegaloScriptProtoObjectWithParams
 		, IMegaloScriptProtoAction
 	{
-		IReadOnlyList<MegaloScriptProtoParam> mInOrderParams;
+		IReadOnlyList<MegaloScriptProtoParam> mInOrderParams = null!;
 
-		public IMegaloScriptProtoAction Template;
+		public IMegaloScriptProtoAction Template = null!;
 		public MegaloScriptProtoActionParameters Parameters { get; private set; }
 		public MegaloScriptProtoActionFlags Flags;
 		/// <summary>Is this action really a wrapper for a virtual trigger? Eg, a branch</summary>
@@ -27,14 +27,17 @@ namespace KSoft.Blam.Megalo.Proto
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
 			base.Serialize(s);
-			var db = (MegaloScriptDatabase)s.Owner;
+			var db = (MegaloScriptDatabase)s.Owner!;
 
-			if (!s.StreamAttributeOpt("name", ref Name, Predicates.IsNotNullOrEmpty) &&
+			string? name = Name;
+			if (!s.StreamAttributeOpt("name", ref name, Predicates.IsNotNullOrEmpty) &&
 				 s.IsReading)
 			{
-				Name = string.Format(Util.InvariantCultureInfo,
+				name = string.Format(Util.InvariantCultureInfo,
 					"Action{0}", DBID.ToString(Util.InvariantCultureInfo));
 			}
+			Name = name ?? string.Format(Util.InvariantCultureInfo,
+				"Action{0}", DBID.ToString(Util.InvariantCultureInfo));
 
 			if (db.SerializeProtoActionReference(s, "template", ref Template) && Template == null)
 			{

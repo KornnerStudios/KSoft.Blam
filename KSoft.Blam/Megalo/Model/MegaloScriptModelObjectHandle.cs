@@ -90,9 +90,9 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region IComparer<MegaloScriptModelObjectHandle> Members
-		readonly int System.Collections.IComparer.Compare(object x, object y)
+		readonly int System.Collections.IComparer.Compare(object? x, object? y)
 		{
-			return Compare((MegaloScriptModelObjectHandle)x, (MegaloScriptModelObjectHandle)y);
+			return Compare((MegaloScriptModelObjectHandle)x!, (MegaloScriptModelObjectHandle)y!);
 		}
 
 		public readonly int Compare(MegaloScriptModelObjectHandle x, MegaloScriptModelObjectHandle y)
@@ -109,9 +109,9 @@ namespace KSoft.Blam.Megalo.Model
 		/// <summary>See <see cref="IComparable{T}.CompareTo"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		readonly int IComparable.CompareTo(object obj)
+		readonly int IComparable.CompareTo(object? obj)
 		{
-			KSoft.Debug.TypeCheck.CastValue(obj, out MegaloScriptModelObjectHandle _obj);
+			KSoft.Debug.TypeCheck.CastValue(obj!, out MegaloScriptModelObjectHandle _obj);
 
 			return MegaloScriptModelObjectHandle.StaticCompare(this, _obj);
 		}
@@ -136,7 +136,7 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region Overrides
-		public override readonly bool Equals(object obj)
+		public override readonly bool Equals(object? obj)
 		{
 			if (obj is MegaloScriptModelObjectHandle objHandle)
 			{
@@ -214,9 +214,9 @@ namespace KSoft.Blam.Megalo.Model
 
 			// Only try to recreate when we're reading and the script wasn't streamed without IDs
 			// Else, Serialize would have already created
-			MegaloScriptModelObject obj = reading && !streamed_sans_id ?
+			MegaloScriptModelObject obj = (reading && !streamed_sans_id ?
 				Recreate(model, handle)
-				: model[handle];
+				: model[handle])!;
 			obj.Serialize(model, s);
 		}
 		internal static void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, MegaloScriptModel model,

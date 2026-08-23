@@ -12,7 +12,7 @@ namespace KSoft.Blam.Megalo.Proto
 	public sealed class MegaloScriptEnum
 		: IO.ITagElementStringNameStreamable
 	{
-		public string Name;
+		public string Name = null!;
 
 		public List<string> Members { get; private set; } = new();
 		public Dictionary<string, int> NameToIndex { get; private set; } = new();

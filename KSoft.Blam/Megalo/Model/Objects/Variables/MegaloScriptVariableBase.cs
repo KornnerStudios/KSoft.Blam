@@ -42,7 +42,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		void IO.IBitStreamSerializable.Serialize(IO.BitStream s)
 		{
-			Serialize((MegaloScriptModel)s.Owner, s);
+			Serialize((MegaloScriptModel)s.Owner!, s);
 		}
 		#endregion
 
@@ -66,7 +66,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		void IO.ITagElementStreamable<string>.Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			Serialize((MegaloScriptModel)s.Owner, s);
+			Serialize((MegaloScriptModel)s.Owner!, s);
 		}
 		#endregion
 	};

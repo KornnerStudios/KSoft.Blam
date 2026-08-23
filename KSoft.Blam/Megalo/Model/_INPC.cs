@@ -7,7 +7,7 @@ namespace KSoft.Blam.Megalo.Model
 		: INotifyPropertyChanged
 	{
 		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		protected void NotifyPropertyChanged(PropertyChangedEventArgs args)
 		{
@@ -36,7 +36,7 @@ namespace KSoft.Blam.Megalo.Model
 	partial class MegaloScriptAccessibleObjectBase
 	{
 		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		protected void NotifyPropertyChanged(PropertyChangedEventArgs args)
 		{
@@ -57,7 +57,7 @@ namespace KSoft.Blam.Megalo.Model
 		: INotifyPropertyChanged
 	{
 		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		protected void NotifyPropertyChanged(PropertyChangedEventArgs args)
 		{
@@ -85,7 +85,7 @@ namespace KSoft.Blam.Megalo.Model
 		: INotifyCollectionChanged
 	{
 		#region INotifyCollectionChanged
-		public event NotifyCollectionChangedEventHandler CollectionChanged;
+		public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
 		protected void NotifyItemsInitialized()
 		{
@@ -104,7 +104,7 @@ namespace KSoft.Blam.Megalo.Model
 		: INotifyCollectionChanged
 	{
 		#region INotifyCollectionChanged
-		public event NotifyCollectionChangedEventHandler CollectionChanged;
+		public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
 		void NotifyItemChanged(int index, MegaloScriptModelObjectHandle oldValue, MegaloScriptModelObjectHandle newValue)
 		{
@@ -160,7 +160,7 @@ namespace KSoft.Blam.Megalo.Model
 		, INotifyPropertyChanged
 	{
 		#region INotifyCollectionChanged
-		public event NotifyCollectionChangedEventHandler CollectionChanged;
+		public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
 		void NotifyItemsInitialized()
 		{
@@ -194,7 +194,7 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		void NotifyPropertyChanged(PropertyChangedEventArgs args)
 		{
@@ -236,7 +236,7 @@ namespace KSoft.Blam.Megalo.Model
 		: INotifyPropertyChanged
 	{
 		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		protected void NotifyPropertyChanged(PropertyChangedEventArgs args)
 		{
@@ -464,4 +464,3 @@ namespace KSoft.Blam.Megalo.Model
 			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameObjectFilter x) => x.Type);
 	};
 }
-

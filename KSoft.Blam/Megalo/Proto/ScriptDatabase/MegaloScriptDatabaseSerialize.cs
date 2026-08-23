@@ -6,7 +6,7 @@ namespace KSoft.Blam.Megalo.Proto
 	{
 		/// <summary>Name of the value type to use when there's no value type specified</summary>
 		const string kNoValueTypeName = "None";
-		static bool ValueTypeNameIsNotNone(string name)
+		static bool ValueTypeNameIsNotNone(string? name)
 			=> !string.IsNullOrEmpty(name) && name != kNoValueTypeName;
 
 		internal bool SerializeValueTypeReference<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
@@ -17,15 +17,17 @@ namespace KSoft.Blam.Megalo.Proto
 			bool streamed = true;
 			bool reading = s.IsReading;
 
-			string type_name = reading ? null : ValueTypeNames[type.NameIndex];
+			string type_name = reading ? null! : ValueTypeNames[type.NameIndex];
 			if (isOptional)
 			{
-				streamed = s.StreamAttributeOpt(attributeName, ref type_name, ValueTypeNameIsNotNone);
+				string? optional_type_name = type_name;
+				streamed = s.StreamAttributeOpt(attributeName, ref optional_type_name, ValueTypeNameIsNotNone);
 
 				if (!streamed && reading)
 				{
-					type_name = kNoValueTypeName;
+					optional_type_name = kNoValueTypeName;
 				}
+				type_name = optional_type_name ?? kNoValueTypeName;
 			}
 			else
 			{
@@ -34,7 +36,7 @@ namespace KSoft.Blam.Megalo.Proto
 
 			if (reading)
 			{
-				type = GetValueType(type_name);
+				type = GetValueType(type_name!);
 			}
 
 			return streamed;
@@ -44,7 +46,7 @@ namespace KSoft.Blam.Megalo.Proto
 		static readonly Func<MegaloScriptDatabase, string, int> kEnumIdResolver =
 			(_db, name) => _db.Enums.FindLastIndex(x => name.Equals(x.Name, StringComparison.Ordinal)); // #NOTE_BLAM: we use FindLastIndex so that it is possible to override builtin enums
 		static readonly Func<MegaloScriptDatabase, int, string> kEnumNameResolver =
-			(_db, id) => id.IsNotNone() ? _db.Enums[id].Name : null;
+			(_db, id) => id.IsNotNone() ? _db.Enums[id].Name : null!;
 		internal bool SerializeEnumTypeReference<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string attributeName, ref int enumIndex, bool isOptional = false)
 			where TDoc : class
@@ -73,9 +75,9 @@ namespace KSoft.Blam.Megalo.Proto
 
 		#region SerializeActionTemplateReference
 		static readonly Func<MegaloScriptDatabase, string, MegaloScriptProtoActionTemplate> kActionTemplateResolver =
-			(_db, name) => _db.ActionTemplates.Find(x => name.Equals(x.Name, StringComparison.Ordinal));
+			(_db, name) => _db.ActionTemplates.Find(x => name.Equals(x.Name, StringComparison.Ordinal))!;
 		static readonly Func<MegaloScriptDatabase, MegaloScriptProtoActionTemplate, string> kActionTemplateNameResolver =
-			(_db, id) => id?.Name;
+			(_db, id) => (id?.Name)!;
 		internal bool SerializeActionTemplateReference<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string attributeName, ref MegaloScriptProtoActionTemplate template)
 			where TDoc : class
@@ -86,7 +88,7 @@ namespace KSoft.Blam.Megalo.Proto
 
 			if (!streamed && s.IsReading)
 			{
-				template = null;
+				template = null!;
 			}
 
 			return streamed;
@@ -95,12 +97,12 @@ namespace KSoft.Blam.Megalo.Proto
 
 		#region SerializeProtoActionReference
 		static readonly Func<MegaloScriptDatabase, string, IMegaloScriptProtoAction> kProtoActionResolver =
-			(_db, name) => (IMegaloScriptProtoAction)
+			(_db, name) => ((IMegaloScriptProtoAction?)
 				_db.ActionTemplates.Find(x => name.Equals(x.Name, StringComparison.Ordinal)) ??
-				_db.Actions.Find(x => name.Equals(x.Name, StringComparison.Ordinal))
+				_db.Actions.Find(x => name.Equals(x.Name, StringComparison.Ordinal)))!
 			;
 		static readonly Func<MegaloScriptDatabase, IMegaloScriptProtoAction, string> kProtoActionNameResolver =
-			(_db, id) => id?.Name;
+			(_db, id) => (id?.Name)!;
 		internal bool SerializeProtoActionReference<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string attributeName, ref IMegaloScriptProtoAction action)
 			where TDoc : class
@@ -111,7 +113,7 @@ namespace KSoft.Blam.Megalo.Proto
 
 			if (!streamed && s.IsReading)
 			{
-				action = null;
+				action = null!;
 			}
 
 			return streamed;
@@ -126,7 +128,7 @@ namespace KSoft.Blam.Megalo.Proto
 			bool reading = s.IsReading;
 
 			var base_type = reading ? MegaloScriptValueBaseType.None : value.BaseType;
-			string name = reading ? null : db.ValueTypeNames[value.NameIndex];
+			string name = reading ? null! : db.ValueTypeNames[value.NameIndex];
 			int bit_length = reading ? 0 : value.BitLength;
 
 			s.StreamAttributeEnum("baseType", ref base_type);
@@ -134,7 +136,7 @@ namespace KSoft.Blam.Megalo.Proto
 			bool has_bit_length = s.StreamAttributeOpt("bitLength", ref bit_length, Predicates.IsNotZero);
 
 			int name_index = reading ? db.ValueTypeNames.Count : -1;
-			if (reading) { db.ValueTypeNames.Add(name); }
+			if (reading) { db.ValueTypeNames.Add(name!); }
 
 			switch (base_type)
 			{

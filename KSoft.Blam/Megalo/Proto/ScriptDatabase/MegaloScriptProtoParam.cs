@@ -13,7 +13,7 @@ namespace KSoft.Blam.Megalo.Proto
 	{
 		public int SigId;
 		public MegaloScriptValueType Type;
-		public string Name;
+		public string Name = null!;
 		public MegaloScriptParamType Kind = MegaloScriptParamType.Input;
 		public bool Optional = false;
 
@@ -27,19 +27,22 @@ namespace KSoft.Blam.Megalo.Proto
 			where TDoc : class
 			where TCursor : class
 		{
-			var db = s.Owner as MegaloScriptDatabase;
+			var db = (s.Owner as MegaloScriptDatabase)!;
 			bool reading = s.IsReading;
 
 			//string type_name = reading ? null : db.ValueTypeNames[Type.NameIndex];
 
 			s.StreamAttributeOpt(kSigIdAttributeName, ref SigId, Predicates.IsNotZero);
 			db.SerializeValueTypeReference(s, kTypeAttributeName, ref Type);
-			if (!s.StreamAttributeOpt(kNameAttirbuteName, ref Name, Predicates.IsNotNullOrEmpty) &&
+			string? name = Name;
+			if (!s.StreamAttributeOpt(kNameAttirbuteName, ref name, Predicates.IsNotNullOrEmpty) &&
 				 reading)
 			{
-				Name = string.Format(Util.InvariantCultureInfo,
+				name = string.Format(Util.InvariantCultureInfo,
 					"Param{0}", SigId.ToString(Util.InvariantCultureInfo));
 			}
+			Name = name ?? string.Format(Util.InvariantCultureInfo,
+				"Param{0}", SigId.ToString(Util.InvariantCultureInfo));
 			s.StreamAttributeEnumOpt(kKindAttributeName, ref Kind);
 			s.StreamAttributeOpt("optional", ref Optional, Predicates.IsTrue);
 		}
@@ -70,7 +73,7 @@ namespace KSoft.Blam.Megalo.Proto
 			where TDoc : class
 			where TCursor : class
 		{
-			int key = TypeExtensions.kNone; string value = null;
+			int key = TypeExtensions.kNone; string value = null!;
 			s.StreamAttribute(kSigIdAttributeName, ref key);
 			s.StreamAttribute(kNameAttirbuteName, ref value);
 

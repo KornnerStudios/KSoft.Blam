@@ -53,7 +53,7 @@
 		#region ITagElementStringNameStreamable Members
 		internal static void SerializeValue<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s,
 			MegaloScriptValueType valueType, ref uint value,
-			IO.TagElementNodeType nodeType = IO.TagElementNodeType.Text, string nodeName = null)
+			IO.TagElementNodeType nodeType = IO.TagElementNodeType.Text, string? nodeName = null)
 			where TDoc : class
 			where TCursor : class
 		{
@@ -68,10 +68,10 @@
 				switch (nodeType)
 				{
 					case IO.TagElementNodeType.Element:
-						s.StreamElementIdAsString(nodeName,		ref value, id_resolving_ctxt, id_resolver, name_resolver);
+						s.StreamElementIdAsString(nodeName!,		ref value, id_resolving_ctxt, id_resolver, name_resolver);
 						break;
 					case IO.TagElementNodeType.Attribute:
-						s.StreamAttributeIdAsString(nodeName,	ref value, id_resolving_ctxt, id_resolver, name_resolver);
+						s.StreamAttributeIdAsString(nodeName!,	ref value, id_resolving_ctxt, id_resolver, name_resolver);
 						break;
 					case IO.TagElementNodeType.Text:
 						s.StreamCursorIdAsString(				ref value, id_resolving_ctxt, id_resolver, name_resolver);
@@ -82,8 +82,8 @@
 			{
 				switch (nodeType)
 				{
-					case IO.TagElementNodeType.Element:		s.StreamElement(nodeName,	ref value); break;
-					case IO.TagElementNodeType.Attribute:	s.StreamAttribute(nodeName,	ref value); break;
+					case IO.TagElementNodeType.Element:		s.StreamElement(nodeName!,	ref value); break;
+					case IO.TagElementNodeType.Attribute:	s.StreamAttribute(nodeName!,	ref value); break;
 					case IO.TagElementNodeType.Text:		s.StreamCursor(				ref value); break;
 				}
 			}

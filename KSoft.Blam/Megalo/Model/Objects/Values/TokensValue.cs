@@ -8,9 +8,9 @@
 	{
 		public int MaxTokens => ValueType.MaxTokens;
 
-		public MegaloScriptToken Token0 { get; private set; }
-		public MegaloScriptToken Token1 { get; private set; }
-		public MegaloScriptToken Token2 { get; private set; }
+		public MegaloScriptToken Token0 { get; private set; } = null!;
+		public MegaloScriptToken Token1 { get; private set; } = null!;
+		public MegaloScriptToken Token2 { get; private set; } = null!;
 		// #REVIEW_BLAM: I think there's engine support for up to 4 tokens...haven't seen any instances yet tho
 		#region StringIndex
 		int mStringIndex = -1;

@@ -15,7 +15,7 @@ namespace KSoft.Blam.Megalo.Model
 					continue;
 				}
 
-				Values[value_id] = null;
+				Values[value_id] = null!;
 			}
 		}
 	};

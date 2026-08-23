@@ -15,7 +15,7 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region Arguments
-		MegaloScriptArguments mArgs;
+		MegaloScriptArguments mArgs = null!;
 		public MegaloScriptArguments Arguments {
 			get { return mArgs; }
 			protected set { mArgs = value;

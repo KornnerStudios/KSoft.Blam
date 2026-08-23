@@ -9,8 +9,8 @@ namespace KSoft.Blam.Megalo.Proto
 		: IO.ITagElementStringNameStreamable
 		, IMegaloScriptProtoAction
 	{
-		public string Name;
-		public MegaloScriptProtoActionTemplate Parent;
+		public string Name = null!;
+		public MegaloScriptProtoActionTemplate Parent = null!;
 
 		public MegaloScriptProtoActionParameters Parameters { get; private set; }
 
@@ -24,7 +24,7 @@ namespace KSoft.Blam.Megalo.Proto
 			where TDoc : class
 			where TCursor : class
 		{
-			var db = KSoft.Debug.TypeCheck.CastReference<MegaloScriptDatabase>(s.Owner);
+			var db = KSoft.Debug.TypeCheck.CastReference<MegaloScriptDatabase>(s.Owner!);
 
 			s.StreamAttribute("name", ref Name);
 			if (db.SerializeActionTemplateReference(s, "template", ref Parent) && Parent == null)

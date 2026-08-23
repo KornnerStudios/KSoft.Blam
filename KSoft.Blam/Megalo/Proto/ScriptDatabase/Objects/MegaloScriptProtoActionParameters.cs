@@ -10,9 +10,9 @@ namespace KSoft.Blam.Megalo.Proto
 	{
 		readonly IMegaloScriptProtoAction mAction;
 
-		MegaloScriptProtoActionParameters mBase;
+		MegaloScriptProtoActionParameters mBase = null!;
 		readonly List<MegaloScriptProtoParam> mParams = new();
-		Dictionary<int, string> mNameOverrides;
+		Dictionary<int, string> mNameOverrides = null!;
 
 		public int Count { get; private set; }
 		public bool HasNameOverrides => mNameOverrides != null;
@@ -59,9 +59,9 @@ namespace KSoft.Blam.Megalo.Proto
 		}
 
 		public MegaloScriptProtoParam this[int index] { get {
-			if (index >= Count) { return null; }
+			if (index >= Count) { return null!; }
 
-			MegaloScriptProtoParam param = null;
+			MegaloScriptProtoParam param = null!;
 
 			if (mBase != null)
 			{
@@ -85,14 +85,14 @@ namespace KSoft.Blam.Megalo.Proto
 
 		public string GetParameterNameOverrideBySigId(int sigId)
 		{
-			if (sigId >= Count) { return null; }
+			if (sigId >= Count) { return null!; }
 
-			if (!HasNameOverrides || mNameOverrides.TryGetValue(sigId, out string name))
+			if (!HasNameOverrides || mNameOverrides.TryGetValue(sigId, out string? name))
 			{
 				name = mBase.GetParameterNameOverrideBySigId(sigId);
 			}
 
-			return name;
+			return name!;
 		}
 
 		#region ITagElementStringNameStreamable Members

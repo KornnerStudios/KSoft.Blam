@@ -23,7 +23,7 @@ namespace KSoft.Blam.Megalo.Proto
 		}
 
 		static void StreamType<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
-			object ctxt, ref MegaloScriptVariableType type)
+			object? ctxt, ref MegaloScriptVariableType type)
 			where TDoc : class
 			where TCursor : class
 		{
@@ -33,7 +33,7 @@ namespace KSoft.Blam.Megalo.Proto
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamableElements("Variable", Traits, (object)null, StreamType);
+			s.StreamableElements("Variable", Traits, (object?)null, StreamType);
 		}
 		#endregion
 	};

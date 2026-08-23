@@ -82,7 +82,7 @@ namespace KSoft.Blam.Megalo.Model
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
 		{
-			var model = (Model.MegaloScriptModel)s.Owner;
+			var model = (Model.MegaloScriptModel)s.Owner!;
 
 			model.MegaloVariant.StreamStringTableIndexPointer(s, ref mLabelStringIndex);
 			s.Stream(ref mValidParameters, 3, MegaloScriptObjectFilterValidParametersBitStreamer.Instance);
@@ -110,7 +110,7 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
-			var model = (Model.MegaloScriptModel)s.Owner;
+			var model = (Model.MegaloScriptModel)s.Owner!;
 
 			model.MegaloVariant.SerializeStringTableIndexOpt(s, "labelIndex", ref mLabelStringIndex);
 			SerializeCodeName(s);

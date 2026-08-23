@@ -10,14 +10,14 @@ namespace KSoft.Blam.Megalo.Proto
 		: IO.ITagElementStringNameStreamable
 	{
 		// old, temp setup used these globals
-		internal static MegaloScriptDatabase HaloReach, Halo4;
+		internal static MegaloScriptDatabase HaloReach = null!, Halo4 = null!;
 
 		public Engine.EngineBuildHandle EngineBuild { get; private set; }
 
 		public uint Version;
 
 		public EngineLimits Limits { get; private set; }
-		public MegaloStaticDatabase StaticDatabase { get; private set; }
+		public MegaloStaticDatabase StaticDatabase { get; private set; } = null!;
 
 		public List<SingleEncoding> SingleEncodings { get; private set; }
 		public List<MegaloScriptEnum> Enums { get; private set; }
@@ -40,8 +40,8 @@ namespace KSoft.Blam.Megalo.Proto
 		internal MegaloScriptValueType TeamDesignatorValueType;
 		internal MegaloScriptValueType ObjectTypeIndexValueType;
 
-		internal MegaloScriptProtoAction ForEachAction;
-		internal MegaloScriptProtoAction BeginAction;
+		internal MegaloScriptProtoAction ForEachAction = null!;
+		internal MegaloScriptProtoAction BeginAction = null!;
 
 		#region ObjectReferenceWithPlayerVarIndex
 		internal struct ProtoObjectReferenceWithPlayerVarIndex
@@ -250,29 +250,47 @@ namespace KSoft.Blam.Megalo.Proto
 		}
 		public MegaloScriptProtoCondition GetCondition(string conditionName)
 		{
-			if (NameToConditionMap.TryGetValue(conditionName, out MegaloScriptProtoCondition cond))
+			if (NameToConditionMap.TryGetValue(conditionName, out MegaloScriptProtoCondition? cond))
 			{
-				return cond;
+				return cond!;
 			}
 
 			throw new KeyNotFoundException(conditionName);
 		}
 		public MegaloScriptProtoAction GetAction(string actionName)
 		{
-			if (NameToActionMap.TryGetValue(actionName, out MegaloScriptProtoAction action))
+			if (NameToActionMap.TryGetValue(actionName, out MegaloScriptProtoAction? action))
 			{
-				return action;
+				return action!;
 			}
 
 			throw new KeyNotFoundException(actionName);
 		}
 
 		internal bool TryGetCondition(string conditionName, out MegaloScriptProtoCondition cond)
-			=> NameToConditionMap.TryGetValue(conditionName, out cond);
-		internal bool TryGetAction(string actionName, out MegaloScriptProtoAction action)
-			=> NameToActionMap.TryGetValue(actionName, out action);
+		{
+			if (NameToConditionMap.TryGetValue(conditionName, out MegaloScriptProtoCondition? found_condition))
+			{
+				cond = found_condition!;
+				return true;
+			}
 
-		public void Postprocess(MegaloStaticDatabase associatedStaticDb, TextWriter errorWriter = null)
+			cond = null!;
+			return false;
+		}
+		internal bool TryGetAction(string actionName, out MegaloScriptProtoAction action)
+		{
+			if (NameToActionMap.TryGetValue(actionName, out MegaloScriptProtoAction? found_action))
+			{
+				action = found_action!;
+				return true;
+			}
+
+			action = null!;
+			return false;
+		}
+
+		public void Postprocess(MegaloStaticDatabase associatedStaticDb, TextWriter? errorWriter = null)
 		{
 			ArgumentNullException.ThrowIfNull(associatedStaticDb);
 

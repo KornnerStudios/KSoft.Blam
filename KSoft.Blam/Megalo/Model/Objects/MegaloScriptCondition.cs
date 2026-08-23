@@ -99,7 +99,7 @@ namespace KSoft.Blam.Megalo.Model
 		: MegaloScriptModelObjectWithParameters
 	{
 		public override MegaloScriptModelObjectType ObjectType { get { return MegaloScriptModelObjectType.Condition; } }
-		public Proto.MegaloScriptProtoCondition ProtoData { get; private set; }
+		public Proto.MegaloScriptProtoCondition ProtoData { get; private set; } = null!;
 
 		#region Inverted
 		bool mInverted;

@@ -134,13 +134,13 @@ namespace KSoft.Blam.Megalo.Model
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHaloReach))
 			{
 				return new Games.HaloReach.Megalo.Model.MegaloScriptModelHaloReach(variantManager,
-					variant as Games.HaloReach.RuntimeData.Variants.GameEngineMegaloVariantHaloReach);
+					(variant as Games.HaloReach.RuntimeData.Variants.GameEngineMegaloVariantHaloReach)!);
 			}
 
 			if (gameBuild.IsWithinSameBranch(Engine.EngineRegistry.EngineBranchHalo4))
 			{
 				return new Games.Halo4.Megalo.Model.MegaloScriptModelHalo4(variantManager,
-					variant as Games.Halo4.RuntimeData.Variants.GameEngineMegaloVariantHalo4);
+					(variant as Games.Halo4.RuntimeData.Variants.GameEngineMegaloVariantHalo4)!);
 			}
 
 			throw new KSoft.Debug.UnreachableException(gameBuild.ToDisplayString());
@@ -328,7 +328,7 @@ namespace KSoft.Blam.Megalo.Model
 				(ctxt, id) =>
 					id.IsNotNone()
 					? ctxt.Model.ToIndexName(Proto.MegaloScriptValueIndexTarget.Trigger, id)
-					: null;
+					: null!;
 		};
 		#endregion
 
@@ -467,7 +467,7 @@ namespace KSoft.Blam.Megalo.Model
 		/// <returns></returns>
 		public MegaloScriptVariableReferenceData NewVarReference(MegaloScriptVariableReferenceType refKind,
 			string refMemberName, int dataValue = TypeExtensions.kNone,
-			string dataTypeName = null)
+			string? dataTypeName = null)
 		{
 			ArgumentException.ThrowIfNullOrEmpty(refMemberName);
 
@@ -491,7 +491,7 @@ namespace KSoft.Blam.Megalo.Model
 		/// <returns></returns>
 		public MegaloScriptVariableReferenceData NewVarReferenceWithEnumData(MegaloScriptVariableReferenceType refKind,
 			string refMemberName, string enumMemberName,
-			string dataTypeName = null)
+			string? dataTypeName = null)
 		{
 			ArgumentException.ThrowIfNullOrEmpty(refMemberName);
 			ArgumentException.ThrowIfNullOrEmpty(enumMemberName);
@@ -522,7 +522,7 @@ namespace KSoft.Blam.Megalo.Model
 		/// <returns></returns>
 		public MegaloScriptVariableReferenceData NewVarReferenceWithIndexData(MegaloScriptVariableReferenceType refKind,
 			string refMemberName, string indexName,
-			string dataTypeName = null)
+			string? dataTypeName = null)
 		{
 			ArgumentException.ThrowIfNullOrEmpty(refMemberName);
 			ArgumentNullException.ThrowIfNull(indexName);

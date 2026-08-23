@@ -235,7 +235,7 @@ namespace KSoft.Blam.Megalo.Proto
 		#endregion
 
 		#region Overrides
-		public override readonly bool Equals(object obj)
+		public override readonly bool Equals(object? obj)
 		{
 			if (obj is MegaloScriptValueType objValueType)
 			{
@@ -263,9 +263,9 @@ namespace KSoft.Blam.Megalo.Proto
 		/// <summary>See <see cref="IComparable{T}.CompareTo"/></summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		readonly int IComparable.CompareTo(object obj)
+		readonly int IComparable.CompareTo(object? obj)
 		{
-			KSoft.Debug.TypeCheck.CastValue(obj, out MegaloScriptValueType _obj);
+			KSoft.Debug.TypeCheck.CastValue(obj!, out MegaloScriptValueType _obj);
 
 			return MegaloScriptValueType.StaticCompare(this, _obj);
 		}

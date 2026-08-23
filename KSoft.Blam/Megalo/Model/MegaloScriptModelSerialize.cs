@@ -14,7 +14,7 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			if (objType == MegaloScriptModelObjectType.Condition && TagElementStreamSerializeFlags.UseConditionTypeNames())
 			{
-				string name = s.IsReading ? null : Database.Conditions[type].Name;
+				string name = s.IsReading ? null! : Database.Conditions[type].Name;
 				s.StreamAttribute("name", ref name);
 				if (s.IsReading)
 				{
@@ -31,7 +31,7 @@ namespace KSoft.Blam.Megalo.Model
 			}
 			else if (objType == MegaloScriptModelObjectType.Action && TagElementStreamSerializeFlags.UseActionTypeNames())
 			{
-				string name = s.IsReading ? null : Database.Actions[type].Name;
+				string name = s.IsReading ? null! : Database.Actions[type].Name;
 				s.StreamAttribute("name", ref name);
 				if (s.IsReading)
 				{
@@ -66,7 +66,7 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			if (s.IsReading)
 			{
-				string object_name = null;
+				string object_name = null!;
 				s.ReadCursor(ref object_name);
 				bitIndex = model.FromIndexName(Proto.MegaloScriptValueIndexTarget.ObjectType, object_name);
 			}

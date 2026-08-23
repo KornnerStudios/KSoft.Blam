@@ -7,10 +7,10 @@ namespace KSoft.Blam.Megalo.Proto
 		: IMegaloStaticDataNamedObject
 	{
 		public const string kUndefinedPrefix = "UNDEFINED";
-		protected static readonly Predicate<string> kIsAvailable =
+		protected static readonly Predicate<string?> kIsAvailable =
 			s => !string.IsNullOrEmpty(s) && !s.StartsWith(kUndefinedPrefix, StringComparison.Ordinal);
 
-		public string Name;
+		public string Name = null!;
 
 		internal void UpdateForUndefined(string suffix, int index)
 		{
@@ -52,7 +52,9 @@ namespace KSoft.Blam.Megalo.Proto
 		#region ITagElementStringNameStreamable Members
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			s.StreamAttributeOpt("name", ref Name, kIsAvailable);
+			string? name = Name;
+			s.StreamAttributeOpt("name", ref name, kIsAvailable);
+			Name = name ?? "";
 		}
 		#endregion
 	};

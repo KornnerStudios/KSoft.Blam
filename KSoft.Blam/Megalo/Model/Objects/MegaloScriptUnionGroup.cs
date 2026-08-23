@@ -25,7 +25,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		internal void HandleRemoval(MegaloScriptUnionGroup unionGroup)
 		{
-			UnionGroups[unionGroup.Id] = null;
+			UnionGroups[unionGroup.Id] = null!;
 		}
 
 		#region NewFrom* Utils
@@ -141,7 +141,7 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			Util.MarkUnusedVariable(ref s);
 
-			MegaloScriptUnionGroup prev_union_group = null;
+			MegaloScriptUnionGroup? prev_union_group = null;
 			foreach (var obj in elements)
 			{
 				if (obj.Type != MegaloScriptModelObjectType.Condition)

@@ -5,7 +5,7 @@ namespace KSoft.Blam.Megalo.Proto
 	public sealed class SingleEncoding
 		: IO.ITagElementStringNameStreamable
 	{
-		public string Name;
+		public string Name = null!;
 		public int BitLength;
 		public float Min, Max;
 		public bool IsSigned;

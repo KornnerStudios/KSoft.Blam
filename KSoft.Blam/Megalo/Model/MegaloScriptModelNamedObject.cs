@@ -31,10 +31,12 @@ namespace KSoft.Blam.Megalo.Model
 			where TDoc : class
 			where TCursor : class
 		{
-			if (!s.StreamAttributeOpt("name", ref mName, Predicates.IsNotNullOrEmpty))
+			string? name = mName;
+			if (!s.StreamAttributeOpt("name", ref name, Predicates.IsNotNullOrEmpty))
 			{
-				mName = "";
+				name = "";
 			}
+			mName = name ?? "";
 		}
 		public override void Serialize<TDoc, TCursor>(MegaloScriptModel model, IO.TagElementStream<TDoc, TCursor, string> s)
 		{
