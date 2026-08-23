@@ -43,7 +43,7 @@ namespace KSoft.Blam.Engine
 				{
 					foreach (var branch in engine.BuildRepository.Branches)
 					{
-						if (string.Compare(branch.Name, branchNameToFind, StringComparison.OrdinalIgnoreCase)==0)
+						if (string.Equals(branch.Name, branchNameToFind, StringComparison.OrdinalIgnoreCase))
 						{
 							found_handle = branch.BranchHandle;
 							goto exit;
@@ -149,7 +149,7 @@ namespace KSoft.Blam.Engine
 			{
 				foreach (var kvp in ExportedBuildsByName)
 				{
-					if (string.Compare(kvp.Key, exportedNameToFind, StringComparison.OrdinalIgnoreCase)==0)
+					if (string.Equals(kvp.Key, exportedNameToFind, StringComparison.OrdinalIgnoreCase))
 					{
 						found_revision = kvp.Value;
 						break;
