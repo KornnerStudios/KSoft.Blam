@@ -37,7 +37,7 @@ namespace KSoft.Blam.Engine
 		/// <summary>Returns a unique 32-bit identifier for this object based on its exposed properties</summary>
 		/// <returns></returns>
 		/// <see cref="Object.GetHashCode"/>
-		public override int GetHashCode() => Name.GetHashCode();
+		public override int GetHashCode() => Name.GetHashCode(StringComparison.Ordinal);
 		/// <summary>Returns a string representation of this object</summary>
 		/// <returns><see cref="Name"/></returns>
 		public override string ToString()

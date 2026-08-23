@@ -1,6 +1,7 @@
 ﻿
 namespace KSoft.Blam.Megalo.Model
 {
+	using System;
 	using Variants = RuntimeData.Variants;
 
 	[System.Reflection.Obfuscation(Exclude=false)]
@@ -223,7 +224,7 @@ namespace KSoft.Blam.Megalo.Model
 					value_type.IndexTarget == Proto.MegaloScriptValueIndexTarget.Option)
 				{
 					var option = Variant.UserDefinedOptions[variable.Var.Data];
-					sb.Append(option.CodeName.Replace(" ", ""));
+					sb.Append(option.CodeName.Replace(" ", "", StringComparison.Ordinal));
 				}
 				else
 				{
@@ -245,7 +246,7 @@ namespace KSoft.Blam.Megalo.Model
 					value_type.IndexTarget == Proto.MegaloScriptValueIndexTarget.Option)
 				{
 					Variants.MegaloVariantUserDefinedOption option = Variant.UserDefinedOptions[variable.Var.Data];
-					sb.Append(option.CodeName.Replace(" ", ""));
+					sb.Append(option.CodeName.Replace(" ", "", StringComparison.Ordinal));
 				}
 				else
 				{
