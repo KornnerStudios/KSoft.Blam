@@ -36,7 +36,7 @@ namespace MgloGui
 					break;
 
 				default:
-					disassembledFileName = assembledFileName = outputFileName = null;
+					disassembledFileName = assembledFileName = outputFileName = null!;
 					break;
 			}
 		}
@@ -51,7 +51,7 @@ namespace MgloGui
 				return;
 			}
 
-			string desired_output_path = null;
+			string? desired_output_path = null;
 			switch (FileReverseEngineeringMode)
 			{
 				case ReverseEngineeringMode.Disassemble:

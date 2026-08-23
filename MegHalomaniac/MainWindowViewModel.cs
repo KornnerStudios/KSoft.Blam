@@ -39,7 +39,7 @@ namespace MgloGui
 		: KSoft.ObjectModel.BasicViewModel
 	{
 		#region Flags
-		private static KSoft.WPF.BitVectorUserInterfaceData gFlagsUserInterfaceSource;
+		private static KSoft.WPF.BitVectorUserInterfaceData? gFlagsUserInterfaceSource;
 		public static KSoft.WPF.BitVectorUserInterfaceData FlagsUserInterfaceSource { get {
 			if (gFlagsUserInterfaceSource == null)
 				{
@@ -58,7 +58,7 @@ namespace MgloGui
 		#endregion
 
 		#region StatusText
-		string mStatusText;
+		string mStatusText = string.Empty;
 		public string StatusText
 		{
 			get { return mStatusText; }
@@ -67,7 +67,7 @@ namespace MgloGui
 		#endregion
 
 		#region ProcessFilesHelpText
-		string mProcessFilesHelpText;
+		string mProcessFilesHelpText = string.Empty;
 		public string ProcessFilesHelpText
 		{
 			get { return mProcessFilesHelpText; }
@@ -76,7 +76,7 @@ namespace MgloGui
 		#endregion
 
 		#region MessagesText
-		string mMessagesText;
+		string mMessagesText = string.Empty;
 		public string MessagesText
 		{
 			get { return mMessagesText; }
@@ -102,7 +102,7 @@ namespace MgloGui
 			var handle = KBlam.Engine.EngineBuildHandle.None;
 
 			string selected_game_name = SelectedGameBuildNameSetting;
-			KBlam.Engine.EngineBuildRevision build_revision = KBlam.Engine.EngineRegistry.TryParseExportedBuildName(selected_game_name);
+			KBlam.Engine.EngineBuildRevision? build_revision = KBlam.Engine.EngineRegistry.TryParseExportedBuildName(selected_game_name);
 			if (build_revision != null)
 			{
 				handle = build_revision.BuildHandle;

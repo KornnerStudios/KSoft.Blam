@@ -58,7 +58,7 @@ namespace MgloGui
 		}
 
 		#region AppIconBitmap
-		static RenderTargetBitmap gAppIconBitmap;
+		static RenderTargetBitmap? gAppIconBitmap;
 		public static RenderTargetBitmap AppIconBitmap { get {
 			// I used to have this setup in OnActivated, but that is called every time the app is put in the foreground.
 			// Initializing it in OnStartup or OnLoaded is too late.
@@ -68,7 +68,7 @@ namespace MgloGui
 					RenderAppIconBitmap();
 				}
 
-				return gAppIconBitmap;
+				return gAppIconBitmap!;
 		} }
 
 		private static void RenderAppIconBitmap()
@@ -145,7 +145,7 @@ namespace MgloGui
 			var megalo_proto_system = MegaloSystemRef.System;
 			var all_dbs_tasks = megalo_proto_system.GetAllDatabasesAsync(GameBuildAndTarget.Build);
 
-			Exception inner_exception = null;
+			Exception? inner_exception = null;
 			if (all_dbs_tasks.Item1.IsFaulted)
 			{
 				inner_exception = all_dbs_tasks.Item1.Exception.GetOnlyExceptionOrAll();
@@ -173,12 +173,12 @@ namespace MgloGui
 		static readonly Dictionary<string, MgloBlamGameRequiredSystems> gCachedGames = new();
 		public static MgloBlamGameRequiredSystems GetOrCreateFromSelectableGameBuildName(string name)
 		{
-			MgloBlamGameRequiredSystems instance;
+			MgloBlamGameRequiredSystems? instance;
 			lock (gCachedGames)
 			{
 				if (!gCachedGames.TryGetValue(name, out instance))
 				{
-					KBlam.Engine.EngineBuildRevision build_revision = KBlam.Engine.EngineRegistry.TryParseExportedBuildName(name);
+					KBlam.Engine.EngineBuildRevision? build_revision = KBlam.Engine.EngineRegistry.TryParseExportedBuildName(name);
 					if (build_revision == null)
 					{
 						throw new ArgumentOutOfRangeException(nameof(name), name, "Not a valid build name");
@@ -189,7 +189,7 @@ namespace MgloGui
 				}
 			}
 
-			return instance;
+			return instance!;
 		}
 
 		public static void DisposeFromOldProgram()

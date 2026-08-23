@@ -52,9 +52,14 @@ namespace MgloGui
 			mFileOffset = 0;
 			Util.MarkUnusedVariable(ref mFileOffset); // #TODO_MGLO?
 
-			if (mEngineVersion == 0 && mGameBuildAndTarget.Build.RevisionIndex.IsNotNone())
+			var build = mGameBuildAndTarget.Build;
+			if (mEngineVersion == 0 && build.RevisionIndex.IsNotNone())
 			{
-				mEngineVersion = mGameBuildAndTarget.Build.Revision.Version;
+				var revision = build.Revision;
+				if (revision != null)
+				{
+					mEngineVersion = revision.Version;
+				}
 			}
 		}
 
@@ -83,10 +88,15 @@ namespace MgloGui
 		protected override void ReverseEngineerInputFile(string inputFile, string outputFile)
 		{
 			bool success = true;
-			KBlam.RuntimeData.Variants.GameEngineVariant gev = null;
-			success = success && EncodeLoadVariant(inputFile, out gev);
-			success = success && EncodeVariantPreprocess(gev, outputFile);
-			success = success && EncodeVariantBlf(outputFile, gev);
+			if (success && EncodeLoadVariant(inputFile, out var gev))
+			{
+				success = EncodeVariantPreprocess(gev, outputFile);
+				success = success && EncodeVariantBlf(outputFile, gev);
+			}
+			else
+			{
+				success = false;
+			}
 
 			Util.MarkUnusedVariable(ref success);
 		}
@@ -173,7 +183,7 @@ namespace MgloGui
 				blf_result = blf.OpenForWrite(fs, mFileOffset, blffile_length);
 				if (blf_result.IsValid)
 				{
-					blf.UnderlyingStream.StreamMode = FileAccess.Write;
+					blf.UnderlyingStream!.StreamMode = FileAccess.Write;
 
 					int engine_version_to_write = mEngineVersion;
 					if (megalo_variant != null)
@@ -211,7 +221,7 @@ namespace MgloGui
 	partial class MainWindowViewModel
 	{
 		#region GameVariantAssemblerFlags
-		private static KSoft.WPF.BitVectorUserInterfaceData gGameVariantAssemblerFlagsUserInterfaceSource;
+		private static KSoft.WPF.BitVectorUserInterfaceData? gGameVariantAssemblerFlagsUserInterfaceSource;
 		public static KSoft.WPF.BitVectorUserInterfaceData GameVariantAssemblerFlagsUserInterfaceSource { get {
 			if (gGameVariantAssemblerFlagsUserInterfaceSource == null)
 			{

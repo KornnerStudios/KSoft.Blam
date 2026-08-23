@@ -22,7 +22,7 @@ namespace MgloGui
 
 		protected KBlam.Engine.BlamEngineTargetHandle mGameBuildAndTarget = KBlam.Engine.BlamEngineTargetHandle.None;
 		protected MgloBlamGameRequiredSystems mRequiredSystems;
-		private List<string> mInputFiles;
+		private List<string> mInputFiles = null!;
 
 		protected abstract ReverseEngineeringMode FileReverseEngineeringMode { get; }
 

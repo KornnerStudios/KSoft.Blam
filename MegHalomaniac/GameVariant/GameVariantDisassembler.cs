@@ -158,13 +158,14 @@ namespace MgloGui
 
 		protected override void ReverseEngineerInputFile(string inputFile, string outputFile)
 		{
-			if (DecodeVariantBlf(inputFile, out KBlam.RuntimeData.Variants.GameEngineVariant gev))
+			if (DecodeVariantBlf(inputFile, out KBlam.RuntimeData.Variants.GameEngineVariant? gev) &&
+				gev != null)
 			{
 				DecodeSaveVariant(gev, outputFile);
 			}
 		}
 
-		bool DecodeVariantBlf(string filePath, out KBlam.RuntimeData.Variants.GameEngineVariant gev)
+		bool DecodeVariantBlf(string filePath, out KBlam.RuntimeData.Variants.GameEngineVariant? gev)
 		{
 			gev = null;
 			bool result = true;
@@ -189,10 +190,10 @@ namespace MgloGui
 		}
 
 		bool DecodeVariantBlob(FileStream fs,
-			out KBlam.RuntimeData.Variants.GameEngineVariant gev)
+			out KBlam.RuntimeData.Variants.GameEngineVariant? gev)
 		{
 			gev = null;
-			KBlam.Blob.GameEngineVariantBlob gevb = null;
+			KBlam.Blob.GameEngineVariantBlob? gevb = null;
 			var blf_result = KBlam.Blob.Transport.BlobChunkVerificationResultInfo.ValidResult;
 
 			long blffile_length = KBlam.Blob.GameEngineVariantBlob.GetBlfFileLength(mGameBuildAndTarget);
@@ -205,13 +206,13 @@ namespace MgloGui
 				blf_result = blf.OpenRange(fs, mFileOffset, mFileOffset + blffile_length, FileAccess.Read);
 				if (blf_result.IsValid)
 				{
-					blf.UnderlyingStream.StreamMode = FileAccess.Read;
+					blf.UnderlyingStream!.StreamMode = FileAccess.Read;
 
-					blf_result = blf.EnumerateChunks(blob_system, out IEnumerable<KBlam.Blob.BlobObject> objects);
+					blf_result = blf.EnumerateChunks(blob_system, out IEnumerable<KBlam.Blob.BlobObject>? objects);
 
 					if (blf_result.IsValid)
 					{
-						gevb = (from bo in objects
+						gevb = (from bo in objects!
 								where bo is KBlam.Blob.GameEngineVariantBlob
 								select bo).FirstOrDefault() as KBlam.Blob.GameEngineVariantBlob;
 					}
@@ -269,7 +270,7 @@ namespace MgloGui
 	partial class MainWindowViewModel
 	{
 		#region GameVariantDisassmblerFlags
-		private static KSoft.WPF.BitVectorUserInterfaceData gGameVariantDisassmblerFlagsUserInterfaceSource;
+		private static KSoft.WPF.BitVectorUserInterfaceData? gGameVariantDisassmblerFlagsUserInterfaceSource;
 		public static KSoft.WPF.BitVectorUserInterfaceData GameVariantDisassmblerFlagsUserInterfaceSource { get {
 			if (gGameVariantDisassmblerFlagsUserInterfaceSource == null)
 			{
