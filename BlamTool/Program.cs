@@ -19,22 +19,22 @@ namespace KSoft.Tool
 	{
 		protected override Environment ProgramEnvironment => Environment.None;
 
-		static string gName;
+		static string? gName;
 		public static string GetName()
 		{
 			if (gName == null)
 			{
-				gName = System.Reflection.Assembly.GetAssembly(typeof(Program)).GetName().Name;
+				gName = typeof(Program).Assembly.GetName().Name ?? string.Empty;
 			}
 
 			return gName;
 		}
-		static string gVersion;
+		static string? gVersion;
 		public static string GetVersion()
 		{
 			if (gVersion == null)
 			{
-				gVersion = System.Reflection.Assembly.GetAssembly(typeof(Program)).GetName().Version.ToString();
+				gVersion = typeof(Program).Assembly.GetName().Version?.ToString() ?? string.Empty;
 			}
 
 			return gVersion;
@@ -186,7 +186,7 @@ namespace KSoft.Tool
 		public static bool TryParse(Environment env, OptionSet ops, IEnumerable<string> args, out List<string> extra)
 		{
 			bool result = true;
-			extra = null;
+			extra = null!;
 
 			string help = env == Environment.None ? "?" : "help";
 

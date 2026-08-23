@@ -10,7 +10,7 @@ namespace KSoft.Tool
 	{
 		protected abstract Environment ProgramEnvironment { get; }
 
-		protected OptionSet mOptions;
+		protected OptionSet mOptions = null!;
 		protected bool mArgShowHelp;
 
 		protected void InitializeOptionArgShowHelp(bool useQuestionMark = false)

@@ -39,8 +39,8 @@ namespace KSoft.Tool.Blam
 
 		KBlam.Engine.EngineBuildHandle mGameBranchHandle;
 		Mode mMode;
-		string mMiniMetadata;
-		string mOutputPath;
+		string? mMiniMetadata;
+		string? mOutputPath;
 
 		protected override void InitializeOptions()
 		{
@@ -60,7 +60,8 @@ namespace KSoft.Tool.Blam
 		#region ValidateArgs
 		bool ValidateArgsDecode()
 		{
-			if (!KBlam.RuntimeData.ContentMiniMetadata.ContainerNameIsValid(mMiniMetadata))
+			if (string.IsNullOrWhiteSpace(mMiniMetadata) ||
+				!KBlam.RuntimeData.ContentMiniMetadata.ContainerNameIsValid(mMiniMetadata))
 			{
 				Console.WriteLine("Error: Mini-metadata provided isn't valid");
 				return false;
@@ -128,9 +129,9 @@ namespace KSoft.Tool.Blam
 
 		void Decode()
 		{
-			var metadata = KBlam.RuntimeData.ContentMiniMetadata.Decode(mGameBranchHandle, mMiniMetadata);
+			var metadata = KBlam.RuntimeData.ContentMiniMetadata.Decode(mGameBranchHandle, mMiniMetadata!);
 
-			string xml_filename = Path.Combine(mOutputPath, mMiniMetadata) + kNameExtension;
+			string xml_filename = Path.Combine(mOutputPath!, mMiniMetadata!) + kNameExtension;
 
 			using (var xml = IO.XmlElementStream.CreateForWrite("ContentMiniMetadata"))
 			{
@@ -148,7 +149,7 @@ namespace KSoft.Tool.Blam
 		{
 			var metadata = KBlam.RuntimeData.ContentMiniMetadata.Create(mGameBranchHandle);
 
-			string xml_filename = Path.Combine(mOutputPath, mMiniMetadata) + kNameExtension;
+			string xml_filename = Path.Combine(mOutputPath!, mMiniMetadata!) + kNameExtension;
 
 			if (!File.Exists(xml_filename))
 			{

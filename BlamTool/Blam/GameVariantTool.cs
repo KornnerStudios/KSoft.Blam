@@ -46,9 +46,9 @@ namespace KSoft.Tool.Blam
 		KBlam.Engine.EngineSystemReference<KBlam.Blob.BlobSystem> mGameEngineBlobSystemRef = KBlam.Engine.EngineSystemReference<KBlam.Blob.BlobSystem>.None;
 		KBlam.Engine.EngineSystemReference<KBlam.Localization.LanguageSystem> mGameEngineLangystemRef = KBlam.Engine.EngineSystemReference<KBlam.Localization.LanguageSystem>.None;
 		Mode mMode;
-		string mPath;
+		string? mPath;
 		uint mFileOffset;
-		string mName, mOutputPath, mSwitches;
+		string? mName, mOutputPath, mSwitches;
 		int mEngineVersion;
 		bool mTimeOperation;
 
@@ -83,15 +83,15 @@ namespace KSoft.Tool.Blam
 
 		protected override void PostprocessParsedOptions()
 		{
-			if (mEngineVersion == 0 && mGameBuildAndTarget.Build.RevisionIndex.IsNotNone())
+			if (mEngineVersion == 0 && mGameBuildAndTarget.Build!.RevisionIndex.IsNotNone())
 			{
-				mEngineVersion = mGameBuildAndTarget.Build.Revision.Version;
+				mEngineVersion = mGameBuildAndTarget.Build!.Revision!.Version;
 			}
 		}
 
 		void ParseGameBuildFromOptionValue(string v)
 		{
-			KBlam.Engine.EngineBuildRevision build_revision = KBlam.Engine.EngineRegistry.TryParseExportedBuildName(v);
+			KBlam.Engine.EngineBuildRevision? build_revision = KBlam.Engine.EngineRegistry.TryParseExportedBuildName(v);
 			if (build_revision != null)
 			{
 				mGameBuildAndTarget = build_revision.BuildHandle.ToEngineTargetHandle();
@@ -187,7 +187,7 @@ namespace KSoft.Tool.Blam
 			{
 				megalo_proto_system_ref = KBlam.Engine.EngineRegistry.GetSystem<MegaloProto.MegaloProtoSystem>(mGameBuildAndTarget.Build);
 
-				var megalo_proto_system = megalo_proto_system_ref.System;
+				var megalo_proto_system = megalo_proto_system_ref.System!;
 				var all_dbs_tasks = megalo_proto_system.GetAllDatabasesAsync(mGameBuildAndTarget.Build);
 
 				System.Threading.Tasks.Task.WaitAll
@@ -209,7 +209,7 @@ namespace KSoft.Tool.Blam
 			}
 			#endregion
 
-			if (mTimeOperation)
+			if (stopwatch != null)
 			{
 				stopwatch.Stop();
 				Console.WriteLine("Perf (DB): {0}", stopwatch.Elapsed);
@@ -220,8 +220,8 @@ namespace KSoft.Tool.Blam
 			{
 				switch (mMode)
 				{
-					case Mode.Decode: Decode(mPath, mName, mOutputPath); break;
-					case Mode.Encode: Encode(mPath, mName, mOutputPath); break;
+					case Mode.Decode: Decode(mPath!, mName!, mOutputPath); break;
+					case Mode.Encode: Encode(mPath!, mName!, mOutputPath); break;
 
 					default: Program.UnavailableOption(mMode); break;
 				}
@@ -231,7 +231,7 @@ namespace KSoft.Tool.Blam
 			mGameEngineBlobSystemRef.Dispose();
 			mGameEngineLangystemRef.Dispose();
 
-			if (mTimeOperation)
+			if (stopwatch != null)
 			{
 				stopwatch.Stop();
 				Console.WriteLine("Perf: {0}", stopwatch.Elapsed);
@@ -297,7 +297,7 @@ namespace KSoft.Tool.Blam
 		#endregion
 
 		#region Decode
-		void DecodeParseSwitches(string switches,
+		void DecodeParseSwitches(string? switches,
 			out MegaloModel.MegaloScriptModelTagElementStreamFlags modelStreamFlags,
 			ref bool ignoreWritePredicates)
 		{
@@ -372,10 +372,10 @@ namespace KSoft.Tool.Blam
 			}
 		}
 		bool DecodeVariantBlob(FileStream fs,
-			out KBlam.RuntimeData.Variants.GameEngineVariant gev)
+			out KBlam.RuntimeData.Variants.GameEngineVariant? gev)
 		{
 			gev = null;
-			KBlam.Blob.GameEngineVariantBlob gevb = null;
+			KBlam.Blob.GameEngineVariantBlob? gevb = null;
 			var blf_result = KBlam.Blob.Transport.BlobChunkVerificationResultInfo.ValidResult;
 
 			long blffile_length = KBlam.Blob.GameEngineVariantBlob.GetBlfFileLength(mGameBuildAndTarget);
@@ -383,18 +383,18 @@ namespace KSoft.Tool.Blam
 			{
 				blf.GameTarget = mGameBuildAndTarget;
 
-				var blob_system = mGameEngineBlobSystemRef.System;
+				var blob_system = mGameEngineBlobSystemRef.System!;
 
 				blf_result = blf.OpenRange(fs, mFileOffset, mFileOffset + blffile_length, FileAccess.Read);
 				if (blf_result.IsValid)
 				{
-					blf.UnderlyingStream.StreamMode = FileAccess.Read;
+					blf.UnderlyingStream!.StreamMode = FileAccess.Read;
 
-					blf_result = blf.EnumerateChunks(blob_system, out IEnumerable<KBlam.Blob.BlobObject> objects);
+					blf_result = blf.EnumerateChunks(blob_system, out IEnumerable<KBlam.Blob.BlobObject>? objects);
 
 					if (blf_result.IsValid)
 					{
-						gevb = (from bo in objects
+						gevb = (from bo in objects!
 								where bo is KBlam.Blob.GameEngineVariantBlob
 								select bo).FirstOrDefault() as KBlam.Blob.GameEngineVariantBlob;
 					}
@@ -421,7 +421,7 @@ namespace KSoft.Tool.Blam
 
 			return blf_result.IsValid;
 		}
-		bool DecodeVariantBlf(string filePath, out KBlam.RuntimeData.Variants.GameEngineVariant gev)
+		bool DecodeVariantBlf(string filePath, out KBlam.RuntimeData.Variants.GameEngineVariant? gev)
 		{
 			gev = null;
 			bool result = true;
@@ -470,9 +470,9 @@ namespace KSoft.Tool.Blam
 				}
 			}
 		}
-		void Decode(string filePath, string xmlName, string outputPath)
+		void Decode(string filePath, string xmlName, string? outputPath)
 		{
-			if (string.IsNullOrWhiteSpace(outputPath)) { outputPath = Path.GetDirectoryName(filePath); }
+			if (string.IsNullOrWhiteSpace(outputPath)) { outputPath = Path.GetDirectoryName(filePath) ?? string.Empty; }
 			if (!Directory.Exists(outputPath))
 			{
 				Console.WriteLine("Error: The output path doesn't exist or is inaccessible: {0}", outputPath);
@@ -487,9 +487,9 @@ namespace KSoft.Tool.Blam
 				out MegaloModel.MegaloScriptModelTagElementStreamFlags model_stream_flags,
 				ref ignore_write_predicates);
 
-			if (DecodeVariantBlf(bin_filename, out KBlam.RuntimeData.Variants.GameEngineVariant gev))
+			if (DecodeVariantBlf(bin_filename, out KBlam.RuntimeData.Variants.GameEngineVariant? gev))
 			{
-				DecodeSaveVariant(gev, xml_filename, model_stream_flags, ignore_write_predicates);
+				DecodeSaveVariant(gev!, xml_filename, model_stream_flags, ignore_write_predicates);
 			}
 		}
 		#endregion
@@ -502,7 +502,7 @@ namespace KSoft.Tool.Blam
 			ClearWeaponTuning=1<<1,
 			AddAllTeams=1<<2,
 		};
-		void EncodeParseSwitches(string switches,
+		void EncodeParseSwitches(string? switches,
 			out EncodeSwitches flags)
 		{
 			flags = 0;
@@ -537,7 +537,7 @@ namespace KSoft.Tool.Blam
 			#region CreateVariantFile
 			if ((switches & EncodeSwitches.CreateVariantFile) != 0)
 			{
-				string dir = Path.GetDirectoryName(filePath);
+				string? dir = Path.GetDirectoryName(filePath);
 				if (!Directory.Exists(dir))
 				{
 					Console.WriteLine("Error: The directory for the game file doesn't exist or is inaccessible: {0}",
@@ -685,7 +685,7 @@ namespace KSoft.Tool.Blam
 				blf_result = blf.OpenForWrite(fs, mFileOffset, blffile_length);
 				if (blf_result.IsValid)
 				{
-					blf.UnderlyingStream.StreamMode = FileAccess.Write;
+					blf.UnderlyingStream!.StreamMode = FileAccess.Write;
 
 					var chdr = (KBlam.Blob.ContentHeaderBlob)blob_system.CreateObject(mGameBuildAndTarget, KBlam.Blob.WellKnownBlob.ContentHeader);
 					chdr.ChangeData(gev.Variant.BaseVariant.Header,
@@ -717,12 +717,12 @@ namespace KSoft.Tool.Blam
 
 			return result;
 		}
-		void Encode(string filePath, string xmlName, string outputPath)
+		void Encode(string filePath, string xmlName, string? outputPath)
 		{
 			EncodeParseSwitches(mSwitches, out EncodeSwitches switches);
 			bool create_output_dir_and_file = (switches & EncodeSwitches.CreateVariantFile) != 0;
 
-			if (string.IsNullOrWhiteSpace(outputPath)) { outputPath = Path.GetDirectoryName(filePath); }
+			if (string.IsNullOrWhiteSpace(outputPath)) { outputPath = Path.GetDirectoryName(filePath) ?? string.Empty; }
 			if (!Directory.Exists(outputPath) && !create_output_dir_and_file)
 			{
 				Console.WriteLine("Error: The output path doesn't exist or is inaccessible: {0}", outputPath);
@@ -738,9 +738,9 @@ namespace KSoft.Tool.Blam
 				return;
 			}
 
-			bool success = true;
-			KBlam.RuntimeData.Variants.GameEngineVariant gev = null;
-			success = success && EncodeLoadVariant(xml_filename, out gev);
+			bool success;
+			KBlam.RuntimeData.Variants.GameEngineVariant gev;
+			success = EncodeLoadVariant(xml_filename, out gev);
 			success = success && EncodeVariantPreprocess(switches, gev, bin_filename);
 			success = success && EncodeVariantBlf(bin_filename, gev);
 
