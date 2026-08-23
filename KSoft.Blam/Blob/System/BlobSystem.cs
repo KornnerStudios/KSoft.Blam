@@ -25,14 +25,15 @@ namespace KSoft.Blam.Blob
 		}
 
 		#region TryGetBlobGroup
-		bool TryGetBlobGroup(GroupTagDatum groupTag, int version,
+		bool TryGetBlobGroup(GroupTagDatum? groupTag, int version,
 			ref BlobGroup group, ref BlobGroupVersionAndBuildInfo infoForVersion)
 		{
 			if (groupTag != null)
 			{
 				var group_candidate = Groups[groupTag];
-				if (group_candidate.VersionAndBuildMap.TryGetValue(version, out infoForVersion))
+				if (group_candidate.VersionAndBuildMap.TryGetValue(version, out var info_for_version))
 				{
+					infoForVersion = info_for_version!;
 					group = group_candidate;
 					return true;
 				}
@@ -41,23 +42,25 @@ namespace KSoft.Blam.Blob
 			return false;
 		}
 
-		bool TryGetBlobGroup(string tagString, int version,
-			out BlobGroup group, out BlobGroupVersionAndBuildInfo infoForVersion)
+		bool TryGetBlobGroup(string? tagString, int version,
+			[System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out BlobGroup group,
+			[System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out BlobGroupVersionAndBuildInfo infoForVersion)
 		{
 			if (version.IsNone())
 			{
 				throw new ArgumentOutOfRangeException(nameof(version));
 			}
 
-			group = null;
-			infoForVersion = null;
+			group = null!;
+			infoForVersion = null!;
 
-			var group_tag = (GroupTagDatum)GroupTags.FindGroupByTag(tagString);
+			var group_tag = (GroupTagDatum?)GroupTags.FindGroupByTag(tagString!);
 			return TryGetBlobGroup(group_tag, version, ref group, ref infoForVersion);
 		}
 
 		public bool TryGetBlobGroup(uint signature, int binarySize, int version,
-			out BlobGroup group, out BlobGroupVersionAndBuildInfo infoForVersion)
+			[System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out BlobGroup group,
+			[System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out BlobGroupVersionAndBuildInfo infoForVersion)
 		{
 			if (version.IsNone())
 			{
@@ -66,8 +69,8 @@ namespace KSoft.Blam.Blob
 
 			Util.MarkUnusedVariable(ref binarySize);
 
-			group = null;
-			infoForVersion = null;
+			group = null!;
+			infoForVersion = null!;
 
 			var group_tag = GroupTags.FindGroupByTag(signature);
 			return TryGetBlobGroup(group_tag, version, ref group, ref infoForVersion);
@@ -86,9 +89,9 @@ namespace KSoft.Blam.Blob
 		}
 
 		public bool TryGetBlobGroup(WellKnownBlob kind,
-			out BlobGroup group)
+			[System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out BlobGroup group)
 		{
-			group = null;
+			group = null!;
 
 			foreach (var kvp in Groups)
 			{
@@ -164,9 +167,8 @@ namespace KSoft.Blam.Blob
 					this.Prototype.Engine));
 			}
 
-			BlobGroupVersionAndBuildInfo known_blob_group_version_info =
+			BlobGroupVersionAndBuildInfo? known_blob_group_version_info =
 				known_blob_group.FindMostRelaventVersionInfo(gameTarget.Build);
-#pragma warning disable IDE0270 // Use coalesce expression
 			if (known_blob_group_version_info == null)
 			{
 				throw new InvalidOperationException(string.Format(Util.InvariantCultureInfo,
@@ -175,7 +177,6 @@ namespace KSoft.Blam.Blob
 					gameTarget.Build,
 					this.Prototype.Engine));
 			}
-#pragma warning restore IDE0270 // Use coalesce expression
 
 			return CreateObject(gameTarget, known_blob_group, known_blob_group_version_info.MajorVersion);
 		}
@@ -188,22 +189,24 @@ namespace KSoft.Blam.Blob
 			where TDoc : class
 			where TCursor : class
 		{
-			var tag_string = s.IsReading
-				? null
+			string tag_string = s.IsReading
+				? null!
 				: groupTag.TagString;
 
 			s.StreamAttribute("tag", ref tag_string);
 
 			if (s.IsReading)
 			{
-				groupTag = (GroupTagDatum)system.GroupTags.FindGroupByTag(tag_string);
+				var serialized_group_tag = (GroupTagDatum?)system.GroupTags.FindGroupByTag(tag_string!);
 
-				if (groupTag == null)
+				if (serialized_group_tag == null)
 				{
 					s.ThrowReadException(new KeyNotFoundException(string.Format(Util.InvariantCultureInfo,
 						"The tag '{0}' isn't defined in this system",
 						tag_string)));
 				}
+
+				groupTag = serialized_group_tag!;
 			}
 		}
 
@@ -262,7 +265,7 @@ namespace KSoft.Blam.Blob
 
 			if (s.IsReading)
 			{
-				string group_tag = null;
+				string group_tag = null!;
 				s.ReadAttribute(kAttributeNameSignature, ref group_tag);
 
 				int version = TypeExtensions.kNone;
@@ -317,7 +320,7 @@ namespace KSoft.Blam.Blob
 
 			var ctxt = new SerializeObjectContext(this, gameTarget);
 			s.StreamElements("BlobObject", results, ctxt, SerializeObject,
-				_ctxt => null);
+				_ctxt => null!);
 
 			return results;
 		}

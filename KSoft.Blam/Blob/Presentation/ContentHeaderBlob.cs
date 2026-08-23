@@ -9,7 +9,7 @@ namespace KSoft.Blam.Blob
 
 		short mBuildMajor;
 		short mBuildMinor = TypeExtensions.kNone;
-		public RuntimeData.ContentHeader Data { get; private set; }
+		public RuntimeData.ContentHeader Data { get; private set; } = null!;
 
 		public bool IsFromMcc
 			=> (mBuildMajor == 0 || ((int)mBuildMajor).IsNone())
@@ -33,7 +33,7 @@ namespace KSoft.Blam.Blob
 					"Game target build revision index must be set for {0}.",
 					gameTarget.Build.ToDisplayString()));
 			}
-			mBuildMajor = (short)gameTarget.Build.Revision.Version;
+			mBuildMajor = (short)gameTarget.Build.Revision!.Version;
 		}
 
 		public void ChangeData(RuntimeData.ContentHeader newData, int buildMajor = 0, int buildMinor = TypeExtensions.kNone)

@@ -20,7 +20,7 @@ namespace KSoft.Blam.Blob.Transport
 			kFooterSize;
 		#endregion
 
-		public IO.EndianStream UnderlyingStream { get; private set; }
+		public IO.EndianStream? UnderlyingStream { get; private set; }
 		public long StartPosition { get; private set; }
 		public long EndPosition { get; private set; }
 		long mFooterPosition;
@@ -32,7 +32,7 @@ namespace KSoft.Blam.Blob.Transport
 
 		/// <summary>Is the <see cref="UnderlyingStream"/> not open?</summary>
 		public bool IsClosed => UnderlyingStream == null;
-		public Stream BaseStream => !IsClosed ? UnderlyingStream.BaseStream : null;
+		public Stream? BaseStream => UnderlyingStream?.BaseStream;
 		public long AssumedStreamSize => EndPosition - StartPosition;
 		public long AssumedBlobSize => mFooterPosition - StartPosition;
 
@@ -42,6 +42,7 @@ namespace KSoft.Blam.Blob.Transport
 		}
 
 		#region Open
+		[System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(UnderlyingStream))]
 		void OpenUnderlyingStream(Stream baseStream, FileAccess permissions, Shell.EndianFormat endian, bool baseStreamOwner = false)
 		{
 			UnderlyingStream = new IO.EndianStream(baseStream, endian,
@@ -68,24 +69,26 @@ namespace KSoft.Blam.Blob.Transport
 					BlobChunkVerificationResultContext.Stream, AssumedBlobSize);
 			}
 		}
+		[System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(UnderlyingStream))]
 		void VerifyIsOpenForRead()
 		{
-			if (IsClosed)
+			if (UnderlyingStream == null)
 			{
 				throw new InvalidOperationException("Blob transport stream is closed.");
 			}
-			if (!UnderlyingStream.CanRead)
+			if (!UnderlyingStream!.CanRead)
 			{
 				throw new InvalidOperationException("Blob transport stream is not readable.");
 			}
 		}
+		[System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(UnderlyingStream))]
 		void VerifyIsOpenForWrite()
 		{
-			if (IsClosed)
+			if (UnderlyingStream == null)
 			{
 				throw new InvalidOperationException("Blob transport stream is closed.");
 			}
-			if (!UnderlyingStream.CanWrite)
+			if (!UnderlyingStream!.CanWrite)
 			{
 				throw new InvalidOperationException("Blob transport stream is not writable.");
 			}
@@ -146,7 +149,7 @@ namespace KSoft.Blam.Blob.Transport
 				? StartPosition + length
 				: length;
 			mFooterPosition = TypeExtensions.kNoneInt64;
-			UnderlyingStream.StreamMode = FileAccess.Write;
+			UnderlyingStream!.StreamMode = FileAccess.Write;
 
 			if (EndPosition.IsNotNone())
 			{
@@ -222,7 +225,7 @@ namespace KSoft.Blam.Blob.Transport
 		}
 		#endregion
 
-		byte[] BuildAuthenticationData()
+		byte[]? BuildAuthenticationData()
 		{
 			if (mFooterPosition.IsNone())
 			{
@@ -231,7 +234,7 @@ namespace KSoft.Blam.Blob.Transport
 					mFooterPosition));
 			}
 
-			System.Security.Cryptography.HashAlgorithm hash_algo = null;
+			System.Security.Cryptography.HashAlgorithm? hash_algo = null;
 			switch (mFooter.Authentication)
 			{
 				case BlobTransportStreamAuthentication.None: break;
@@ -243,7 +246,7 @@ namespace KSoft.Blam.Blob.Transport
 
 			if (hash_algo != null)
 			{
-				return hash_algo.ComputeHash(BaseStream, StartPosition, mFooterPosition);
+				return hash_algo.ComputeHash(BaseStream!, StartPosition, mFooterPosition);
 			}
 
 			System.Diagnostics.Debug.Assert(mFooter.Authentication == BlobTransportStreamAuthentication.None);
@@ -254,12 +257,12 @@ namespace KSoft.Blam.Blob.Transport
 		BlobChunkVerificationResultInfo VerifyEnoughBytesForChunkOrData(long totalSize)
 		{
 			var result = BlobChunkVerificationResultInfo.ValidResult;
-			if (UnderlyingStream.IsWriting && EndPosition.IsNone())
+			if (UnderlyingStream!.IsWriting && EndPosition.IsNone())
 			{
 				return result;
 			}
 
-			long bytes_remaining = BaseStream.BytesRemaining(EndPosition);
+			long bytes_remaining = BaseStream!.BytesRemaining(EndPosition);
 			if (bytes_remaining < totalSize)
 			{
 				result = new BlobChunkVerificationResultInfo(BlobChunkVerificationResult.EndOfStream,
@@ -276,14 +279,14 @@ namespace KSoft.Blam.Blob.Transport
 			{
 				if (streamFirst)
 				{
-					UnderlyingStream.Stream(ref mHeader);
+					UnderlyingStream!.Stream(ref mHeader);
 				}
 
 				result = mHeader.Verify(out bool requires_byteswap);
 
 				if (result.IsValid && requires_byteswap)
 				{
-					UnderlyingStream.ChangeByteOrder(UnderlyingStream.ByteOrder.Invert());
+					UnderlyingStream!.ChangeByteOrder(UnderlyingStream!.ByteOrder.Invert());
 				}
 			}
 
@@ -303,8 +306,8 @@ namespace KSoft.Blam.Blob.Transport
 			{
 				if (streamFirst)
 				{
-					mFooterPosition = BaseStream.Position;
-					UnderlyingStream.Stream(ref mHeader);
+					mFooterPosition = BaseStream!.Position;
+					UnderlyingStream!.Stream(ref mHeader);
 				}
 				long blob_size = AssumedBlobSize;
 
@@ -312,7 +315,7 @@ namespace KSoft.Blam.Blob.Transport
 
 				if (streamFirst && result.IsValid)
 				{
-					mFooter.SerializeAuthenticationData(UnderlyingStream);
+					mFooter.SerializeAuthenticationData(UnderlyingStream!);
 				}
 			}
 
@@ -327,7 +330,7 @@ namespace KSoft.Blam.Blob.Transport
 		{
 			var result = BlobChunkVerificationResultInfo.ValidResult;
 
-			byte[] hash = BuildAuthenticationData();
+			byte[]? hash = BuildAuthenticationData();
 
 			if (hash != null)
 			{
@@ -356,8 +359,8 @@ namespace KSoft.Blam.Blob.Transport
 
 			if (findStartPosition.IsNotNone())
 			{
-				orig_pos = UnderlyingStream.BaseStream.Position;
-				UnderlyingStream.Seek(findStartPosition + StartPosition, System.IO.SeekOrigin.Begin);
+				orig_pos = UnderlyingStream!.BaseStream.Position;
+				UnderlyingStream!.Seek(findStartPosition + StartPosition, System.IO.SeekOrigin.Begin);
 			}
 
 			try
@@ -368,7 +371,7 @@ namespace KSoft.Blam.Blob.Transport
 			{
 				if (orig_pos.IsNotNone())
 				{
-					UnderlyingStream.Seek(orig_pos, System.IO.SeekOrigin.Begin);
+					UnderlyingStream!.Seek(orig_pos, System.IO.SeekOrigin.Begin);
 				}
 			}
 		}
@@ -385,7 +388,7 @@ namespace KSoft.Blam.Blob.Transport
 
 			if (result.IsValid)
 			{
-				UnderlyingStream.Stream(ref header);
+				UnderlyingStream!.Stream(ref header);
 				result = header	.VerifyVersionIsPositive()
 								.And(header, h => h.VerifyDataSize(0))
 								.And(header, h => h.VerifyFlagsIsPostive())
@@ -397,9 +400,9 @@ namespace KSoft.Blam.Blob.Transport
 				{
 					if (isEof)
 					{
-						mFooterPosition = BaseStream.Position - BlobChunkHeader.kSizeOf;
-						mFooter.SerializeSansHeader(UnderlyingStream, header);
-						mFooter.SerializeAuthenticationData(UnderlyingStream);
+						mFooterPosition = BaseStream!.Position - BlobChunkHeader.kSizeOf;
+						mFooter.SerializeSansHeader(UnderlyingStream!, header);
+						mFooter.SerializeAuthenticationData(UnderlyingStream!);
 					}
 					else
 					{
@@ -407,7 +410,7 @@ namespace KSoft.Blam.Blob.Transport
 
 						if (!getResultValueConsumesChunk)
 						{
-							header.StreamSkipData(BaseStream);
+							header.StreamSkipData(BaseStream!);
 						}
 					}
 				}
@@ -432,7 +435,7 @@ namespace KSoft.Blam.Blob.Transport
 			bool is_eof = false;
 			while (result_info.IsValid)
 			{
-				T result_value = default;
+				T result_value = default!;
 				result_info = EnumerateOneChunk(out BlobChunkHeader chunk_header, ref result_value,
 					getResultValue, getResultValueConsumesChunk, out is_eof);
 
@@ -458,12 +461,12 @@ namespace KSoft.Blam.Blob.Transport
 		{
 			Util.MarkUnusedVariable(ref header);
 
-			return @this.BaseStream.Position; // position at this point will be right after [header]
+			return @this.BaseStream!.Position; // position at this point will be right after [header]
 		}
 		static byte[] GetEnumerateStreamResultBytes(BlobTransportStream @this, BlobChunkHeader header)
 		{
 			byte[] bytes = new byte[header.DataSize];
-			@this.UnderlyingStream.Stream(bytes);
+			@this.UnderlyingStream!.Stream(bytes);
 
 			return bytes;
 		}
@@ -480,7 +483,7 @@ namespace KSoft.Blam.Blob.Transport
 
 			var obj = blobSystem.CreateObject(GameTarget, blobGroup, header.Version, header.Size);
 
-			var byte_order = UnderlyingStream.ByteOrder;
+			var byte_order = UnderlyingStream!.ByteOrder;
 			if (infoForVersion.ForceLittleEndian)
 			{
 				byte_order = Shell.EndianFormat.Little;
@@ -507,7 +510,7 @@ namespace KSoft.Blam.Blob.Transport
 				"Build incompatibility for chunk {0} v{1} sizeof({2}) which uses build={3} " +
 				"but we're using build={4} for {5}",
 				blobGroup.GroupTag.TagString, header.Version, header.DataSize, buildForBlobVersion.ToDisplayString(),
-				actualBuild.ToDisplayString(), UnderlyingStream.StreamName));
+				actualBuild.ToDisplayString(), UnderlyingStream!.StreamName));
 		}
 		void EnumerateChunksReadObjectFoundUnknownChunk(BlobSystem blobSystem,
 			BlobChunkHeader header, bool throwOnUnhandledChunk)
@@ -547,7 +550,7 @@ namespace KSoft.Blam.Blob.Transport
 					}
 
 					var task = Task<BlobObject>.Factory.StartNew(s =>
-						(s as BlobTransportStream).EnumerateChunksReadObject(blobSystem, blob_group, info_for_version, header, kv.Value),
+						(s as BlobTransportStream)!.EnumerateChunksReadObject(blobSystem, blob_group, info_for_version, header, kv.Value),
 						this);
 					task_list.Add(task);
 				}
@@ -589,7 +592,7 @@ namespace KSoft.Blam.Blob.Transport
 			return results;
 		}
 
-		public async Task<KeyValuePair<BlobChunkVerificationResultInfo, IEnumerable<BlobObject>>> EnumerateChunksAsync(
+		public async Task<KeyValuePair<BlobChunkVerificationResultInfo, IEnumerable<BlobObject>?>> EnumerateChunksAsync(
 			BlobSystem blobSystem,
 			bool throwOnUnhandledChunk = true,
 			BlobTransportStreamAuthentication expectedAuthentication = BlobTransportStreamAuthentication.None,
@@ -598,7 +601,7 @@ namespace KSoft.Blam.Blob.Transport
 			ArgumentNullException.ThrowIfNull(blobSystem);
 			VerifyIsOpenForRead();
 
-			IEnumerable<BlobObject> objects = null;
+			IEnumerable<BlobObject>? objects = null;
 
 			var result_info = EnumerateStream(out IList<KeyValuePair<BlobChunkHeader, byte[]>> chunks, expectedAuthentication,
 				GetEnumerateStreamResultBytes, getResultValueConsumesChunk: true);
@@ -617,10 +620,10 @@ namespace KSoft.Blam.Blob.Transport
 						  select task.Result;
 			}
 
-			return new KeyValuePair<BlobChunkVerificationResultInfo, IEnumerable<BlobObject>>(result_info, objects);
+			return new KeyValuePair<BlobChunkVerificationResultInfo, IEnumerable<BlobObject>?>(result_info, objects);
 		}
 		public BlobChunkVerificationResultInfo EnumerateChunks(BlobSystem blobSystem,
-			out IEnumerable<BlobObject> objects, bool throwOnUnhandledChunk = true,
+			out IEnumerable<BlobObject>? objects, bool throwOnUnhandledChunk = true,
 			BlobTransportStreamAuthentication expectedAuthentication = BlobTransportStreamAuthentication.None,
 			bool authenticateBlob = true)
 		{
@@ -655,21 +658,21 @@ namespace KSoft.Blam.Blob.Transport
 			if (result.IsValid)
 			{
 				mHeader = new StreamHeader(mHeader.FileType);
-				mHeader.Serialize(UnderlyingStream);
+				mHeader.Serialize(UnderlyingStream!);
 			}
 
 			return result;
 		}
 		BlobChunkVerificationResultInfo WriteChunksWriteEof(BlobTransportStreamAuthentication authentication)
 		{
-			mFooterPosition = BaseStream.Position;
+			mFooterPosition = BaseStream!.Position;
 			mFooter = new StreamFooter(authentication, AssumedBlobSize);
 
 			var result = VerifyEnoughBytesForChunkOrData(kFooterSize + authentication.GetDataSize());
 
 			if (result.IsValid)
 			{
-				byte[] auth_data = BuildAuthenticationData();
+				byte[]? auth_data = BuildAuthenticationData();
 
 				if (auth_data != null)
 				{
@@ -683,8 +686,8 @@ namespace KSoft.Blam.Blob.Transport
 					Buffer.BlockCopy(auth_data, 0, mFooter.AuthenticationData, 0, auth_data.Length);
 				}
 
-				mFooter.Serialize(UnderlyingStream);
-				mFooter.SerializeAuthenticationData(UnderlyingStream);
+				mFooter.Serialize(UnderlyingStream!);
+				mFooter.SerializeAuthenticationData(UnderlyingStream!);
 			}
 
 			return result;
@@ -702,8 +705,8 @@ namespace KSoft.Blam.Blob.Transport
 					break;
 				}
 
-				header.Serialize(UnderlyingStream);
-				UnderlyingStream.Writer.Write(kv.Value);
+				header.Serialize(UnderlyingStream!);
+				UnderlyingStream!.Writer.Write(kv.Value);
 			}
 
 			return result_info;
@@ -713,7 +716,7 @@ namespace KSoft.Blam.Blob.Transport
 		{
 			byte[] data;
 
-			var byte_order = UnderlyingStream.ByteOrder;
+			var byte_order = UnderlyingStream!.ByteOrder;
 			if (obj.SystemGroupVersionInfo.ForceLittleEndian)
 			{
 				byte_order = Shell.EndianFormat.Little;
@@ -741,7 +744,7 @@ namespace KSoft.Blam.Blob.Transport
 			for (int x = 0; x < objects.Length; x++)
 			{
 				tasks[x] = Task<KeyValuePair<BlobChunkHeader, byte[]>>.Factory.StartNew(
-					obj => WriteChunksProcessObject((BlobObject)obj),
+					obj => WriteChunksProcessObject((BlobObject)obj!),
 					objects[x]);
 			}
 

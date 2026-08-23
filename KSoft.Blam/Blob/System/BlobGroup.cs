@@ -22,11 +22,11 @@ namespace KSoft.Blam.Blob
 			where TDoc : class
 			where TCursor : class
 		{
-			var system = KSoft.Debug.TypeCheck.CastReference<BlobSystem>(s.UserData);
+			var system = KSoft.Debug.TypeCheck.CastReference<BlobSystem>(s.UserData!);
 
 			if (s.IsReading)
 			{
-				BlobGroup.SerializeVersionToBuildMapKey(s, (object)null,
+				BlobGroup.SerializeVersionToBuildMapKey(s, null,
 					ref mMajorVersion);
 			}
 
@@ -40,7 +40,7 @@ namespace KSoft.Blam.Blob
 	public sealed class BlobGroup
 		: IO.ITagElementStringNameStreamable
 	{
-		public BlobSystem ParentSystem { get; private set; }
+		public BlobSystem ParentSystem { get; private set; } = null!;
 
 		GroupTagDatum mGroupTag;
 		public GroupTagDatum GroupTag => mGroupTag;
@@ -57,15 +57,15 @@ namespace KSoft.Blam.Blob
 			mKnownAs = WellKnownBlob.NotWellKnown;
 		}
 
-		public BlobGroupVersionAndBuildInfo FindMostRelaventVersionInfo(Engine.EngineBuildHandle forBuild)
+		public BlobGroupVersionAndBuildInfo? FindMostRelaventVersionInfo(Engine.EngineBuildHandle forBuild)
 		{
 			if (forBuild.IsNone)
 			{
 				throw new ArgumentNoneException(nameof(forBuild));
 			}
 
-			BlobGroupVersionAndBuildInfo exact_match = null;
-			BlobGroupVersionAndBuildInfo most_relevant = null;
+			BlobGroupVersionAndBuildInfo? exact_match = null;
+			BlobGroupVersionAndBuildInfo? most_relevant = null;
 			int possibly_relevant_count = 0;
 
 			foreach (var kvp in VersionAndBuildMap)
@@ -92,7 +92,7 @@ namespace KSoft.Blam.Blob
 
 		#region ITagElementStreamable<string> Members
 		internal static void SerializeVersionToBuildMapKey<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
-			object _dontUse,
+			object? _dontUse,
 			ref int versionId)
 			where TDoc : class
 			where TCursor : class
@@ -106,7 +106,7 @@ namespace KSoft.Blam.Blob
 		{
 			if (s.IsReading)
 			{
-				var system = KSoft.Debug.TypeCheck.CastReference<BlobSystem>(s.UserData);
+				var system = KSoft.Debug.TypeCheck.CastReference<BlobSystem>(s.UserData!);
 				ParentSystem = system;
 			}
 

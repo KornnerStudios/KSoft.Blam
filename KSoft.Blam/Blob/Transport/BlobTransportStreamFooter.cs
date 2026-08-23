@@ -29,7 +29,7 @@ namespace KSoft.Blam.Blob.Transport
 			/// <summary>The size of the blob from the header up UNTIL the footer (so, exclusive)</summary>
 			public uint BlobSize;
 			public BlobTransportStreamAuthentication Authentication;
-			public byte[] AuthenticationData;
+			public byte[] AuthenticationData = null!;
 
 			int InitializeData()
 			{
@@ -45,7 +45,7 @@ namespace KSoft.Blam.Blob.Transport
 			{
 				BlobSize = (uint)blobSize;
 				Authentication = authentication;
-				AuthenticationData = null;
+				AuthenticationData = null!;
 
 				Header = new BlobChunkHeader(kSignature, kVersion, kSizeOfDataSansAuthData + Authentication.GetDataSize());
 				InitializeData();

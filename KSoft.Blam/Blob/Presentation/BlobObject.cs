@@ -7,8 +7,8 @@ namespace KSoft.Blam.Blob
 		: IO.IEndianStreamSerializable
 		, IO.ITagElementStringNameStreamable
 	{
-		public BlobGroup SystemGroup { get; private set; }
-		public BlobGroupVersionAndBuildInfo SystemGroupVersionInfo { get; private set; }
+		public BlobGroup SystemGroup { get; private set; } = null!;
+		public BlobGroupVersionAndBuildInfo SystemGroupVersionInfo { get; private set; } = null!;
 		public Engine.BlamEngineTargetHandle GameTarget { get; private set; }
 		public int Version { get; private set; }
 		public int BlobFlags { get; internal set; }
@@ -26,9 +26,9 @@ namespace KSoft.Blam.Blob
 			Version = version;
 
 			if (SystemGroup.VersionAndBuildMap.TryGetValue(Version,
-					out BlobGroupVersionAndBuildInfo info_for_version))
+					out BlobGroupVersionAndBuildInfo? info_for_version))
 			{
-				SystemGroupVersionInfo = info_for_version;
+				SystemGroupVersionInfo = info_for_version!;
 			}
 			else
 			{

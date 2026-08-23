@@ -22,7 +22,7 @@ namespace KSoft.Blam.Blob
 
 		public bool InvalidData { get; private set; }
 
-		public RuntimeData.Variants.GameEngineVariant Data { get; private set; }
+		public RuntimeData.Variants.GameEngineVariant Data { get; private set; } = null!;
 
 		public override int CalculateFixedBinarySize(Engine.BlamEngineTargetHandle gameTarget)
 		{
@@ -57,7 +57,7 @@ namespace KSoft.Blam.Blob
 			Data = newData;
 		}
 
-		void SanityCheckInvalidIsFalse(string streamName)
+		void SanityCheckInvalidIsFalse(string? streamName)
 		{
 			if (InvalidData)
 			{
@@ -144,12 +144,12 @@ namespace KSoft.Blam.Blob
 				s.Read(bs_bytes, bs_length);
 
 				hasher.TransformFinalBlock(bs_bytes, 0, bs_length);
-				InvalidData = hasher.Hash.EqualsArray(hashBuffer) == false;
+				InvalidData = hasher.Hash!.EqualsArray(hashBuffer) == false;
 			}
 
 			if (RequireValidHashes && InvalidData)
 			{
-				Data = null;
+				Data = null!;
 			}
 			else
 			{
@@ -189,7 +189,7 @@ namespace KSoft.Blam.Blob
 
 				hasher.TransformBlock(bs_length_bytes, 0, bs_length_bytes.Length, null, 0);
 				hasher.TransformFinalBlock(bs_bytes, 0, bs_length);
-				calculated_hash = hasher.Hash;
+				calculated_hash = hasher.Hash!;
 			}
 			#endregion
 
