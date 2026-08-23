@@ -22,7 +22,7 @@ namespace KSoft.Blam.Blob
 
 		public bool InvalidData { get; private set; }
 
-		public RuntimeData.Variants.GameEngineVariant Data { get; private set; } = null!;
+		public RuntimeData.Variants.GameEngineVariant? Data { get; private set; }
 
 		public override int CalculateFixedBinarySize(Engine.BlamEngineTargetHandle gameTarget)
 		{
@@ -149,7 +149,7 @@ namespace KSoft.Blam.Blob
 
 			if (RequireValidHashes && InvalidData)
 			{
-				Data = null!;
+				Data = null;
 			}
 			else
 			{
@@ -158,7 +158,7 @@ namespace KSoft.Blam.Blob
 				{
 					bs.StreamMode = System.IO.FileAccess.Read;
 
-					Data.Serialize(bs);
+					Data!.Serialize(bs);
 				}
 			}
 		}
@@ -171,7 +171,7 @@ namespace KSoft.Blam.Blob
 			{
 				bs.StreamMode = System.IO.FileAccess.Write;
 
-				Data.Serialize(bs);
+				Data!.Serialize(bs);
 				bs.Flush();
 
 				bs_length = (int)ms.Position;
@@ -224,7 +224,7 @@ namespace KSoft.Blam.Blob
 
 			using (s.EnterCursorBookmark("GameVariant"))
 			{
-				s.StreamObject(Data);
+				s.StreamObject(Data!);
 			}
 		}
 		#endregion

@@ -35,14 +35,14 @@ namespace KSoft.Blam.Megalo.Proto
 			s.StreamAttributeOpt(kSigIdAttributeName, ref SigId, Predicates.IsNotZero);
 			db.SerializeValueTypeReference(s, kTypeAttributeName, ref Type);
 			string? name = Name;
-			if (!s.StreamAttributeOpt(kNameAttirbuteName, ref name, Predicates.IsNotNullOrEmpty) &&
-				 reading)
+			bool has_name = s.StreamAttributeOpt(kNameAttirbuteName, ref name, Predicates.IsNotNullOrEmpty);
+			if (reading)
 			{
-				name = string.Format(Util.InvariantCultureInfo,
-					"Param{0}", SigId.ToString(Util.InvariantCultureInfo));
+				Name = has_name
+					? name!
+					: string.Format(Util.InvariantCultureInfo,
+						"Param{0}", SigId.ToString(Util.InvariantCultureInfo));
 			}
-			Name = name ?? string.Format(Util.InvariantCultureInfo,
-				"Param{0}", SigId.ToString(Util.InvariantCultureInfo));
 			s.StreamAttributeEnumOpt(kKindAttributeName, ref Kind);
 			s.StreamAttributeOpt("optional", ref Optional, Predicates.IsTrue);
 		}

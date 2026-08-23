@@ -463,6 +463,7 @@ namespace KSoft.Blam.Engine
 			}
 
 			actualBuild = EngineBuildHandle.None;
+			value = default!;
 			return false;
 		}
 		public static bool TryGetValue<T>(IReadOnlyDictionary<EngineBuildHandle, T> dic, EngineBuildHandle forBuild,

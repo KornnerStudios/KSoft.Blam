@@ -14,14 +14,14 @@ namespace KSoft.Blam.Megalo.Proto
 			base.Serialize(s);
 
 			string? name = Name;
-			if (!s.StreamAttributeOpt("name", ref name, Predicates.IsNotNullOrEmpty) &&
-				 s.IsReading)
+			bool has_name = s.StreamAttributeOpt("name", ref name, Predicates.IsNotNullOrEmpty);
+			if (s.IsReading)
 			{
-				name = string.Format(Util.InvariantCultureInfo,
-					"Condition{0}", DBID.ToString(Util.InvariantCultureInfo));
+				Name = has_name
+					? name!
+					: string.Format(Util.InvariantCultureInfo,
+						"Condition{0}", DBID.ToString(Util.InvariantCultureInfo));
 			}
-			Name = name ?? string.Format(Util.InvariantCultureInfo,
-				"Condition{0}", DBID.ToString(Util.InvariantCultureInfo));
 
 			s.StreamableElements("Param", Parameters);
 		}

@@ -30,14 +30,14 @@ namespace KSoft.Blam.Megalo.Proto
 			var db = (MegaloScriptDatabase)s.Owner!;
 
 			string? name = Name;
-			if (!s.StreamAttributeOpt("name", ref name, Predicates.IsNotNullOrEmpty) &&
-				 s.IsReading)
+			bool has_name = s.StreamAttributeOpt("name", ref name, Predicates.IsNotNullOrEmpty);
+			if (s.IsReading)
 			{
-				name = string.Format(Util.InvariantCultureInfo,
-					"Action{0}", DBID.ToString(Util.InvariantCultureInfo));
+				Name = has_name
+					? name!
+					: string.Format(Util.InvariantCultureInfo,
+						"Action{0}", DBID.ToString(Util.InvariantCultureInfo));
 			}
-			Name = name ?? string.Format(Util.InvariantCultureInfo,
-				"Action{0}", DBID.ToString(Util.InvariantCultureInfo));
 
 			if (db.SerializeProtoActionReference(s, "template", ref Template) && Template == null)
 			{

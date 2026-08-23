@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace KSoft.Blam.Engine.Test
 {
@@ -21,6 +22,18 @@ namespace KSoft.Blam.Engine.Test
 				"Expected MegaloScriptValueType bit count size has changed. Was this intentional?");
 			Assert.AreEqual(19, Megalo.Model.MegaloScriptModelObjectHandle.BitCount,
 				"Expected MegaloScriptModelObjectHandle bit count size has changed. Was this intentional?");
+		}
+
+		[TestMethod]
+		public void EngineBuildHandle_TryGetValueClearsReusedValueOnMiss()
+		{
+			var values = new Dictionary<EngineBuildHandle, string>();
+			string value = "stale";
+
+			bool found = EngineRegistry.EngineBranchHaloReach.BranchHandle.TryGetValue(values, ref value);
+
+			Assert.IsFalse(found);
+			Assert.IsNull(value);
 		}
 
 		[TestMethod]
