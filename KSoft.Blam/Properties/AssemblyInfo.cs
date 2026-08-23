@@ -30,3 +30,6 @@ using System.Runtime.InteropServices;
 [assembly: SuppressMessage("Style",
 	"IDE1005:Delegate invocation can be simplified.",
 	Justification = "Can't breakpoint simplification")]
+[assembly: SuppressMessage("Design",
+	"CA1033:Interface methods should be callable by child types",
+	Justification = "Explicit interface implementations intentionally preserve collection and serialization model contracts")]
