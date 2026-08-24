@@ -23,6 +23,7 @@ namespace KSoft.Tool
 		protected virtual bool ValidateArgs() { return true; }
 		protected virtual void PostprocessParsedOptions() { }
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors", Justification = "Overrides only register deferred option callbacks and do not access derived state.")]
 		protected ProgramBase()
 		{
 			InitializeOptions();
