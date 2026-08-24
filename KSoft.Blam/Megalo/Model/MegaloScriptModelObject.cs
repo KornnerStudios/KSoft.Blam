@@ -42,6 +42,7 @@ namespace KSoft.Blam.Megalo.Model
 			};
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1043:Use Integral Or String Argument For Indexers", Justification = "Megalo object handles are the established domain lookup key.")]
 		public MegaloScriptModelObject? this[MegaloScriptModelObjectHandle handle] => GetModelObjectFromHandle(handle);
 	};
 
