@@ -33,8 +33,8 @@ namespace KSoft.Tool.Blam
 			var sb = new System.Text.StringBuilder(64);
 			sb.Append("Valid modes: ");
 
-			sb.AppendFormat("{0},", Mode.Decode.ToString().ToLowerInvariant());
-			sb.AppendFormat("{0},", Mode.Encode.ToString().ToLowerInvariant());
+			sb.Append(Mode.Decode.ToString().ToLowerInvariant()).Append(',');
+			sb.Append(Mode.Encode.ToString().ToLowerInvariant()).Append(',');
 
 			return sb.ToString();
 		}
@@ -212,7 +212,7 @@ namespace KSoft.Tool.Blam
 			if (stopwatch != null)
 			{
 				stopwatch.Stop();
-				Console.WriteLine("Perf (DB): {0}", stopwatch.Elapsed);
+				Console.WriteLine(string.Create(KSoft.Util.InvariantCultureInfo, $"Perf (DB): {stopwatch.Elapsed}"));
 				stopwatch.Restart();
 			}
 
@@ -234,7 +234,7 @@ namespace KSoft.Tool.Blam
 			if (stopwatch != null)
 			{
 				stopwatch.Stop();
-				Console.WriteLine("Perf: {0}", stopwatch.Elapsed);
+				Console.WriteLine(string.Create(KSoft.Util.InvariantCultureInfo, $"Perf: {stopwatch.Elapsed}"));
 			}
 		}
 		void MainImpl(string helpName, List<string> args)
@@ -403,8 +403,8 @@ namespace KSoft.Tool.Blam
 
 			if (blf_result.IsInvalid)
 			{
-				Console.WriteLine("Error: Failed to decode variant file{0}{1}", System.Environment.NewLine,
-					blf_result.BuildErrorMessage());
+				Console.WriteLine(string.Create(KSoft.Util.InvariantCultureInfo,
+					$"Error: Failed to decode variant file{System.Environment.NewLine}{blf_result.BuildErrorMessage()}"));
 			}
 			else if (gevb == null)
 			{
@@ -432,8 +432,8 @@ namespace KSoft.Tool.Blam
 
 				if (dst_fs.Length < (mFileOffset + blffile_length))
 				{
-					Console.WriteLine("Error: not enough data starting at offset 0x{0} to be a variant we support",
-						mFileOffset.ToString("X8"));
+					Console.WriteLine(string.Create(KSoft.Util.InvariantCultureInfo,
+						$"Error: not enough data starting at offset 0x{mFileOffset:X8} to be a variant we support"));
 					result = false;
 				}
 				else
@@ -662,8 +662,8 @@ namespace KSoft.Tool.Blam
 
 			if (ev.GameBuild != mGameBuildAndTarget.Build)
 			{
-				Console.WriteLine("Error: {0}'s game parameter '{1}' differs from what you gave me. Weak sauce",
-					xmlFilename, ev.GameBuild);
+				Console.WriteLine(string.Create(KSoft.Util.InvariantCultureInfo,
+					$"Error: {xmlFilename}'s game parameter '{ev.GameBuild}' differs from what you gave me. Weak sauce"));
 				result = false;
 			}
 
@@ -700,8 +700,8 @@ namespace KSoft.Tool.Blam
 
 			if (blf_result.IsInvalid)
 			{
-				Console.WriteLine("Error: Failed to encode variant file{0}{1}", System.Environment.NewLine,
-					blf_result.BuildErrorMessage());
+				Console.WriteLine(string.Create(KSoft.Util.InvariantCultureInfo,
+					$"Error: Failed to encode variant file{System.Environment.NewLine}{blf_result.BuildErrorMessage()}"));
 			}
 
 			return blf_result.IsValid;

@@ -176,8 +176,8 @@ namespace MgloGui
 
 				if (dst_fs.Length < (mFileOffset + blffile_length))
 				{
-					throw new InvalidDataException(string.Format("Error: not enough data starting at offset 0x{0} to be a variant we support",
-						mFileOffset.ToString("X8")));
+					throw new InvalidDataException(string.Create(KSoft.Util.InvariantCultureInfo,
+						$"Error: not enough data starting at offset 0x{mFileOffset.ToString("X8", KSoft.Util.InvariantCultureInfo)} to be a variant we support"));
 					//result = false;
 				}
 				else
@@ -221,8 +221,8 @@ namespace MgloGui
 
 			if (blf_result.IsInvalid)
 			{
-				throw new InvalidDataException(string.Format("Error: Failed to decode variant file{0}{1}", System.Environment.NewLine,
-					blf_result.BuildErrorMessage()));
+				throw new InvalidDataException(string.Create(KSoft.Util.InvariantCultureInfo,
+					$"Error: Failed to decode variant file{System.Environment.NewLine}{blf_result.BuildErrorMessage()}"));
 			}
 			else if (gevb == null)
 			{
