@@ -1,6 +1,7 @@
 ﻿using KSoft;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace MgloGui
@@ -48,8 +49,8 @@ namespace MgloGui
 			Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background,
 				new Action(() =>
 				{
-					ViewModel.MessagesText += string.Format("Skipped due to existing output {0}{1}",
-						inputFile, Environment.NewLine);
+					ViewModel.MessagesText += string.Create(CultureInfo.CurrentCulture,
+						$"Skipped due to existing output {inputFile}{Environment.NewLine}");
 				}));
 		}
 
@@ -60,8 +61,8 @@ namespace MgloGui
 			Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background,
 				new Action(() =>
 				{
-					ViewModel.MessagesText += string.Format("Skipped due to read-only output {0}{1}",
-						inputFile, Environment.NewLine);
+					ViewModel.MessagesText += string.Create(CultureInfo.CurrentCulture,
+						$"Skipped due to read-only output {inputFile}{Environment.NewLine}");
 				}));
 		}
 
@@ -70,8 +71,8 @@ namespace MgloGui
 			Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background,
 				new Action(() =>
 				{
-					ViewModel.MessagesText += string.Format("EXCEPTION {0}{1}{2}",
-						inputFile, Environment.NewLine, e);
+					ViewModel.MessagesText += string.Create(CultureInfo.CurrentCulture,
+						$"EXCEPTION {inputFile}{Environment.NewLine}{e}");
 				}));
 		}
 		#endregion

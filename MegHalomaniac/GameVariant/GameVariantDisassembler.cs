@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -317,8 +318,8 @@ namespace MgloGui
 			{
 				if (t.IsFaulted)
 				{
-					MessagesText += string.Format("Disassembling game variantg BINs failed {0}{1}",
-						Environment.NewLine, t.Exception.GetOnlyExceptionOrAll());
+					MessagesText += string.Create(CultureInfo.CurrentCulture,
+						$"Disassembling game variantg BINs failed {Environment.NewLine}{t.Exception.GetOnlyExceptionOrAll()}");
 				}
 
 				FinishProcessing();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -268,8 +269,8 @@ namespace MgloGui
 			{
 				if (t.IsFaulted)
 				{
-					MessagesText += string.Format("Assembling game variantg XMLs failed {0}{1}",
-						Environment.NewLine, t.Exception.GetOnlyExceptionOrAll());
+					MessagesText += string.Create(CultureInfo.CurrentCulture,
+						$"Assembling game variantg XMLs failed {Environment.NewLine}{t.Exception.GetOnlyExceptionOrAll()}");
 				}
 
 				FinishProcessing();

@@ -88,7 +88,7 @@ namespace KSoft.Blam.Engine.Test
 			string valid_case_blob_system_display_name = EngineRegistry.GetSystemDebugDisplayString(Blob.BlobSystem.SystemGuid);
 			Assert.IsTrue(valid_case_blob_system_display_name.IsNotNullOrEmpty(), valid_case_blob_system_display_name);
 			Assert.AreEqual(
-				"{"+Blob.BlobSystem.SystemGuid.ToString(Values.KGuid.kFormatHyphenated)+"}=" + typeof(KSoft.Blam.Blob.BlobSystem),
+				"{"+Blob.BlobSystem.SystemGuid.ToString(Values.KGuid.kFormatHyphenated, KSoft.Util.InvariantCultureInfo)+"}=" + typeof(KSoft.Blam.Blob.BlobSystem),
 				valid_case_blob_system_display_name);
 		}
 	};

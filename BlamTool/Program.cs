@@ -99,7 +99,7 @@ namespace KSoft.Tool
 			var sb = new System.Text.StringBuilder(64);
 			sb.Append("Valid environments: ");
 
-			sb.AppendFormat("{0},", Environment.Blam.ToString().ToLowerInvariant());
+			sb.Append(Environment.Blam.ToString().ToLowerInvariant()).Append(',');
 
 			return sb.ToString(0, sb.Length-1); // don't include the last ','
 		}

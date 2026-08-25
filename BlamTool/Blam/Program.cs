@@ -32,8 +32,8 @@ namespace KSoft.Tool
 			var sb = new System.Text.StringBuilder(64);
 			sb.Append("Valid tools: ");
 
-			sb.AppendFormat("{0},", ToolType.Gvar.ToString().ToLowerInvariant());
-			sb.AppendFormat("{0},", ToolType.Metadata.ToString().ToLowerInvariant());
+			sb.Append(ToolType.Gvar.ToString().ToLowerInvariant()).Append(',');
+			sb.Append(ToolType.Metadata.ToString().ToLowerInvariant()).Append(',');
 
 			return sb.ToString();
 		}

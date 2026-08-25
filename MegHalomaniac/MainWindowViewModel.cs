@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Threading.Tasks;
 using KSoft;
 using KSoft.Collections;
@@ -352,7 +353,7 @@ namespace MgloGui
 			ClearStatus();
 			IsProcessing = true;
 
-			StatusText = string.Format("Loading {0}...", SelectedGameBuildNameSetting);
+			StatusText = string.Create(CultureInfo.CurrentCulture, $"Loading {SelectedGameBuildNameSetting}...");
 
 			var task = Task.Run(() =>
 			{
@@ -371,10 +372,8 @@ namespace MgloGui
 			{
 				if (t.IsFaulted)
 				{
-					MessagesText += string.Format("Loading {0} systems failed {1}{2}",
-						SelectedGameBuildNameSetting,
-						Environment.NewLine,
-						t.Exception.GetOnlyExceptionOrAll());
+					MessagesText += string.Create(CultureInfo.CurrentCulture,
+						$"Loading {SelectedGameBuildNameSetting} systems failed {Environment.NewLine}{t.Exception.GetOnlyExceptionOrAll()}");
 				}
 
 				FinishProcessing();

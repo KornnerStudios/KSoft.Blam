@@ -29,8 +29,8 @@ namespace KSoft.Tool.Blam
 			var sb = new System.Text.StringBuilder(64);
 			sb.Append("Valid modes: ");
 
-			sb.AppendFormat("{0},", Mode.Decode.ToString().ToLowerInvariant());
-			sb.AppendFormat("{0},", Mode.Encode.ToString().ToLowerInvariant());
+			sb.Append(Mode.Decode.ToString().ToLowerInvariant()).Append(',');
+			sb.Append(Mode.Encode.ToString().ToLowerInvariant()).Append(',');
 
 			return sb.ToString();
 		}
