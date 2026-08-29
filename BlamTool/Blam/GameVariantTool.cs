@@ -170,6 +170,8 @@ namespace KSoft.Tool.Blam
 		}
 		#endregion
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types",
+			Justification = "CLI tool reports initialization and task failures to the console instead of terminating silently.")]
 		void MainBody()
 		{
 			var stopwatch = mTimeOperation ? System.Diagnostics.Stopwatch.StartNew() : null;

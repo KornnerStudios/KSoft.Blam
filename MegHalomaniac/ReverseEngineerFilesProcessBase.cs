@@ -88,6 +88,8 @@ namespace MgloGui
 
 		protected abstract void ReverseEngineerInputFile(string inputFile, string outputFile);
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types",
+			Justification = "Each input file is processed independently; failures are logged and do not stop remaining files.")]
 		public void ReverseEngineerInputFiles()
 		{
 			var p = Parallel.ForEach(mInputFiles, f =>
