@@ -35,6 +35,7 @@ namespace MgloGui
 		kNumberOf,
 	};
 
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1852:Seal internal types", Justification = "Extensible game-variant assembly workflow processor.")]
 	class GvarAssembler : GvarReverseEngineerFilesProcessBase
 	{
 		bool mClearTitleUpdateData = false;
@@ -219,6 +220,7 @@ namespace MgloGui
 		}
 	};
 
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1852:Seal internal types", Justification = "WPF binding view model extended through partial classes.")]
 	partial class MainWindowViewModel
 	{
 		#region GameVariantAssemblerFlags

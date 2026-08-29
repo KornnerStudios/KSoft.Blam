@@ -66,6 +66,7 @@ namespace MgloGui
 		kNumberOf,
 	};
 
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1852:Seal internal types", Justification = "Extensible game-variant disassembly workflow processor.")]
 	class GvarDisassembler : GvarReverseEngineerFilesProcessBase
 	{
 		bool mIgnoreWritePredicates;
