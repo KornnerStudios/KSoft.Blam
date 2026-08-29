@@ -741,10 +741,18 @@ namespace KSoft.Tool.Blam
 			}
 
 			bool success;
-			KBlam.RuntimeData.Variants.GameEngineVariant gev;
-			success = EncodeLoadVariant(xml_filename, out gev);
-			success = success && EncodeVariantPreprocess(switches, gev, bin_filename);
-			success = success && EncodeVariantBlf(bin_filename, gev);
+			if (EncodeLoadVariant(xml_filename, out var gev))
+			{
+				using (gev)
+				{
+					success = EncodeVariantPreprocess(switches, gev, bin_filename);
+					success = success && EncodeVariantBlf(bin_filename, gev);
+				}
+			}
+			else
+			{
+				success = false;
+			}
 
 			if (!success && create_output_dir_and_file &&
 				File.Exists(bin_filename))

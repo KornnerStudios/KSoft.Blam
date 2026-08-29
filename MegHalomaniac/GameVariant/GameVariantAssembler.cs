@@ -92,8 +92,11 @@ namespace MgloGui
 			bool success = true;
 			if (success && EncodeLoadVariant(inputFile, out var gev))
 			{
-				success = EncodeVariantPreprocess(gev, outputFile);
-				success = success && EncodeVariantBlf(outputFile, gev);
+				using (gev)
+				{
+					success = EncodeVariantPreprocess(gev, outputFile);
+					success = success && EncodeVariantBlf(outputFile, gev);
+				}
 			}
 			else
 			{
