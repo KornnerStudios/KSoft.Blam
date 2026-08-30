@@ -519,7 +519,9 @@ namespace KSoft.Blam.Blob.Transport
 
 			Util.MarkUnusedVariable(ref blobSystem);
 
-			var tag_string = new string(Values.GroupTagData32.FromUInt(header.Signature));
+			Span<char> tag = stackalloc char[sizeof(uint)];
+			Values.GroupTagData32.FromUInt(header.Signature, tag);
+			var tag_string = new string(tag);
 
 			if (throwOnUnhandledChunk)
 			{
