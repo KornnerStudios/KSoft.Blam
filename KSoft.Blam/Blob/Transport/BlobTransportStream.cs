@@ -466,7 +466,7 @@ namespace KSoft.Blam.Blob.Transport
 		static byte[] GetEnumerateStreamResultBytes(BlobTransportStream @this, BlobChunkHeader header)
 		{
 			byte[] bytes = new byte[header.DataSize];
-			@this.UnderlyingStream!.Stream(bytes);
+			@this.UnderlyingStream!.Stream(bytes.AsSpan());
 
 			return bytes;
 		}

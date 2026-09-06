@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace KSoft.Blam.Blob.Transport
 {
 	using AuthenticationTypeStreamer = IO.EnumBinaryStreamer<BlobTransportStreamAuthentication, byte>;
@@ -106,7 +107,7 @@ namespace KSoft.Blam.Blob.Transport
 
 				if (Authentication != BlobTransportStreamAuthentication.None)
 				{
-					s.Stream(AuthenticationData);
+					s.Stream(AuthenticationData.AsSpan());
 				}
 			}
 			#endregion

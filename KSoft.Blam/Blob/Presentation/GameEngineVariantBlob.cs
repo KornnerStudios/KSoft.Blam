@@ -96,7 +96,7 @@ namespace KSoft.Blam.Blob
 			int maxBitStreamSize, bool isProbablyFromMcc)
 		{
 			byte[] bitstream_size_bytes = new byte[sizeof(int)];
-			s.Read(bitstream_size_bytes);
+			s.Read(bitstream_size_bytes.AsSpan());
 			hasher.TransformBlock(bitstream_size_bytes, 0, bitstream_size_bytes.Length, null, 0);
 
 			if (!s.ByteOrder.IsSameAsRuntime())
@@ -141,7 +141,7 @@ namespace KSoft.Blam.Blob
 			{
 				int bs_length = ReadBitStreamSize(s, hasher, max_bit_stream_size, is_probably_from_mcc);
 				bs_bytes = new byte[IntegerMath.Align(IntegerMath.kInt32AlignmentBit, bs_length)];
-				s.Read(bs_bytes, bs_length);
+				s.Read(bs_bytes.AsSpan(0, bs_length));
 
 				hasher.TransformFinalBlock(bs_bytes, 0, bs_length);
 				InvalidData = hasher.Hash!.EqualsArray(hashBuffer) == false;
@@ -208,7 +208,7 @@ namespace KSoft.Blam.Blob
 			byte[] hash_buffer = new byte[kSizeOfHash];
 
 			long hash_position = s.BaseStream.Position;
-			s.Stream(hash_buffer);
+			s.Stream(hash_buffer.AsSpan());
 			s.Pad32();
 
 				 if (s.IsReading)	{ ReadBitStream(s.Reader, hash_buffer); }
