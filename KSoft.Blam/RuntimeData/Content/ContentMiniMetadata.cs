@@ -136,7 +136,7 @@ namespace KSoft.Blam.RuntimeData
 				bs.Flush();
 
 				byte[] bits = ms.ToArray();
-				encoded_porition = kRadixEncoding.Encode(bits);
+				encoded_porition = kRadixEncoding.Encode(bits.AsSpan());
 			}
 
 			if (encoded_porition.Length > kEncodedPortionLength)
