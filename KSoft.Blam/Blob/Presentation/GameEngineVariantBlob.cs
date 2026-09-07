@@ -131,10 +131,18 @@ namespace KSoft.Blam.Blob
 
 			return size;
 		}
-		void ReadBitStream(IO.EndianReader s, byte[] hashBuffer)
+		void ReadBitStream(IO.EndianReader s, ReadOnlySpan<byte> hashBuffer)
 		{
 			int max_bit_stream_size = GetBitStreamSize();
-			bool is_probably_from_mcc = hashBuffer.EqualsZero();
+			bool is_probably_from_mcc = true;
+			foreach (byte value in hashBuffer)
+			{
+				if (value != 0)
+				{
+					is_probably_from_mcc = false;
+					break;
+				}
+			}
 
 			byte[] bs_bytes;
 			using (var hasher = Program.GetGen3RuntimeDataHasher())
@@ -144,7 +152,7 @@ namespace KSoft.Blam.Blob
 				s.Read(bs_bytes.AsSpan(0, bs_length));
 
 				hasher.TransformFinalBlock(bs_bytes, 0, bs_length);
-				InvalidData = hasher.Hash!.EqualsArray(hashBuffer) == false;
+				InvalidData = !hasher.Hash!.AsSpan().SequenceEqual(hashBuffer);
 			}
 
 			if (RequireValidHashes && InvalidData)
@@ -205,10 +213,11 @@ namespace KSoft.Blam.Blob
 		{
 			SanityCheckInvalidIsFalse(s.StreamName);
 
-			byte[] hash_buffer = new byte[kSizeOfHash];
+			Span<byte> hash_buffer = stackalloc byte[kSizeOfHash];
+			hash_buffer.Clear();
 
 			long hash_position = s.BaseStream.Position;
-			s.Stream(hash_buffer.AsSpan());
+			s.Stream(hash_buffer);
 			s.Pad32();
 
 				 if (s.IsReading)	{ ReadBitStream(s.Reader, hash_buffer); }
