@@ -61,7 +61,7 @@ namespace KSoft.Blam.Megalo.Model
 		{
 			EnumFlags.Modify(value, ref mValidParameters, param);
 
-			int index = Bits.TrailingZerosCount((uint)param);
+			int index = System.Numerics.BitOperations.TrailingZeroCount((uint)param);
 			NotifyPropertyChanged(kParameterChanged[index]);
 			NotifyPropertyChanged(kHasParametersChanged);
 		}

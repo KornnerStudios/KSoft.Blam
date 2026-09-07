@@ -37,7 +37,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			where T : struct
 		{
 			var old_flags = Modifiers;
-			int index = Bits.TrailingZerosCount((uint)modifer);
+			int index = System.Numerics.BitOperations.TrailingZeroCount((uint)modifer);
 
 			EnumFlags.Modify(newValue.HasValue, ref Modifiers, modifer);
 			value = newValue.GetValueOrDefault();
@@ -527,7 +527,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			where T : struct
 		{
 			var old_flags = Modifiers;
-			int index = Bits.TrailingZerosCount((uint)modifer);
+			int index = System.Numerics.BitOperations.TrailingZeroCount((uint)modifer);
 
 			EnumFlags.Modify(newValue.HasValue, ref Modifiers, modifer);
 			value = newValue.GetValueOrDefault();
