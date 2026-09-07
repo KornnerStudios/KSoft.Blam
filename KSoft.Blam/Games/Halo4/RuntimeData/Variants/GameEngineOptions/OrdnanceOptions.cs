@@ -98,7 +98,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamableFixedArray("Possibility", Possibilities);
+			s.StreamableFixedArray("Possibility", Possibilities.AsSpan());
 		}
 		#endregion
 	};

@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 {
 	using LocaleStringTableInfo = Localization.StringTables.LocaleStringTableInfo;
@@ -165,7 +166,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		#region ITagElementStringNameStreamable Members
 		public override void SerializeTeams<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			int streamed_count = s.StreamableFixedArray("Team", mTeams,
+			int streamed_count = s.StreamableFixedArray("Team", mTeams.AsSpan(),
 				mHalo4Build, _h4Build => new GameOptionsSingleTeamOptionsHalo4(_h4Build));
 
 			if (s.IsReading)

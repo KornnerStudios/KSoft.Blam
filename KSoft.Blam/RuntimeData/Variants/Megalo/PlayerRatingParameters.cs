@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace KSoft.Blam.RuntimeData.Variants
 {
 	public enum PlayerRatingParameter
@@ -100,7 +101,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		{
 			s.StreamAttribute("showInScoreboard", ref ShowInScoreboard);
 
-			int streamed_count = s.StreamFixedArray("Param", ParameterArray);
+			int streamed_count = s.StreamFixedArray("Param", ParameterArray.AsSpan());
 
 			Util.MarkUnusedVariable(ref streamed_count);
 		}

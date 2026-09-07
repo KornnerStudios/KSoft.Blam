@@ -103,7 +103,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		#region ITagElementStringNameStreamable Members
 		protected override void SerializeLoadouts<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, bool isUsed)
 		{
-			int streamed_count = !isUsed ? 0 : s.StreamableFixedArray("entry", mLoadouts);
+			int streamed_count = !isUsed ? 0 : s.StreamableFixedArray("entry", mLoadouts.AsSpan());
 
 			if (s.IsReading)
 			{
