@@ -101,7 +101,7 @@ namespace KSoft.Blam.Blob
 
 			if (!s.ByteOrder.IsSameAsRuntime())
 			{
-				Bitwise.ByteSwap.SwapData(Bitwise.ByteSwap.kInt32Definition, bitstream_size_bytes);
+				bitstream_size_bytes.AsSpan(0, sizeof(int)).Reverse();
 			}
 			int assumed_size = BitConverter.ToInt32(bitstream_size_bytes, 0);
 			int size = assumed_size;
@@ -184,7 +184,7 @@ namespace KSoft.Blam.Blob
 				byte[] bs_length_bytes = BitConverter.GetBytes(bs_length);
 				if (!s.ByteOrder.IsSameAsRuntime())
 				{
-					Bitwise.ByteSwap.SwapData(Bitwise.ByteSwap.kInt32Definition, bs_length_bytes);
+					bs_length_bytes.AsSpan(0, sizeof(int)).Reverse();
 				}
 
 				hasher.TransformBlock(bs_length_bytes, 0, bs_length_bytes.Length, null, 0);
