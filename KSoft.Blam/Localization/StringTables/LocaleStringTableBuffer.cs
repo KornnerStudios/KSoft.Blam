@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace KSoft.Blam.Localization.StringTables
 {
 	[System.Reflection.Obfuscation(Exclude=false)]
@@ -31,7 +32,7 @@ namespace KSoft.Blam.Localization.StringTables
 			}
 
 			Buffer = new byte[size];
-			bs.Read(Buffer);
+			bs.Read(Buffer.AsSpan());
 
 			if (is_compressed)
 			{
@@ -51,7 +52,7 @@ namespace KSoft.Blam.Localization.StringTables
 				bs.Write(buffer.Length, mOwner.kInfo.BufferSizeBitLength);
 			}
 
-			bs.Write(buffer);
+			bs.Write(buffer.AsSpan());
 		}
 		public void Serialize(IO.BitStream s)
 		{

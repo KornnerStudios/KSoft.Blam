@@ -90,7 +90,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		#region IBitStreamSerializable Members
 		public void Serialize(IO.BitStream s)
 		{
-			s.StreamFixedArray(ParameterArray);
+			s.StreamFixedArray(ParameterArray.AsSpan());
 			s.Stream(ref ShowInScoreboard);
 		}
 		#endregion
