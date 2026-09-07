@@ -109,11 +109,11 @@ namespace KSoft.Blam.Blob
 			bool size_was_in_range_after_forced_byte_swap = false;
 			if (isProbablyFromMcc)
 			{
-				size = Bitwise.ByteSwap.SwapInt32(size);
+				size = System.Buffers.Binary.BinaryPrimitives.ReverseEndianness(size);
 			}
 			else if (assumed_size < 0 || assumed_size > maxBitStreamSize)
 			{
-				size = Bitwise.ByteSwap.SwapInt32(size);
+				size = System.Buffers.Binary.BinaryPrimitives.ReverseEndianness(size);
 				if (size <= maxBitStreamSize)
 				{
 					size_was_in_range_after_forced_byte_swap = true;

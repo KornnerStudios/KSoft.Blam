@@ -36,7 +36,8 @@ namespace KSoft.Blam.Blob.Transport
 
 				if (EndianSignature != kEndianSignature)
 				{
-					requiresByteswap = Bitwise.ByteSwap.SwapInt16(EndianSignature) == kEndianSignature;
+					requiresByteswap =
+						System.Buffers.Binary.BinaryPrimitives.ReverseEndianness(EndianSignature) == kEndianSignature;
 
 					if (!requiresByteswap) // the signature didn't match, even after byte swapping it
 					{
@@ -60,7 +61,8 @@ namespace KSoft.Blam.Blob.Transport
 			internal void ByteSwap()
 			{
 				Header.ByteSwap();
-				Bitwise.ByteSwap.Swap(ref EndianSignature);
+				EndianSignature =
+					System.Buffers.Binary.BinaryPrimitives.ReverseEndianness(EndianSignature);
 			}
 
 			#region IEndianStreamSerializable Members

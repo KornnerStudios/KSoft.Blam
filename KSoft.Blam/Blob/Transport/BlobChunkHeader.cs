@@ -148,10 +148,10 @@ namespace KSoft.Blam.Blob.Transport
 
 		internal void ByteSwap()
 		{
-			Bitwise.ByteSwap.Swap(ref Signature);
-			Bitwise.ByteSwap.Swap(ref Size);
-			Bitwise.ByteSwap.Swap(ref Version);
-			Bitwise.ByteSwap.Swap(ref Flags);
+			Signature = System.Buffers.Binary.BinaryPrimitives.ReverseEndianness(Signature);
+			Size = System.Buffers.Binary.BinaryPrimitives.ReverseEndianness(Size);
+			Version = System.Buffers.Binary.BinaryPrimitives.ReverseEndianness(Version);
+			Flags = System.Buffers.Binary.BinaryPrimitives.ReverseEndianness(Flags);
 		}
 
 		#region IEndianStreamSerializable Members
