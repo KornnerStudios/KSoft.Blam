@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using KSoft;
 using KSoft.Collections;
+using KSoft.PropertyChanged.SourceGeneration;
 
 namespace MgloGui
 {
@@ -59,30 +60,18 @@ namespace MgloGui
 		#endregion
 
 		#region StatusText
-		string mStatusText = string.Empty;
-		public string StatusText
-		{
-			get { return mStatusText; }
-			set { this.SetFieldObj(ref mStatusText, value); }
-		}
+		[GeneratedPropertyChanged]
+		public partial string StatusText { get; set; } = string.Empty;
 		#endregion
 
 		#region ProcessFilesHelpText
-		string mProcessFilesHelpText = string.Empty;
-		public string ProcessFilesHelpText
-		{
-			get { return mProcessFilesHelpText; }
-			set { this.SetFieldObj(ref mProcessFilesHelpText, value); }
-		}
+		[GeneratedPropertyChanged]
+		public partial string ProcessFilesHelpText { get; set; } = string.Empty;
 		#endregion
 
 		#region MessagesText
-		string mMessagesText = string.Empty;
-		public string MessagesText
-		{
-			get { return mMessagesText; }
-			set { this.SetFieldObj(ref mMessagesText, value); }
-		}
+		[GeneratedPropertyChanged]
+		public partial string MessagesText { get; set; } = string.Empty;
 		#endregion
 
 		#region IsProcessing

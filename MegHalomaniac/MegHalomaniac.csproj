@@ -42,6 +42,10 @@
       <Project>{8BC67689-8BAA-480E-B2C1-03590AB79259}</Project>
       <Name>KSoft.WPF</Name>
     </ProjectReference>
+    <ProjectReference Include="$(VitaRootDir)KSoft\KSoft.PropertyChanged.SourceGeneration\KSoft.PropertyChanged.SourceGeneration.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="False"
+                      PrivateAssets="all" />
     <ProjectReference Include="..\KSoft.Blam\KSoft.Blam.csproj">
       <Project>{74372FF0-FCDA-405B-8DA3-E4BFBA051D27}</Project>
       <Name>KSoft.Blam</Name>
