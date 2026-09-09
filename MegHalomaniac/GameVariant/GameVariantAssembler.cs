@@ -236,12 +236,8 @@ namespace MgloGui
 			return gGameVariantAssemblerFlagsUserInterfaceSource;
 		} }
 
-		KSoft.Collections.BitVector32 mGameVariantAssemblerFlags;
-		public KSoft.Collections.BitVector32 GameVariantAssemblerFlags
-		{
-			get { return mGameVariantAssemblerFlags; }
-			set { this.SetFieldVal(ref mGameVariantAssemblerFlags, value); }
-		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged]
+		public partial KSoft.Collections.BitVector32 GameVariantAssemblerFlags { get; set; }
 		#endregion
 
 		public string GameVariantAssemblerOutputPathOverride { get {

@@ -52,11 +52,8 @@ namespace MgloGui
 		} }
 
 		KSoft.Collections.BitVector32 mFlags;
-		public KSoft.Collections.BitVector32 Flags
-		{
-			get { return mFlags; }
-			set { this.SetFieldVal(ref mFlags, value); }
-		}
+		[GeneratedPropertyChanged(BackingField = nameof(mFlags))]
+		public partial KSoft.Collections.BitVector32 Flags { get; set; }
 		#endregion
 
 		#region StatusText
@@ -75,12 +72,8 @@ namespace MgloGui
 		#endregion
 
 		#region IsProcessing
-		bool mIsProcessing;
-		public bool IsProcessing
-		{
-			get { return mIsProcessing; }
-			set { this.SetFieldVal(ref mIsProcessing, value); }
-		}
+		[GeneratedPropertyChanged]
+		public partial bool IsProcessing { get; set; }
 		#endregion
 
 		#region Selected Game Build
