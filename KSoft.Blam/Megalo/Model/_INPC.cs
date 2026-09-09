@@ -243,11 +243,6 @@ namespace KSoft.Blam.Megalo.Model
 			PropertyChanged.SafeNotify(this, args);
 		}
 		#endregion
-
-		static readonly PropertyChangedEventArgs kTypeChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptToken x) => x.Type);
-		static readonly PropertyChangedEventArgs kValueChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptToken x) => x.Value);
 	};
 	#region Values
 	partial class MegaloScriptValueBase

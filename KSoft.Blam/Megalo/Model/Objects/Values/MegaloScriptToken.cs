@@ -14,18 +14,20 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region Type
 		MegaloScriptTokenAbstractType mType = MegaloScriptTokenAbstractType.None;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptTokenAbstractType Type {
 			get { return mType; }
 			set { mType = value;
-				NotifyPropertyChanged(kTypeChanged);
+				NotifyPropertyChanged(kTypeChangedEventArgs);
 		} }
 		#endregion
 		#region Value
 		MegaloScriptVariableReferenceData mValue = MegaloScriptVariableReferenceData.Null;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Value {
 			get { return mValue; }
 			set { mValue = value;
-				NotifyPropertyChanged(kValueChanged);
+				NotifyPropertyChanged(kValueChangedEventArgs);
 		} }
 		#endregion
 

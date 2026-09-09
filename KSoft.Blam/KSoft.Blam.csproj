@@ -27,6 +27,10 @@
       <Name>KSoft.Security</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="$(VitaRootDir)KSoft\KSoft.PropertyChanged.SourceGeneration\KSoft.PropertyChanged.SourceGeneration.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="False"
+                      PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Engine\EngineRegistry.xml">
