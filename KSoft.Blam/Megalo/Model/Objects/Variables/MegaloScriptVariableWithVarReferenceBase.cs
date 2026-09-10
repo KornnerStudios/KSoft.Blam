@@ -7,10 +7,11 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region Var
 		protected MegaloScriptVariableReferenceData mVar;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Var {
 			get { return mVar; }
 			set { mVar = value;
-				NotifyPropertyChanged(kVarChanged);
+				NotifyPropertyChanged(kVarChangedEventArgs);
 		} }
 		#endregion
 

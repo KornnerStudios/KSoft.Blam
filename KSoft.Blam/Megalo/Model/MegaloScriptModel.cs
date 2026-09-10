@@ -48,45 +48,53 @@ namespace KSoft.Blam.Megalo.Model
 		public ObservableCollection<MegaloScriptGameObjectFilter> CandySpawnerFilters { get; private set; }
 
 		#region Trigger entry points properties
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int InitializationTriggerIndex {
 			get { return mInitializationTriggerIndex; }
 			set { mInitializationTriggerIndex = value;
-				NotifyPropertyChanged(kInitializationTriggerIndexChanged);
+				NotifyPropertyChanged(kInitializationTriggerIndexChangedEventArgs);
 		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int LocalInitializationTriggerIndex {
 			get { return mLocalInitializationTriggerIndex; }
 			set { mLocalInitializationTriggerIndex = value;
-				NotifyPropertyChanged(kLocalInitializationTriggerIndexChanged);
+				NotifyPropertyChanged(kLocalInitializationTriggerIndexChangedEventArgs);
 		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int HostMigrationTriggerIndex {
 			get { return mHostMigrationTriggerIndex; }
 			set { mHostMigrationTriggerIndex = value;
-				NotifyPropertyChanged(kHostMigrationTriggerIndexChanged);
+				NotifyPropertyChanged(kHostMigrationTriggerIndexChangedEventArgs);
 		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int DoubleHostMigrationTriggerIndex {
 			get { return mDoubleHostMigrationTriggerIndex; }
 			set { mDoubleHostMigrationTriggerIndex = value;
-				NotifyPropertyChanged(kDoubleHostMigrationTriggerIndexChanged);
+				NotifyPropertyChanged(kDoubleHostMigrationTriggerIndexChangedEventArgs);
 		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int ObjectDeathEventTriggerIndex {
 			get { return mObjectDeathEventTriggerIndex; }
 			set { mObjectDeathEventTriggerIndex = value;
-				NotifyPropertyChanged(kObjectDeathEventTriggerIndexChanged);
+				NotifyPropertyChanged(kObjectDeathEventTriggerIndexChangedEventArgs);
 		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int LocalTriggerIndex {
 			get { return mLocalTriggerIndex; }
 			set { mLocalTriggerIndex = value;
-				NotifyPropertyChanged(kLocalTriggerIndexChanged);
+				NotifyPropertyChanged(kLocalTriggerIndexChangedEventArgs);
 		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int PregameTriggerIndex {
 			get { return mPregameTriggerIndex; }
 			set { mPregameTriggerIndex = value;
-				NotifyPropertyChanged(kPregameTriggerIndexChanged);
+				NotifyPropertyChanged(kPregameTriggerIndexChangedEventArgs);
 		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int IncidentTriggerIndex {
 			get { return mIncidentTriggerIndex; }
 			set { mIncidentTriggerIndex = value;
-				NotifyPropertyChanged(kIncidentTriggerIndexChanged);
+				NotifyPropertyChanged(kIncidentTriggerIndexChangedEventArgs);
 		} }
 		#endregion
 

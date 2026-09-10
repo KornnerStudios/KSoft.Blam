@@ -11,10 +11,11 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region Position
 		MegaloScriptWidgetPosition mPosition; // byte at runtime
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptWidgetPosition Position {
 			get { return mPosition; }
 			set { mPosition = value;
-				NotifyPropertyChanged(kPositionChanged);
+				NotifyPropertyChanged(kPositionChangedEventArgs);
 		} }
 		#endregion
 

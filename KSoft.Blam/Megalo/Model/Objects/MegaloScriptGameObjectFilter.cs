@@ -11,43 +11,48 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region LabelStringIndex
 		int mLabelStringIndex; // 0x0
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int LabelStringIndex {
 			get { return mLabelStringIndex; }
 			set { mLabelStringIndex = value;
-				NotifyPropertyChanged(kLabelStringIndexChanged);
+				NotifyPropertyChanged(kLabelStringIndexChangedEventArgs);
 		} }
 		#endregion
 		#region Unknown1
 		int mUnknown1;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Unknown1 {
 			get { return mUnknown1; }
 			set { mUnknown1 = value;
-				NotifyPropertyChanged(kUnknown1Changed);
+				NotifyPropertyChanged(kUnknown1ChangedEventArgs);
 		} }
 		#endregion
 		#region Unknown2
 		int mUnknown2;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Unknown2 {
 			get { return mUnknown2; }
 			set { mUnknown2 = value;
-				NotifyPropertyChanged(kUnknown2Changed);
+				NotifyPropertyChanged(kUnknown2ChangedEventArgs);
 		} }
 		#endregion
 		#region Unknown3
 		int mUnknown3;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Unknown3 {
 			get { return mUnknown3; }
 			set { mUnknown3 = value;
-				NotifyPropertyChanged(kUnknown3Changed);
+				NotifyPropertyChanged(kUnknown3ChangedEventArgs);
 		} }
 		#endregion
 
 		#region Type
 		MegaloScriptGameObjectType mType;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptGameObjectType Type {
 			get { return mType; }
 			set { mType = value;
-				NotifyPropertyChanged(kTypeChanged);
+				NotifyPropertyChanged(kTypeChangedEventArgs);
 		} }
 		#endregion
 

@@ -14,23 +14,6 @@ namespace KSoft.Blam.Megalo.Model
 			PropertyChanged.SafeNotify(this, args);
 		}
 		#endregion
-
-		static readonly PropertyChangedEventArgs kInitializationTriggerIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptModel x) => x.InitializationTriggerIndex);
-		static readonly PropertyChangedEventArgs kLocalInitializationTriggerIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptModel x) => x.LocalInitializationTriggerIndex);
-		static readonly PropertyChangedEventArgs kHostMigrationTriggerIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptModel x) => x.HostMigrationTriggerIndex);
-		static readonly PropertyChangedEventArgs kDoubleHostMigrationTriggerIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptModel x) => x.DoubleHostMigrationTriggerIndex);
-		static readonly PropertyChangedEventArgs kObjectDeathEventTriggerIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptModel x) => x.ObjectDeathEventTriggerIndex);
-		static readonly PropertyChangedEventArgs kLocalTriggerIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptModel x) => x.LocalTriggerIndex);
-		static readonly PropertyChangedEventArgs kPregameTriggerIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptModel x) => x.PregameTriggerIndex);
-		static readonly PropertyChangedEventArgs kIncidentTriggerIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptModel x) => x.IncidentTriggerIndex);
 	};
 
 	partial class MegaloScriptAccessibleObjectBase
@@ -66,19 +49,6 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 	};
 
-	partial class MegaloScriptModelNamedObject
-	{
-		static readonly PropertyChangedEventArgs kNameChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptModelNamedObject x) => x.Name);
-	};
-
-	partial class MegaloScriptModelObjectWithParameters
-	{
-		static readonly PropertyChangedEventArgs kCommentOutChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptModelObjectWithParameters x) => x.CommentOut);
-		static readonly PropertyChangedEventArgs kArgumentsChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptModelObjectWithParameters x) => x.Arguments);
-	};
 	#endregion
 
 	partial class MegaloScriptArguments
@@ -261,50 +231,6 @@ namespace KSoft.Blam.Megalo.Model
 	};
 	#endregion
 
-	#region Variables
-	partial class MegaloScriptVariableBase
-	{
-		static readonly PropertyChangedEventArgs kNetworkStateChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptVariableBase x) => x.NetworkState);
-		static readonly PropertyChangedEventArgs kUnknownChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptVariableBase x) => x.Unknown);
-	};
-	partial class MegaloScriptVariableWithVarReferenceBase
-	{
-		static readonly PropertyChangedEventArgs kVarChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptVariableWithVarReferenceBase x) => x.Var);
-	};
-
-	partial class MegaloScriptTeamVariable
-	{
-		static readonly PropertyChangedEventArgs kTeamDesignatorChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTeamVariable x) => x.TeamDesignator);
-	};
-	#endregion
-
-	partial class MegaloScriptGameStatistic
-	{
-		static readonly PropertyChangedEventArgs kNameStringIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameStatistic x) => x.NameStringIndex);
-		static readonly PropertyChangedEventArgs kFormatChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameStatistic x) => x.Format);
-		static readonly PropertyChangedEventArgs kSortOrderChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameStatistic x) => x.SortOrder);
-		static readonly PropertyChangedEventArgs kGroupingChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameStatistic x) => x.Grouping);
-
-		static readonly PropertyChangedEventArgs kUnk5Changed =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameStatistic x) => x.Unk5);
-		static readonly PropertyChangedEventArgs kIsScoreToWinChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameStatistic x) => x.IsScoreToWin);
-	};
-
-	partial class MegaloScriptHudWidget
-	{
-		static readonly PropertyChangedEventArgs kPositionChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptHudWidget x) => x.Position);
-	};
-
 	partial class MegaloScriptObjectFilter
 	{
 		static readonly PropertyChangedEventArgs kLabelStringIndexChanged =
@@ -329,18 +255,4 @@ namespace KSoft.Blam.Megalo.Model
 		];
 	};
 
-	partial class MegaloScriptGameObjectFilter
-	{
-		static readonly PropertyChangedEventArgs kLabelStringIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameObjectFilter x) => x.LabelStringIndex);
-		static readonly PropertyChangedEventArgs kUnknown1Changed =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameObjectFilter x) => x.Unknown1);
-		static readonly PropertyChangedEventArgs kUnknown2Changed =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameObjectFilter x) => x.Unknown2);
-		static readonly PropertyChangedEventArgs kUnknown3Changed =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameObjectFilter x) => x.Unknown3);
-
-		static readonly PropertyChangedEventArgs kTypeChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptGameObjectFilter x) => x.Type);
-	};
 }

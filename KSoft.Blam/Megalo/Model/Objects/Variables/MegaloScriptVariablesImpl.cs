@@ -62,10 +62,11 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region TeamDesignator
 		int mTeamDesignator;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int TeamDesignator {
 			get { return mTeamDesignator; }
 			set { mTeamDesignator = value;
-				NotifyPropertyChanged(kTeamDesignatorChanged);
+				NotifyPropertyChanged(kTeamDesignatorChangedEventArgs);
 		} }
 		#endregion
 

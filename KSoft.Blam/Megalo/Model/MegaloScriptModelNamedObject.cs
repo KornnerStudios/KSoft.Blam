@@ -8,10 +8,11 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region Name
 		string mName;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public string Name {
 			get { return mName; }
 			set { mName = value;
-				NotifyPropertyChanged(kNameChanged);
+				NotifyPropertyChanged(kNameChangedEventArgs);
 		} }
 		#endregion
 

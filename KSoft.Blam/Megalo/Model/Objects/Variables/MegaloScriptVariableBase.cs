@@ -11,18 +11,20 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region NetworkState
 		MegaloScriptVariableNetworkState mNetworkState;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableNetworkState NetworkState {
 			get { return mNetworkState; }
 			set { mNetworkState = value;
-				NotifyPropertyChanged(kNetworkStateChanged);
+				NotifyPropertyChanged(kNetworkStateChangedEventArgs);
 		} }
 		#endregion
 		#region Unknown
 		protected bool mUnknown;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool Unknown {
 			get { return mUnknown; }
 			set { mUnknown = value;
-				NotifyPropertyChanged(kUnknownChanged);
+				NotifyPropertyChanged(kUnknownChangedEventArgs);
 		} }
 		#endregion
 
