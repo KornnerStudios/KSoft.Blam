@@ -59,7 +59,7 @@ namespace KSoft.Blam.Localization.StringTables
 
 		protected void NotifyItemsInitialized()
 		{
-			NotifyPropertyChanged(kCountChanged);
+			NotifyPropertyChanged(kCountChangedEventArgs);
 			CollectionChanged.SafeNotify(this, ObjectModel.Util.kNotifyCollectionReset);
 		}
 		protected void NotifyItemChanged(int index, LocaleStringTableReference oldValue, LocaleStringTableReference newValue)
@@ -69,13 +69,13 @@ namespace KSoft.Blam.Localization.StringTables
 		}
 		protected void NotifyItemInserted(int index, LocaleStringTableReference value)
 		{
-			NotifyPropertyChanged(kCountChanged);
+			NotifyPropertyChanged(kCountChangedEventArgs);
 			CollectionChanged.SafeNotify(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
 				value, index));
 		}
 		protected void NotifyItemRemoved(int index, LocaleStringTableReference value)
 		{
-			NotifyPropertyChanged(kCountChanged);
+			NotifyPropertyChanged(kCountChangedEventArgs);
 			CollectionChanged.SafeNotify(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
 				value, index));
 		}
@@ -89,8 +89,5 @@ namespace KSoft.Blam.Localization.StringTables
 			PropertyChanged.SafeNotify(this, args);
 		}
 		#endregion
-
-		static readonly PropertyChangedEventArgs kCountChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((LocaleStringTable x) => x.Count);
 	};
 }

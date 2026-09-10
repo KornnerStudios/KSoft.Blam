@@ -260,6 +260,7 @@ namespace KSoft.Blam.Megalo.Model
 			mElements.CopyTo(array, arrayIndex);
 		}
 
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Count											{ get { return mElements.Count; } }
 		bool ICollection<MegaloScriptModelObjectHandle>.IsReadOnly	{ get { return false; } }
 		#endregion

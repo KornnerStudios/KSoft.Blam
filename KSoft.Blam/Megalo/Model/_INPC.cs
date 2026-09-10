@@ -88,20 +88,17 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		void NotifyItemInserted(int index, MegaloScriptModelObjectHandle value)
 		{
-			NotifyPropertyChanged(kCountChanged);
+			NotifyPropertyChanged(kCountChangedEventArgs);
 			CollectionChanged.SafeNotify(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
 				value, index));
 		}
 		void NotifyItemRemoved(int index, MegaloScriptModelObjectHandle value)
 		{
-			NotifyPropertyChanged(kCountChanged);
+			NotifyPropertyChanged(kCountChangedEventArgs);
 			CollectionChanged.SafeNotify(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
 				value, index));
 		}
 		#endregion
-
-		static readonly PropertyChangedEventArgs kCountChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptConditionActionReferences x) => x.Count);
 	};
 
 	#endregion
@@ -132,13 +129,13 @@ namespace KSoft.Blam.Megalo.Model
 		}
 		void NotifyItemInserted(int index, MegaloScriptModelObjectHandle value)
 		{
-			NotifyPropertyChanged(kCountChanged);
+			NotifyPropertyChanged(kCountChangedEventArgs);
 			CollectionChanged.SafeNotify(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
 				value, index));
 		}
 		void NotifyItemRemoved(int index, MegaloScriptModelObjectHandle value)
 		{
-			NotifyPropertyChanged(kCountChanged);
+			NotifyPropertyChanged(kCountChangedEventArgs);
 			CollectionChanged.SafeNotify(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
 				value, index));
 		}
@@ -152,9 +149,6 @@ namespace KSoft.Blam.Megalo.Model
 			PropertyChanged.SafeNotify(this, args);
 		}
 		#endregion
-
-		static readonly PropertyChangedEventArgs kCountChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptConditionActionReferences x) => x.Count);
 	};
 
 	#region Triggers

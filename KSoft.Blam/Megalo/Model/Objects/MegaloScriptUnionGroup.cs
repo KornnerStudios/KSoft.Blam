@@ -234,6 +234,7 @@ namespace KSoft.Blam.Megalo.Model
 			mConditions.CopyTo(array, arrayIndex);
 		}
 
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Count											{ get { return mConditions.Count; } }
 		bool ICollection<MegaloScriptModelObjectHandle>.IsReadOnly	{ get { return true; } }
 		#endregion

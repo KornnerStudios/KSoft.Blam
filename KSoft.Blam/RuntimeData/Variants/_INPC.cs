@@ -29,8 +29,5 @@ namespace KSoft.Blam.RuntimeData.Variants
 				oldValue, newValue, index));
 		}
 		#endregion
-
-		static readonly PropertyChangedEventArgs kHasValuesChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((OptionalRealArray x) => x.HasValues);
 	};
 }

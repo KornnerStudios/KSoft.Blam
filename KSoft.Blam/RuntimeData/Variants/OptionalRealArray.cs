@@ -33,6 +33,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 		readonly float[] mArray;
 
 		public int Length => mArray.Length;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool HasValues => mValidFlags != 0;
 		internal bool AreUnchanged => mValidFlags == 0;
 
@@ -63,7 +64,7 @@ namespace KSoft.Blam.RuntimeData.Variants
 
 			if (old_flags != mValidFlags)
 			{
-				NotifyPropertyChanged(kHasValuesChanged);
+				NotifyPropertyChanged(kHasValuesChangedEventArgs);
 			}
 
 			NotifyItemChanged(index, old_value, value);

@@ -18,6 +18,7 @@ namespace KSoft.Blam.Localization.StringTables
 		readonly GameLanguageTable mEngineLanguageTable;
 		readonly List<LocaleStringTableReference> mStringReferences;
 
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Count => mStringReferences.Count;
 		public int Capacity => kInfo.MaxCount;
 		internal bool HasStrings => mStringReferences.Count > 0;
