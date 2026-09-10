@@ -10,19 +10,21 @@
 	{
 		#region TargetType
 		MegaloScriptTargetType mTargetType;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptTargetType TargetType {
 			get { return mTargetType; }
 			set { mTargetType = value;
-				NotifyPropertyChanged(kTargetTypeChanged);
+				NotifyPropertyChanged(kTargetTypeChangedEventArgs);
 		} }
 		#endregion
 
 		#region Value
 		MegaloScriptVariableReferenceData mValue = MegaloScriptVariableReferenceData.Null;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Value {
 			get { return mValue; }
 			set { mValue = value;
-				NotifyPropertyChanged(kValueChanged);
+				NotifyPropertyChanged(kValueChangedEventArgs);
 		} }
 		#endregion
 

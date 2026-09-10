@@ -10,10 +10,11 @@
 		// assuming the ValueType isn't Any.
 		#region Var
 		MegaloScriptVariableReferenceData mVar = MegaloScriptVariableReferenceData.Null;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Var {
 			get { return mVar; }
 			set { mVar = value;
-				NotifyPropertyChanged(kVarChanged);
+				NotifyPropertyChanged(kVarChangedEventArgs);
 		} }
 		#endregion
 
@@ -95,10 +96,11 @@
 	{
 		#region PlayerVarIndex
 		int mPlayerVarIndex;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int PlayerVarIndex {
 			get { return mPlayerVarIndex; }
 			set { mPlayerVarIndex = value;
-				NotifyPropertyChanged(kPlayerVarIndexChanged);
+				NotifyPropertyChanged(kPlayerVarIndexChangedEventArgs);
 		} }
 		#endregion
 

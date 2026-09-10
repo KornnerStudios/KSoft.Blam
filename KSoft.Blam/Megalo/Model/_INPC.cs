@@ -245,24 +245,6 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 	};
 	#region Values
-	partial class MegaloScriptVarReferenceValueBase
-	{
-		static readonly PropertyChangedEventArgs kVarChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptVarReferenceValueBase x) => x.Var);
-	};
-	partial class MegaloScriptTokensValue
-	{
-		static readonly PropertyChangedEventArgs kStringIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTokensValue x) => x.StringIndex);
-		static readonly PropertyChangedEventArgs kTokenCountChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTokensValue x) => x.TokenCount);
-	};
-
-	partial class MegaloScriptVirtualTriggerValue
-	{
-		static readonly PropertyChangedEventArgs kVirtualTriggerHandleChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptVirtualTriggerValue x) => x.VirtualTriggerHandle);
-	};
 	partial class MegaloScriptShapeValue
 	{
 		static readonly PropertyChangedEventArgs kShapeTypeChanged =
@@ -276,45 +258,6 @@ namespace KSoft.Blam.Megalo.Model
 			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptShapeValue x) => x.Top);
 		static readonly PropertyChangedEventArgs kBottomChanged =
 			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptShapeValue x) => x.Bottom);
-	};
-	partial class MegaloScriptTargetVarValue
-	{
-		static readonly PropertyChangedEventArgs kTargetTypeChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTargetVarValue x) => x.TargetType);
-		static readonly PropertyChangedEventArgs kValueChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTargetVarValue x) => x.Value);
-	};
-	partial class MegaloScriptTeamFilterParametersValue
-	{
-		static readonly PropertyChangedEventArgs kFilterTypeChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTeamFilterParametersValue x) => x.FilterType);
-		static readonly PropertyChangedEventArgs kPlayerChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTeamFilterParametersValue x) => x.Player);
-		static readonly PropertyChangedEventArgs kPlayerAddOrRemoveChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTeamFilterParametersValue x) => x.PlayerAddOrRemove);
-	};
-	partial class MegaloScriptNavpointIconParametersValue
-	{
-		static readonly PropertyChangedEventArgs kIconTypeChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptNavpointIconParametersValue x) => x.IconType);
-		static readonly PropertyChangedEventArgs kNumericChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptNavpointIconParametersValue x) => x.Numeric);
-	};
-	partial class MegaloScriptWidgetMeterParametersValue
-	{
-		static readonly PropertyChangedEventArgs kTypeChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptWidgetMeterParametersValue x) => x.Type);
-		static readonly PropertyChangedEventArgs kTimerChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptWidgetMeterParametersValue x) => x.Timer);
-		static readonly PropertyChangedEventArgs kNumeric1Changed =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptWidgetMeterParametersValue x) => x.Numeric1);
-		static readonly PropertyChangedEventArgs kNumeric2Changed =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptWidgetMeterParametersValue x) => x.Numeric2);
-	};
-	partial class MegaloScriptObjectReferenceWithPlayerVarIndexValue
-	{
-		static readonly PropertyChangedEventArgs kPlayerVarIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectReferenceWithPlayerVarIndexValue x) => x.PlayerVarIndex);
 	};
 	#endregion
 

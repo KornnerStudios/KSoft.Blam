@@ -11,27 +11,30 @@
 	{
 		#region FilterType
 		MegaloScriptPlayerFilterType mFilterType;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptPlayerFilterType FilterType {
 			get { return mFilterType; }
 			set { mFilterType = value;
-				NotifyPropertyChanged(kFilterTypeChanged);
+				NotifyPropertyChanged(kFilterTypeChangedEventArgs);
 		} }
 		#endregion
 
 		#region Player
 		MegaloScriptVariableReferenceData mPlayer = MegaloScriptVariableReferenceData.Player;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Player {
 			get { return mPlayer; }
 			set { mPlayer = value;
-				NotifyPropertyChanged(kPlayerChanged);
+				NotifyPropertyChanged(kPlayerChangedEventArgs);
 		} }
 		#endregion
 		#region PlayerAddOrRemove (Bool)
 		MegaloScriptVariableReferenceData mPlayerAddOrRemove = MegaloScriptVariableReferenceData.Custom;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData PlayerAddOrRemove {
 			get { return mPlayerAddOrRemove; }
 			set { mPlayerAddOrRemove = value;
-				NotifyPropertyChanged(kPlayerAddOrRemoveChanged);
+				NotifyPropertyChanged(kPlayerAddOrRemoveChangedEventArgs);
 		} }
 		#endregion
 

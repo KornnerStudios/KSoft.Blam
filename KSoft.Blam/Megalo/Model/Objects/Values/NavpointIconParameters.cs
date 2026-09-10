@@ -14,18 +14,20 @@
 	{
 		#region IconType
 		MegaloScriptNavpointIconType mIconType;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptNavpointIconType IconType {
 			get { return mIconType; }
 			set { mIconType = value;
-				NotifyPropertyChanged(kIconTypeChanged);
+				NotifyPropertyChanged(kIconTypeChangedEventArgs);
 		} }
 		#endregion
 		#region Numeric
 		MegaloScriptVariableReferenceData mNumeric = MegaloScriptVariableReferenceData.Custom;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Numeric {
 			get { return mNumeric; }
 			set { mNumeric = value;
-				NotifyPropertyChanged(kNumericChanged);
+				NotifyPropertyChanged(kNumericChangedEventArgs);
 		} }
 		#endregion
 

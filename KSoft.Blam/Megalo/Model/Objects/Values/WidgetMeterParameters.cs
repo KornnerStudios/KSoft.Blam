@@ -11,34 +11,38 @@
 	{
 		#region Type
 		MegaloScriptWidgetMeterType mType;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptWidgetMeterType Type {
 			get { return mType; }
 			set { mType = value;
-				NotifyPropertyChanged(kTypeChanged);
+				NotifyPropertyChanged(kTypeChangedEventArgs);
 		} }
 		#endregion
 		#region Timer
 		MegaloScriptVariableReferenceData mTimer = MegaloScriptVariableReferenceData.Timer;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Timer {
 			get { return mTimer; }
 			set { mTimer = value;
-				NotifyPropertyChanged(kTimerChanged);
+				NotifyPropertyChanged(kTimerChangedEventArgs);
 		} }
 		#endregion
 		#region Numeric1 (fill amount numerator)
 		MegaloScriptVariableReferenceData mNumeric1 = MegaloScriptVariableReferenceData.Custom;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Numeric1 {
 			get { return mNumeric1; }
 			set { mNumeric1 = value;
-				NotifyPropertyChanged(kNumeric1Changed);
+				NotifyPropertyChanged(kNumeric1ChangedEventArgs);
 		} }
 		#endregion
 		#region Numeric2 (fill amount denominator)
 		MegaloScriptVariableReferenceData mNumeric2 = MegaloScriptVariableReferenceData.Custom;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Numeric2 {
 			get { return mNumeric2; }
 			set { mNumeric2 = value;
-				NotifyPropertyChanged(kNumeric2Changed);
+				NotifyPropertyChanged(kNumeric2ChangedEventArgs);
 		} }
 		#endregion
 
