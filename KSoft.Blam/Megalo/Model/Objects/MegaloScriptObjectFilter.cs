@@ -60,6 +60,7 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 
 		#region ValidParameters interface
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool HasParameters { get { return mValidParameters != 0; } }
 
 		void ParameterSet(bool value, MegaloScriptObjectFilterValidParameters param)
@@ -68,16 +69,19 @@ namespace KSoft.Blam.Megalo.Model
 
 			int index = System.Numerics.BitOperations.TrailingZeroCount((uint)param);
 			NotifyPropertyChanged(kParameterChanged[index]);
-			NotifyPropertyChanged(kHasParametersChanged);
+			NotifyPropertyChanged(kHasParametersChangedEventArgs);
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool HasObjectTypeIndex	{
 			get { return mValidParameters.HasFlag(MegaloScriptObjectFilterValidParameters.ObjectType); }
 			set { ParameterSet(value, MegaloScriptObjectFilterValidParameters.ObjectType); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool HasTeam	{
 			get { return mValidParameters.HasFlag(MegaloScriptObjectFilterValidParameters.Team); }
 			set { ParameterSet(value, MegaloScriptObjectFilterValidParameters.Team); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool HasNumeric	{
 			get { return mValidParameters.HasFlag(MegaloScriptObjectFilterValidParameters.Numeric); }
 			set { ParameterSet(value, MegaloScriptObjectFilterValidParameters.Numeric); }

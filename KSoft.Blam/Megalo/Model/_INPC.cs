@@ -176,12 +176,10 @@ namespace KSoft.Blam.Megalo.Model
 
 	partial class MegaloScriptObjectFilter
 	{
-		static readonly PropertyChangedEventArgs kHasParametersChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.HasParameters);
 		static readonly PropertyChangedEventArgs[] kParameterChanged = [
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.HasObjectTypeIndex),
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.HasNumeric),
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.HasNumeric),
+			kHasObjectTypeIndexChangedEventArgs,
+			kHasTeamChangedEventArgs,
+			kHasNumericChangedEventArgs,
 		];
 	};
 
