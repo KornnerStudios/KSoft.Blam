@@ -30,10 +30,11 @@ namespace KSoft.Blam.Megalo.Model
 		public Proto.MegaloScriptValueType ValueType { get; private set; }
 		#region IsGlobal
 		bool mIsGlobal;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool IsGlobal {
-			get { return mIsGlobal; }
-			set { mIsGlobal = value;
-				NotifyPropertyChanged(kIsGlobalChanged);
+		get { return mIsGlobal; }
+		set { mIsGlobal = value;
+			NotifyPropertyChanged(kIsGlobalChangedEventArgs);
 		} }
 		#endregion
 

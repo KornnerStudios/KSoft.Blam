@@ -9,10 +9,11 @@
 	{
 		#region Value
 		uint mValue;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public uint Value {
 			get { return mValue; }
 			set { mValue = value;
-				NotifyPropertyChanged(kValueChanged);
+				NotifyPropertyChanged(kValueChangedEventArgs);
 		} }
 		#endregion
 

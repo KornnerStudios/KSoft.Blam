@@ -48,10 +48,11 @@
 	{
 		#region Value
 		bool mValue;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool Value {
 			get { return mValue; }
 			set { mValue = value;
-				NotifyPropertyChanged(kValueChanged);
+				NotifyPropertyChanged(kValueChangedEventArgs);
 		} }
 		#endregion
 
@@ -96,10 +97,11 @@
 	{
 		#region Value
 		int mValue;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Value {
 			get { return mValue; }
 			set { mValue = value;
-				NotifyPropertyChanged(kValueChanged);
+				NotifyPropertyChanged(kValueChangedEventArgs);
 		} }
 		#endregion
 
@@ -144,10 +146,11 @@
 	{
 		#region Value
 		uint mValue;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public uint Value {
 			get { return mValue; }
 			set { mValue = value;
-				NotifyPropertyChanged(kValueChanged);
+				NotifyPropertyChanged(kValueChangedEventArgs);
 		} }
 		#endregion
 
@@ -192,10 +195,11 @@
 	{
 		#region Value
 		float mValue;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float Value {
 			get { return mValue; }
 			set { mValue = value;
-				NotifyPropertyChanged(kValueChanged);
+				NotifyPropertyChanged(kValueChangedEventArgs);
 		} }
 		#endregion
 
@@ -249,26 +253,29 @@
 	{
 		#region Value X
 		int mX;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int X {
 			get { return mX; }
 			set { mX = value;
-				NotifyPropertyChanged(kXChanged);
+				NotifyPropertyChanged(kXChangedEventArgs);
 		} }
 		#endregion
 		#region Value Y
 		int mY;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Y {
 			get { return mY; }
 			set { mY = value;
-				NotifyPropertyChanged(kYChanged);
+				NotifyPropertyChanged(kYChangedEventArgs);
 		} }
 		#endregion
 		#region Value Z
 		int mZ;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Z {
 			get { return mZ; }
 			set { mZ = value;
-				NotifyPropertyChanged(kZChanged);
+				NotifyPropertyChanged(kZChangedEventArgs);
 		} }
 		#endregion
 
@@ -320,10 +327,11 @@
 	{
 		#region Value
 		int mValue;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Value {
 			get { return mValue; }
 			set { mValue = value;
-				NotifyPropertyChanged(kValueChanged);
+				NotifyPropertyChanged(kValueChangedEventArgs);
 		} }
 		#endregion
 

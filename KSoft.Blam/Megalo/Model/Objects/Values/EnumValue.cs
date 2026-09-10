@@ -9,10 +9,11 @@
 	{
 		#region Value
 		int mValue;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Value {
 			get { return mValue; }
 			set { mValue = value;
-				NotifyPropertyChanged(kValueChanged);
+				NotifyPropertyChanged(kValueChangedEventArgs);
 		} }
 		#endregion
 

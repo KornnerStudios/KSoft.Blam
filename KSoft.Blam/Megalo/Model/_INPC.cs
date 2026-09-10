@@ -245,64 +245,6 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 	};
 	#region Values
-	partial class MegaloScriptValueBase
-	{
-		static readonly PropertyChangedEventArgs kIsGlobalChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptValueBase x) => x.IsGlobal);
-	};
-
-	partial class MegaloScriptBoolValue
-	{
-		static readonly PropertyChangedEventArgs kValueChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptBoolValue x) => x.Value);
-	};
-
-	partial class MegaloScriptIntValue
-	{
-		static readonly PropertyChangedEventArgs kValueChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptIntValue x) => x.Value);
-	};
-	partial class MegaloScriptUIntValue
-	{
-		static readonly PropertyChangedEventArgs kValueChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptUIntValue x) => x.Value);
-	};
-	partial class MegaloScriptSingleValue
-	{
-		static readonly PropertyChangedEventArgs kValueChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptSingleValue x) => x.Value);
-	};
-	partial class MegaloScriptPoint3dValue
-	{
-		static readonly PropertyChangedEventArgs kXChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptPoint3dValue x) => x.X);
-		static readonly PropertyChangedEventArgs kYChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptPoint3dValue x) => x.Y);
-		static readonly PropertyChangedEventArgs kZChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptPoint3dValue x) => x.Z);
-	};
-
-	partial class MegaloScriptFlagsValue
-	{
-		static readonly PropertyChangedEventArgs kValueChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptFlagsValue x) => x.Value);
-	};
-	partial class MegaloScriptEnumValue
-	{
-		static readonly PropertyChangedEventArgs kValueChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptEnumValue x) => x.Value);
-	};
-	partial class MegaloScriptIndexValue
-	{
-		static readonly PropertyChangedEventArgs kValueChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptIndexValue x) => x.Value);
-	};
-
-	partial class MegaloScriptVarIndexValue
-	{
-		static readonly PropertyChangedEventArgs kValueChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptVarIndexValue x) => x.Value);
-	};
 	partial class MegaloScriptVarReferenceValueBase
 	{
 		static readonly PropertyChangedEventArgs kVarChanged =
