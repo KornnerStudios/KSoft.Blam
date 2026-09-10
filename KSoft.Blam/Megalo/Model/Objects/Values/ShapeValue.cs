@@ -10,43 +10,48 @@
 	{
 		#region ShapeType
 		MegaloScriptShapeType mShapeType;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptShapeType ShapeType {
 			get { return mShapeType; }
 			set { mShapeType = value;
-				NotifyPropertyChanged(kShapeTypeChanged);
+				NotifyPropertyChanged(kShapeTypeChangedEventArgs);
 		} }
 		#endregion
 
 		#region Radius
 		MegaloScriptVariableReferenceData mRadius = MegaloScriptVariableReferenceData.Custom;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Radius {
 			get { return mRadius; }
 			set { mRadius = value;
-				NotifyPropertyChanged(kRadiusChanged);
+				NotifyPropertyChanged(kRadiusChangedEventArgs);
 		} }
 		#endregion
 		#region Length
 		MegaloScriptVariableReferenceData mLength = MegaloScriptVariableReferenceData.Custom;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Length {
 			get { return mLength; }
 			set { mLength = value;
-				NotifyPropertyChanged(kLengthChanged);
+				NotifyPropertyChanged(kLengthChangedEventArgs);
 		} }
 		#endregion
 		#region Top
 		MegaloScriptVariableReferenceData mTop = MegaloScriptVariableReferenceData.Custom;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Top {
 			get { return mTop; }
 			set { mTop = value;
-				NotifyPropertyChanged(kTopChanged);
+				NotifyPropertyChanged(kTopChangedEventArgs);
 		} }
 		#endregion
 		#region Bottom
 		MegaloScriptVariableReferenceData mBottom = MegaloScriptVariableReferenceData.Custom;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptVariableReferenceData Bottom {
 			get { return mBottom; }
 			set { mBottom = value;
-				NotifyPropertyChanged(kBottomChanged);
+				NotifyPropertyChanged(kBottomChangedEventArgs);
 		} }
 		#endregion
 
@@ -131,7 +136,7 @@
 			mTop = MegaloScriptVariableReferenceData.Custom;
 			mBottom = MegaloScriptVariableReferenceData.Custom;
 
-			NotifyPropertyChanged(kRadiusChanged);
+			NotifyPropertyChanged(kRadiusChangedEventArgs);
 			ShapeType = MegaloScriptShapeType.Sphere;
 		}
 		public void SetAsCylinder(MegaloScriptVariableReferenceData radius,
@@ -146,9 +151,9 @@
 			mTop = top;
 			mBottom = bottom;
 
-			NotifyPropertyChanged(kRadiusChanged);
-			NotifyPropertyChanged(kTopChanged);
-			NotifyPropertyChanged(kBottomChanged);
+			NotifyPropertyChanged(kRadiusChangedEventArgs);
+			NotifyPropertyChanged(kTopChangedEventArgs);
+			NotifyPropertyChanged(kBottomChangedEventArgs);
 			ShapeType = MegaloScriptShapeType.Cylinder;
 		}
 		public void SetAsBox(MegaloScriptVariableReferenceData width, MegaloScriptVariableReferenceData length,
@@ -164,10 +169,10 @@
 			mTop = top;
 			mBottom = bottom;
 
-			NotifyPropertyChanged(kRadiusChanged);
-			NotifyPropertyChanged(kLengthChanged);
-			NotifyPropertyChanged(kTopChanged);
-			NotifyPropertyChanged(kBottomChanged);
+			NotifyPropertyChanged(kRadiusChangedEventArgs);
+			NotifyPropertyChanged(kLengthChangedEventArgs);
+			NotifyPropertyChanged(kTopChangedEventArgs);
+			NotifyPropertyChanged(kBottomChangedEventArgs);
 			ShapeType = MegaloScriptShapeType.Box;
 		}
 		#endregion

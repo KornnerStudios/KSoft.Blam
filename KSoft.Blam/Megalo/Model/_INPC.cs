@@ -178,20 +178,6 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 	};
 	#region Values
-	partial class MegaloScriptShapeValue
-	{
-		static readonly PropertyChangedEventArgs kShapeTypeChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptShapeValue x) => x.ShapeType);
-
-		static readonly PropertyChangedEventArgs kRadiusChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptShapeValue x) => x.Radius);
-		static readonly PropertyChangedEventArgs kLengthChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptShapeValue x) => x.Length);
-		static readonly PropertyChangedEventArgs kTopChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptShapeValue x) => x.Top);
-		static readonly PropertyChangedEventArgs kBottomChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptShapeValue x) => x.Bottom);
-	};
 	#endregion
 
 	partial class MegaloScriptObjectFilter
