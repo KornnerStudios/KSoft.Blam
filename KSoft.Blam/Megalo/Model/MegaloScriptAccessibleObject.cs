@@ -19,11 +19,12 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region CodeName
 		string mCodeName = string.Empty;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public string CodeName {
 			get { return mCodeName; }
 			set { ArgumentNullException.ThrowIfNull(value);
 				mCodeName = value;
-				NotifyPropertyChanged(kCodeNameChanged);
+				NotifyPropertyChanged(kCodeNameChangedEventArgs);
 		} }
 		#endregion
 

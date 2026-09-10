@@ -48,9 +48,6 @@ namespace KSoft.Blam.Localization.StringTables
 			PropertyChanged.SafeNotify(this, args);
 		}
 		#endregion
-
-		static readonly PropertyChangedEventArgs kCodeNameChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((LocaleStringTableReference x) => x.CodeName);
 	};
 
 	partial class LocaleStringTable

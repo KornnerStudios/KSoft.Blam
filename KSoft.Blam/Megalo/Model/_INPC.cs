@@ -30,9 +30,6 @@ namespace KSoft.Blam.Megalo.Model
 			PropertyChanged.SafeNotify(this, argsList, startIndex);
 		}
 		#endregion
-
-		static readonly PropertyChangedEventArgs kCodeNameChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptAccessibleObjectBase x) => x.CodeName);
 	};
 
 	#region MegaloScriptModelObject
@@ -107,23 +104,7 @@ namespace KSoft.Blam.Megalo.Model
 			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptConditionActionReferences x) => x.Count);
 	};
 
-	partial class MegaloScriptCondition
-	{
-		static readonly PropertyChangedEventArgs kProtoDataChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptCondition x) => x.ProtoData);
-
-		static readonly PropertyChangedEventArgs kInvertedChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptCondition x) => x.Inverted);
-		static readonly PropertyChangedEventArgs kUnionGroupChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptCondition x) => x.UnionGroup);
-	};
 	#endregion
-
-	partial class MegaloScriptAction
-	{
-		static readonly PropertyChangedEventArgs kProtoDataChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptAction x) => x.ProtoData);
-	}
 
 	partial class MegaloScriptConditionActionReferences
 		: INotifyCollectionChanged

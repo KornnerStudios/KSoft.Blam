@@ -29,6 +29,7 @@ namespace KSoft.Blam.Megalo.Model
 		: MegaloScriptModelObjectWithParameters
 	{
 		public override MegaloScriptModelObjectType ObjectType { get { return MegaloScriptModelObjectType.Action; } }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public Proto.MegaloScriptProtoAction ProtoData { get; private set; } = null!;
 
 		internal void InitializeForType(MegaloScriptModel model, int actionType)
@@ -43,7 +44,7 @@ namespace KSoft.Blam.Megalo.Model
 			}
 
 			ProtoData = model.Database.Actions[actionType];
-			NotifyPropertyChanged(kProtoDataChanged);
+			NotifyPropertyChanged(kProtoDataChangedEventArgs);
 			Arguments = new MegaloScriptArguments(model, ProtoData);
 		}
 		internal void InitializeForType(MegaloScriptModel model, string actionType)
@@ -51,7 +52,7 @@ namespace KSoft.Blam.Megalo.Model
 			var proto_action = model.Database.GetAction(actionType);
 
 			ProtoData = proto_action;
-			NotifyPropertyChanged(kProtoDataChanged);
+			NotifyPropertyChanged(kProtoDataChangedEventArgs);
 			Arguments = new MegaloScriptArguments(model, ProtoData);
 		}
 

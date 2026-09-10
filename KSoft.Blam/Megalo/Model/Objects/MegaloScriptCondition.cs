@@ -99,23 +99,26 @@ namespace KSoft.Blam.Megalo.Model
 		: MegaloScriptModelObjectWithParameters
 	{
 		public override MegaloScriptModelObjectType ObjectType { get { return MegaloScriptModelObjectType.Condition; } }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public Proto.MegaloScriptProtoCondition ProtoData { get; private set; } = null!;
 
 		#region Inverted
 		bool mInverted;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool Inverted {
 			get { return mInverted; }
 			set { mInverted = value;
-				NotifyPropertyChanged(kInvertedChanged);
+				NotifyPropertyChanged(kInvertedChangedEventArgs);
 		} }
 		#endregion
 		// both of these are local to owning (virtual) trigger when encoded
 		#region UnionGroup
 		int mUnionGroup = TypeExtensions.kNone;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int UnionGroup {
 			get { return mUnionGroup; }
 			private set { mUnionGroup = value;
-				NotifyPropertyChanged(kUnionGroupChanged);
+				NotifyPropertyChanged(kUnionGroupChangedEventArgs);
 		} }
 
 		internal void AssociateWith(MegaloScriptUnionGroup unionGroup)
@@ -138,7 +141,7 @@ namespace KSoft.Blam.Megalo.Model
 			}
 
 			ProtoData = model.Database.Conditions[condType];
-			NotifyPropertyChanged(kProtoDataChanged);
+			NotifyPropertyChanged(kProtoDataChangedEventArgs);
 			Arguments = new MegaloScriptArguments(model, ProtoData);
 		}
 		internal void InitializeForType(MegaloScriptModel model, string condType)
@@ -146,7 +149,7 @@ namespace KSoft.Blam.Megalo.Model
 			var proto_cond = model.Database.GetCondition(condType);
 
 			ProtoData = proto_cond;
-			NotifyPropertyChanged(kProtoDataChanged);
+			NotifyPropertyChanged(kProtoDataChangedEventArgs);
 			Arguments = new MegaloScriptArguments(model, ProtoData);
 		}
 
