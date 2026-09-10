@@ -20,6 +20,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		float mValue19, mValue20, mValue21, mValue22, mValue23, mValue24;
 		short mValue25, mValue26;
 
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool IsUnchanged => Modifiers == 0;
 
 		public void Clear()
@@ -44,116 +45,143 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 
 			if (old_flags != Modifiers)
 			{
-				NotifyPropertyChanged(kIsUnchangedChanged);
+				NotifyPropertyChanged(kIsUnchangedChangedEventArgs);
 			}
 
 			NotifyPropertyChanged(kValueChanged[index]);
 		}
 
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value0 {
 			get { return GetImpl(mValue0, WeaponTuningBarrelModifiers.Value0); }
 			set { SetImpl(value, ref mValue0, WeaponTuningBarrelModifiers.Value0); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value1 {
 			get { return GetImpl(mValue1, WeaponTuningBarrelModifiers.Value1); }
 			set { SetImpl(Value1, ref mValue1, WeaponTuningBarrelModifiers.Value1); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value2 {
 			get { return GetImpl(mValue2, WeaponTuningBarrelModifiers.Value2); }
 			set { SetImpl(Value2, ref mValue2, WeaponTuningBarrelModifiers.Value2); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value3 {
 			get { return GetImpl(mValue3, WeaponTuningBarrelModifiers.Value3); }
 			set { SetImpl(Value3, ref mValue3, WeaponTuningBarrelModifiers.Value3); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value4 {
 			get { return GetImpl(mValue4, WeaponTuningBarrelModifiers.Value4); }
 			set { SetImpl(Value4, ref mValue4, WeaponTuningBarrelModifiers.Value4); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value5 {
 			get { return GetImpl(mValue5, WeaponTuningBarrelModifiers.Value5); }
 			set { SetImpl(Value5, ref mValue5, WeaponTuningBarrelModifiers.Value5); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value6 {
 			get { return GetImpl(mValue6, WeaponTuningBarrelModifiers.Value6); }
 			set { SetImpl(Value6, ref mValue6, WeaponTuningBarrelModifiers.Value6); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value7 {
 			get { return GetImpl(mValue7, WeaponTuningBarrelModifiers.Value7); }
 			set { SetImpl(Value7, ref mValue7, WeaponTuningBarrelModifiers.Value7); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value8 {
 			get { return GetImpl(mValue8, WeaponTuningBarrelModifiers.Value8); }
 			set { SetImpl(Value8, ref mValue8, WeaponTuningBarrelModifiers.Value8); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value9 {
 			get { return GetImpl(mValue9, WeaponTuningBarrelModifiers.Value9); }
 			set { SetImpl(Value9, ref mValue9, WeaponTuningBarrelModifiers.Value9); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value10 {
 			get { return GetImpl(mValue10, WeaponTuningBarrelModifiers.Value10); }
 			set { SetImpl(Value10, ref mValue10, WeaponTuningBarrelModifiers.Value10); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value11 {
 			get { return GetImpl(mValue11, WeaponTuningBarrelModifiers.Value11); }
 			set { SetImpl(Value11, ref mValue11, WeaponTuningBarrelModifiers.Value11); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value12 {
 			get { return GetImpl(mValue12, WeaponTuningBarrelModifiers.Value12); }
 			set { SetImpl(Value12, ref mValue12, WeaponTuningBarrelModifiers.Value12); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value13 {
 			get { return GetImpl(mValue13, WeaponTuningBarrelModifiers.Value13); }
 			set { SetImpl(Value13, ref mValue13, WeaponTuningBarrelModifiers.Value13); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value14 {
 			get { return GetImpl(mValue14, WeaponTuningBarrelModifiers.Value14); }
 			set { SetImpl(Value14, ref mValue14, WeaponTuningBarrelModifiers.Value14); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value15 {
 			get { return GetImpl(mValue15, WeaponTuningBarrelModifiers.Value15); }
 			set { SetImpl(Value15, ref mValue15, WeaponTuningBarrelModifiers.Value15); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value16 {
 			get { return GetImpl(mValue16, WeaponTuningBarrelModifiers.Value16); }
 			set { SetImpl(Value16, ref mValue16, WeaponTuningBarrelModifiers.Value16); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value17 {
 			get { return GetImpl(mValue17, WeaponTuningBarrelModifiers.Value17); }
 			set { SetImpl(Value17, ref mValue17, WeaponTuningBarrelModifiers.Value17); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value18 {
 			get { return GetImpl(mValue18, WeaponTuningBarrelModifiers.Value18); }
 			set { SetImpl(Value18, ref mValue18, WeaponTuningBarrelModifiers.Value18); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value19 {
 			get { return GetImpl(mValue19, WeaponTuningBarrelModifiers.Value19); }
 			set { SetImpl(Value19, ref mValue19, WeaponTuningBarrelModifiers.Value19); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value20 {
 			get { return GetImpl(mValue20, WeaponTuningBarrelModifiers.Value20); }
 			set { SetImpl(Value20, ref mValue20, WeaponTuningBarrelModifiers.Value20); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value21 {
 			get { return GetImpl(mValue21, WeaponTuningBarrelModifiers.Value21); }
 			set { SetImpl(Value21, ref mValue21, WeaponTuningBarrelModifiers.Value21); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value22 {
 			get { return GetImpl(mValue22, WeaponTuningBarrelModifiers.Value22); }
 			set { SetImpl(Value22, ref mValue22, WeaponTuningBarrelModifiers.Value22); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value23 {
 			get { return GetImpl(mValue23, WeaponTuningBarrelModifiers.Value23); }
 			set { SetImpl(Value23, ref mValue23, WeaponTuningBarrelModifiers.Value23); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value24 {
 			get { return GetImpl(mValue24, WeaponTuningBarrelModifiers.Value24); }
 			set { SetImpl(Value24, ref mValue24, WeaponTuningBarrelModifiers.Value24); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value25 {
 			get { return GetImpl(mValue25, WeaponTuningBarrelModifiers.Value25); }
 			set { SetImpl(Value25, ref mValue25, WeaponTuningBarrelModifiers.Value25); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public short? Value26 {
 			get { return GetImpl(mValue26, WeaponTuningBarrelModifiers.Value26); }
 			set { SetImpl(Value26, ref mValue26, WeaponTuningBarrelModifiers.Value26); }

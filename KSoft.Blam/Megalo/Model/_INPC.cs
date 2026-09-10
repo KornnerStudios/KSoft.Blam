@@ -176,11 +176,16 @@ namespace KSoft.Blam.Megalo.Model
 
 	partial class MegaloScriptObjectFilter
 	{
-		static readonly PropertyChangedEventArgs[] kParameterChanged = [
-			kHasObjectTypeIndexChangedEventArgs,
-			kHasTeamChangedEventArgs,
-			kHasNumericChangedEventArgs,
-		];
+		static readonly PropertyChangedEventArgs[] kParameterChanged;
+
+		static MegaloScriptObjectFilter()
+		{
+			kParameterChanged = [
+				kHasObjectTypeIndexChangedEventArgs,
+				kHasTeamChangedEventArgs,
+				kHasNumericChangedEventArgs,
+			];
+		}
 	};
 
 }
