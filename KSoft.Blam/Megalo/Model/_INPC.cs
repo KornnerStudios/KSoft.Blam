@@ -162,24 +162,6 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		static readonly PropertyChangedEventArgs kCodeNameChanged =
 			ObjectModel.Util.CreatePropertyChangedEventArgs((IMegaloScriptAccessibleObject x) => x.CodeName);
-
-		static readonly PropertyChangedEventArgs kExecutionModeChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTrigger x) => x.ExecutionMode);
-		static readonly PropertyChangedEventArgs kTriggerTypeChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTrigger x) => x.TriggerType);
-		static readonly PropertyChangedEventArgs kObjectFilterIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTrigger x) => x.ObjectFilterIndex);
-		static readonly PropertyChangedEventArgs kGameObjectTypeChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTrigger x) => x.GameObjectType);
-		static readonly PropertyChangedEventArgs kGameObjectFilterIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTrigger x) => x.GameObjectFilterIndex);
-		static readonly PropertyChangedEventArgs kFrameUpdateFrequencyChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTrigger x) => x.FrameUpdateFrequency);
-		static readonly PropertyChangedEventArgs kFrameUpdateOffsetChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTrigger x) => x.FrameUpdateOffset);
-
-		static readonly PropertyChangedEventArgs kCommentOutChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptTrigger x) => x.CommentOut);
 	};
 	#endregion
 

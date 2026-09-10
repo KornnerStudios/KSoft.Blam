@@ -16,26 +16,29 @@ namespace KSoft.Blam.Megalo.Model
 
 		#region ExecutionMode
 		MegaloScriptTriggerExecutionMode mExecutionMode;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptTriggerExecutionMode ExecutionMode {
 			get { return mExecutionMode; }
 			set { mExecutionMode = value;
-				NotifyPropertyChanged(kExecutionModeChanged);
+				NotifyPropertyChanged(kExecutionModeChangedEventArgs);
 		} }
 		#endregion
 		#region TriggerType
 		MegaloScriptTriggerType mTriggerType;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptTriggerType TriggerType {
 			get { return mTriggerType; }
 			set { mTriggerType = value;
-				NotifyPropertyChanged(kTriggerTypeChanged);
+				NotifyPropertyChanged(kTriggerTypeChangedEventArgs);
 		} }
 		#endregion
 		#region ObjectFilterIndex
 		int mObjectFilterIndex = KSoft.TypeExtensions.kNoneInt32;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int ObjectFilterIndex {
 			get { return mObjectFilterIndex; }
 			set { mObjectFilterIndex = value;
-				NotifyPropertyChanged(kObjectFilterIndexChanged);
+				NotifyPropertyChanged(kObjectFilterIndexChangedEventArgs);
 		} }
 		#endregion
 		// Added in Halo4
@@ -43,30 +46,34 @@ namespace KSoft.Blam.Megalo.Model
 		MegaloScriptGameObjectType mGameObjectType;
 		int mGameObjectFilterIndex = KSoft.TypeExtensions.kNoneInt32;
 
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public MegaloScriptGameObjectType GameObjectType {
 			get { return mGameObjectType; }
 			set { mGameObjectType = value;
-				NotifyPropertyChanged(kGameObjectTypeChanged);
+				NotifyPropertyChanged(kGameObjectTypeChangedEventArgs);
 		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int GameObjectFilterIndex {
 			get { return mGameObjectFilterIndex; }
 			set { mGameObjectFilterIndex = value;
-				NotifyPropertyChanged(kGameObjectFilterIndexChanged);
+				NotifyPropertyChanged(kGameObjectFilterIndexChangedEventArgs);
 		} }
 		#endregion
 		#region FrameUpdate
 		int mFrameUpdateFrequency;
 		int mFrameUpdateOffset;
 
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int FrameUpdateFrequency {
 			get { return mFrameUpdateFrequency; }
 			set { mFrameUpdateFrequency = value;
-				NotifyPropertyChanged(kFrameUpdateFrequencyChanged);
+				NotifyPropertyChanged(kFrameUpdateFrequencyChangedEventArgs);
 		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int FrameUpdateOffset {
 			get { return mFrameUpdateOffset; }
 			set { mFrameUpdateOffset = value;
-				NotifyPropertyChanged(kFrameUpdateOffsetChanged);
+				NotifyPropertyChanged(kFrameUpdateOffsetChangedEventArgs);
 		} }
 
 		public bool HasFrameUpdate { get { return mFrameUpdateFrequency != 0; } }
@@ -74,6 +81,7 @@ namespace KSoft.Blam.Megalo.Model
 
 		#region CommentOut
 		bool mCommentOut;
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool CommentOut {
 			get { return mCommentOut; }
 			set {
@@ -85,7 +93,7 @@ namespace KSoft.Blam.Megalo.Model
 				}
 
 				mCommentOut = value;
-				NotifyPropertyChanged(kCommentOutChanged);
+				NotifyPropertyChanged(kCommentOutChangedEventArgs);
 		} }
 		#endregion
 
