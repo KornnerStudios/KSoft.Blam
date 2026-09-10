@@ -11,10 +11,11 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region LabelStringIndex
 		int mLabelStringIndex; // 0x0
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int LabelStringIndex {
 			get { return mLabelStringIndex; }
 			set { mLabelStringIndex = value;
-				NotifyPropertyChanged(kLabelStringIndexChanged);
+				NotifyPropertyChanged(kLabelStringIndexChangedEventArgs);
 		} }
 		#endregion
 
@@ -22,35 +23,39 @@ namespace KSoft.Blam.Megalo.Model
 
 		#region ObjectTypeIndex
 		int mObjectTypeIndex; // 0x4
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int ObjectTypeIndex {
 			get { return mObjectTypeIndex; }
 			set { mObjectTypeIndex = value;
-				NotifyPropertyChanged(kObjectTypeIndexChanged);
+				NotifyPropertyChanged(kObjectTypeIndexChangedEventArgs);
 		} }
 		#endregion
 		#region Team
 		int mTeam; // 0xA sbyte at runtime
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Team {
 			get { return mTeam; }
 			set { mTeam = value;
-				NotifyPropertyChanged(kTeamChanged);
+				NotifyPropertyChanged(kTeamChangedEventArgs);
 		} }
 		#endregion
 		#region Numeric
 		int mNumeric; // 0x8 short at runtime
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Numeric {
 			get { return mNumeric; }
 			set { mNumeric = value;
-				NotifyPropertyChanged(kNumericChanged);
+				NotifyPropertyChanged(kNumericChangedEventArgs);
 		} }
 		#endregion
 
 		#region Minimum
 		int mMinimum; // 0xC short at runtime
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public int Minimum {
 			get { return mMinimum; }
 			set { mMinimum = value;
-				NotifyPropertyChanged(kMinimumChanged);
+				NotifyPropertyChanged(kMinimumChangedEventArgs);
 		} }
 		#endregion
 

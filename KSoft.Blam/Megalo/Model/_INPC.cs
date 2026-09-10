@@ -182,19 +182,6 @@ namespace KSoft.Blam.Megalo.Model
 
 	partial class MegaloScriptObjectFilter
 	{
-		static readonly PropertyChangedEventArgs kLabelStringIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.LabelStringIndex);
-
-		static readonly PropertyChangedEventArgs kObjectTypeIndexChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.ObjectTypeIndex);
-		static readonly PropertyChangedEventArgs kTeamChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.Team);
-		static readonly PropertyChangedEventArgs kNumericChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.Numeric);
-
-		static readonly PropertyChangedEventArgs kMinimumChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.Minimum);
-
 		static readonly PropertyChangedEventArgs kHasParametersChanged =
 			ObjectModel.Util.CreatePropertyChangedEventArgs((MegaloScriptObjectFilter x) => x.HasParameters);
 		static readonly PropertyChangedEventArgs[] kParameterChanged = [
