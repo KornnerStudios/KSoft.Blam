@@ -538,6 +538,7 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 		float mValue0, mValue1, mValue2, mValue3, mValue4, mValue5, mValue6,
 			mValue7, mValue8, mValue9, mValue10, mValue11, mValue12, mValue13;
 
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public bool IsUnchanged => Modifiers == 0;
 
 		public void Clear()
@@ -562,64 +563,78 @@ namespace KSoft.Blam.Games.Halo4.RuntimeData.Variants
 
 			if (old_flags != Modifiers)
 			{
-				NotifyPropertyChanged(kIsUnchangedChanged);
+				NotifyPropertyChanged(kIsUnchangedChangedEventArgs);
 			}
 
 			NotifyPropertyChanged(kValueChanged[index]);
 		}
 
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value0 {
 			get { return GetImpl(mValue0, WeaponTuningModifiers.Value0); }
 			set { SetImpl(value, ref mValue0, WeaponTuningModifiers.Value0); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value1 {
 			get { return GetImpl(mValue1, WeaponTuningModifiers.Value1); }
 			set { SetImpl(value, ref mValue1, WeaponTuningModifiers.Value1); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value2 {
 			get { return GetImpl(mValue2, WeaponTuningModifiers.Value2); }
 			set { SetImpl(value, ref mValue2, WeaponTuningModifiers.Value2); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value3 {
 			get { return GetImpl(mValue3, WeaponTuningModifiers.Value3); }
 			set { SetImpl(value, ref mValue3, WeaponTuningModifiers.Value3); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value4 {
 			get { return GetImpl(mValue4, WeaponTuningModifiers.Value4); }
 			set { SetImpl(value, ref mValue4, WeaponTuningModifiers.Value4); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value5 {
 			get { return GetImpl(mValue5, WeaponTuningModifiers.Value5); }
 			set { SetImpl(value, ref mValue5, WeaponTuningModifiers.Value5); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value6 {
 			get { return GetImpl(mValue6, WeaponTuningModifiers.Value6); }
 			set { SetImpl(value, ref mValue6, WeaponTuningModifiers.Value6); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value7 {
 			get { return GetImpl(mValue7, WeaponTuningModifiers.Value7); }
 			set { SetImpl(value, ref mValue7, WeaponTuningModifiers.Value7); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value8 {
 			get { return GetImpl(mValue8, WeaponTuningModifiers.Value8); }
 			set { SetImpl(value, ref mValue8, WeaponTuningModifiers.Value8); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value9 {
 			get { return GetImpl(mValue9, WeaponTuningModifiers.Value9); }
 			set { SetImpl(value, ref mValue9, WeaponTuningModifiers.Value9); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value10 {
 			get { return GetImpl(mValue10, WeaponTuningModifiers.Value10); }
 			set { SetImpl(value, ref mValue10, WeaponTuningModifiers.Value10); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value11 {
 			get { return GetImpl(mValue11, WeaponTuningModifiers.Value11); }
 			set { SetImpl(value, ref mValue11, WeaponTuningModifiers.Value11); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value12 {
 			get { return GetImpl(mValue12, WeaponTuningModifiers.Value12); }
 			set { SetImpl(value, ref mValue12, WeaponTuningModifiers.Value12); }
 		}
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		public float? Value13 {
 			get { return GetImpl(mValue13, WeaponTuningModifiers.Value13); }
 			set { SetImpl(value, ref mValue13, WeaponTuningModifiers.Value13); }
