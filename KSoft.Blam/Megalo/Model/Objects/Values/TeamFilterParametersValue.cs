@@ -11,31 +11,19 @@
 	{
 		#region FilterType
 		MegaloScriptPlayerFilterType mFilterType;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptPlayerFilterType FilterType {
-			get { return mFilterType; }
-			set { mFilterType = value;
-				NotifyPropertyChanged(kFilterTypeChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mFilterType), AlwaysNotify = true)]
+		public partial MegaloScriptPlayerFilterType FilterType { get; set; }
 		#endregion
 
 		#region Player
 		MegaloScriptVariableReferenceData mPlayer = MegaloScriptVariableReferenceData.Player;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableReferenceData Player {
-			get { return mPlayer; }
-			set { mPlayer = value;
-				NotifyPropertyChanged(kPlayerChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mPlayer), AlwaysNotify = true)]
+		public partial MegaloScriptVariableReferenceData Player { get; set; }
 		#endregion
 		#region PlayerAddOrRemove (Bool)
 		MegaloScriptVariableReferenceData mPlayerAddOrRemove = MegaloScriptVariableReferenceData.Custom;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableReferenceData PlayerAddOrRemove {
-			get { return mPlayerAddOrRemove; }
-			set { mPlayerAddOrRemove = value;
-				NotifyPropertyChanged(kPlayerAddOrRemoveChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mPlayerAddOrRemove), AlwaysNotify = true)]
+		public partial MegaloScriptVariableReferenceData PlayerAddOrRemove { get; set; }
 		#endregion
 
 		public MegaloScriptTeamFilterParametersValue(MegaloScriptValueType valueType) : base(valueType)

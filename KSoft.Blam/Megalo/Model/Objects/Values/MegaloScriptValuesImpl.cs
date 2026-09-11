@@ -48,12 +48,8 @@
 	{
 		#region Value
 		bool mValue;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public bool Value {
-			get { return mValue; }
-			set { mValue = value;
-				NotifyPropertyChanged(kValueChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mValue), AlwaysNotify = true)]
+		public partial bool Value { get; set; }
 		#endregion
 
 		public MegaloScriptBoolValue(MegaloScriptValueType valueType) : base(valueType)
@@ -97,12 +93,8 @@
 	{
 		#region Value
 		int mValue;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int Value {
-			get { return mValue; }
-			set { mValue = value;
-				NotifyPropertyChanged(kValueChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mValue), AlwaysNotify = true)]
+		public partial int Value { get; set; }
 		#endregion
 
 		public MegaloScriptIntValue(MegaloScriptValueType valueType) : base(valueType)
@@ -146,12 +138,8 @@
 	{
 		#region Value
 		uint mValue;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public uint Value {
-			get { return mValue; }
-			set { mValue = value;
-				NotifyPropertyChanged(kValueChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mValue), AlwaysNotify = true)]
+		public partial uint Value { get; set; }
 		#endregion
 
 		public MegaloScriptUIntValue(MegaloScriptValueType valueType) : base(valueType)
@@ -195,12 +183,8 @@
 	{
 		#region Value
 		float mValue;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public float Value {
-			get { return mValue; }
-			set { mValue = value;
-				NotifyPropertyChanged(kValueChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mValue), AlwaysNotify = true)]
+		public partial float Value { get; set; }
 		#endregion
 
 		public MegaloScriptSingleValue(MegaloScriptValueType valueType) : base(valueType)
@@ -253,30 +237,18 @@
 	{
 		#region Value X
 		int mX;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int X {
-			get { return mX; }
-			set { mX = value;
-				NotifyPropertyChanged(kXChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mX), AlwaysNotify = true)]
+		public partial int X { get; set; }
 		#endregion
 		#region Value Y
 		int mY;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int Y {
-			get { return mY; }
-			set { mY = value;
-				NotifyPropertyChanged(kYChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mY), AlwaysNotify = true)]
+		public partial int Y { get; set; }
 		#endregion
 		#region Value Z
 		int mZ;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int Z {
-			get { return mZ; }
-			set { mZ = value;
-				NotifyPropertyChanged(kZChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mZ), AlwaysNotify = true)]
+		public partial int Z { get; set; }
 		#endregion
 
 		public MegaloScriptPoint3dValue(MegaloScriptValueType valueType) : base(valueType)
@@ -327,12 +299,8 @@
 	{
 		#region Value
 		int mValue;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int Value {
-			get { return mValue; }
-			set { mValue = value;
-				NotifyPropertyChanged(kValueChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mValue), AlwaysNotify = true)]
+		public partial int Value { get; set; }
 		#endregion
 
 		public MegaloScriptVarIndexValue(MegaloScriptValueType valueType) : base(valueType)

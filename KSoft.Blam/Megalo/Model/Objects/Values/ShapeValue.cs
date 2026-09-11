@@ -10,49 +10,29 @@
 	{
 		#region ShapeType
 		MegaloScriptShapeType mShapeType;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptShapeType ShapeType {
-			get { return mShapeType; }
-			set { mShapeType = value;
-				NotifyPropertyChanged(kShapeTypeChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mShapeType), AlwaysNotify = true)]
+		public partial MegaloScriptShapeType ShapeType { get; set; }
 		#endregion
 
 		#region Radius
 		MegaloScriptVariableReferenceData mRadius = MegaloScriptVariableReferenceData.Custom;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableReferenceData Radius {
-			get { return mRadius; }
-			set { mRadius = value;
-				NotifyPropertyChanged(kRadiusChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mRadius), AlwaysNotify = true)]
+		public partial MegaloScriptVariableReferenceData Radius { get; set; }
 		#endregion
 		#region Length
 		MegaloScriptVariableReferenceData mLength = MegaloScriptVariableReferenceData.Custom;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableReferenceData Length {
-			get { return mLength; }
-			set { mLength = value;
-				NotifyPropertyChanged(kLengthChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mLength), AlwaysNotify = true)]
+		public partial MegaloScriptVariableReferenceData Length { get; set; }
 		#endregion
 		#region Top
 		MegaloScriptVariableReferenceData mTop = MegaloScriptVariableReferenceData.Custom;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableReferenceData Top {
-			get { return mTop; }
-			set { mTop = value;
-				NotifyPropertyChanged(kTopChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mTop), AlwaysNotify = true)]
+		public partial MegaloScriptVariableReferenceData Top { get; set; }
 		#endregion
 		#region Bottom
 		MegaloScriptVariableReferenceData mBottom = MegaloScriptVariableReferenceData.Custom;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableReferenceData Bottom {
-			get { return mBottom; }
-			set { mBottom = value;
-				NotifyPropertyChanged(kBottomChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mBottom), AlwaysNotify = true)]
+		public partial MegaloScriptVariableReferenceData Bottom { get; set; }
 		#endregion
 
 		public MegaloScriptShapeValue(MegaloScriptValueType valueType) : base(valueType)

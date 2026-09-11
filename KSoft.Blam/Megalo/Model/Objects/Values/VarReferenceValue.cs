@@ -10,12 +10,8 @@
 		// assuming the ValueType isn't Any.
 		#region Var
 		MegaloScriptVariableReferenceData mVar = MegaloScriptVariableReferenceData.Null;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableReferenceData Var {
-			get { return mVar; }
-			set { mVar = value;
-				NotifyPropertyChanged(kVarChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mVar), AlwaysNotify = true)]
+		public partial MegaloScriptVariableReferenceData Var { get; set; }
 		#endregion
 
 		protected MegaloScriptVarReferenceValueBase(MegaloScriptValueType valueType) : base(valueType)
@@ -96,12 +92,8 @@
 	{
 		#region PlayerVarIndex
 		int mPlayerVarIndex;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int PlayerVarIndex {
-			get { return mPlayerVarIndex; }
-			set { mPlayerVarIndex = value;
-				NotifyPropertyChanged(kPlayerVarIndexChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mPlayerVarIndex), AlwaysNotify = true)]
+		public partial int PlayerVarIndex { get; set; }
 		#endregion
 
 		public MegaloScriptObjectReferenceWithPlayerVarIndexValue(MegaloScriptValueType valueType) : base(valueType)

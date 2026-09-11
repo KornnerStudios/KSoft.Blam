@@ -62,12 +62,8 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region TeamDesignator
 		int mTeamDesignator;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int TeamDesignator {
-			get { return mTeamDesignator; }
-			set { mTeamDesignator = value;
-				NotifyPropertyChanged(kTeamDesignatorChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mTeamDesignator), AlwaysNotify = true)]
+		public partial int TeamDesignator { get; set; }
 		#endregion
 
 		protected override void Serialize(MegaloScriptModel model, IO.BitStream s)

@@ -16,65 +16,37 @@ namespace KSoft.Blam.Megalo.Model
 
 		#region ExecutionMode
 		MegaloScriptTriggerExecutionMode mExecutionMode;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptTriggerExecutionMode ExecutionMode {
-			get { return mExecutionMode; }
-			set { mExecutionMode = value;
-				NotifyPropertyChanged(kExecutionModeChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mExecutionMode), AlwaysNotify = true)]
+		public partial MegaloScriptTriggerExecutionMode ExecutionMode { get; set; }
 		#endregion
 		#region TriggerType
 		MegaloScriptTriggerType mTriggerType;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptTriggerType TriggerType {
-			get { return mTriggerType; }
-			set { mTriggerType = value;
-				NotifyPropertyChanged(kTriggerTypeChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mTriggerType), AlwaysNotify = true)]
+		public partial MegaloScriptTriggerType TriggerType { get; set; }
 		#endregion
 		#region ObjectFilterIndex
 		int mObjectFilterIndex = KSoft.TypeExtensions.kNoneInt32;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int ObjectFilterIndex {
-			get { return mObjectFilterIndex; }
-			set { mObjectFilterIndex = value;
-				NotifyPropertyChanged(kObjectFilterIndexChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mObjectFilterIndex), AlwaysNotify = true)]
+		public partial int ObjectFilterIndex { get; set; }
 		#endregion
 		// Added in Halo4
 		#region GameObjectFilter
 		MegaloScriptGameObjectType mGameObjectType;
 		int mGameObjectFilterIndex = KSoft.TypeExtensions.kNoneInt32;
 
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptGameObjectType GameObjectType {
-			get { return mGameObjectType; }
-			set { mGameObjectType = value;
-				NotifyPropertyChanged(kGameObjectTypeChangedEventArgs);
-		} }
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int GameObjectFilterIndex {
-			get { return mGameObjectFilterIndex; }
-			set { mGameObjectFilterIndex = value;
-				NotifyPropertyChanged(kGameObjectFilterIndexChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mGameObjectType), AlwaysNotify = true)]
+		public partial MegaloScriptGameObjectType GameObjectType { get; set; }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mGameObjectFilterIndex), AlwaysNotify = true)]
+		public partial int GameObjectFilterIndex { get; set; }
 		#endregion
 		#region FrameUpdate
 		int mFrameUpdateFrequency;
 		int mFrameUpdateOffset;
 
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int FrameUpdateFrequency {
-			get { return mFrameUpdateFrequency; }
-			set { mFrameUpdateFrequency = value;
-				NotifyPropertyChanged(kFrameUpdateFrequencyChangedEventArgs);
-		} }
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int FrameUpdateOffset {
-			get { return mFrameUpdateOffset; }
-			set { mFrameUpdateOffset = value;
-				NotifyPropertyChanged(kFrameUpdateOffsetChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mFrameUpdateFrequency), AlwaysNotify = true)]
+		public partial int FrameUpdateFrequency { get; set; }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mFrameUpdateOffset), AlwaysNotify = true)]
+		public partial int FrameUpdateOffset { get; set; }
 
 		public bool HasFrameUpdate { get { return mFrameUpdateFrequency != 0; } }
 		#endregion

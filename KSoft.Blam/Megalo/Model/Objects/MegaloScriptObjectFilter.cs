@@ -11,52 +11,32 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region LabelStringIndex
 		int mLabelStringIndex; // 0x0
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int LabelStringIndex {
-			get { return mLabelStringIndex; }
-			set { mLabelStringIndex = value;
-				NotifyPropertyChanged(kLabelStringIndexChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mLabelStringIndex), AlwaysNotify = true)]
+		public partial int LabelStringIndex { get; set; }
 		#endregion
 
 		MegaloScriptObjectFilterValidParameters mValidParameters;	// 0xB
 
 		#region ObjectTypeIndex
 		int mObjectTypeIndex; // 0x4
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int ObjectTypeIndex {
-			get { return mObjectTypeIndex; }
-			set { mObjectTypeIndex = value;
-				NotifyPropertyChanged(kObjectTypeIndexChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mObjectTypeIndex), AlwaysNotify = true)]
+		public partial int ObjectTypeIndex { get; set; }
 		#endregion
 		#region Team
 		int mTeam; // 0xA sbyte at runtime
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int Team {
-			get { return mTeam; }
-			set { mTeam = value;
-				NotifyPropertyChanged(kTeamChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mTeam), AlwaysNotify = true)]
+		public partial int Team { get; set; }
 		#endregion
 		#region Numeric
 		int mNumeric; // 0x8 short at runtime
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int Numeric {
-			get { return mNumeric; }
-			set { mNumeric = value;
-				NotifyPropertyChanged(kNumericChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mNumeric), AlwaysNotify = true)]
+		public partial int Numeric { get; set; }
 		#endregion
 
 		#region Minimum
 		int mMinimum; // 0xC short at runtime
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int Minimum {
-			get { return mMinimum; }
-			set { mMinimum = value;
-				NotifyPropertyChanged(kMinimumChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mMinimum), AlwaysNotify = true)]
+		public partial int Minimum { get; set; }
 		#endregion
 
 		#region ValidParameters interface

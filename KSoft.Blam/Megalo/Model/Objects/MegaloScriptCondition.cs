@@ -104,22 +104,14 @@ namespace KSoft.Blam.Megalo.Model
 
 		#region Inverted
 		bool mInverted;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public bool Inverted {
-			get { return mInverted; }
-			set { mInverted = value;
-				NotifyPropertyChanged(kInvertedChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mInverted), AlwaysNotify = true)]
+		public partial bool Inverted { get; set; }
 		#endregion
 		// both of these are local to owning (virtual) trigger when encoded
 		#region UnionGroup
 		int mUnionGroup = TypeExtensions.kNone;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int UnionGroup {
-			get { return mUnionGroup; }
-			private set { mUnionGroup = value;
-				NotifyPropertyChanged(kUnionGroupChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mUnionGroup), AlwaysNotify = true)]
+		public partial int UnionGroup { get; private set; }
 
 		internal void AssociateWith(MegaloScriptUnionGroup unionGroup)
 		{

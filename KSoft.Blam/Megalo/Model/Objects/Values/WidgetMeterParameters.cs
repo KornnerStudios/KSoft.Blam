@@ -11,39 +11,23 @@
 	{
 		#region Type
 		MegaloScriptWidgetMeterType mType;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptWidgetMeterType Type {
-			get { return mType; }
-			set { mType = value;
-				NotifyPropertyChanged(kTypeChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mType), AlwaysNotify = true)]
+		public partial MegaloScriptWidgetMeterType Type { get; set; }
 		#endregion
 		#region Timer
 		MegaloScriptVariableReferenceData mTimer = MegaloScriptVariableReferenceData.Timer;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableReferenceData Timer {
-			get { return mTimer; }
-			set { mTimer = value;
-				NotifyPropertyChanged(kTimerChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mTimer), AlwaysNotify = true)]
+		public partial MegaloScriptVariableReferenceData Timer { get; set; }
 		#endregion
 		#region Numeric1 (fill amount numerator)
 		MegaloScriptVariableReferenceData mNumeric1 = MegaloScriptVariableReferenceData.Custom;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableReferenceData Numeric1 {
-			get { return mNumeric1; }
-			set { mNumeric1 = value;
-				NotifyPropertyChanged(kNumeric1ChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mNumeric1), AlwaysNotify = true)]
+		public partial MegaloScriptVariableReferenceData Numeric1 { get; set; }
 		#endregion
 		#region Numeric2 (fill amount denominator)
 		MegaloScriptVariableReferenceData mNumeric2 = MegaloScriptVariableReferenceData.Custom;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableReferenceData Numeric2 {
-			get { return mNumeric2; }
-			set { mNumeric2 = value;
-				NotifyPropertyChanged(kNumeric2ChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mNumeric2), AlwaysNotify = true)]
+		public partial MegaloScriptVariableReferenceData Numeric2 { get; set; }
 		#endregion
 
 		public MegaloScriptWidgetMeterParametersValue(MegaloScriptValueType valueType) : base(valueType)

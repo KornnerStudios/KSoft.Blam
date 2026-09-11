@@ -9,12 +9,8 @@
 	{
 		#region Value
 		int mValue;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int Value {
-			get { return mValue; }
-			set { mValue = value;
-				NotifyPropertyChanged(kValueChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mValue), AlwaysNotify = true)]
+		public partial int Value { get; set; }
 		#endregion
 
 		public MegaloScriptIndexValue(MegaloScriptValueType valueType) : base(valueType)

@@ -11,12 +11,8 @@
 		// Internal: the decompiled trigger in the model
 		#region VirtualTriggerHandle
 		MegaloScriptModelObjectHandle mVirtualTriggerHandle;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptModelObjectHandle VirtualTriggerHandle {
-			get { return mVirtualTriggerHandle; }
-			set { mVirtualTriggerHandle = value;
-				NotifyPropertyChanged(kVirtualTriggerHandleChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mVirtualTriggerHandle), AlwaysNotify = true)]
+		public partial MegaloScriptModelObjectHandle VirtualTriggerHandle { get; set; }
 		#endregion
 
 		public MegaloScriptVirtualTriggerValue(MegaloScriptValueType valueType) : base(valueType)

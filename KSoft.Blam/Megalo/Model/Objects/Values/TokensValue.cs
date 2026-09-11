@@ -14,22 +14,14 @@
 		// #REVIEW_BLAM: I think there's engine support for up to 4 tokens...haven't seen any instances yet tho
 		#region StringIndex
 		int mStringIndex = -1;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int StringIndex {
-			get { return mStringIndex; }
-			set { mStringIndex = value;
-				NotifyPropertyChanged(kStringIndexChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mStringIndex), AlwaysNotify = true)]
+		public partial int StringIndex { get; set; }
 		#endregion
 
 		#region TokenCount
 		int mTokenCount;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int TokenCount {
-			get { return mTokenCount; }
-			set { mTokenCount = value;
-				NotifyPropertyChanged(kTokenCountChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mTokenCount), AlwaysNotify = true)]
+		public partial int TokenCount { get; set; }
 		#endregion
 
 		public MegaloScriptTokensValue(MegaloScriptModel model, MegaloScriptValueType valueType) : base(valueType)

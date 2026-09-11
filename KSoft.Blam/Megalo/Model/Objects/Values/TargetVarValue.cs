@@ -10,22 +10,14 @@
 	{
 		#region TargetType
 		MegaloScriptTargetType mTargetType;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptTargetType TargetType {
-			get { return mTargetType; }
-			set { mTargetType = value;
-				NotifyPropertyChanged(kTargetTypeChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mTargetType), AlwaysNotify = true)]
+		public partial MegaloScriptTargetType TargetType { get; set; }
 		#endregion
 
 		#region Value
 		MegaloScriptVariableReferenceData mValue = MegaloScriptVariableReferenceData.Null;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableReferenceData Value {
-			get { return mValue; }
-			set { mValue = value;
-				NotifyPropertyChanged(kValueChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mValue), AlwaysNotify = true)]
+		public partial MegaloScriptVariableReferenceData Value { get; set; }
 		#endregion
 
 		public MegaloScriptTargetVarValue(MegaloScriptValueType valueType) : base(valueType)

@@ -48,54 +48,22 @@ namespace KSoft.Blam.Megalo.Model
 		public ObservableCollection<MegaloScriptGameObjectFilter> CandySpawnerFilters { get; private set; }
 
 		#region Trigger entry points properties
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int InitializationTriggerIndex {
-			get { return mInitializationTriggerIndex; }
-			set { mInitializationTriggerIndex = value;
-				NotifyPropertyChanged(kInitializationTriggerIndexChangedEventArgs);
-		} }
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int LocalInitializationTriggerIndex {
-			get { return mLocalInitializationTriggerIndex; }
-			set { mLocalInitializationTriggerIndex = value;
-				NotifyPropertyChanged(kLocalInitializationTriggerIndexChangedEventArgs);
-		} }
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int HostMigrationTriggerIndex {
-			get { return mHostMigrationTriggerIndex; }
-			set { mHostMigrationTriggerIndex = value;
-				NotifyPropertyChanged(kHostMigrationTriggerIndexChangedEventArgs);
-		} }
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int DoubleHostMigrationTriggerIndex {
-			get { return mDoubleHostMigrationTriggerIndex; }
-			set { mDoubleHostMigrationTriggerIndex = value;
-				NotifyPropertyChanged(kDoubleHostMigrationTriggerIndexChangedEventArgs);
-		} }
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int ObjectDeathEventTriggerIndex {
-			get { return mObjectDeathEventTriggerIndex; }
-			set { mObjectDeathEventTriggerIndex = value;
-				NotifyPropertyChanged(kObjectDeathEventTriggerIndexChangedEventArgs);
-		} }
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int LocalTriggerIndex {
-			get { return mLocalTriggerIndex; }
-			set { mLocalTriggerIndex = value;
-				NotifyPropertyChanged(kLocalTriggerIndexChangedEventArgs);
-		} }
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int PregameTriggerIndex {
-			get { return mPregameTriggerIndex; }
-			set { mPregameTriggerIndex = value;
-				NotifyPropertyChanged(kPregameTriggerIndexChangedEventArgs);
-		} }
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public int IncidentTriggerIndex {
-			get { return mIncidentTriggerIndex; }
-			set { mIncidentTriggerIndex = value;
-				NotifyPropertyChanged(kIncidentTriggerIndexChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mInitializationTriggerIndex), AlwaysNotify = true)]
+		public partial int InitializationTriggerIndex { get; set; }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mLocalInitializationTriggerIndex), AlwaysNotify = true)]
+		public partial int LocalInitializationTriggerIndex { get; set; }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mHostMigrationTriggerIndex), AlwaysNotify = true)]
+		public partial int HostMigrationTriggerIndex { get; set; }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mDoubleHostMigrationTriggerIndex), AlwaysNotify = true)]
+		public partial int DoubleHostMigrationTriggerIndex { get; set; }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mObjectDeathEventTriggerIndex), AlwaysNotify = true)]
+		public partial int ObjectDeathEventTriggerIndex { get; set; }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mLocalTriggerIndex), AlwaysNotify = true)]
+		public partial int LocalTriggerIndex { get; set; }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mPregameTriggerIndex), AlwaysNotify = true)]
+		public partial int PregameTriggerIndex { get; set; }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mIncidentTriggerIndex), AlwaysNotify = true)]
+		public partial int IncidentTriggerIndex { get; set; }
 		#endregion
 
 		protected MegaloScriptModel(Variants.GameEngineVariant variantManager, Variants.GameEngineMegaloVariant variant)

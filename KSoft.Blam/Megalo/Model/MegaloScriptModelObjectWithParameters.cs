@@ -7,22 +7,14 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region CommentOut
 		bool mCommentOut;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public bool CommentOut {
-			get { return mCommentOut; }
-			set { mCommentOut = value;
-				NotifyPropertyChanged(kCommentOutChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mCommentOut), AlwaysNotify = true)]
+		public partial bool CommentOut { get; set; }
 		#endregion
 
 		#region Arguments
 		MegaloScriptArguments mArgs = null!;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptArguments Arguments {
-			get { return mArgs; }
-			protected set { mArgs = value;
-				NotifyPropertyChanged(kArgumentsChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mArgs), AlwaysNotify = true)]
+		public partial MegaloScriptArguments Arguments { get; protected set; }
 		#endregion
 
 		public T GetArgument<T>(MegaloScriptModel model, int paramIndex)

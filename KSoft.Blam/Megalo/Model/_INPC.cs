@@ -3,6 +3,9 @@ using System.ComponentModel;
 
 namespace KSoft.Blam.Megalo.Model
 {
+	[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedHost(
+		KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedHostProvider.CachedEventArgs,
+		NotificationMethod = nameof(NotifyPropertyChanged))]
 	partial class MegaloScriptModel
 		: INotifyPropertyChanged
 	{
@@ -16,6 +19,9 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 	};
 
+	[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedHost(
+		KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedHostProvider.CachedEventArgs,
+		NotificationMethod = nameof(NotifyPropertyChanged))]
 	partial class MegaloScriptAccessibleObjectBase
 	{
 		#region INotifyPropertyChanged
@@ -33,6 +39,9 @@ namespace KSoft.Blam.Megalo.Model
 	};
 
 	#region MegaloScriptModelObject
+	[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedHost(
+		KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedHostProvider.CachedEventArgs,
+		NotificationMethod = nameof(NotifyPropertyChanged))]
 	partial class MegaloScriptModelObject
 		: INotifyPropertyChanged
 	{
@@ -159,6 +168,9 @@ namespace KSoft.Blam.Megalo.Model
 	};
 	#endregion
 
+	[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedHost(
+		KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedHostProvider.CachedEventArgs,
+		NotificationMethod = nameof(NotifyPropertyChanged))]
 	partial class MegaloScriptToken
 		: INotifyPropertyChanged
 	{

@@ -11,12 +11,8 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region Position
 		MegaloScriptWidgetPosition mPosition; // byte at runtime
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptWidgetPosition Position {
-			get { return mPosition; }
-			set { mPosition = value;
-				NotifyPropertyChanged(kPositionChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mPosition), AlwaysNotify = true)]
+		public partial MegaloScriptWidgetPosition Position { get; set; }
 		#endregion
 
 		#region IBitStreamSerializable Members

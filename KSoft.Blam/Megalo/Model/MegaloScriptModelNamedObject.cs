@@ -8,12 +8,8 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region Name
 		string mName;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public string Name {
-			get { return mName; }
-			set { mName = value;
-				NotifyPropertyChanged(kNameChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mName), AlwaysNotify = true)]
+		public partial string Name { get; set; }
 		#endregion
 
 		protected MegaloScriptModelNamedObject()

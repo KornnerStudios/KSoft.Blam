@@ -11,21 +11,13 @@ namespace KSoft.Blam.Megalo.Model
 	{
 		#region NetworkState
 		MegaloScriptVariableNetworkState mNetworkState;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public MegaloScriptVariableNetworkState NetworkState {
-			get { return mNetworkState; }
-			set { mNetworkState = value;
-				NotifyPropertyChanged(kNetworkStateChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mNetworkState), AlwaysNotify = true)]
+		public partial MegaloScriptVariableNetworkState NetworkState { get; set; }
 		#endregion
 		#region Unknown
 		protected bool mUnknown;
-		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
-		public bool Unknown {
-			get { return mUnknown; }
-			set { mUnknown = value;
-				NotifyPropertyChanged(kUnknownChangedEventArgs);
-		} }
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged(BackingField = nameof(mUnknown), AlwaysNotify = true)]
+		public partial bool Unknown { get; set; }
 		#endregion
 
 		public virtual bool HasNetworkState { get { return true; } }
