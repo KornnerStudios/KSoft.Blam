@@ -160,14 +160,6 @@ namespace KSoft.Blam.Megalo.Model
 		#endregion
 	};
 
-	#region Triggers
-	partial class MegaloScriptTrigger
-	{
-		static readonly PropertyChangedEventArgs kCodeNameChanged =
-			ObjectModel.Util.CreatePropertyChangedEventArgs((IMegaloScriptAccessibleObject x) => x.CodeName);
-	};
-	#endregion
-
 	[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedHost(
 		KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedHostProvider.CachedEventArgs,
 		NotificationMethod = nameof(NotifyPropertyChanged))]

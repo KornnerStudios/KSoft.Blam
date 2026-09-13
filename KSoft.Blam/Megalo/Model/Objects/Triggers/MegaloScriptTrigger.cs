@@ -176,11 +176,12 @@ namespace KSoft.Blam.Megalo.Model
 
 		// really only implemented so we can search triggers in the Model's FindNameIndex
 		#region IMegaloScriptAccessibleObject Members
+		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChangedEventArgs]
 		string IMegaloScriptAccessibleObject.CodeName {
 			get { return base.Name; }
 			set { ArgumentNullException.ThrowIfNull(value);
 				base.Name = value;
-				NotifyPropertyChanged(kCodeNameChanged);
+				NotifyPropertyChanged(kCodeNameChangedEventArgs);
 		} }
 		#endregion
 	};
