@@ -122,9 +122,7 @@ namespace KSoft.Blam.Engine
 			mHandle == 0;
 
 		#region Overrides
-		/// <summary>See <see cref="Object.Equals"/></summary>
-		/// <param name="obj"></param>
-		/// <returns></returns>
+		/// <inheritdoc/>
 		public override bool Equals(object? obj)
 		{
 			if (obj is BlamEngineTargetHandle objHandle)
@@ -155,7 +153,7 @@ namespace KSoft.Blam.Engine
 
 		/// <summary>Creates a string of the build component name ids separated by periods</summary>
 		/// <returns>Empty string if this <see cref="IsNone"/></returns>
-		/// <remarks>If the <see cref="Branch"/>'s display name is the same as <see cref="Engine"/>, the former isn't included in the output</remarks>
+		/// <remarks>If the <see cref="EngineBuildHandle.Branch"/>'s display name is the same as <see cref="Engine"/>, the former isn't included in the output</remarks>
 		public string ToDisplayString()
 		{
 			if (IsNone)

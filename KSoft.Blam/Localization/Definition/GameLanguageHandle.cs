@@ -129,9 +129,7 @@ namespace KSoft.Blam.Localization
 			mHandle == 0;
 
 		#region Overrides
-		/// <summary>See <see cref="Object.Equals"/></summary>
-		/// <param name="obj"></param>
-		/// <returns></returns>
+		/// <inheritdoc/>
 		public override bool Equals(object? obj)
 		{
 			if (obj is GameLanguageHandle objHandle)
