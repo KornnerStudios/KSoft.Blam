@@ -70,7 +70,7 @@ namespace KSoft.Blam.Blob.Transport
 			{
 				s.Stream(ref Header);
 				s.Stream(ref EndianSignature);
-				s.Stream(ref FileType, TypeExtensionsBlam.kTagStringEncoding);
+				s.Stream(ref FileType, TypeExtensionsBlam.kTagStringStorage);
 				s.Pad16();
 			}
 			#endregion

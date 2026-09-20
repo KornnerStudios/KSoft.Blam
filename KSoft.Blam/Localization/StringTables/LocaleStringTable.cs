@@ -12,7 +12,7 @@ namespace KSoft.Blam.Localization.StringTables
 	{
 		static readonly Memory.Strings.StringMemoryPoolSettings kStringPoolConfig =
 			new(Memory.Strings.StringStorage.CStringUtf8,
-				implicitNull:false, addressSize:Shell.ProcessorSize.x32);
+				Shell.EndianFormat.Big, implicitNull:false, addressSize:Shell.ProcessorSize.x32);
 
 		internal LocaleStringTableInfo kInfo;
 		readonly GameLanguageTable mEngineLanguageTable;

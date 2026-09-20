@@ -13,7 +13,6 @@ namespace KSoft.Blam.RuntimeData
 			"abcdefghijklmnopqrstuvwxyz012345", Shell.EndianFormat.Big, true);
 		static readonly Memory.Strings.StringStorage kAuthorStorage = new(Memory.Strings.StringStorageWidthType.Ascii, Memory.Strings.StringStorageType.CharArray,
 			fixedLength: kAuthorStorageLength);
-		static readonly Text.StringStorageEncoding kAuthorEncoding = new(kAuthorStorage);
 
 		const int kBitStreamSizeInBytes = 0x80;
 		const int kEncodedPortionLength = 0x2A; // characters
@@ -70,7 +69,7 @@ namespace KSoft.Blam.RuntimeData
 			s.StreamNoneable(ref EngineIconIndex, engine_category_limits.IndexBitLength);
 			s.Stream(ref unkA);
 			s.Stream(ref unkB);
-			s.Stream(ref Author, kAuthorEncoding);
+			s.Stream(ref Author, kAuthorStorage);
 		}
 		#endregion
 

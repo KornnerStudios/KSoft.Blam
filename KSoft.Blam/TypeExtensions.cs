@@ -14,7 +14,6 @@ namespace KSoft.Blam
 		internal const int kTagStringLength = 31;
 		internal static readonly Memory.Strings.StringStorage kTagStringStorage = new(
 			Memory.Strings.StringStorageWidthType.Ascii, Memory.Strings.StringStorageType.CharArray, kTagStringLength+1);
-		internal static readonly Text.StringStorageEncoding kTagStringEncoding = new(kTagStringStorage);
 
 		#region Enum Bit Encoders
 		public static class BitEncoders

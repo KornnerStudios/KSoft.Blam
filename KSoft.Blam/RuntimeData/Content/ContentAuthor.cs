@@ -13,7 +13,6 @@ namespace KSoft.Blam.RuntimeData
 		const int kNameLength = 16;
 		static readonly Memory.Strings.StringStorage kNameStorage = new(
 			Memory.Strings.StringStorageWidthType.Ascii, Memory.Strings.StringStorageType.CString, fixedLength: kNameLength);
-		public static readonly Text.StringStorageEncoding kNameEncoding = new(kNameStorage);
 
 		public DateTime TimeStamp;
 		public ulong Xuid;
@@ -44,7 +43,7 @@ namespace KSoft.Blam.RuntimeData
 		{
 			s.Stream(ref TimeStamp, isUnixTime: true);
 			s.Stream(ref Xuid);
-			s.Stream(ref Name, kNameEncoding); // #REVIEW_BLAM: do we need to do Name_NeedsDevHack here?
+			s.Stream(ref Name, kNameStorage); // #REVIEW_BLAM: do we need to do Name_NeedsDevHack here?
 			s.Stream(ref IsOnlineId);
 			s.Pad24();
 		}

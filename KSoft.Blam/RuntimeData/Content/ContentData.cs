@@ -22,8 +22,7 @@ namespace KSoft.Blam.RuntimeData
 	{
 		const int kStringLength = 128;
 		static readonly Memory.Strings.StringStorage kStringStorage = new(
-			Memory.Strings.StringStorageWidthType.Unicode, Memory.Strings.StringStorageType.CString, Shell.EndianFormat.Big, kStringLength);
-		static readonly Text.StringStorageEncoding kStringEncoding = new(kStringStorage);
+			Memory.Strings.StringStorageWidthType.Unicode, Memory.Strings.StringStorageType.CString, kStringLength);
 
 		public Engine.EngineBuildHandle GameBuild { get; private set; }
 
@@ -108,8 +107,10 @@ namespace KSoft.Blam.RuntimeData
 			s.Stream(ref EngineCategoryIndex, 8, signExtend:true);
 			s.StreamObject(Creator);
 			s.StreamObject(Modifier);
-			s.Stream(ref Title, Memory.Strings.StringStorage.CStringUnicodeBigEndian, maxLength: kStringLength-1);
-			s.Stream(ref Description, Memory.Strings.StringStorage.CStringUnicodeBigEndian, maxLength: kStringLength-1);
+			s.Stream(ref Title, Memory.Strings.StringStorage.CStringUnicode,
+				Shell.EndianFormat.Big, maxLength: kStringLength-1);
+			s.Stream(ref Description, Memory.Strings.StringStorage.CStringUnicode,
+				Shell.EndianFormat.Big, maxLength: kStringLength-1);
 
 			if (Type == ContentType.Film || Type == ContentType.FilmClip)
 			{
@@ -152,8 +153,8 @@ namespace KSoft.Blam.RuntimeData
 			s.Pad24(); s.Pad32();
 			s.Stream(Creator);
 			s.Stream(Modifier);
-			s.Stream(ref Title, kStringEncoding);
-			s.Stream(ref Description, kStringEncoding);
+			s.Stream(ref Title, kStringStorage);
+			s.Stream(ref Description, kStringStorage);
 
 			if (Type == ContentType.Film || Type == ContentType.FilmClip)
 			{
