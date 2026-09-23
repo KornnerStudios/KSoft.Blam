@@ -82,14 +82,14 @@
 				ToolTip="Where disassembled game variants (xml) will be output to"
 				DataContext="{x:Static props:Settings.Default}" Text="{Binding GvarDisassemblyOutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 			<Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="Disassembler Flags" />
-			<KSoftWpfControls:BitVectorControl Grid.Row="3" Grid.Column="1" BitsUserInterfaceSource="{x:Static local:MainWindowViewModel.GameVariantDisassmblerFlagsUserInterfaceSource}" BitVector="{Binding GameVariantDisassmblerFlags}" />
+			<KSoftWpfControls:BitVectorControl Grid.Row="3" Grid.Column="1" BitVector="{Binding GameVariantDisassmblerFlags}" />
 
 			<Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="Assembler Output" />
 			<KSoftWpfControls:SelectableFolderControl Grid.Row="4" Grid.Column="1"
 				ToolTip="Where assembled game variants (bin) will be output to"
 				DataContext="{x:Static props:Settings.Default}" Text="{Binding GvarAssemblyOutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 			<Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="Assembler Flags" />
-			<KSoftWpfControls:BitVectorControl Grid.Row="5" Grid.Column="1" BitsUserInterfaceSource="{x:Static local:MainWindowViewModel.GameVariantAssemblerFlagsUserInterfaceSource}" BitVector="{Binding GameVariantAssemblerFlags}" />
+			<KSoftWpfControls:BitVectorControl Grid.Row="5" Grid.Column="1" BitVector="{Binding GameVariantAssemblerFlags}" />
 
 			<Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Top" Content="Messages" />
 

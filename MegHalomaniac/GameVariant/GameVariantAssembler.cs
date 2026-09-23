@@ -65,7 +65,7 @@ namespace MgloGui
 			}
 		}
 
-		void InterpretFlags(KSoft.Collections.BitVector32 flags)
+		void InterpretFlags(KSoft.Collections.BitVector32<GvarAssemblerFlags> flags)
 		{
 			if (flags.Test(GvarAssemblerFlags.ClearTitleUpdateData))
 			{
@@ -227,17 +227,8 @@ namespace MgloGui
 	partial class MainWindowViewModel
 	{
 		#region GameVariantAssemblerFlags
-		private static KSoft.WPF.BitVectorUserInterfaceData? gGameVariantAssemblerFlagsUserInterfaceSource;
-		public static KSoft.WPF.BitVectorUserInterfaceData GameVariantAssemblerFlagsUserInterfaceSource { get {
-			if (gGameVariantAssemblerFlagsUserInterfaceSource == null)
-			{
-				gGameVariantAssemblerFlagsUserInterfaceSource = KSoft.WPF.BitVectorUserInterfaceData.ForEnum(typeof(GvarAssemblerFlags));
-			}
-			return gGameVariantAssemblerFlagsUserInterfaceSource;
-		} }
-
 		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged]
-		public partial KSoft.Collections.BitVector32 GameVariantAssemblerFlags { get; set; }
+		public partial KSoft.Collections.BitVector32<GvarAssemblerFlags> GameVariantAssemblerFlags { get; set; }
 		#endregion
 
 		public string GameVariantAssemblerOutputPathOverride { get {

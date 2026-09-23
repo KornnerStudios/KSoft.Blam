@@ -96,7 +96,7 @@ namespace MgloGui
 			Util.MarkUnusedVariable(ref mFileOffset); // #TODO_MGLO?
 		}
 
-		void InterpretFlags(KSoft.Collections.BitVector32 flags)
+		void InterpretFlags(KSoft.Collections.BitVector32<GvarDisassemblerFlags> flags)
 		{
 			bool using_op_names = false;
 
@@ -272,17 +272,8 @@ namespace MgloGui
 	partial class MainWindowViewModel
 	{
 		#region GameVariantDisassmblerFlags
-		private static KSoft.WPF.BitVectorUserInterfaceData? gGameVariantDisassmblerFlagsUserInterfaceSource;
-		public static KSoft.WPF.BitVectorUserInterfaceData GameVariantDisassmblerFlagsUserInterfaceSource { get {
-			if (gGameVariantDisassmblerFlagsUserInterfaceSource == null)
-			{
-				gGameVariantDisassmblerFlagsUserInterfaceSource = KSoft.WPF.BitVectorUserInterfaceData.ForEnum(typeof(GvarDisassemblerFlags));
-			}
-			return gGameVariantDisassmblerFlagsUserInterfaceSource;
-		} }
-
 		[KSoft.PropertyChanged.SourceGeneration.GeneratedPropertyChanged]
-		public partial KSoft.Collections.BitVector32 GameVariantDisassmblerFlags { get; set; }
+		public partial KSoft.Collections.BitVector32<GvarDisassemblerFlags> GameVariantDisassmblerFlags { get; set; }
 		#endregion
 
 		public string GameVariantDisassemblerOutputPathOverride { get {
