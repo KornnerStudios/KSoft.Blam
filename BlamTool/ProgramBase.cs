@@ -31,18 +31,21 @@ namespace KSoft.Tool
 
 		protected static bool DependentAssemblyExists(string assemblyName, bool isFault = true)
 		{
-			assemblyName += ".dll";
-
-			string asm_path_cwdir = System.IO.Path.Combine(System.Environment.CurrentDirectory, assemblyName);
-
-			if (!System.IO.File.Exists(asm_path_cwdir))
+			try
 			{
-				Console.WriteLine("{0} was not found with this .exe! {1}",
+				System.Reflection.Assembly.Load(new System.Reflection.AssemblyName(assemblyName));
+				return true;
+			}
+			catch (Exception ex) when (ex is System.IO.FileNotFoundException
+				or System.IO.FileLoadException
+				or BadImageFormatException)
+			{
+				Console.WriteLine("{0}.dll could not be loaded by this app! {1}",
 					assemblyName,
-					isFault ? "I need this DLL in order to run!" : "I'm probably going to crash soon...");
+					isFault ? "I need this assembly in order to run!" : "I'm probably going to crash soon...");
+				Console.WriteLine(ex.Message);
 				return false;
 			}
-			return true;
 		}
 
 		protected static bool SwitchIsOn(string switches, int index, string switchCtxt, string switchDesc)
