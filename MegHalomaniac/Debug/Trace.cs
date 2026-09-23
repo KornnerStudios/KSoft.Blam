@@ -6,6 +6,6 @@ namespace MgloGui.Debug
 	internal static class Trace
 	{
 		/// <summary>Trace source for MegHalomaniac UI diagnostics</summary>
-		public static Diag.TraceSource MgloGui { get; } =	new Diag.TraceSource("PhxGui", Diag.SourceLevels.All);
+		public static Diag.TraceSource MgloGui { get; } =	new Diag.TraceSource("MgloGui", Diag.SourceLevels.All);
 	};
 }

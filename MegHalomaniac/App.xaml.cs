@@ -26,6 +26,11 @@ namespace MgloGui
 			, typeof(Debug.Trace)
 			).SortAndReturn(KSoft.Debug.AssemblyTraceSourcesCollector.CompareTraceSourcesByName);
 
+		public App()
+		{
+			KSoft.Program.Initialize();
+		}
+
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			AppDomain.CurrentDomain.UnhandledException += new
@@ -33,7 +38,6 @@ namespace MgloGui
 
 			base.OnStartup(e);
 
-			KSoft.Program.Initialize();
 			KSoft.Blam.Program.Initialize();
 			KSoft.Blam.Program.InitializeCoreSystems();
 		}

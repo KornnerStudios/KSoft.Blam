@@ -7,6 +7,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="..\BlamTool\App.config"
+          Link="TraceConfigs\BlamTool.dll.config"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\MegHalomaniac\App.config"
+          Link="TraceConfigs\MegHalomaniac.dll.config"
+          CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="$(VitaRootDir)KSoft\KSoft\KSoft.csproj">
       <Project>{eb07f515-e27c-4768-8bd8-2829f657807e}</Project>
       <Name>KSoft</Name>
