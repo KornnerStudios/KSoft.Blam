@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -29,18 +28,10 @@ public sealed class TraceConfigurationTests
 			KSoft.Program.DebugTraceClass,
 			KSoft.Blam.Program.DebugTraceClass);
 
-		try
+		foreach (string sourceName in traceSources.Select(source => source.Name))
 		{
-			foreach (string sourceName in traceSources.Select(source => source.Name))
-			{
-				Assert.IsTrue(configuredSources.TryGetValue(sourceName, out XElement? source), $"Missing trace source '{sourceName}'.");
-				AssertHasFileListener(source);
-			}
-		}
-		finally
-		{
-			foreach (TraceSource traceSource in traceSources)
-				traceSource.Close();
+			Assert.IsTrue(configuredSources.TryGetValue(sourceName, out XElement? source), $"Missing trace source '{sourceName}'.");
+			AssertHasFileListener(source);
 		}
 
 		if (appSourceName != null)
