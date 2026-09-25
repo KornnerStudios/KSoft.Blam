@@ -40,6 +40,13 @@ namespace MgloGui
 
 			KSoft.Blam.Program.Initialize();
 			KSoft.Blam.Program.InitializeCoreSystems();
+
+			var mainWindow = new MainWindow
+			{
+				DataContext = new MainWindowViewModel(),
+			};
+			MainWindow = mainWindow;
+			mainWindow.Show();
 		}
 
 		protected override void OnExit(ExitEventArgs e)

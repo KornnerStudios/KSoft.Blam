@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MgloGui
@@ -8,13 +9,25 @@ namespace MgloGui
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private readonly MainWindowViewModel mViewModel = new();
+		bool mInitialGameBuildRefreshCompleted;
+		private MainWindowViewModel ViewModel
+			=> (MainWindowViewModel)(DataContext
+				?? throw new InvalidOperationException("MainWindow requires a MainWindowViewModel DataContext."));
 
 		public MainWindow()
 		{
 			InitializeComponent();
+		}
 
-			base.DataContext = mViewModel;
+		protected override void OnContentRendered(EventArgs e)
+		{
+			base.OnContentRendered(e);
+
+			if (mInitialGameBuildRefreshCompleted)
+				return;
+
+			mInitialGameBuildRefreshCompleted = true;
+			ViewModel.RefreshForCurrentlySelectedGameBuild();
 		}
 
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -25,7 +38,7 @@ namespace MgloGui
 
 		private void OnDrop(object sender, DragEventArgs e)
 		{
-			if (mViewModel.IsProcessing)
+			if (ViewModel.IsProcessing)
 			{
 				return;
 			}
@@ -34,13 +47,13 @@ namespace MgloGui
 			{
 				string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-				mViewModel.ProcessFiles(files);
+				ViewModel.ProcessFiles(files);
 			}
 		}
 
 		private void OnPreviewDragOver(object sender, DragEventArgs e)
 		{
-			if (mViewModel.IsProcessing)
+			if (ViewModel.IsProcessing)
 			{
 				return;
 			}
@@ -51,7 +64,7 @@ namespace MgloGui
 		private void OnPreviewDragEnter(object sender, DragEventArgs e)
 		{
 			e.Effects = DragDropEffects.None;
-			if (mViewModel.IsProcessing)
+			if (ViewModel.IsProcessing)
 			{
 				return;
 			}
@@ -59,7 +72,7 @@ namespace MgloGui
 			if (e.Data.GetDataPresent(DataFormats.FileDrop))
 			{
 				string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-				if (mViewModel.AcceptsFiles(files))
+				if (ViewModel.AcceptsFiles(files))
 				{
 					e.Effects = DragDropEffects.Move;
 				}
@@ -68,35 +81,36 @@ namespace MgloGui
 
 		private void OnPreviewDragLeave(object sender, DragEventArgs e)
 		{
-			if (mViewModel.IsProcessing)
+			if (ViewModel.IsProcessing)
 			{
 				return;
 			}
 
-			mViewModel.ClearProcessFilesHelpText();
+			ViewModel.ClearProcessFilesHelpText();
 		}
 
 		private void OnMessagesBlockMouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (mViewModel.IsProcessing)
+			if (ViewModel.IsProcessing)
 			{
 				return;
 			}
 
-			if (!string.IsNullOrWhiteSpace(mViewModel.MessagesText))
+			if (!string.IsNullOrWhiteSpace(ViewModel.MessagesText))
 			{
-				Clipboard.SetText(mViewModel.MessagesText);
+				Clipboard.SetText(ViewModel.MessagesText);
 			}
 		}
 
 		private void OnSelectedGameGameBuildChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
 		{
-			if (mViewModel.IsProcessing)
+			// Settings-backed bindings can raise this while InitializeComponent is constructing the window.
+			if (!IsLoaded || ViewModel.IsProcessing)
 			{
 				return;
 			}
 
-			mViewModel.RefreshForCurrentlySelectedGameBuild();
+			ViewModel.RefreshForCurrentlySelectedGameBuild();
 		}
 	};
 }
