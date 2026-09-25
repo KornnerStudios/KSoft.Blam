@@ -10,7 +10,7 @@ namespace KSoft.Blam.Test;
 public sealed class TraceConfigurationTests
 {
 	[TestMethod]
-	[DataRow("BlamTool.dll.config", "BlamTool", null)]
+	[DataRow("BlamTool.dll.config", "BlamTool", "BlamTool")]
 	[DataRow("MegHalomaniac.dll.config", "MegHalomaniac", "MgloGui")]
 	public void AppConfig_CoversActiveTraceSources(string configFileName, string baseFileName, string? appSourceName)
 	{
@@ -26,6 +26,7 @@ public sealed class TraceConfigurationTests
 		var traceSources = KSoft.Debug.AssemblyTraceSourcesCollector.FromClasses(
 			null,
 			KSoft.Program.DebugTraceClass,
+			KSoft.Security.Program.DebugTraceClass,
 			KSoft.Blam.Program.DebugTraceClass);
 
 		foreach (string sourceName in traceSources.Select(source => source.Name))

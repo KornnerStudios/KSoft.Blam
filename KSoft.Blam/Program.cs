@@ -11,6 +11,8 @@ namespace KSoft.Blam
 		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
 		public static void Initialize()
 		{
+			KSoft.Security.Program.Initialize();
+			KSoft.Program.RegisterTraceSources(DebugTraceClass);
 			Engine.EngineRegistry.InitializeForNewProgram();
 		}
 		// If we don't do this, this function will get inlined to the assembly who called this (eg, Test.KSoft.Blam)
@@ -19,6 +21,7 @@ namespace KSoft.Blam
 		public static void Dispose()
 		{
 			Engine.EngineRegistry.DisposeFromOldProgram();
+			KSoft.Security.Program.Dispose();
 		}
 
 		public static void InitializeCoreSystems()

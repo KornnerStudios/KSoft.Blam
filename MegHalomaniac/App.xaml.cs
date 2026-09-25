@@ -22,6 +22,7 @@ namespace MgloGui
 	{
 		public static List<TraceSource> AllTraceSources { get; private set; } = KSoft.Debug.AssemblyTraceSourcesCollector.FromClasses(null
 			, KSoft.Program.DebugTraceClass
+			, KSoft.Security.Program.DebugTraceClass
 			, KSoft.Blam.Program.DebugTraceClass
 			, typeof(Debug.Trace)
 			).SortAndReturn(KSoft.Debug.AssemblyTraceSourcesCollector.CompareTraceSourcesByName);
@@ -29,6 +30,7 @@ namespace MgloGui
 		public App()
 		{
 			KSoft.Program.Initialize();
+			KSoft.Program.RegisterTraceSources(AllTraceSources);
 		}
 
 		protected override void OnStartup(StartupEventArgs e)
