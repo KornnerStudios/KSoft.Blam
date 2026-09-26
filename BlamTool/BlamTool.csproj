@@ -11,7 +11,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
+    <PackageReference Include="Mono.Options" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(VitaRootDir)KSoft\KSoft\KSoft.csproj">
