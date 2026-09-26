@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="MSTest.Sdk/4.1.0">
+<Project Sdk="MSTest.Sdk">
   <PropertyGroup>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Test.KSoft.Blam</RootNamespace>
